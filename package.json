@@ -2,7 +2,7 @@
   "name": "snowb-bitmapfont",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://silenceleo.github.io/snowb-bmf",
+  "homepage": "https://silenceleo.github.io/snowb-bmf/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
