@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "./static/css/main.2cc839bc.chunk.css",
+    "main.js": "./static/js/main.2cc98221.chunk.js",
+    "main.js.map": "./static/js/main.2cc98221.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.8eb0ca99.js",
+    "runtime-main.js.map": "./static/js/runtime-main.8eb0ca99.js.map",
+    "static/js/2.fc7be827.chunk.js": "./static/js/2.fc7be827.chunk.js",
+    "static/js/2.fc7be827.chunk.js.map": "./static/js/2.fc7be827.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.f40a6f7a7d080f426c933e456b54c9fa.js": "./precache-manifest.f40a6f7a7d080f426c933e456b54c9fa.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/main.2cc839bc.chunk.css.map": "./static/css/main.2cc839bc.chunk.css.map",
+    "static/js/2.fc7be827.chunk.js.LICENSE.txt": "./static/js/2.fc7be827.chunk.js.LICENSE.txt",
+    "static/js/RectanglePacker.654b1e16b59dc2cc713a.worker.js": "./static/js/RectanglePacker.654b1e16b59dc2cc713a.worker.js",
+    "static/js/RectanglePacker.654b1e16b59dc2cc713a.worker.js.map": "./static/js/RectanglePacker.654b1e16b59dc2cc713a.worker.js.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8eb0ca99.js",
+    "static/js/2.fc7be827.chunk.js",
+    "static/css/main.2cc839bc.chunk.css",
+    "static/js/main.2cc98221.chunk.js"
+  ]
+}
