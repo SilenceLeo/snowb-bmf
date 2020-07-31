@@ -1,0 +1,66 @@
+import fontStyleStringify, { FontStyleConfig } from './fontStyleStringify'
+
+export interface TextSize {
+  text: string
+  font: string
+  width: number
+  height: number
+  fontWidth: number
+  fontHeight: number
+  trimOffsetTop: number
+  trimOffsetLeft: number
+  trimOffsetRight: number
+  trimOffsetBottom: number
+}
+
+let canvas: HTMLCanvasElement
+
+export default function getTextSize(
+  text: string,
+  config: FontStyleConfig,
+): TextSize {
+  if (!canvas) canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('Get context 2d failed.')
+
+  // clear before settings
+  canvas.width = 1
+  canvas.height = 1
+
+  const font = fontStyleStringify(config)
+
+  ctx.font = font
+
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'bottom'
+
+  const testA = ctx.measureText(text)
+
+  ctx.textAlign = 'right'
+  ctx.textBaseline = 'top'
+
+  const testB = ctx.measureText(text)
+
+  const trimOffsetLeft = Math.ceil(testA.actualBoundingBoxLeft)
+  const trimOffsetRight = Math.ceil(testB.actualBoundingBoxRight)
+  const trimOffsetTop = Math.ceil(testB.actualBoundingBoxAscent)
+  const trimOffsetBottom = Math.ceil(testA.actualBoundingBoxDescent)
+  const width = trimOffsetLeft + Math.ceil(testA.actualBoundingBoxRight)
+  const height = trimOffsetBottom + Math.ceil(testA.actualBoundingBoxAscent)
+  const fontWidth = Math.ceil(testA.width)
+  const fontHeight =
+    testA.actualBoundingBoxAscent - testB.actualBoundingBoxAscent
+
+  return {
+    text,
+    font,
+    width,
+    height,
+    fontWidth,
+    fontHeight,
+    trimOffsetTop,
+    trimOffsetLeft,
+    trimOffsetRight,
+    trimOffsetBottom,
+  }
+}
