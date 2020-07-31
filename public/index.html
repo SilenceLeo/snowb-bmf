@@ -4,7 +4,30 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="theme-color" content="#252525" />
-    <meta name="description" content="Snow Bamboo BitmapFont editor online." />
+    <title>SnowB BMF - Bitmap Font Generator Online</title>
+    <meta
+      name="description"
+      content="SnowB BMF is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both image files and character descriptions that can be read by a game for easy rendering of fonts."
+    />
+    <meta
+      property="og:title"
+      content="SnowB BMF - Bitmap Font Generator Online"
+    />
+    <meta property="og:site_name" content="SnowB BMF" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://silenceleo.github.io/snowb-bmf/" />
+    <meta
+      property="og:image"
+      content="https://silenceleo.github.io/snowb-bmf/logo512.png"
+    />
+    <meta
+      property="og:description"
+      content="SnowB BMF is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both image files and character descriptions that can be read by a game for easy rendering of fonts."
+    />
+    <meta
+      name="description"
+      content="SnowB BMF is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both image files and character descriptions that can be read by a game for easy rendering of fonts."
+    />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link
       rel="stylesheet"
@@ -24,7 +47,6 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Snow Bamboo BitmapFont</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -39,14 +61,5 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <script>
-      window.addEventListener('beforeinstallprompt', function (e) {
-        // log the platforms provided as options in an install prompt
-        console.log(e.platforms) // e.g., ["web", "android", "windows"]
-        e.userChoice.then(function (choiceResult) {
-          console.log(choiceResult.outcome) // either "accepted" or "dismissed"
-        }, handleError)
-      })
-    </script>
   </body>
 </html>
