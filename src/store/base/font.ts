@@ -27,7 +27,7 @@ class Font {
   @observable.ref opentype: OpenType | null = null
 
   @computed get minBaseLine() {
-    return Math.min(
+    const min = Math.min(
       this.middle,
       this.hanging,
       this.top,
@@ -35,10 +35,12 @@ class Font {
       this.ideographic,
       this.bottom,
     )
+    if (Number.isNaN(Number(min))) return 0
+    return min
   }
 
   @computed get maxBaseLine() {
-    return Math.max(
+    const max = Math.max(
       this.middle,
       this.hanging,
       this.top,
@@ -46,6 +48,8 @@ class Font {
       this.ideographic,
       this.bottom,
     )
+    if (Number.isNaN(Number(max))) return this.size
+    return max
   }
 
   constructor(font: Partial<Font> = {}) {

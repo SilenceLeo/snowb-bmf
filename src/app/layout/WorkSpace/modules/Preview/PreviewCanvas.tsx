@@ -135,7 +135,8 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     canvas.width = data.width
     canvas.height = data.height
     data.list.forEach((item) => {
-      if (!item.source) return
+      if (!item.source || item.source.width === 0 || item.source.height === 0)
+        return
       ctx.drawImage(item.source, item.x - data.xOffset, item.y - data.yOffset)
     })
 

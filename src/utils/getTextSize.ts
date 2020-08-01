@@ -65,18 +65,7 @@ export default function getTextSize(
   const fontWidth = Math.ceil(testA.width)
   const fontHeight =
     testA.actualBoundingBoxAscent - testB.actualBoundingBoxAscent
-  console.log(text, testA, testB, {
-    text,
-    font,
-    width,
-    height,
-    fontWidth,
-    fontHeight,
-    trimOffsetTop,
-    trimOffsetLeft,
-    trimOffsetRight,
-    trimOffsetBottom,
-  })
+
   return {
     text,
     font,
