@@ -25,6 +25,7 @@ const useStyles = makeStyles(({ zIndex }) =>
       flex: 1,
       position: 'relative',
       height: '0',
+      overflow: 'hidden',
     },
     loadingBackdrop: {
       zIndex: zIndex.drawer + 1,
