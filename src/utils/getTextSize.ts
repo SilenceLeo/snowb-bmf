@@ -36,6 +36,21 @@ export default function getTextSize(
 
   const testA = ctx.measureText(text)
 
+  if (typeof testA.actualBoundingBoxLeft === 'undefined') {
+    return {
+      text,
+      font,
+      width: testA.width,
+      height: parseInt(`${config.fontSize ?? '14'}`, 10),
+      fontWidth: testA.width,
+      fontHeight: parseInt(`${config.fontSize ?? '14'}`, 10),
+      trimOffsetTop: 0,
+      trimOffsetLeft: 0,
+      trimOffsetRight: 0,
+      trimOffsetBottom: 0,
+    }
+  }
+
   ctx.textAlign = 'right'
   ctx.textBaseline = 'top'
 
@@ -50,7 +65,18 @@ export default function getTextSize(
   const fontWidth = Math.ceil(testA.width)
   const fontHeight =
     testA.actualBoundingBoxAscent - testB.actualBoundingBoxAscent
-
+  console.log(text, testA, testB, {
+    text,
+    font,
+    width,
+    height,
+    fontWidth,
+    fontHeight,
+    trimOffsetTop,
+    trimOffsetLeft,
+    trimOffsetRight,
+    trimOffsetBottom,
+  })
   return {
     text,
     font,

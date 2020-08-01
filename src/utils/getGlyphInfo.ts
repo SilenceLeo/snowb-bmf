@@ -138,6 +138,13 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
     ctx = newCtx
   }
 
+  if (canvas.width === 0 || canvas.height === 0) {
+    return {
+      canvas,
+      ...trimInfo,
+    }
+  }
+
   const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const styleTrimInfo = trimImageData(imgData)
   canvas.width = styleTrimInfo.width
