@@ -14,11 +14,9 @@ export interface Store {
 }
 
 export default function createStore(): Store {
-  console.time('初始化store')
-  const store = { ui: new Ui(), workspace: new Workspace() }
-  console.timeEnd('初始化store')
-  return store
+  return { ui: new Ui(), workspace: new Workspace() }
 }
+
 export type TStore = ReturnType<typeof createStore>
 
 export { default as Ui } from './ui'

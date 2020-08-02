@@ -117,8 +117,6 @@ class Project {
     this.worker = new RectanglePacker()
     const packList = this.rectangleList.sort((a, b) => b.height - a.height)
 
-    console.time('===打包字符')
-
     this.worker.addEventListener(
       'message',
       action('PackerWorkerCallback', (messageEvent) => {
@@ -126,7 +124,6 @@ class Project {
         const imgList = Array.from(this.glyphImages)
         let maxWidth = 0
         let maxHeight = 0
-        console.timeEnd('===打包字符')
         ;(data as TextRectangle[]).forEach((rectangle) => {
           const { letter, x, y, type, width, height } = rectangle
           let glyph: GlyphFont | GlyphImage | undefined
@@ -169,7 +166,6 @@ class Project {
   }
 
   @action.bound packStyle(): void {
-    console.time('idle')
     this.isPacking = true
     if (this.worker) {
       this.worker.terminate()
@@ -196,7 +192,6 @@ class Project {
         if (tasks.length) {
           runTasks()
         } else {
-          console.timeEnd('idle')
           this.idleId = 0
           this.pack()
         }
@@ -249,7 +244,6 @@ class Project {
   }
 
   @action.bound addGlyphs(oldText = ''): void {
-    console.time('初始化字符')
     const currentList = Array.from(new Set(this.text.split('')))
     const oldList = Array.from(new Set(oldText.split('')))
     this.text = currentList.join('')
@@ -269,9 +263,6 @@ class Project {
         this.glyphs.delete(letter)
       }
     })
-    console.timeEnd('初始化字符')
-
-    // this.pack()
   }
 
   @action.bound addImages<T extends FileInfo>(list: T[]): void {
