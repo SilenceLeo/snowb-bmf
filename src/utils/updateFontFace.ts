@@ -26,7 +26,7 @@ export default function updateFontFace(
     loadDiv.style.pointerEvents = 'none'
     document.body.appendChild(loadDiv)
   } else {
-    fontTargeCache.replaceChild(cssNode, fontTargeCache.childNodes[0])
+    fontTargeCache.appendChild(cssNode)
   }
   loadDiv.style.fontFamily = name
   return new Promise((resolve) => setTimeout(resolve, 200))
