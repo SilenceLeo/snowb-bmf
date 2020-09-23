@@ -45,6 +45,7 @@ const useStyles = makeStyles(({ bgPixel }) =>
       marginTop: (props: StyleProps) => `${props.height / -2}px`,
       transform: (props: StyleProps) =>
         `scale(${props.scale}) translate(${props.offsetX}px,${props.offsetY}px)`,
+      imageRendering: 'pixelated',
     },
     canvas: {
       width: '100%',
