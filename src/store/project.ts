@@ -37,7 +37,7 @@ class Project {
   @observable isPacking = false
 
   @observable text =
-    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!№;%:?*()_+-=.,/|"\'@#$^&{}[]'
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!№;%:?*()_+-=.,/|"\'@#$^&{}[]'
 
   @observable.shallow glyphs: Map<string, GlyphFont> = new Map()
 
