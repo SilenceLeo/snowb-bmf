@@ -63,7 +63,7 @@ function toOriginBuffer(protoProject: IProject): Project {
   return ({
     ...project,
     glyphs: map,
-    glyphImages: new Set(project.glyphImages || []),
+    glyphImages: project.glyphImages || [],
   } as unknown) as Project
 }
 

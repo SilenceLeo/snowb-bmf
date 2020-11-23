@@ -41,7 +41,7 @@ class Project {
 
   @observable.shallow glyphs: Map<string, GlyphFont> = new Map()
 
-  @observable.shallow glyphImages: Set<GlyphImage> = new Set()
+  @observable.shallow glyphImages: GlyphImage[] = []
 
   @observable.ref style: Style
 
@@ -69,7 +69,8 @@ class Project {
     }
 
     project.glyphImages?.forEach((img) => {
-      this.glyphImages.add(new GlyphImage(img))
+      console.log(img)
+      this.glyphImages.push(new GlyphImage(img))
     })
 
     if (!this.glyphs.has(' '))
@@ -83,7 +84,7 @@ class Project {
   @computed get glyphList(): (GlyphFont | GlyphImage)[] {
     const obj: { [key: string]: GlyphImage } = {}
 
-    Array.from(this.glyphImages).forEach((glyph) => {
+    this.glyphImages.forEach((glyph) => {
       if (glyph.letter && glyph.selected) {
         obj[glyph.letter] = glyph
       }
@@ -121,7 +122,7 @@ class Project {
       'message',
       action('PackerWorkerCallback', (messageEvent) => {
         const { data } = messageEvent
-        const imgList = Array.from(this.glyphImages)
+        const imgList = this.glyphImages
         let maxWidth = 0
         let maxHeight = 0
         ;(data as TextRectangle[]).forEach((rectangle) => {
@@ -269,14 +270,15 @@ class Project {
     Promise.all(
       list.map((img) => {
         const glyphImage = new GlyphImage(img)
-        this.glyphImages.add(glyphImage)
+        this.glyphImages.push(glyphImage)
         return glyphImage.initImage()
       }),
     ).then(this.pack)
   }
 
   @action.bound removeImage(image: GlyphImage): void {
-    this.glyphImages.delete(image)
+    const idx = this.glyphImages.indexOf(image)
+    if (idx > -1) this.glyphImages.splice(idx, 1)
   }
 
   @action.bound setCanvas(canvas: HTMLCanvasElement): void {

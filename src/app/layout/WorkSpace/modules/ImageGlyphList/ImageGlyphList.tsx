@@ -22,7 +22,7 @@ const ImageGlyphList: FunctionComponent<unknown> = () => {
   const classes = useStyles()
   return (
     <Box className={classes.root}>
-      {Array.from(glyphImages).map((glyph) => {
+      {glyphImages.map((glyph) => {
         return <ImageGlyph glyph={glyph} key={glyph.src} />
       })}
     </Box>
