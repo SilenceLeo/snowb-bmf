@@ -54,6 +54,8 @@ class Font {
 
   constructor(font: Partial<Font> = {}) {
     this.size = font.size || 72
+    this.lineHeight = font.lineHeight || 1.25
+
     if (font.font && font.font.byteLength) {
       this.setFont(font.font)
     } else {
