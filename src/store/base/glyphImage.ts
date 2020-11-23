@@ -29,8 +29,10 @@ class GlyphImage extends GlyphBase {
     this.fileName = glyphImage.fileName || ''
     this.fileType = glyphImage.fileType || ''
     this.buffer = glyphImage.buffer || null
-    if (glyphImage.buffer)
+    if (glyphImage.buffer) {
       this.src = URL.createObjectURL(new Blob([glyphImage.buffer]))
+      this.initImage()
+    }
   }
 
   @action.bound initImage(): Promise<void> {
