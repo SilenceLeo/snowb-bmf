@@ -12,11 +12,13 @@ import GridInput from 'src/app/components/GridInput'
 
 import FormAngle from '../FormAngle'
 
-interface FormGradient {
+interface FormGradientProps {
   gradient: Gradient
 }
 
-const FormGradient: FunctionComponent<FormGradient> = (props: FormGradient) => {
+const FormGradient: FunctionComponent<FormGradientProps> = (
+  props: FormGradientProps,
+) => {
   const {
     gradient: {
       type,

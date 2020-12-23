@@ -14,8 +14,8 @@ interface FormImageProps {
   patternTexture: PatternTexture
   scale: number
   src: string
-  onChangeImage(buffer: ArrayBuffer): void
-  onChangeScale(scale: number): void
+  // onChangeImage(buffer: ArrayBuffer): void
+  // onChangeScale(scale: number): void
 }
 
 const FormImage: FunctionComponent<FormImageProps> = (

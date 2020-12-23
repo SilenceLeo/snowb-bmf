@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx'
 import { deepObserve } from 'mobx-utils'
 import { cancel, request } from 'requestidlecallback'
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import RectanglePacker from 'worker-loader?name=static/js/RectanglePacker.[hash].worker.js!src/workers/RectanglePacker.worker'
+import RectanglePacker from 'worker-loader?filename=static/js/RectanglePacker.[hash].worker.js!src/workers/RectanglePacker.worker'
 
 import Ui from './base/ui'
 import Style from './base/style'

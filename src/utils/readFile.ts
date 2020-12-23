@@ -7,7 +7,7 @@ export default function readFile(
     const reader = new FileReader()
     reader.readAsArrayBuffer(file)
     reader.onload = (e) => {
-      resolve(e.target?.result)
+      resolve(e?.target?.result || null)
     }
   })
 }

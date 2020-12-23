@@ -57,8 +57,8 @@ const FormFill: FunctionComponent<FormFillProps> = (props: FormFillProps) => {
           patternTexture={patternTexture}
           src={patternTexture.src}
           scale={patternTexture.scale}
-          onChangeImage={patternTexture.setImage}
-          onChangeScale={patternTexture.setScale}
+          // onChangeImage={patternTexture.setImage}
+          // onChangeScale={patternTexture.setScale}
         />
       ) : null}
     </>
