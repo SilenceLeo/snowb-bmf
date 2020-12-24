@@ -11,6 +11,7 @@ import LeftBar from '../LeftBar'
 import TitleBar from '../TitleBar'
 import RightBar from '../RightBar'
 import WorkSpace from '../WorkSpace'
+import UpdateToast from './UpdateToast'
 
 const useStyles = makeStyles(({ zIndex }) =>
   createStyles({
@@ -41,6 +42,7 @@ const Wrap: FunctionComponent<unknown> = () => {
   return (
     <Box className={classes.root}>
       <TitleBar />
+      <UpdateToast />
       <Box className={classes.content}>
         <LeftBar />
         <WorkSpace />

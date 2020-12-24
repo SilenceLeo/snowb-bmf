@@ -6,11 +6,6 @@ import getLuaString from './getLuaString'
 import getTextString from './getTextString'
 import toOutputInfo from './toOutputInfo'
 
-interface OutputConfig {
-  type: 'xml' | 'text' | 'lua'
-  ext: 'fnt' | 'xml'
-}
-
 export default function outputFile(
   project: Project,
   config = {

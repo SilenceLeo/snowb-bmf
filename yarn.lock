@@ -7796,19 +7796,19 @@ mobx-react-lite@^2.2.0:
   resolved "https://registry.yarnpkg.com/mobx-react-lite/-/mobx-react-lite-2.2.2.tgz#87c217dc72b4e47b22493daf155daf3759f868a6"
   integrity sha512-2SlXALHIkyUPDsV4VTKVR9DW7K3Ksh1aaIv3NrNJygTbhXe2A9GrcKHZ2ovIiOp/BXilOcTYemfHHZubP431dg==
 
-mobx-react@^6:
+mobx-react@^6.3.1:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-6.3.1.tgz#204f9756e42e19d91cb6598837063b7e7de87c52"
   integrity sha512-IOxdJGnRSNSJrL2uGpWO5w9JH5q5HoxEqwOF4gye1gmZYdjoYkkMzSGMDnRCUpN/BNzZcFoMdHXrjvkwO7KgaQ==
   dependencies:
     mobx-react-lite "^2.2.0"
 
-mobx-utils@^5:
+mobx-utils@^5.6.1:
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/mobx-utils/-/mobx-utils-5.6.1.tgz#b7d9184b7442fe704be367d4363a2e9961be28cc"
   integrity sha512-bpTJzM8MXniGnXCZY+ImjPDqBKQ3+G3g/QFSPtNkH6HM3x14DAPqKH7No7NDyhbXBMv3FaVetsgnoEPozbi45Q==
 
-mobx@^5:
+mobx@^5.15.7:
   version "5.15.7"
   resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.15.7.tgz#b9a5f2b6251f5d96980d13c78e9b5d8d4ce22665"
   integrity sha512-wyM3FghTkhmC+hQjyPGGFdpehrcX1KOXsDuERhfK2YbJemkUhEB+6wzEN639T21onxlfYBmriA1PFnvxTUhcKw==
