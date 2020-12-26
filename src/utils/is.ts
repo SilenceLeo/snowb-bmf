@@ -6,6 +6,8 @@ const num = <T>(n: T): IsNumber<T> => {
   return (typeof n === 'number' && !Number.isNaN(n)) as IsNumber<T>
 }
 
-export default {
+const is = {
   num,
 }
+
+export default is

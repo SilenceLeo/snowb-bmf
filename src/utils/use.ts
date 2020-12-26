@@ -5,6 +5,8 @@ const num = <T extends unknown>(a: T, b: number): number => {
   return b
 }
 
-export default {
+const use = {
   num,
 }
+
+export default use
