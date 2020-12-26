@@ -35,7 +35,7 @@ function useSpaceDrag<T extends HTMLElement>(
     return 0
   }, [moveState.ks, moveState.ms])
 
-  const moveCallback = useCallback(onMove, deps)
+  const moveCallback = useCallback(onMove, [onMove, ...deps])
 
   const handleKeyEvent = useCallback(
     (e: KeyboardEvent) => {

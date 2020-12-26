@@ -15,7 +15,7 @@ function useWheel(
   onWheel: WheelCallback,
   deps: DependencyList = [],
 ): void {
-  const callback = useCallback(onWheel, deps)
+  const callback = useCallback(onWheel, [onWheel, deps])
   const handleWheel = useCallback(
     (e: WheelEvent) => {
       e.preventDefault()
