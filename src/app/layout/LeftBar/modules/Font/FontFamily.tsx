@@ -8,9 +8,6 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { useFont } from 'src/store/hooks'
 import readFile from 'src/utils/readFile'
 
-// eslint-disable-next-line import/no-webpack-loader-syntax
-// import ToTtfBufferWorder from 'worker-loader?name=static/js/ToTtfBuffer.[hash].worker.js!src/workers/ToTtfBuffer.worker'
-
 const FontFamily: FunctionComponent<unknown> = () => {
   const [loading, setLoading] = useState(false)
   const { setFont } = useFont()
@@ -42,26 +39,8 @@ const FontFamily: FunctionComponent<unknown> = () => {
         .then(() => setLoading(false))
         .catch((e) => {
           setLoading(false)
-          // eslint-disable-next-line no-alert
           window.alert(e.message)
         })
-
-      // const worker = new ToTtfBufferWorder()
-      // const postData = { buffer: arrBuf, type: ext[1] }
-      // worker.addEventListener('message', (messageEvent) => {
-      //   const { data } = messageEvent
-      //   const { buffer, name } = data
-      //   const url = URL.createObjectURL(new Blob([buffer]))
-
-      //   updateFontFace(name.fullName, url)
-      //   setTimeout(() => {
-      //     if (setFont) setFont(name.fullName, buffer)
-      //     setLoading(false)
-      //   }, 200)
-      //   worker.terminate()
-      // })
-
-      // worker.postMessage(postData, [arrBuf])
     })
   }
 

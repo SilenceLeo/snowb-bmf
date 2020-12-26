@@ -1,5 +1,5 @@
 {
-  "name": "snowb-bitmapfont",
+  "name": "snowb-bmf",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://snowb.org/",
@@ -33,18 +33,11 @@
     "react-dom": "^17.0.1",
     "rectangle-packer": "^0.0.7",
     "requestidlecallback": "^0.3.0",
-    "workbox-background-sync": "^5.1.3",
-    "workbox-broadcast-update": "^5.1.3",
-    "workbox-cacheable-response": "^5.1.3",
     "workbox-core": "^5.1.3",
     "workbox-expiration": "^5.1.3",
-    "workbox-google-analytics": "^5.1.3",
-    "workbox-navigation-preload": "^5.1.3",
     "workbox-precaching": "^5.1.3",
-    "workbox-range-requests": "^5.1.3",
     "workbox-routing": "^5.1.3",
-    "workbox-strategies": "^5.1.3",
-    "workbox-streams": "^5.1.3"
+    "workbox-strategies": "^5.1.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
