@@ -2,7 +2,6 @@ import React from 'react'
 import { ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Provider } from 'mobx-react'
-import 'mobx-react/batchingForReactDom'
 
 import createStore from 'src/store'
 import theme from './theme'
