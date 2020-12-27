@@ -11,7 +11,7 @@ import Metric from './base/metric'
 import GlyphFont from './base/glyphFont'
 import GlyphImage, { FileInfo } from './base/glyphImage'
 import { GlyphType } from './base/glyphBase'
-
+// import { GuillotineBinPack } from '../packer'
 interface TextRectangle {
   width: number
   height: number
@@ -118,41 +118,19 @@ class Project {
     this.worker = new RectanglePacker()
     const packList = this.rectangleList.sort((a, b) => b.height - a.height)
 
+    // const packer = new GuillotineBinPack(512, 512)
+
+    // packer.InsertSizes(
+    //   packList.filter(({ width, height }) => !!(width && height)),
+    //   true,
+    //   1,
+    //   1,
+    // )
     this.worker.addEventListener(
       'message',
       action('PackerWorkerCallback', (messageEvent) => {
         const { data } = messageEvent
-        const imgList = this.glyphImages
-        let maxWidth = 0
-        let maxHeight = 0
-        ;(data as TextRectangle[]).forEach((rectangle) => {
-          const { letter, x, y, type, width, height } = rectangle
-          let glyph: GlyphFont | GlyphImage | undefined
-
-          if (type === 'image') {
-            glyph = imgList.find((gi) => {
-              if (gi && gi.letter === letter) return true
-              return false
-            })
-          }
-
-          if (!glyph) {
-            glyph = this.glyphs.get(letter)
-          }
-
-          if (glyph) {
-            glyph.x = x || 0
-            glyph.y = y || 0
-          }
-
-          maxWidth = Math.max(maxWidth, x + width)
-          maxHeight = Math.max(maxHeight, y + height)
-        })
-
-        this.ui.setSize(
-          maxWidth - this.layout.spacing,
-          maxHeight - this.layout.spacing,
-        )
+        this.setPack(data)
 
         this.isPacking = false
         this.worker?.terminate()
@@ -163,6 +141,41 @@ class Project {
 
     this.worker.postMessage(
       packList.filter(({ width, height }) => !!(width && height)),
+    )
+  }
+
+  @action.bound setPack(list: TextRectangle[]): void {
+    const imgList = this.glyphImages
+    let maxWidth = 0
+    let maxHeight = 0
+
+    list.forEach((rectangle) => {
+      const { letter, x, y, type, width, height } = rectangle
+      let glyph: GlyphFont | GlyphImage | undefined
+
+      if (type === 'image') {
+        glyph = imgList.find((gi) => {
+          if (gi && gi.letter === letter) return true
+          return false
+        })
+      }
+
+      if (!glyph) {
+        glyph = this.glyphs.get(letter)
+      }
+
+      if (glyph) {
+        glyph.x = x || 0
+        glyph.y = y || 0
+      }
+
+      maxWidth = Math.max(maxWidth, x + width)
+      maxHeight = Math.max(maxHeight, y + height)
+    })
+
+    this.ui.setSize(
+      maxWidth - this.layout.spacing,
+      maxHeight - this.layout.spacing,
     )
   }
 
