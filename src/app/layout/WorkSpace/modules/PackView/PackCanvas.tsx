@@ -18,10 +18,11 @@ interface StyleProps {
 const useStyles = makeStyles(({ bgPixel }) =>
   createStyles({
     root: {
-      position: 'absolute',
+      position: 'relative',
       width: '100%',
       height: '100%',
       overflow: 'hidden',
+      flex: 1,
       cursor: (props: StyleProps) => {
         if (props.dragState === 2) return 'grabbing'
         if (props.dragState === 1) return 'grab'

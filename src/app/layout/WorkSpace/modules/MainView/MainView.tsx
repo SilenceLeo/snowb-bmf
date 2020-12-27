@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 import { useProjectUi } from 'src/store/hooks'
 
-import PackCanvas from '../PackCanvas'
+import PackView from '../PackView'
 import Preview from '../Preview'
 
 const useStyles = makeStyles(({ palette }) =>
@@ -25,7 +25,7 @@ const MainView: FunctionComponent<unknown> = () => {
 
   return (
     <div className={classes.root}>
-      {showPreview ? <Preview /> : <PackCanvas />}
+      {showPreview ? <Preview /> : <PackView />}
     </div>
   )
 }
