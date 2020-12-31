@@ -2259,10 +2259,7 @@ export const Layout = ($root.Layout = (() => {
    * @interface ILayout
    * @property {number|null} [padding] Layout padding
    * @property {number|null} [spacing] Layout spacing
-   * @property {number|null} [width] Layout width
-   * @property {number|null} [height] Layout height
-   * @property {boolean|null} [auto] Layout auto
-   * @property {boolean|null} [fixedSize] Layout fixedSize
+   * @property {boolean|null} [power] Layout power
    */
 
   /**
@@ -2296,36 +2293,12 @@ export const Layout = ($root.Layout = (() => {
   Layout.prototype.spacing = 0
 
   /**
-   * Layout width.
-   * @member {number} width
+   * Layout power.
+   * @member {boolean} power
    * @memberof Layout
    * @instance
    */
-  Layout.prototype.width = 0
-
-  /**
-   * Layout height.
-   * @member {number} height
-   * @memberof Layout
-   * @instance
-   */
-  Layout.prototype.height = 0
-
-  /**
-   * Layout auto.
-   * @member {boolean} auto
-   * @memberof Layout
-   * @instance
-   */
-  Layout.prototype.auto = false
-
-  /**
-   * Layout fixedSize.
-   * @member {boolean} fixedSize
-   * @memberof Layout
-   * @instance
-   */
-  Layout.prototype.fixedSize = false
+  Layout.prototype.power = false
 
   /**
    * Creates a new Layout instance using the specified properties.
@@ -2360,17 +2333,8 @@ export const Layout = ($root.Layout = (() => {
       Object.hasOwnProperty.call(message, 'spacing')
     )
       writer.uint32(/* id 2, wireType 0 =*/ 16).int32(message.spacing)
-    if (message.width != null && Object.hasOwnProperty.call(message, 'width'))
-      writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.width)
-    if (message.height != null && Object.hasOwnProperty.call(message, 'height'))
-      writer.uint32(/* id 4, wireType 0 =*/ 32).int32(message.height)
-    if (message.auto != null && Object.hasOwnProperty.call(message, 'auto'))
-      writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.auto)
-    if (
-      message.fixedSize != null &&
-      Object.hasOwnProperty.call(message, 'fixedSize')
-    )
-      writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.fixedSize)
+    if (message.power != null && Object.hasOwnProperty.call(message, 'power'))
+      writer.uint32(/* id 3, wireType 0 =*/ 24).bool(message.power)
     return writer
   }
 
@@ -2412,16 +2376,7 @@ export const Layout = ($root.Layout = (() => {
           message.spacing = reader.int32()
           break
         case 3:
-          message.width = reader.int32()
-          break
-        case 4:
-          message.height = reader.int32()
-          break
-        case 5:
-          message.auto = reader.bool()
-          break
-        case 6:
-          message.fixedSize = reader.bool()
+          message.power = reader.bool()
           break
         default:
           reader.skipType(tag & 7)
@@ -2461,15 +2416,8 @@ export const Layout = ($root.Layout = (() => {
       if (!$util.isInteger(message.padding)) return 'padding: integer expected'
     if (message.spacing != null && message.hasOwnProperty('spacing'))
       if (!$util.isInteger(message.spacing)) return 'spacing: integer expected'
-    if (message.width != null && message.hasOwnProperty('width'))
-      if (!$util.isInteger(message.width)) return 'width: integer expected'
-    if (message.height != null && message.hasOwnProperty('height'))
-      if (!$util.isInteger(message.height)) return 'height: integer expected'
-    if (message.auto != null && message.hasOwnProperty('auto'))
-      if (typeof message.auto !== 'boolean') return 'auto: boolean expected'
-    if (message.fixedSize != null && message.hasOwnProperty('fixedSize'))
-      if (typeof message.fixedSize !== 'boolean')
-        return 'fixedSize: boolean expected'
+    if (message.power != null && message.hasOwnProperty('power'))
+      if (typeof message.power !== 'boolean') return 'power: boolean expected'
     return null
   }
 
@@ -2486,10 +2434,7 @@ export const Layout = ($root.Layout = (() => {
     let message = new $root.Layout()
     if (object.padding != null) message.padding = object.padding | 0
     if (object.spacing != null) message.spacing = object.spacing | 0
-    if (object.width != null) message.width = object.width | 0
-    if (object.height != null) message.height = object.height | 0
-    if (object.auto != null) message.auto = Boolean(object.auto)
-    if (object.fixedSize != null) message.fixedSize = Boolean(object.fixedSize)
+    if (object.power != null) message.power = Boolean(object.power)
     return message
   }
 
@@ -2508,23 +2453,14 @@ export const Layout = ($root.Layout = (() => {
     if (options.defaults) {
       object.padding = 0
       object.spacing = 0
-      object.width = 0
-      object.height = 0
-      object.auto = false
-      object.fixedSize = false
+      object.power = false
     }
     if (message.padding != null && message.hasOwnProperty('padding'))
       object.padding = message.padding
     if (message.spacing != null && message.hasOwnProperty('spacing'))
       object.spacing = message.spacing
-    if (message.width != null && message.hasOwnProperty('width'))
-      object.width = message.width
-    if (message.height != null && message.hasOwnProperty('height'))
-      object.height = message.height
-    if (message.auto != null && message.hasOwnProperty('auto'))
-      object.auto = message.auto
-    if (message.fixedSize != null && message.hasOwnProperty('fixedSize'))
-      object.fixedSize = message.fixedSize
+    if (message.power != null && message.hasOwnProperty('power'))
+      object.power = message.power
     return object
   }
 

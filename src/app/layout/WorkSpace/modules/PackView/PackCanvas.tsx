@@ -50,7 +50,7 @@ const PackCanvas: FunctionComponent<unknown> = () => {
   const {
     isPacking,
     ui,
-    layout: { padding },
+    layout: { padding, auto, fixedSize, width: packWidth, height: packHeight },
     glyphList,
     style: { bgColor },
     packCanvas,
@@ -130,7 +130,18 @@ const PackCanvas: FunctionComponent<unknown> = () => {
         )
       }
     })
-  }, [bgColor, glyphList, isPacking, height, width, padding])
+  }, [
+    bgColor,
+    glyphList,
+    isPacking,
+    height,
+    width,
+    padding,
+    auto,
+    fixedSize,
+    packWidth,
+    packHeight,
+  ])
 
   return (
     <div

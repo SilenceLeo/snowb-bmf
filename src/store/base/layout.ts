@@ -22,6 +22,15 @@ class Layout {
     this.spacing = use.num(layout.spacing, 1)
 
     this.power = !!layout.power
+
+    this.width = use.num(layout.width, 1024)
+
+    this.height = use.num(layout.height, 1024)
+
+    // Compatible with old files, default true.
+    this.auto = layout.auto === false ? false : true
+
+    this.fixedSize = !!layout.fixedSize
   }
 
   @action.bound setPadding(padding: number): void {

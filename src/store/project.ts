@@ -11,7 +11,7 @@ import Metric from './base/metric'
 import GlyphFont from './base/glyphFont'
 import GlyphImage, { FileInfo } from './base/glyphImage'
 import { GlyphType } from './base/glyphBase'
-// import { GuillotineBinPack } from '../packer'
+import { GuillotineBinPack } from 'rectangle-packer'
 interface TextRectangle {
   width: number
   height: number
@@ -69,7 +69,6 @@ class Project {
     }
 
     project.glyphImages?.forEach((img) => {
-      console.log(img)
       this.glyphImages.push(new GlyphImage(img))
     })
 
@@ -118,14 +117,21 @@ class Project {
     this.worker = new RectanglePacker()
     const packList = this.rectangleList.sort((a, b) => b.height - a.height)
 
-    // const packer = new GuillotineBinPack(512, 512)
+    if (!this.layout.auto) {
+      const packer = new GuillotineBinPack<TextRectangle>(
+        this.layout.width + this.layout.spacing,
+        this.layout.height + this.layout.spacing,
+      )
 
-    // packer.InsertSizes(
-    //   packList.filter(({ width, height }) => !!(width && height)),
-    //   true,
-    //   1,
-    //   1,
-    // )
+      const list = packList.filter(({ width, height }) => !!(width && height))
+
+      packer.InsertSizes(list, true, 1, 1)
+
+      this.setPack(packer.usedRectangles, list)
+
+      this.isPacking = false
+      return
+    }
     this.worker.addEventListener(
       'message',
       action('PackerWorkerCallback', (messageEvent) => {
@@ -144,10 +150,14 @@ class Project {
     )
   }
 
-  @action.bound setPack(list: TextRectangle[]): void {
+  @action.bound setPack(
+    list: TextRectangle[],
+    failedList?: TextRectangle[],
+  ): void {
     const imgList = this.glyphImages
     let maxWidth = 0
     let maxHeight = 0
+    const { auto, fixedSize, width, height, spacing } = this.layout
 
     list.forEach((rectangle) => {
       const { letter, x, y, type, width, height } = rectangle
@@ -173,10 +183,38 @@ class Project {
       maxHeight = Math.max(maxHeight, y + height)
     })
 
-    this.ui.setSize(
-      maxWidth - this.layout.spacing,
-      maxHeight - this.layout.spacing,
-    )
+    if (failedList?.length) {
+      failedList.forEach((rectangle) => {
+        const { letter, type } = rectangle
+        let glyph: GlyphFont | GlyphImage | undefined
+
+        if (type === 'image') {
+          glyph = imgList.find((gi) => {
+            if (gi && gi.letter === letter) return true
+            return false
+          })
+        }
+
+        if (!glyph) {
+          glyph = this.glyphs.get(letter)
+        }
+
+        if (glyph) {
+          glyph.x = 0
+          glyph.y = 0
+        }
+      })
+      this.ui.setPackFailed(true)
+    } else {
+      this.ui.setPackFailed(false)
+    }
+
+    if (!auto && fixedSize) {
+      this.ui.setSize(width, height)
+      return
+    }
+
+    this.ui.setSize(maxWidth - spacing, maxHeight - spacing)
   }
 
   @action.bound packStyle(): void {
@@ -240,8 +278,7 @@ class Project {
       this.throttlePack()
     })
 
-    deepObserve(this.layout, (change) => {
-      if (isName(change, 'power')) return
+    deepObserve(this.layout, () => {
       this.throttlePack()
     })
 

@@ -966,17 +966,8 @@ export interface ILayout {
   /** Layout spacing */
   spacing?: number | null
 
-  /** Layout width */
-  width?: number | null
-
-  /** Layout height */
-  height?: number | null
-
-  /** Layout auto */
-  auto?: boolean | null
-
-  /** Layout fixedSize */
-  fixedSize?: boolean | null
+  /** Layout power */
+  power?: boolean | null
 }
 
 /** Represents a Layout. */
@@ -993,17 +984,8 @@ export class Layout implements ILayout {
   /** Layout spacing. */
   public spacing: number
 
-  /** Layout width. */
-  public width: number
-
-  /** Layout height. */
-  public height: number
-
-  /** Layout auto. */
-  public auto: boolean
-
-  /** Layout fixedSize. */
-  public fixedSize: boolean
+  /** Layout power. */
+  public power: boolean
 
   /**
    * Creates a new Layout instance using the specified properties.

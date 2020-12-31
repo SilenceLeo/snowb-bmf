@@ -9769,10 +9769,10 @@ readdirp@~3.5.0:
   dependencies:
     picomatch "^2.2.1"
 
-rectangle-packer@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/rectangle-packer/-/rectangle-packer-0.0.7.tgz#9f3aa9f0f2dc90a7eff8dfddbf39ae9b12aa9f30"
-  integrity sha512-xdf95o/FtcaRFnZQkJqGBOhjaMF6y4756af065nuk7ng+wQHUwo3MuwM/h6GGF6PQ6WGlfhl8cnhoppx493CZw==
+rectangle-packer@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/rectangle-packer/-/rectangle-packer-0.0.8.tgz#6a8c491a37bae3868cf7ad4608341b709f6934f0"
+  integrity sha512-Iqs/zMRUKxx8ZsgYL9UbiszXSHZewm3bGhch/Hvgo8sba2q/YIEu9C0z8X1Q77Ks7HMvg8zisMhyLojipDtdMQ==
 
 recursive-readdir@2.2.2:
   version "2.2.2"

@@ -87,13 +87,7 @@ message Layout {
 
   int32 spacing = 2;
 
-  int32 width = 3;
-
-  int32 height = 4;
-
-  bool auto = 5;
-
-  bool fixedSize = 6;
+  bool power = 3;
 }
 
 message Shadow {

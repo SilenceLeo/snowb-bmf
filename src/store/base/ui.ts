@@ -26,6 +26,8 @@ class Ui {
 
   @observable previewOffsetY = 0
 
+  @observable packFailed = false
+
   constructor(ui: Partial<Ui> = {}) {
     if (ui.previewText) {
       this.previewText = ui.previewText
@@ -61,7 +63,7 @@ class Ui {
     this.previewText = text
   }
 
-  @action.bound setShowPreview(showPreview: boolean) {
+  @action.bound setShowPreview(showPreview: boolean): void {
     this.showPreview = showPreview
   }
 
@@ -74,9 +76,13 @@ class Ui {
     this.previewOffsetY = use.num(trans.previewOffsetY, this.previewOffsetY)
   }
 
-  @action.bound setSelectLetter(letter: string = '', next: string = '') {
+  @action.bound setSelectLetter(letter: string = '', next: string = ''): void {
     this.selectLetter = letter
     this.selectNextLetter = next
+  }
+
+  @action.bound setPackFailed(packFailed: boolean): void {
+    this.packFailed = packFailed
   }
 }
 
