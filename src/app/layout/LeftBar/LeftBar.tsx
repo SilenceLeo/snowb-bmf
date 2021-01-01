@@ -36,9 +36,9 @@ const LeftBar: FunctionComponent<unknown> = () => {
         <Divider />
         <Font />
         <Divider />
-        <GlobalMetric />
-        <Divider />
         <PackConfig />
+        <Divider />
+        <GlobalMetric />
       </Box>
     </Box>
   )
