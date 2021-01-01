@@ -15,7 +15,13 @@ serviceWorkerRegistration.register({
   onUpdate(registration) {
     const worker = registration.waiting
     if (!worker) return
-    const event = new CustomEvent('updateVerion', { detail: worker })
-    window.dispatchEvent(event)
+
+    const channel = new MessageChannel()
+
+    channel.port1.onmessage = () => {
+      window.dispatchEvent(new CustomEvent('updateVerion', { detail: worker }))
+    }
+
+    worker.postMessage({ type: 'SKIP_WAITING' }, [channel.port2])
   },
 })
