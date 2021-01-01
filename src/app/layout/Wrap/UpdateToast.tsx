@@ -39,13 +39,14 @@ export default function ConsecutiveSnackbars() {
     setOpen(false)
   }
 
-  const updateVersion = React.useCallback((newWorker) => {
-    setWorker(newWorker || null)
-    setOpen(!!newWorker)
+  const updateVersion = React.useCallback((event) => {
+    const { detail } = event
+    setWorker(detail || null)
+    setOpen(!!detail)
   }, [])
 
   const handleReload = () => {
-    if (!worker) return
+    if (!worker || !worker.postMessage) return
 
     const channel = new MessageChannel()
 

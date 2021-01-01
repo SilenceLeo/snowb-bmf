@@ -15,5 +15,7 @@ serviceWorkerRegistration.register({
   onUpdate(registration) {
     const worker = registration.waiting
     if (!worker) return
+    const event = new CustomEvent('updateVerion', { detail: worker })
+    window.dispatchEvent(event)
   },
 })
