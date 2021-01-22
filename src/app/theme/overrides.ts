@@ -3,8 +3,22 @@ import { Overrides } from '@material-ui/core/styles/overrides'
 const overrides: Overrides = {
   MuiCssBaseline: {
     '@global': {
+      'html,body,#root': {
+        width: '100%',
+        height: '100%',
+      },
       html: {
         fontSize: '14px',
+      },
+      body: {
+        margin: 0,
+        // fontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        WebkitFontSmoothing: 'antialiased',
+        MozOsxFontSmoothing: 'grayscale',
+        userSelect: 'none',
+      },
+      '#root': {
+        minWidth: 900,
       },
       'input::-webkit-inner-spin-button': {
         marginLeft: '10px',
