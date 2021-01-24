@@ -27,7 +27,6 @@ export interface State {
 export default function ConsecutiveSnackbars() {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
-  const [worker, setWorker] = React.useState<ServiceWorker | null>(null)
 
   const handleClose = (
     event: React.SyntheticEvent | MouseEvent,
@@ -39,21 +38,13 @@ export default function ConsecutiveSnackbars() {
     setOpen(false)
   }
 
-  const updateVersion = React.useCallback((newWorker) => {
-    setWorker(newWorker || null)
-    setOpen(!!newWorker)
+  const updateVersion = React.useCallback((event) => {
+    const { detail } = event
+    setOpen(!!detail)
   }, [])
 
   const handleReload = () => {
-    if (!worker) return
-
-    const channel = new MessageChannel()
-
-    channel.port1.onmessage = (event) => {
-      window.location.reload()
-    }
-
-    worker.postMessage({ type: 'SKIP_WAITING' }, [channel.port2])
+    window.location.reload()
   }
 
   React.useEffect(() => {
