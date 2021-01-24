@@ -114,9 +114,7 @@ class Project {
     if (this.idleId) return
     if (this.worker) this.worker.terminate()
     this.isPacking = true
-    this.worker = new RectanglePacker()
     const packList = this.rectangleList.sort((a, b) => b.height - a.height)
-
     if (!this.layout.auto) {
       const packer = new GuillotineBinPack<TextRectangle>(
         this.layout.width + this.layout.spacing,
@@ -132,6 +130,7 @@ class Project {
       this.isPacking = false
       return
     }
+    this.worker = new RectanglePacker()
     this.worker.addEventListener(
       'message',
       action('PackerWorkerCallback', (messageEvent) => {
