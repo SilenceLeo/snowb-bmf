@@ -52,6 +52,11 @@ class Font {
     return max
   }
 
+  @computed get hasFont() {
+    if (this.font && this.opentype && this.family !== 'sans-serif') return true
+    return false
+  }
+
   constructor(font: Partial<Font> = {}) {
     this.size = font.size || 72
     this.lineHeight = font.lineHeight || 1.25
@@ -102,6 +107,13 @@ class Font {
 
   @action.bound setLineHeight(lineHeight: number): void {
     this.lineHeight = lineHeight
+  }
+
+  @action.bound clearFont(): void {
+    this.font = null
+    this.opentype = null
+    this.family = 'sans-serif'
+    this.updateBaseines()
   }
 }
 

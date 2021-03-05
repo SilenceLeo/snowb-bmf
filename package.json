@@ -56,7 +56,7 @@
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
-    "react-scripts": "4.0.1",
+    "react-scripts": "^4.0.3",
     "typescript": "^4.0.3",
     "web-vitals": "^0.2.4",
     "worker-loader": "^3.0.7"
