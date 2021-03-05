@@ -1,8 +1,11 @@
 import { observable, action, computed } from 'mobx'
 import { deepObserve } from 'mobx-utils'
 import { cancel, request } from 'requestidlecallback'
+import { GuillotineBinPack } from 'rectangle-packer'
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import RectanglePacker from 'worker-loader?filename=static/js/RectanglePacker.[hash].worker.js!src/workers/RectanglePacker.worker'
+// import RectanglePacker from 'worker-loader?filename=static/js/RectanglePacker.[hash].worker.js!src/workers/RectanglePacker.worker'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import AutoPacker from 'worker-loader?filename=static/js/AutoPacker.[hash].worker.js!src/workers/AutoPacker.worker'
 
 import Ui from './base/ui'
 import Style from './base/style'
@@ -11,7 +14,6 @@ import Metric from './base/metric'
 import GlyphFont from './base/glyphFont'
 import GlyphImage, { FileInfo } from './base/glyphImage'
 import { GlyphType } from './base/glyphBase'
-import { GuillotineBinPack } from 'rectangle-packer'
 interface TextRectangle {
   width: number
   height: number
@@ -26,7 +28,7 @@ class Project {
 
   id: number
 
-  worker: RectanglePacker | null = null
+  worker: AutoPacker | null = null
 
   packStart = 0
 
@@ -130,7 +132,7 @@ class Project {
       this.isPacking = false
       return
     }
-    this.worker = new RectanglePacker()
+    this.worker = new AutoPacker()
     this.worker.addEventListener(
       'message',
       action('PackerWorkerCallback', (messageEvent) => {
