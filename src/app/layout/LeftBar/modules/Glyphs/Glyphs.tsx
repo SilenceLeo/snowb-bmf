@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent } from 'react'
+import React, { useState, FunctionComponent, useCallback } from 'react'
 
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
@@ -24,6 +24,11 @@ const Glyphs: FunctionComponent<unknown> = () => {
     }
   }
 
+  const handleCompositionStart = useCallback((): void => {
+    setInputText(text)
+    setIsIME(true)
+  }, [text])
+
   const handleCompositionEnd = (): void => {
     setIsIME(false)
     const str = Array.from(new Set(inputText.split(''))).join('')
@@ -46,7 +51,7 @@ const Glyphs: FunctionComponent<unknown> = () => {
           variant='outlined'
           inputProps={{ spellCheck: false }}
           onChange={handleInput}
-          onCompositionStart={() => setIsIME(true)}
+          onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
         />
       </Box>
