@@ -1,4 +1,9 @@
-import React, { useState, FunctionComponent, useCallback } from 'react'
+import React, {
+  useState,
+  FunctionComponent,
+  useCallback,
+  useEffect,
+} from 'react'
 
 import Box from '@material-ui/core/Box'
 import TextField from '@material-ui/core/TextField'
@@ -35,6 +40,10 @@ const Glyphs: FunctionComponent<unknown> = () => {
     setInputText(str)
     if (str !== text) setText(str)
   }
+
+  useEffect(() => {
+    setInputText(text)
+  }, [text])
 
   return (
     <>
