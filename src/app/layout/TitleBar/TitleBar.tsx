@@ -60,23 +60,26 @@ const TitleBar: FunctionComponent<unknown> = () => {
   const { addProject } = worckSpace
   const project = worckSpace.currentProject
   const handleLoad = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (e.target?.files && e.target.files[0]) {
-      readFile(e.target.files[0]).then((buffer) => {
-        try {
-          if (buffer instanceof ArrayBuffer) addProject(decodeProject(buffer))
-        } catch (err) {
-          setToast({
-            open: true,
-            component: (
-              <Box display='flex' alignItems='center'>
-                <ErrorIcon />
-                {`${err.toString()}`}
-              </Box>
-            ),
-          })
-        }
-      })
-    }
+    if (!e.target?.files || !e.target.files[0]) return
+    const file = e.target.files[0]
+    const isText = /\.ltr$/.test(file.name)
+    console.log(isText)
+    readFile(file, isText).then((buffer) => {
+      try {
+        if (typeof buffer === 'string') console.log(JSON.parse(buffer))
+        else if (buffer) addProject(decodeProject(buffer))
+      } catch (err) {
+        setToast({
+          open: true,
+          component: (
+            <Box display='flex' alignItems='center'>
+              <ErrorIcon />
+              {`${err.toString()}`}
+            </Box>
+          ),
+        })
+      }
+    })
   }
 
   const handleNewProject = useCallback(
@@ -161,7 +164,7 @@ const TitleBar: FunctionComponent<unknown> = () => {
           ref={labelRef}
         >
           Open
-          <input type='file' onChange={handleLoad} accept='.sbf' hidden />
+          <input type='file' onChange={handleLoad} accept='.sbf,.ltr' hidden />
         </Button>
         <Button
           className={classes.btn}
