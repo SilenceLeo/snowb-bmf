@@ -76,8 +76,8 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
 
   if (shadow) {
     const blur = Math.ceil(shadow.blur * 1.5)
-    addX = Math.abs(shadow.offsetX) + blur
-    addY = Math.abs(shadow.offsetY) + blur
+    addX += Math.abs(shadow.offsetX) + blur
+    addY += Math.abs(shadow.offsetY) + blur
   }
 
   styleX += addX
