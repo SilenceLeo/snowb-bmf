@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import { useProject } from 'src/store/hooks'
+import { useProject, useProjectUi } from 'src/store/hooks'
 import GridInput from 'src/app/components/GridInput/GridInput'
 
 interface ExportButtonProps {
@@ -21,6 +21,7 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
 ) => {
   const { className, onSave } = props
   const project = useProject()
+  const { setShowPreview } = project.ui
   const { name } = project
   const [open, setOpen] = useState(false)
   const [val, setVal] = useState(0)
@@ -32,6 +33,7 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
   ])
 
   const handleClickOpen = () => {
+    setShowPreview(false)
     setOpen(true)
   }
 
