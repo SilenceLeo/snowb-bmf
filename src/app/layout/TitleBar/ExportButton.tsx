@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import { useProject, useProjectUi } from 'src/store/hooks'
+import { useProject } from 'src/store/hooks'
 import GridInput from 'src/app/components/GridInput/GridInput'
 
 interface ExportButtonProps {
