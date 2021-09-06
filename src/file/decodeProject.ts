@@ -1,5 +1,6 @@
 import { Project, Font } from 'src/store'
 import { Project as ProjectProto, IProject } from 'src/proto'
+import { Project as Project1000000 } from 'src/proto/1.0.0'
 import { Project as Project1000001 } from 'src/proto/1.0.1'
 import getVersionNumber from 'src/utils/getVersionNumber'
 import updateOldProject from './updateOldProject'
@@ -10,6 +11,7 @@ interface ProtoVersionMap {
 }
 
 const oldDecodeProto: ProtoVersionMap = {
+  1000000: Project1000000,
   1000001: Project1000001,
 }
 
