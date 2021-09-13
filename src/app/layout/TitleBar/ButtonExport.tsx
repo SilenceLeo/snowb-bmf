@@ -1,5 +1,11 @@
-import React, { useState, useEffect, FunctionComponent } from 'react'
+import React, {
+  useState,
+  useEffect,
+  FunctionComponent,
+  useCallback,
+} from 'react'
 import hotkeys from 'hotkeys-js'
+import { observer } from 'mobx-react'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -9,20 +15,20 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import { useProject } from 'src/store/hooks'
+import outputFile from 'src/file/outputFile'
 import GridInput from 'src/app/components/GridInput/GridInput'
 
-interface ExportButtonProps {
+interface ButtonExportProps {
   className?: string
-  onSave?: (config: { ext: string; type: string }) => void
 }
 
-const ExportButton: FunctionComponent<ExportButtonProps> = (
-  props: ExportButtonProps,
+const ButtonExport: FunctionComponent<ButtonExportProps> = (
+  props: ButtonExportProps,
 ) => {
-  const { className, onSave } = props
+  const { className } = props
   const project = useProject()
-  const { setShowPreview } = project.ui
-  const { name } = project
+  const { name, ui } = project
+  const { setShowPreview } = ui
   const [open, setOpen] = useState(false)
   const [val, setVal] = useState(0)
   const [list] = useState([
@@ -32,10 +38,10 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
     { id: 3, ext: 'text', type: 'text' },
   ])
 
-  const handleClickOpen = () => {
+  const handleOpen = useCallback(() => {
     setShowPreview(false)
     setOpen(true)
-  }
+  }, [setShowPreview])
 
   const handleClose = () => {
     setOpen(false)
@@ -49,29 +55,29 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
   ) => {
     setVal(e.target.value as number)
   }
-  const handleSave = () => {
-    if (onSave)
-      onSave({
-        ext: list[val].ext,
-        type: list[val].type,
-      })
+
+  const handleSave = useCallback(() => {
+    outputFile(project, {
+      ext: list[val].ext,
+      type: list[val].type,
+    })
     handleClose()
-  }
+  }, [list, project, val])
 
   useEffect(() => {
     hotkeys.unbind('ctrl+shift+s,command+shift+s')
-    hotkeys('ctrl+shift+s,command+shift+s', handleClickOpen)
+    hotkeys('ctrl+shift+s,command+shift+s', handleOpen)
     return () => {
       hotkeys.unbind('ctrl+shift+s,command+shift+s')
     }
-  }, [])
+  }, [handleOpen])
 
   return (
     <>
       <Button
         className={className}
         title='Export BitmapFont (⌘⇧ + S)'
-        onClick={handleClickOpen}
+        onClick={handleOpen}
       >
         Export
       </Button>
@@ -98,4 +104,4 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
   )
 }
 
-export default ExportButton
+export default observer(ButtonExport)
