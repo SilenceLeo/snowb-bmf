@@ -1,8 +1,19 @@
 import { Project, Font } from 'src/store'
-import proto, { IProject } from 'src/proto'
+import { Project as ProjectProto, IProject } from 'src/proto'
+import { Project as Project1000000 } from 'src/proto/1.0.0'
+import { Project as Project1000001 } from 'src/proto/1.0.1'
 import getVersionNumber from 'src/utils/getVersionNumber'
 import updateOldProject from './updateOldProject'
 import prefix from './prefix'
+
+interface ProtoVersionMap {
+  [key: number]: typeof ProjectProto
+}
+
+const oldDecodeProto: ProtoVersionMap = {
+  1000000: Project1000000,
+  1000001: Project1000001,
+}
 
 function toOriginBuffer(protoProject: IProject): Project {
   const project = { ...protoProject }
@@ -72,7 +83,7 @@ export default function decodeProject(buffer: ArrayBuffer): Project {
   if (buffer.byteLength < 17) throw new Error('error')
   const perfixBuffer = prefix()
   const perfixName = perfixBuffer.slice(0, perfixBuffer.byteLength - 3)
-  const latestVersionBuffer = perfixBuffer.slice(perfixBuffer.byteLength - 3)
+  // const latestVersionBuffer = perfixBuffer.slice(perfixBuffer.byteLength - 3)
   const u8 = new Uint8Array(buffer)
   const filePrefix = u8.slice(0, perfixBuffer.byteLength)
   const versionBuffer = filePrefix.slice(filePrefix.byteLength - 3)
@@ -81,13 +92,11 @@ export default function decodeProject(buffer: ArrayBuffer): Project {
     if (filePrefix[i] !== e) isSbf = false
   })
   if (!isSbf) throw new Error('unknow file')
-  const currentVersion = getVersionNumber(Array.from(latestVersionBuffer))
+  // const currentVersion = getVersionNumber(Array.from(latestVersionBuffer))
   const fileVersion = getVersionNumber(Array.from(versionBuffer))
 
-  const project = proto.Project.decode(u8.slice(filePrefix.byteLength))
+  const decodeProto = oldDecodeProto[fileVersion] || ProjectProto
+  const project = decodeProto.decode(u8.slice(filePrefix.byteLength))
 
-  if (fileVersion < currentVersion)
-    return toOriginBuffer(updateOldProject(project, fileVersion))
-
-  return toOriginBuffer(project)
+  return toOriginBuffer(updateOldProject(project, fileVersion))
 }

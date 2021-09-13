@@ -1,6 +1,6 @@
 import { saveAs } from 'file-saver'
 import { Project } from 'src/store'
-import proto, { IProject } from 'src/proto'
+import { Project as ProjectProto, IProject } from 'src/proto'
 
 import prefix from './prefix'
 
@@ -29,8 +29,8 @@ export default function saveProject(project: Project): void {
     )
   }
 
-  const protoProject = proto.Project.create((project as unknown) as IProject)
-  const projectBuffer = proto.Project.encode(protoProject).finish()
+  const protoProject = ProjectProto.create((project as unknown) as IProject)
+  const projectBuffer = ProjectProto.encode(protoProject).finish()
   const perfixBuffer = prefix()
 
   const buffer = new Uint8Array(

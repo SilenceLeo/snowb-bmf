@@ -21,6 +21,7 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
 ) => {
   const { className, onSave } = props
   const project = useProject()
+  const { setShowPreview } = project.ui
   const { name } = project
   const [open, setOpen] = useState(false)
   const [val, setVal] = useState(0)
@@ -32,6 +33,7 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
   ])
 
   const handleClickOpen = () => {
+    setShowPreview(false)
     setOpen(true)
   }
 

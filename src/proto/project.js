@@ -313,7 +313,7 @@ export const GradientColor = ($root.GradientColor = (() => {
     if (message.id != null && Object.hasOwnProperty.call(message, 'id'))
       writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.id)
     if (message.offset != null && Object.hasOwnProperty.call(message, 'offset'))
-      writer.uint32(/* id 2, wireType 0 =*/ 16).sint32(message.offset)
+      writer.uint32(/* id 2, wireType 5 =*/ 21).float(message.offset)
     if (message.color != null && Object.hasOwnProperty.call(message, 'color'))
       writer.uint32(/* id 3, wireType 2 =*/ 26).string(message.color)
     return writer
@@ -354,7 +354,7 @@ export const GradientColor = ($root.GradientColor = (() => {
           message.id = reader.int32()
           break
         case 2:
-          message.offset = reader.sint32()
+          message.offset = reader.float()
           break
         case 3:
           message.color = reader.string()
@@ -396,7 +396,7 @@ export const GradientColor = ($root.GradientColor = (() => {
     if (message.id != null && message.hasOwnProperty('id'))
       if (!$util.isInteger(message.id)) return 'id: integer expected'
     if (message.offset != null && message.hasOwnProperty('offset'))
-      if (!$util.isInteger(message.offset)) return 'offset: integer expected'
+      if (typeof message.offset !== 'number') return 'offset: number expected'
     if (message.color != null && message.hasOwnProperty('color'))
       if (!$util.isString(message.color)) return 'color: string expected'
     return null
@@ -414,7 +414,7 @@ export const GradientColor = ($root.GradientColor = (() => {
     if (object instanceof $root.GradientColor) return object
     let message = new $root.GradientColor()
     if (object.id != null) message.id = object.id | 0
-    if (object.offset != null) message.offset = object.offset | 0
+    if (object.offset != null) message.offset = Number(object.offset)
     if (object.color != null) message.color = String(object.color)
     return message
   }
@@ -439,7 +439,10 @@ export const GradientColor = ($root.GradientColor = (() => {
     if (message.id != null && message.hasOwnProperty('id'))
       object.id = message.id
     if (message.offset != null && message.hasOwnProperty('offset'))
-      object.offset = message.offset
+      object.offset =
+        options.json && !isFinite(message.offset)
+          ? String(message.offset)
+          : message.offset
     if (message.color != null && message.hasOwnProperty('color'))
       object.color = message.color
     return object

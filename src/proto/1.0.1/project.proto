@@ -11,7 +11,7 @@ message Metric {
 message GradientColor {
   int32 id = 1;
 
-  float offset = 2;
+  sint32 offset = 2;
 
   string color = 3;
 }
