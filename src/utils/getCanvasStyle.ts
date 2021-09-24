@@ -24,6 +24,9 @@ interface Config {
   patternTexture: PatternTexture
 }
 
+const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+const matrix = svg.createSVGMatrix()
+
 export default function getCanvasStyle(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -67,17 +70,9 @@ export default function getCanvasStyle(
   const { image, repetition, scale } = config.patternTexture
   if (!image) return 'rgba(0,0,0,0)'
 
-  if (scale === 1)
-    return ctx.createPattern(image, repetition) || 'rgba(0,0,0,0)'
-
-  const { naturalWidth, naturalHeight } = image
-  const canvas: HTMLCanvasElement = document.createElement('canvas')
-  canvas.width = Math.ceil(naturalWidth * scale)
-  canvas.height = Math.ceil(naturalHeight * scale)
-  const textureCtx = canvas.getContext('2d')
-
-  if (!textureCtx) return 'rgba(0,0,0,0)'
-
-  textureCtx.drawImage(image, 0, 0, canvas.width, canvas.height)
-  return ctx.createPattern(canvas, repetition) || 'rgba(0,0,0,0)'
+  const pattern = ctx.createPattern(image, repetition)
+  if (!pattern) return 'rgba(0,0,0,0)'
+  // TODO: Add trim translate and rotate.
+  pattern.setTransform(matrix.scale(scale).translate(x, y))
+  return pattern
 }

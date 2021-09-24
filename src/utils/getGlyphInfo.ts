@@ -72,7 +72,7 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
   let addX = lineWidth
   let addY = lineWidth
   let styleX = (width - font.size) / 2
-  let styleY = (height - font.size) / 2
+  let styleY = trimOffsetTop
 
   if (shadow) {
     const blur = Math.ceil(shadow.blur * 1.5)
