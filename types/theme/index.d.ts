@@ -1,7 +1,8 @@
 import { CSSProperties } from '@material-ui/core/styles/withStyles'
-import { Theme } from '@material-ui/core/styles/createMuiTheme'
+// import { Theme } from '@material-ui/core/styles/createMuiTheme'
+// import { Theme } from '@material-ui/core/styles/createTheme'
 // import { Breakpoint } from '@material-ui/core/styles/createBreakpoints'
-import { TypeBackground } from '@material-ui/core/styles/createPalette'
+// import { TypeBackground } from '@material-ui/core/styles/createPalette'
 
 declare module '@material-ui/core/styles/createPalette' {
   interface TypeBackground {
@@ -11,7 +12,7 @@ declare module '@material-ui/core/styles/createPalette' {
   }
 }
 
-declare module '@material-ui/core/styles/createMuiTheme' {
+declare module '@material-ui/core/styles/createTheme' {
   interface Theme {
     bgPixel: CSSProperties
   }

@@ -70,7 +70,7 @@ const TitleBar: FunctionComponent<unknown> = () => {
             component: (
               <Box display='flex' alignItems='center'>
                 <ErrorIcon />
-                {`${err.toString()}`}
+                {`${(err as Error).toString()}`}
               </Box>
             ),
           })
