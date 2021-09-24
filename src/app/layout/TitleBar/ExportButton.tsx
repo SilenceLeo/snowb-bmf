@@ -1,4 +1,9 @@
-import React, { useState, useEffect, FunctionComponent } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  FunctionComponent,
+} from 'react'
 import hotkeys from 'hotkeys-js'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -32,10 +37,10 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
     { id: 3, ext: 'text', type: 'text' },
   ])
 
-  const handleClickOpen = () => {
+  const handleClickOpen = useCallback(() => {
     setShowPreview(false)
     setOpen(true)
-  }
+  }, [setShowPreview])
 
   const handleClose = () => {
     setOpen(false)
@@ -64,7 +69,7 @@ const ExportButton: FunctionComponent<ExportButtonProps> = (
     return () => {
       hotkeys.unbind('ctrl+shift+s,command+shift+s')
     }
-  }, [])
+  }, [handleClickOpen])
 
   return (
     <>
