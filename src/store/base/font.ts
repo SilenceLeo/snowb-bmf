@@ -3,10 +3,18 @@ import getTextBaselines from 'src/utils/getTextBaselines'
 import { parse, Font as OpenType } from 'opentype.js'
 import updateFontFace from 'src/utils/updateFontFace'
 
+interface FontResource {
+  font: ArrayBuffer
+  family: string
+  opentype: OpenType
+}
+
 class Font {
   @observable.ref font: ArrayBuffer | null = null
 
   @observable family: string = 'sans-serif'
+
+  @observable fonts: FontResource[] = []
 
   @observable size: number
 
@@ -98,6 +106,34 @@ class Font {
         this.updateBaseines()
       })
     })
+  }
+
+  @action.bound addFont(font: ArrayBuffer): Promise<void> {
+    let opentype: OpenType
+    try {
+      opentype = parse(font, { lowMemory: true })
+    } catch (e) {
+      return Promise.resolve()
+    }
+    const { names } = opentype
+    const family = names.postScriptName[Object.keys(names.postScriptName)[0]]
+    const url = URL.createObjectURL(new Blob([font]))
+    return updateFontFace(family, url).then(() => {
+      runInAction(() => {
+        this.fonts.push({
+          font,
+          family,
+          opentype,
+        })
+        this.updateBaseines()
+      })
+    })
+  }
+
+  @action.bound removeFont(fontResource: FontResource) {
+    const idx = this.fonts.indexOf(fontResource)
+    if (idx === -1) return
+    this.fonts.splice(idx, 1)
   }
 
   @action.bound setSize(size: number): void {
