@@ -21,11 +21,11 @@ const useStyles = makeStyles(({ zIndex, spacing }) =>
       fontWeight: 'bolder',
       marginRight: spacing(4),
     },
-    // appNameSup: {
-    //   fontWeight: 'lighter',
-    //   fontSize: '0.5em',
-    //   marginLeft: '0.5rem',
-    // },
+    appNameSup: {
+      fontWeight: 'lighter',
+      fontSize: '0.5em',
+      marginLeft: '0.5rem',
+    },
     btn: {
       textTransform: 'none',
     },
@@ -45,7 +45,7 @@ const TitleBar: FunctionComponent<unknown> = () => {
     >
       <Typography variant='h1' className={classes.appName}>
         SnowB BMF
-        {/* <sup className={classes.appNameSup}>BETA</sup> */}
+        <sup className={classes.appNameSup}>BETA</sup>
       </Typography>
       <Box flex='auto' paddingX={4}>
         <ButtonNew className={classes.btn} />

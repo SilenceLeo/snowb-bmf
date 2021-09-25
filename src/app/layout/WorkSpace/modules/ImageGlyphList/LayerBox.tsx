@@ -153,7 +153,7 @@ const LayerBox: FunctionComponent<unknown> = () => {
             <Grid item>
               <Typography>Image Glyph List</Typography>
             </Grid>
-            <Grid item xs container justify='center'>
+            <Grid item xs container justifyContent='center'>
               <Button
                 component='label'
                 color='primary'

@@ -1,8 +1,8 @@
 import React, {
   useState,
   useEffect,
-  FunctionComponent,
   useCallback,
+  FunctionComponent,
 } from 'react'
 import hotkeys from 'hotkeys-js'
 import { observer } from 'mobx-react'

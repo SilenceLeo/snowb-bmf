@@ -39,6 +39,7 @@ function toOriginBuffer(protoProject: IProject): Project {
           if (glyphImage && glyphImage.kerning && glyphImage.kerning[key])
             imgKerning.set(key, glyphImage.kerning[key] || 0)
         })
+        glyphImage.kerning = imgKerning as {}
       }
     })
 
@@ -62,21 +63,21 @@ function toOriginBuffer(protoProject: IProject): Project {
 
   // fill
   if (project?.style?.fill?.patternTexture?.buffer) {
-    project.style.fill.patternTexture.buffer = project.style.fill.patternTexture.buffer.slice()
-      .buffer as Uint8Array
+    project.style.fill.patternTexture.buffer =
+      project.style.fill.patternTexture.buffer.slice().buffer as Uint8Array
   }
 
   // stroke
   if (project?.style?.stroke?.patternTexture?.buffer) {
-    project.style.stroke.patternTexture.buffer = project.style.stroke.patternTexture.buffer.slice()
-      .buffer as Uint8Array
+    project.style.stroke.patternTexture.buffer =
+      project.style.stroke.patternTexture.buffer.slice().buffer as Uint8Array
   }
 
-  return ({
+  return {
     ...project,
     glyphs: map,
     glyphImages: project.glyphImages || [],
-  } as unknown) as Project
+  } as unknown as Project
 }
 
 export default function decodeProject(buffer: ArrayBuffer): Project {

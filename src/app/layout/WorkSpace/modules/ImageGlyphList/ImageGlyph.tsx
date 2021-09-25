@@ -81,7 +81,7 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
     <Paper variant='outlined' className={classes.root}>
       <img className={classes.image} src={glyph.src} alt={glyph.fileName} />
       <Grid container direction='column' className={classes.actions}>
-        <Grid item container justify='space-between' alignItems='center'>
+        <Grid item container justifyContent='space-between' alignItems='center'>
           <Checkbox
             checked={selected}
             size='small'
