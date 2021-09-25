@@ -1,9 +1,9 @@
-import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles'
+import { createTheme, responsiveFontSizes } from '@material-ui/core/styles'
 
 import props from './props'
 import overrides from './overrides'
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     type: 'dark',
     primary: { main: '#444' },

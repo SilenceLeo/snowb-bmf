@@ -24,7 +24,7 @@ const GridInput: FunctionComponent<GridInputProps> = (
       container
       spacing={2}
       wrap='nowrap'
-      justify='center'
+      justifyContent='center'
       alignItems='center'
     >
       <Grid item xs={4}>
