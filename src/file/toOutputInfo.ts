@@ -83,7 +83,7 @@ export default function toOutputInfo(project: Project): BMFont {
     fontScale = (1 / opentype.unitsPerEm) * size
   }
   const info: BMFontInfo = {
-    face: style.font.family,
+    face: style.font.mainFamily,
     size: style.font.size,
     bold: 0,
     italic: 0,

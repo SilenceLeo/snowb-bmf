@@ -1310,213 +1310,13 @@ export const Fill = ($root.Fill = (() => {
   return Fill
 })())
 
-export const FontResource = ($root.FontResource = (() => {
-  /**
-   * Properties of a FontResource.
-   * @exports IFontResource
-   * @interface IFontResource
-   * @property {Uint8Array|null} [font] FontResource font
-   */
-
-  /**
-   * Constructs a new FontResource.
-   * @exports FontResource
-   * @classdesc Represents a FontResource.
-   * @implements IFontResource
-   * @constructor
-   * @param {IFontResource=} [properties] Properties to set
-   */
-  function FontResource(properties) {
-    if (properties)
-      for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-        if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
-  }
-
-  /**
-   * FontResource font.
-   * @member {Uint8Array} font
-   * @memberof FontResource
-   * @instance
-   */
-  FontResource.prototype.font = $util.newBuffer([])
-
-  /**
-   * Creates a new FontResource instance using the specified properties.
-   * @function create
-   * @memberof FontResource
-   * @static
-   * @param {IFontResource=} [properties] Properties to set
-   * @returns {FontResource} FontResource instance
-   */
-  FontResource.create = function create(properties) {
-    return new FontResource(properties)
-  }
-
-  /**
-   * Encodes the specified FontResource message. Does not implicitly {@link FontResource.verify|verify} messages.
-   * @function encode
-   * @memberof FontResource
-   * @static
-   * @param {IFontResource} message FontResource message or plain object to encode
-   * @param {$protobuf.Writer} [writer] Writer to encode to
-   * @returns {$protobuf.Writer} Writer
-   */
-  FontResource.encode = function encode(message, writer) {
-    if (!writer) writer = $Writer.create()
-    if (message.font != null && Object.hasOwnProperty.call(message, 'font'))
-      writer.uint32(/* id 1, wireType 2 =*/ 10).bytes(message.font)
-    return writer
-  }
-
-  /**
-   * Encodes the specified FontResource message, length delimited. Does not implicitly {@link FontResource.verify|verify} messages.
-   * @function encodeDelimited
-   * @memberof FontResource
-   * @static
-   * @param {IFontResource} message FontResource message or plain object to encode
-   * @param {$protobuf.Writer} [writer] Writer to encode to
-   * @returns {$protobuf.Writer} Writer
-   */
-  FontResource.encodeDelimited = function encodeDelimited(message, writer) {
-    return this.encode(message, writer).ldelim()
-  }
-
-  /**
-   * Decodes a FontResource message from the specified reader or buffer.
-   * @function decode
-   * @memberof FontResource
-   * @static
-   * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-   * @param {number} [length] Message length if known beforehand
-   * @returns {FontResource} FontResource
-   * @throws {Error} If the payload is not a reader or valid buffer
-   * @throws {$protobuf.util.ProtocolError} If required fields are missing
-   */
-  FontResource.decode = function decode(reader, length) {
-    if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
-    let end = length === undefined ? reader.len : reader.pos + length,
-      message = new $root.FontResource()
-    while (reader.pos < end) {
-      let tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.font = reader.bytes()
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  }
-
-  /**
-   * Decodes a FontResource message from the specified reader or buffer, length delimited.
-   * @function decodeDelimited
-   * @memberof FontResource
-   * @static
-   * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-   * @returns {FontResource} FontResource
-   * @throws {Error} If the payload is not a reader or valid buffer
-   * @throws {$protobuf.util.ProtocolError} If required fields are missing
-   */
-  FontResource.decodeDelimited = function decodeDelimited(reader) {
-    if (!(reader instanceof $Reader)) reader = new $Reader(reader)
-    return this.decode(reader, reader.uint32())
-  }
-
-  /**
-   * Verifies a FontResource message.
-   * @function verify
-   * @memberof FontResource
-   * @static
-   * @param {Object.<string,*>} message Plain object to verify
-   * @returns {string|null} `null` if valid, otherwise the reason why it is not
-   */
-  FontResource.verify = function verify(message) {
-    if (typeof message !== 'object' || message === null)
-      return 'object expected'
-    if (message.font != null && message.hasOwnProperty('font'))
-      if (
-        !(
-          (message.font && typeof message.font.length === 'number') ||
-          $util.isString(message.font)
-        )
-      )
-        return 'font: buffer expected'
-    return null
-  }
-
-  /**
-   * Creates a FontResource message from a plain object. Also converts values to their respective internal types.
-   * @function fromObject
-   * @memberof FontResource
-   * @static
-   * @param {Object.<string,*>} object Plain object
-   * @returns {FontResource} FontResource
-   */
-  FontResource.fromObject = function fromObject(object) {
-    if (object instanceof $root.FontResource) return object
-    let message = new $root.FontResource()
-    if (object.font != null)
-      if (typeof object.font === 'string')
-        $util.base64.decode(
-          object.font,
-          (message.font = $util.newBuffer($util.base64.length(object.font))),
-          0,
-        )
-      else if (object.font.length) message.font = object.font
-    return message
-  }
-
-  /**
-   * Creates a plain object from a FontResource message. Also converts values to other types if specified.
-   * @function toObject
-   * @memberof FontResource
-   * @static
-   * @param {FontResource} message FontResource
-   * @param {$protobuf.IConversionOptions} [options] Conversion options
-   * @returns {Object.<string,*>} Plain object
-   */
-  FontResource.toObject = function toObject(message, options) {
-    if (!options) options = {}
-    let object = {}
-    if (options.defaults)
-      if (options.bytes === String) object.font = ''
-      else {
-        object.font = []
-        if (options.bytes !== Array) object.font = $util.newBuffer(object.font)
-      }
-    if (message.font != null && message.hasOwnProperty('font'))
-      object.font =
-        options.bytes === String
-          ? $util.base64.encode(message.font, 0, message.font.length)
-          : options.bytes === Array
-          ? Array.prototype.slice.call(message.font)
-          : message.font
-    return object
-  }
-
-  /**
-   * Converts this FontResource to JSON.
-   * @function toJSON
-   * @memberof FontResource
-   * @instance
-   * @returns {Object.<string,*>} JSON object
-   */
-  FontResource.prototype.toJSON = function toJSON() {
-    return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
-  }
-
-  return FontResource
-})())
-
 export const Font = ($root.Font = (() => {
   /**
    * Properties of a Font.
    * @exports IFont
    * @interface IFont
-   * @property {Array.<IFontResource>|null} [fonts] Font fonts
+   * @property {Uint8Array|null} [font] Font font
+   * @property {string|null} [family] Font family
    * @property {number|null} [size] Font size
    * @property {number|null} [lineHeight] Font lineHeight
    */
@@ -1530,19 +1330,26 @@ export const Font = ($root.Font = (() => {
    * @param {IFont=} [properties] Properties to set
    */
   function Font(properties) {
-    this.fonts = []
     if (properties)
       for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
         if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
   }
 
   /**
-   * Font fonts.
-   * @member {Array.<IFontResource>} fonts
+   * Font font.
+   * @member {Uint8Array} font
    * @memberof Font
    * @instance
    */
-  Font.prototype.fonts = $util.emptyArray
+  Font.prototype.font = $util.newBuffer([])
+
+  /**
+   * Font family.
+   * @member {string} family
+   * @memberof Font
+   * @instance
+   */
+  Font.prototype.family = ''
 
   /**
    * Font size.
@@ -1583,19 +1390,17 @@ export const Font = ($root.Font = (() => {
    */
   Font.encode = function encode(message, writer) {
     if (!writer) writer = $Writer.create()
-    if (message.fonts != null && message.fonts.length)
-      for (let i = 0; i < message.fonts.length; ++i)
-        $root.FontResource.encode(
-          message.fonts[i],
-          writer.uint32(/* id 1, wireType 2 =*/ 10).fork(),
-        ).ldelim()
+    if (message.font != null && Object.hasOwnProperty.call(message, 'font'))
+      writer.uint32(/* id 1, wireType 2 =*/ 10).bytes(message.font)
+    if (message.family != null && Object.hasOwnProperty.call(message, 'family'))
+      writer.uint32(/* id 2, wireType 2 =*/ 18).string(message.family)
     if (message.size != null && Object.hasOwnProperty.call(message, 'size'))
-      writer.uint32(/* id 2, wireType 0 =*/ 16).int32(message.size)
+      writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.size)
     if (
       message.lineHeight != null &&
       Object.hasOwnProperty.call(message, 'lineHeight')
     )
-      writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.lineHeight)
+      writer.uint32(/* id 4, wireType 0 =*/ 32).int32(message.lineHeight)
     return writer
   }
 
@@ -1631,13 +1436,15 @@ export const Font = ($root.Font = (() => {
       let tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          if (!(message.fonts && message.fonts.length)) message.fonts = []
-          message.fonts.push($root.FontResource.decode(reader, reader.uint32()))
+          message.font = reader.bytes()
           break
         case 2:
-          message.size = reader.int32()
+          message.family = reader.string()
           break
         case 3:
+          message.size = reader.int32()
+          break
+        case 4:
           message.lineHeight = reader.int32()
           break
         default:
@@ -1674,13 +1481,16 @@ export const Font = ($root.Font = (() => {
   Font.verify = function verify(message) {
     if (typeof message !== 'object' || message === null)
       return 'object expected'
-    if (message.fonts != null && message.hasOwnProperty('fonts')) {
-      if (!Array.isArray(message.fonts)) return 'fonts: array expected'
-      for (let i = 0; i < message.fonts.length; ++i) {
-        let error = $root.FontResource.verify(message.fonts[i])
-        if (error) return 'fonts.' + error
-      }
-    }
+    if (message.font != null && message.hasOwnProperty('font'))
+      if (
+        !(
+          (message.font && typeof message.font.length === 'number') ||
+          $util.isString(message.font)
+        )
+      )
+        return 'font: buffer expected'
+    if (message.family != null && message.hasOwnProperty('family'))
+      if (!$util.isString(message.family)) return 'family: string expected'
     if (message.size != null && message.hasOwnProperty('size'))
       if (!$util.isInteger(message.size)) return 'size: integer expected'
     if (message.lineHeight != null && message.hasOwnProperty('lineHeight'))
@@ -1700,16 +1510,15 @@ export const Font = ($root.Font = (() => {
   Font.fromObject = function fromObject(object) {
     if (object instanceof $root.Font) return object
     let message = new $root.Font()
-    if (object.fonts) {
-      if (!Array.isArray(object.fonts))
-        throw TypeError('.Font.fonts: array expected')
-      message.fonts = []
-      for (let i = 0; i < object.fonts.length; ++i) {
-        if (typeof object.fonts[i] !== 'object')
-          throw TypeError('.Font.fonts: object expected')
-        message.fonts[i] = $root.FontResource.fromObject(object.fonts[i])
-      }
-    }
+    if (object.font != null)
+      if (typeof object.font === 'string')
+        $util.base64.decode(
+          object.font,
+          (message.font = $util.newBuffer($util.base64.length(object.font))),
+          0,
+        )
+      else if (object.font.length) message.font = object.font
+    if (object.family != null) message.family = String(object.family)
     if (object.size != null) message.size = object.size | 0
     if (object.lineHeight != null) message.lineHeight = object.lineHeight | 0
     return message
@@ -1727,16 +1536,25 @@ export const Font = ($root.Font = (() => {
   Font.toObject = function toObject(message, options) {
     if (!options) options = {}
     let object = {}
-    if (options.arrays || options.defaults) object.fonts = []
     if (options.defaults) {
+      if (options.bytes === String) object.font = ''
+      else {
+        object.font = []
+        if (options.bytes !== Array) object.font = $util.newBuffer(object.font)
+      }
+      object.family = ''
       object.size = 0
       object.lineHeight = 0
     }
-    if (message.fonts && message.fonts.length) {
-      object.fonts = []
-      for (let j = 0; j < message.fonts.length; ++j)
-        object.fonts[j] = $root.FontResource.toObject(message.fonts[j], options)
-    }
+    if (message.font != null && message.hasOwnProperty('font'))
+      object.font =
+        options.bytes === String
+          ? $util.base64.encode(message.font, 0, message.font.length)
+          : options.bytes === Array
+          ? Array.prototype.slice.call(message.font)
+          : message.font
+    if (message.family != null && message.hasOwnProperty('family'))
+      object.family = message.family
     if (message.size != null && message.hasOwnProperty('size'))
       object.size = message.size
     if (message.lineHeight != null && message.hasOwnProperty('lineHeight'))

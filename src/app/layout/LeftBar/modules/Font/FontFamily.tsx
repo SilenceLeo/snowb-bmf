@@ -1,5 +1,6 @@
 import React, { useState, FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
+import { useSnackbar } from 'notistack'
 
 import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List'
@@ -17,6 +18,7 @@ import readFile from 'src/utils/readFile'
 const FontFamily: FunctionComponent<unknown> = () => {
   const [loading, setLoading] = useState(false)
   const { fonts, addFont, removeFont } = useFont()
+  const { enqueueSnackbar } = useSnackbar()
 
   const hanleUploadFile = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -45,7 +47,10 @@ const FontFamily: FunctionComponent<unknown> = () => {
 
       addFont(arrBuf)
         .then(() => setLoading(false))
-        .catch(() => setLoading(false))
+        .catch((err) => {
+          setLoading(false)
+          enqueueSnackbar(err.message, { variant: 'error' })
+        })
     })
   }
 

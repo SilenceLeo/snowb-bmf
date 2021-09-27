@@ -1,7 +1,8 @@
 import React from 'react'
-import { ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import { Provider } from 'mobx-react'
+import { SnackbarProvider } from 'notistack'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import { ThemeProvider } from '@material-ui/core/styles'
 
 import createStore from 'src/store'
 import theme from './theme'
@@ -13,7 +14,14 @@ function App(): JSX.Element {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Provider {...createStore()}>
-        <Wrap />
+        <SnackbarProvider
+          anchorOrigin={{
+            horizontal: 'center',
+            vertical: 'top',
+          }}
+        >
+          <Wrap />
+        </SnackbarProvider>
       </Provider>
     </ThemeProvider>
   )

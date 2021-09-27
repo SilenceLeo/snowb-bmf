@@ -9,11 +9,9 @@ interface FontResource {
   opentype: OpenType
 }
 
+const DEFAULT_FAMILY = 'sans-serif'
+
 class Font {
-  @observable.ref font: ArrayBuffer | null = null
-
-  @observable family: string = 'sans-serif'
-
   @observable fonts: FontResource[] = []
 
   @observable size: number
@@ -32,7 +30,27 @@ class Font {
 
   @observable bottom = 0
 
-  @observable.ref opentype: OpenType | null = null
+  @computed get mainFont() {
+    if (this.fonts.length > 0) return this.fonts[0]
+    return null
+  }
+
+  @computed get mainFamily() {
+    if (this.mainFont) return this.mainFont.family
+    return DEFAULT_FAMILY
+  }
+
+  @computed get opentype() {
+    if (this.mainFont) return this.mainFont.opentype
+    return null
+  }
+
+  @computed get family(): string {
+    return (
+      this.fonts.map((fontResource) => `"${fontResource.family}"`).join(',') ||
+      DEFAULT_FAMILY
+    )
+  }
 
   @computed get minBaseLine() {
     const min = Math.min(
@@ -60,17 +78,11 @@ class Font {
     return max
   }
 
-  @computed get hasFont() {
-    if (this.font && this.opentype && this.family !== 'sans-serif') return true
-    return false
-  }
-
   constructor(font: Partial<Font> = {}) {
     this.size = font.size || 72
     this.lineHeight = font.lineHeight || 1.25
-
-    if (font.font && font.font.byteLength) {
-      this.setFont(font.font)
+    if (font.fonts && font.fonts.length) {
+      font.fonts.forEach((fontResource) => this.addFont(fontResource.font))
     } else {
       this.updateBaseines()
     }
@@ -90,24 +102,6 @@ class Font {
     this.bottom = bls.bottom
   }
 
-  @action.bound setFont(buffer: ArrayBuffer): Promise<void> {
-    try {
-      this.opentype = parse(buffer, { lowMemory: true })
-    } catch (e) {
-      return Promise.resolve()
-    }
-    const { names } = this.opentype
-    const fontName = names.postScriptName[Object.keys(names.postScriptName)[0]]
-    const url = URL.createObjectURL(new Blob([buffer]))
-    return updateFontFace(fontName, url).then(() => {
-      runInAction(() => {
-        this.family = fontName
-        this.font = buffer
-        this.updateBaseines()
-      })
-    })
-  }
-
   @action.bound addFont(font: ArrayBuffer): Promise<void> {
     let opentype: OpenType
     try {
@@ -117,6 +111,12 @@ class Font {
     }
     const { names } = opentype
     const family = names.postScriptName[Object.keys(names.postScriptName)[0]]
+    const hasFont = this.fonts.find(
+      (fontResource) => fontResource.family === family,
+    )
+    if (hasFont) {
+      return Promise.reject(new Error('Font already exists.'))
+    }
     const url = URL.createObjectURL(new Blob([font]))
     return updateFontFace(family, url).then(() => {
       runInAction(() => {
@@ -143,13 +143,6 @@ class Font {
 
   @action.bound setLineHeight(lineHeight: number): void {
     this.lineHeight = lineHeight
-  }
-
-  @action.bound clearFont(): void {
-    this.font = null
-    this.opentype = null
-    this.family = 'sans-serif'
-    this.updateBaseines()
   }
 }
 

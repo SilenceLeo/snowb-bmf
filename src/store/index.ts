@@ -13,8 +13,11 @@ export interface Store {
   workspace: Workspace
 }
 
+let store: Store
+
 export default function createStore(): Store {
-  return { ui: new Ui(), workspace: new Workspace() }
+  if (!store) store = { ui: new Ui(), workspace: new Workspace() }
+  return store
 }
 
 export type TStore = ReturnType<typeof createStore>

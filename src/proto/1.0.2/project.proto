@@ -48,16 +48,14 @@ message Fill {
   string lineJoin = 7;
 }
 
-message FontResource {
-  bytes font = 1;
-}
-
 message Font {
-  repeated FontResource fonts = 1;
+  optional bytes font = 1;
 
-  int32 size = 2;
+  string family = 2;
 
-  int32 lineHeight = 3;
+  int32 size = 3;
+
+  int32 lineHeight = 4;
 }
 
 message GlyphFont {

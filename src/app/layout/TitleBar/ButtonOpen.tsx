@@ -1,9 +1,7 @@
-import React, { useState, FunctionComponent, useRef } from 'react'
+import React, { FunctionComponent, useRef } from 'react'
 import { observer } from 'mobx-react'
-import Box from '@material-ui/core/Box'
+import { useSnackbar } from 'notistack'
 import Button from '@material-ui/core/Button'
-import ErrorIcon from '@material-ui/icons/Error'
-import Snackbar from '@material-ui/core/Snackbar'
 
 import { useWorkspace } from 'src/store/hooks'
 
@@ -18,10 +16,8 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
   props: ButtonOpenProps,
 ) => {
   const { className } = props
-  const [toast, setToast] = useState<{
-    open: boolean
-    component: React.ReactNode | null
-  }>({ open: false, component: null })
+  const { enqueueSnackbar } = useSnackbar()
+
   const worckSpace = useWorkspace()
   const labelRef = useRef<HTMLLabelElement>(null)
   const { addProject } = worckSpace
@@ -36,46 +32,21 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
         if (typeof buffer === 'string') console.log(JSON.parse(buffer))
         else if (buffer) addProject(decodeProject(buffer))
       } catch (err) {
-        setToast({
-          open: true,
-          component: (
-            <Box display='flex' alignItems='center'>
-              <ErrorIcon />
-              {`${(err as Error).toString()}`}
-            </Box>
-          ),
-        })
-      }
-    })
-  }
-
-  const handleToastClose = () => {
-    setToast((t) => {
-      return {
-        ...t,
-        open: false,
+        enqueueSnackbar((err as Error).toString(), { variant: 'error' })
       }
     })
   }
 
   return (
-    <>
-      <Button
-        className={className}
-        title='Open Project (⌘ + O)'
-        component='label'
-        ref={labelRef}
-      >
-        Open
-        <input type='file' onChange={handleLoad} accept='.sbf,.ltr' hidden />
-      </Button>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={toast.open}
-        onClose={handleToastClose}
-        message={toast.component}
-      />
-    </>
+    <Button
+      className={className}
+      title='Open Project (⌘ + O)'
+      component='label'
+      ref={labelRef}
+    >
+      Open
+      <input type='file' onChange={handleLoad} accept='.sbf,.ltr' hidden />
+    </Button>
   )
 }
 
