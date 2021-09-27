@@ -1,6 +1,5 @@
 import formatStr from 'src/utils/formatStr'
-
-import { BMFont } from './toOutputInfo'
+import { Output, FontToString } from '../type'
 
 const TEMP_INFO = `info face="$face$" size=$size$ bold=$bold$ italic=$italic$ charset=$charset$ unicode=$unicode$ stretchH=$stretchH$ smooth=$smooth$ aa=$aa$ padding=$padding$ spacing=$spacing$\n`
 const TEMP_COMMON = `common lineHeight=$lineHeight$ base=$base$ scaleW=$scaleW$ scaleH=$scaleH$ pages=$pages$ packed=$packed$\n`
@@ -10,7 +9,11 @@ const TEMP_CHAR = `char id=$id$ x=$x$ y=$y$ width=$width$ height=$height$ xoffse
 const TEMP_KERNINGS = `kernings count=$count$\n`
 const TEMP_KERNING = `kerning first=$first$ second=$second$ amount=$amount$\n`
 
-export default function getTextString(bmfont: BMFont): string {
+const type = 'TEXT'
+
+const exts = ['fnt', 'txt']
+
+const getString: FontToString = (bmfont) => {
   const { info, common, pages, chars, kernings } = bmfont
 
   let str = ''
@@ -39,3 +42,7 @@ export default function getTextString(bmfont: BMFont): string {
 
   return str
 }
+
+const outputConfig: Output = { type, exts, getString }
+
+export default outputConfig

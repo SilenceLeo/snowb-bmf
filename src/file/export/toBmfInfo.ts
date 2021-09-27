@@ -1,74 +1,15 @@
 import { Project } from 'src/store'
-
-interface BMFontInfo extends Record<string, unknown> {
-  face: string
-  size: number
-  bold: number
-  italic: number
-  charset: string
-  unicode: number
-  stretchH: number
-  smooth: number
-  aa: number
-  padding: number[]
-  spacing: number[]
-}
-
-interface BMFontCommon extends Record<string, unknown> {
-  lineHeight: number
-  base: number
-  scaleW: number
-  scaleH: number
-  pages: number
-  packed: number
-}
-
-interface BMFontPage extends Record<string, unknown> {
-  id: number
-  file: string
-}
-
-export interface BMFontChar extends Record<string, unknown> {
-  letter: string
-  id: number
-  source: HTMLImageElement | HTMLCanvasElement | null
-  x: number
-  y: number
-  width: number
-  height: number
-  xoffset: number
-  yoffset: number
-  xadvance: number
-  page: number
-  chnl: number
-}
-
-interface BMFontChars extends Record<string, unknown> {
-  count: number
-  list: BMFontChar[]
-}
-
-export interface BMFontKerning extends Record<string, unknown> {
-  first: number
-  second: number
-  amount: number
-}
-
-interface BMFontKernings extends Record<string, unknown> {
-  count: number
-  list: BMFontKerning[]
-}
-
-export interface BMFont {
-  info: BMFontInfo
-  common: BMFontCommon
-  pages: BMFontPage[]
-  chars: BMFontChars
-  kernings: BMFontKernings
-}
+import {
+  BMFont,
+  BMFontInfo,
+  BMFontPage,
+  BMFontChars,
+  BMFontCommon,
+  BMFontKernings,
+} from './type'
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
-export default function toOutputInfo(project: Project): BMFont {
+export default function toBmfInfo(project: Project): BMFont {
   const {
     name,
     style,

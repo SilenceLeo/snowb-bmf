@@ -5,10 +5,11 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useProject } from 'src/store/hooks'
 import useWheel from 'src/app/hooks/useWheel'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
-import toOutputInfo, { BMFontChar } from 'src/file/toOutputInfo'
+import { BMFontChar, toBmfInfo } from 'src/file/export'
 
 import getPreviewCanvas, { PreviewObject } from './getPreviewCanvas'
 import LetterList from './LetterList'
+import { autorun } from 'mobx'
 
 interface StyleProps {
   width: number
@@ -184,32 +185,33 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   ])
 
   useEffect(() => {
-    if (!canvasRef.current || isPacking) return
+    autorun(() => {
+      if (!canvasRef.current || isPacking) return
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
 
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const { chars, kernings } = toOutputInfo(project)
-    const kerningMap: Map<number, Map<number, number>> = new Map()
-    kernings.list.forEach(({ first, second, amount }) => {
-      if (!kerningMap.has(first)) kerningMap.set(first, new Map())
-      const k = kerningMap.get(first)
-      k?.set(second, amount)
+      const { chars, kernings } = toBmfInfo(project)
+      const kerningMap: Map<number, Map<number, number>> = new Map()
+      kernings.list.forEach(({ first, second, amount }) => {
+        if (!kerningMap.has(first)) kerningMap.set(first, new Map())
+        const k = kerningMap.get(first)
+        k?.set(second, amount)
+      })
+      const charMap: Map<string, BMFontChar> = new Map()
+      chars.list.forEach((char) => {
+        charMap.set(char.letter, char)
+      })
+      const lh = size * lineHeight
+      const obj = getPreviewCanvas(
+        ui.previewText,
+        charMap,
+        kerningMap,
+        lh,
+        maxBaseLine - minBaseLine,
+      )
+      setData(() => obj)
     })
-    const charMap: Map<string, BMFontChar> = new Map()
-    chars.list.forEach((char) => {
-      charMap.set(char.letter, char)
-    })
-    const lh = size * lineHeight
-    const obj = getPreviewCanvas(
-      ui.previewText,
-      charMap,
-      kerningMap,
-      lh,
-      maxBaseLine - minBaseLine,
-    )
-    setData(() => obj)
   }, [
     isPacking,
     lineHeight,

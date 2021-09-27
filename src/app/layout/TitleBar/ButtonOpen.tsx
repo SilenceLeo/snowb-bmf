@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button'
 import { useWorkspace } from 'src/store/hooks'
 
 import readFile from 'src/utils/readFile'
-import decodeProject from 'src/file/decodeProject'
+import conversion from 'src/file/conversion'
 
 interface ButtonOpenProps {
   className?: string
@@ -26,12 +26,12 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
     if (!e.target?.files || !e.target.files[0]) return
     const file = e.target.files[0]
     const isText = /\.ltr$/.test(file.name)
-    console.log(isText)
+
     readFile(file, isText).then((buffer) => {
       try {
-        if (typeof buffer === 'string') console.log(JSON.parse(buffer))
-        else if (buffer) addProject(decodeProject(buffer))
+        addProject(conversion(buffer))
       } catch (err) {
+        console.log(err)
         enqueueSnackbar((err as Error).toString(), { variant: 'error' })
       }
     })

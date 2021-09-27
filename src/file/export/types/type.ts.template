@@ -1,0 +1,18 @@
+import formatStr from 'src/utils/formatStr'
+import { Output, FontToString } from '../type'
+
+const type = 'TEXT'
+
+const exts = ['fnt', 'txt']
+
+const getString: FontToString = (bmfont) => {
+  const { info, common, pages, chars, kernings } = bmfont
+
+  let str = ''
+
+  return str
+}
+
+const outputConfig: Output = { type, exts, getString }
+
+export default outputConfig

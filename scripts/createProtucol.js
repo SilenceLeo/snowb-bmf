@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const path = require('path')
-const prettier = require('prettier')
 const { exec } = require('child_process')
 
 const pbjs = require('protobufjs/cli/pbjs')
 const pbts = require('protobufjs/cli/pbts')
-const outputDir = path.join(process.cwd(), 'src/proto/')
+
+const inputFile = path.join(
+  process.cwd(),
+  'src/file/conversion/types/sbf/proto/project.proto',
+)
+const outputDir = path.dirname(inputFile)
 
 pbjs.main(
   [
     '--target',
     'static-module',
-    'src/proto/project.proto',
+    'src/file/conversion/types/sbf/proto/project.proto',
     '-w',
     'es6',
     '--es6',

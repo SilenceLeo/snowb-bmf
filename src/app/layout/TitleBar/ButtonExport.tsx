@@ -15,7 +15,7 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import { useProject } from 'src/store/hooks'
-import outputFile from 'src/file/outputFile'
+import { configList, exportFile } from 'src/file/export'
 import GridInput from 'src/app/components/GridInput/GridInput'
 
 interface ButtonExportProps {
@@ -30,13 +30,8 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   const { name, ui } = project
   const { setShowPreview } = ui
   const [open, setOpen] = useState(false)
+  const [list] = useState(configList)
   const [val, setVal] = useState(0)
-  const [list] = useState([
-    { id: 0, ext: 'fnt', type: 'xml' },
-    { id: 1, ext: 'xml', type: 'xml' },
-    { id: 2, ext: 'fnt', type: 'text' },
-    { id: 3, ext: 'text', type: 'text' },
-  ])
 
   const handleOpen = useCallback(() => {
     setShowPreview(false)
@@ -57,10 +52,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   }
 
   const handleSave = useCallback(() => {
-    outputFile(project, {
-      ext: list[val].ext,
-      type: list[val].type,
-    })
+    exportFile(project, list[val])
     handleClose()
   }, [list, project, val])
 
@@ -86,8 +78,8 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
         <DialogContent dividers>
           <GridInput before='Export Type:' childrenWidth={8}>
             <Select displayEmpty value={val} onChange={handleChange}>
-              {list.map((item) => (
-                <MenuItem value={item.id} key={item.id}>
+              {list.map((item, idx) => (
+                <MenuItem value={idx} key={item.id}>
                   {`${name}.${item.ext} (BMFont ${item.type.toUpperCase()})`}
                 </MenuItem>
               ))}

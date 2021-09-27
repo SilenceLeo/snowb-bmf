@@ -1,6 +1,5 @@
 import formatStr from 'src/utils/formatStr'
-
-import { BMFont } from './toOutputInfo'
+import { Output, FontToString } from '../type'
 
 const TEMP_INFO = `<info face="$face$" size="$size$" bold="$bold$" italic="$italic$" charset="$charset$" unicode="$unicode$" stretchH="$stretchH$" smooth="$smooth$" aa="$aa$" padding="$padding$" spacing="$spacing$" />`
 const TEMP_COMMON = `<common lineHeight="$lineHeight$" base="$base$" scaleW="$scaleW$" scaleH="$scaleH$" pages="$pages$" packed="$packed$" />`
@@ -9,8 +8,13 @@ const TEMP_CHARS = `<chars count="$count$" />`
 const TEMP_CHAR = `<char id="$id$" x="$x$" y="$y$" width="$width$" height="$height$" xoffset="$xoffset$" yoffset="$yoffset$" xadvance="$xadvance$" page="$page$" chnl="$chnl$" />`
 const TEMP_KERNINGS = `<kernings count="$count$" />`
 const TEMP_KERNING = `<kerning first="$first$" second="$second$" amount="$amount$" />`
+
+const type = 'XML'
+
+const exts = ['fnt', 'txt']
+
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
-export default function storeToXml(bmfont: BMFont): string {
+const getString: FontToString = (bmfont) => {
   const { info, common, pages, chars, kernings } = bmfont
 
   const parser = new DOMParser()
@@ -67,3 +71,7 @@ export default function storeToXml(bmfont: BMFont): string {
     xmlDOM,
   )}`
 }
+
+const outputConfig: Output = { type, exts, getString }
+
+export default outputConfig

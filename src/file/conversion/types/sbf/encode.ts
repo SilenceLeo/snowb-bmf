@@ -1,12 +1,11 @@
-import { saveAs } from 'file-saver'
 import { Project } from 'src/store'
-import { encodeProject } from 'src/proto'
+import { encodeProject } from './proto'
 
 import prefix from './prefix'
 
-export default function saveProject(project: Project): void {
-  const projectBuffer = encodeProject(project)
+export default function encode(project: Project): Uint8Array {
   const perfixBuffer = prefix()
+  const projectBuffer = encodeProject(project)
 
   const buffer = new Uint8Array(
     perfixBuffer.byteLength + projectBuffer.byteLength,
@@ -15,5 +14,5 @@ export default function saveProject(project: Project): void {
   buffer.set(perfixBuffer, 0)
   buffer.set(projectBuffer, perfixBuffer.byteLength)
 
-  saveAs(new Blob([buffer]), `${project.name}.sbf`)
+  return buffer
 }

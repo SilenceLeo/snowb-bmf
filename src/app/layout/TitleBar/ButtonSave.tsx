@@ -1,10 +1,12 @@
 import React, { useEffect, FunctionComponent, useCallback } from 'react'
 import { toJS } from 'mobx'
 import hotkeys from 'hotkeys-js'
+import { saveAs } from 'file-saver'
 import { observer } from 'mobx-react'
+import { useSnackbar } from 'notistack'
 import Button from '@material-ui/core/Button'
 
-import saveProject from 'src/file/saveProject'
+import { encode } from 'src/file/conversion'
 import { useWorkspace } from 'src/store/hooks'
 
 interface ButtonSaveProps {
@@ -16,16 +18,21 @@ const ButtonSave: FunctionComponent<ButtonSaveProps> = (
 ) => {
   const { className } = props
 
+  const { enqueueSnackbar } = useSnackbar()
   const worckSpace = useWorkspace()
   const { currentProject: project } = worckSpace
 
   const handleSaveProject = useCallback(
     (e: { preventDefault(): void }) => {
       e.preventDefault()
-      saveProject(toJS(project))
-      return false
+      try {
+        const buffer = encode(toJS(project))
+        saveAs(new Blob([buffer]), `${project.name}.sbf`)
+      } catch (e) {
+        enqueueSnackbar((e as Error).message)
+      }
     },
-    [project],
+    [enqueueSnackbar, project],
   )
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { BMFontChar } from 'src/file/toOutputInfo'
+import { BMFontChar } from 'src/file/export'
 
 interface PreviewItem {
   x: number

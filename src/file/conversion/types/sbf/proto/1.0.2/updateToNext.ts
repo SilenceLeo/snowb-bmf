@@ -1,5 +1,5 @@
 import { IProject } from './project'
-import { IProject as IProjectNext, IFont } from '../'
+import { IProject as IProjectNext, IFont } from '../project'
 
 export default function updateToNext(project: IProject): IProjectNext {
   if (project.style?.font?.font) {
