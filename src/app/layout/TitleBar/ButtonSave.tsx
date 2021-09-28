@@ -4,6 +4,7 @@ import hotkeys from 'hotkeys-js'
 import { saveAs } from 'file-saver'
 import { observer } from 'mobx-react'
 import { useSnackbar } from 'notistack'
+import * as Sentry from '@sentry/react'
 import Button from '@material-ui/core/Button'
 
 import { encode } from 'src/file/conversion'
@@ -29,6 +30,7 @@ const ButtonSave: FunctionComponent<ButtonSaveProps> = (
         const buffer = encode(toJS(project))
         saveAs(new Blob([buffer]), `${project.name}.sbf`)
       } catch (e) {
+        Sentry.captureException(e)
         enqueueSnackbar((e as Error).message)
       }
     },

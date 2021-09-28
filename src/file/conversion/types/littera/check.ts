@@ -1,5 +1,6 @@
-import { CheckFunction } from '../type'
+import * as Sentry from '@sentry/react'
 import validate from './schema'
+import { CheckFunction } from '../type'
 
 const check: CheckFunction = (litteraStr) => {
   if (typeof litteraStr !== 'string') return false
@@ -13,11 +14,22 @@ const check: CheckFunction = (litteraStr) => {
 
   const isLittera = validate(litteraData)
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log(isLittera, validate.errors)
+  if (!isLittera) {
+    if (process.env.NODE_ENV === 'development')
+      console.log(isLittera, validate.errors)
+
+    validate.errors?.forEach((item) => {
+      Sentry.addBreadcrumb({
+        category: 'littera',
+        message: 'Littera validate error',
+        level: Sentry.Severity.Info,
+        data: item,
+      })
+    })
+    Sentry.captureMessage('Littera validate error')
   }
 
-  return false
+  return isLittera
 }
 
 export default check

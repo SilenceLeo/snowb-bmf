@@ -107,7 +107,7 @@ class Font {
     try {
       opentype = parse(font, { lowMemory: true })
     } catch (e) {
-      return Promise.resolve()
+      return Promise.reject(e)
     }
     const { names } = opentype
     const family = names.postScriptName[Object.keys(names.postScriptName)[0]]

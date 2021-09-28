@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useRef } from 'react'
 import { observer } from 'mobx-react'
 import { useSnackbar } from 'notistack'
+import * as Sentry from '@sentry/react'
 import Button from '@material-ui/core/Button'
-
 import { useWorkspace } from 'src/store/hooks'
 
 import readFile from 'src/utils/readFile'
@@ -30,9 +30,9 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
     readFile(file, isText).then((buffer) => {
       try {
         addProject(conversion(buffer))
-      } catch (err) {
-        console.log(err)
-        enqueueSnackbar((err as Error).toString(), { variant: 'error' })
+      } catch (e) {
+        Sentry.captureException(e)
+        enqueueSnackbar((e as Error).toString(), { variant: 'error' })
       }
     })
   }

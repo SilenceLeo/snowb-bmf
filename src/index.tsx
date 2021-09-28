@@ -7,16 +7,13 @@ import App from './app/App'
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
-if (
-  process.env.NODE_ENV === 'production' &&
-  process.env.REACT_APP_SENTRY_DSN &&
-  process.env.REACT_APP_SENTRY_RELEASE
-) {
+if (process.env.REACT_APP_SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
-    release: process.env.REACT_APP_SENTRY_RELEASE,
+    release: process.env.REACT_APP_SENTRY_RELEASE || 'test',
     integrations: [new Integrations.BrowserTracing()],
     tracesSampleRate: 1.0,
+    environment: process.env.NODE_ENV,
   })
 }
 
