@@ -29,8 +29,11 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
 
     readFile(file, isText).then((buffer) => {
       try {
-        addProject(conversion(buffer))
+        const project = conversion(buffer)
+        if (!project.name) project.name = file.name
+        addProject(project)
       } catch (e) {
+        console.log(e)
         Sentry.captureException(e)
         enqueueSnackbar((e as Error).toString(), { variant: 'error' })
       }

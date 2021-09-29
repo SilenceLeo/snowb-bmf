@@ -6,8 +6,6 @@ class Layout {
 
   @observable spacing = 1
 
-  @observable power = false
-
   @observable width = 1024
 
   @observable height = 1024
@@ -20,8 +18,6 @@ class Layout {
     this.padding = use.num(layout.padding, 1)
 
     this.spacing = use.num(layout.spacing, 1)
-
-    this.power = !!layout.power
 
     this.width = use.num(layout.width, 1024)
 
@@ -39,10 +35,6 @@ class Layout {
 
   @action.bound setSpacing(spacing: number): void {
     this.spacing = spacing
-  }
-
-  @action.bound setPower(power: boolean): void {
-    this.power = power
   }
 
   @action.bound setWidth(width: number): void {

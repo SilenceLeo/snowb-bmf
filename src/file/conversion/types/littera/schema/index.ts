@@ -11,7 +11,7 @@ import font, { FontData } from './font'
 
 const ajv = new Ajv()
 
-interface LitteraData {
+export interface LitteraData {
   glow: GlowData
   fill: FillData
   settings: SettingsData
@@ -41,6 +41,16 @@ const schema: JTDSchemaType<LitteraData> = {
   },
 }
 
-const validate = ajv.compile(schema)
+export * from './glow'
+export * from './fill'
+export * from './settings'
+export * from './shadow'
+export * from './stroke'
+export * from './background'
+export * from './bevel'
+export * from './glyphs'
+export * from './font'
+
+export const validate = ajv.compile(schema)
 
 export default validate

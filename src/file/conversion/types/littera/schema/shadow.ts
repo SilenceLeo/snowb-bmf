@@ -14,15 +14,15 @@ export interface ShadowData {
 
 const shadow: JTDSchemaType<ShadowData> = {
   properties: {
-    quality: { type: 'int32' },
-    color: { type: 'int32' },
-    strength: { type: 'int32' },
-    blurX: { type: 'int32' },
-    angle: { type: 'int32' },
-    blurY: { type: 'int32' },
+    quality: { type: 'float32' },
+    color: { type: 'float32' },
+    strength: { type: 'float32' },
+    blurX: { type: 'float32' },
+    angle: { type: 'float32' },
+    blurY: { type: 'float32' },
     shadowEnabled: { type: 'boolean' },
-    alpha: { type: 'int32' },
-    distance: { type: 'int32' },
+    alpha: { type: 'float32' },
+    distance: { type: 'float32' },
   },
 }
 

@@ -15,16 +15,16 @@ export interface GlowData {
 
 const glow: JTDSchemaType<GlowData> = {
   properties: {
-    quality: { type: 'int32' },
-    colors: { elements: { type: 'int32' } },
+    quality: { type: 'float32' },
+    colors: { elements: { type: 'float32' } },
     glowEnabled: { type: 'boolean' },
-    alphas: { elements: { type: 'int32' } },
-    ratios: { elements: { type: 'int32' } },
-    blurX: { type: 'int32' },
-    angle: { type: 'int32' },
-    blurY: { type: 'int32' },
-    strength: { type: 'int32' },
-    distance: { type: 'int32' },
+    alphas: { elements: { type: 'float32' } },
+    ratios: { elements: { type: 'float32' } },
+    blurX: { type: 'float32' },
+    angle: { type: 'float32' },
+    blurY: { type: 'float32' },
+    strength: { type: 'float32' },
+    distance: { type: 'float32' },
   },
 }
 

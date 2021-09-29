@@ -3,7 +3,7 @@ import getTextBaselines from 'src/utils/getTextBaselines'
 import { parse, Font as OpenType } from 'opentype.js'
 import updateFontFace from 'src/utils/updateFontFace'
 
-interface FontResource {
+export interface FontResource {
   font: ArrayBuffer
   family: string
   opentype: OpenType

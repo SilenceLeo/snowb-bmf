@@ -15,24 +15,28 @@ export interface StrokeData {
   size: number
   gradientRatios: number[]
   xOffset: number
+  texture?: string
 }
 
 const stroke: JTDSchemaType<StrokeData> = {
   properties: {
-    gradientAlphas: { elements: { type: 'int32' } },
-    yOffset: { type: 'int32' },
+    gradientAlphas: { elements: { type: 'float32' } },
+    yOffset: { type: 'float32' },
     gradientType: { enum: ['linear', 'radial'] },
-    gradientRotation: { type: 'int32' },
+    gradientRotation: { type: 'float32' },
     fillType: { enum: ['gradientFill', 'textureFill'] },
     pixelHinting: { type: 'boolean' },
-    textureScale: { type: 'int32' },
-    gradientColors: { elements: { type: 'int32' } },
+    textureScale: { type: 'float32' },
+    gradientColors: { elements: { type: 'float32' } },
     strokeEnabled: { type: 'boolean' },
-    miterLimit: { type: 'int32' },
+    miterLimit: { type: 'float32' },
     jointStyle: { enum: ['miter', 'bevel', 'round'] },
-    size: { type: 'int32' },
-    gradientRatios: { elements: { type: 'int32' } },
-    xOffset: { type: 'int32' },
+    size: { type: 'float32' },
+    gradientRatios: { elements: { type: 'float32' } },
+    xOffset: { type: 'float32' },
+  },
+  optionalProperties: {
+    texture: { type: 'string' },
   },
 }
 

@@ -16,11 +16,11 @@ const glyphs: JTDSchemaType<GlyphsData> = {
     glyphs: { type: 'string' },
     powerOfTwo: { type: 'boolean' },
     canvasHeight: { type: 'string' },
-    padding: { type: 'int32' },
-    packMethod: { type: 'int32' },
+    padding: { type: 'float32' },
+    packMethod: { type: 'float32' },
     canvasWidth: { type: 'string' },
     roundValues: { type: 'boolean' },
-    descriptionFormat: { type: 'int32' },
+    descriptionFormat: { type: 'float32' },
   },
 }
 

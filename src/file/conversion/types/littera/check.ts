@@ -3,14 +3,17 @@ import validate from './schema'
 import { CheckFunction } from '../type'
 
 const check: CheckFunction = (litteraStr) => {
-  if (typeof litteraStr !== 'string') return false
   let litteraData
 
-  try {
-    litteraData = JSON.parse(litteraStr)
-  } catch (e) {
-    return false
+  if (typeof litteraStr === 'string') {
+    try {
+      litteraData = JSON.parse(litteraStr)
+    } catch (e) {
+      return false
+    }
   }
+
+  if (typeof litteraData !== 'object') return false
 
   const isLittera = validate(litteraData)
 

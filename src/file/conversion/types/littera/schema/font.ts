@@ -8,8 +8,8 @@ export interface FontData {
 
 const font: JTDSchemaType<FontData> = {
   properties: {
-    size: { type: 'int32' },
-    spacing: { type: 'int32' },
+    size: { type: 'float32' },
+    spacing: { type: 'float32' },
   },
   optionalProperties: {
     data: { type: 'string' },

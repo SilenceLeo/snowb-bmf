@@ -5,7 +5,6 @@ import Box from '@material-ui/core/Box'
 
 import Padding from './Padding'
 import Spacing from './Spacing'
-// import Power from './Power'
 import AutoPack from './AutoPack'
 import FixedSize from './FixedSize'
 import PackWidth from './PackWidth'
@@ -35,9 +34,6 @@ const PackConfig: FunctionComponent<unknown> = () => {
       <Box paddingX={2} marginY={4}>
         <PackHeight />
       </Box>
-      {/* <Box paddingX={2} marginY={4}>
-        <Power />
-      </Box> */}
     </>
   )
 }

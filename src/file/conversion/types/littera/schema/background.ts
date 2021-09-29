@@ -7,8 +7,8 @@ export interface BackgroundData {
 
 const background: JTDSchemaType<BackgroundData> = {
   properties: {
-    color: { type: 'int32' },
-    alpha: { type: 'int32' },
+    color: { type: 'float32' },
+    alpha: { type: 'float32' },
   },
 }
 

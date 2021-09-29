@@ -18,17 +18,17 @@ export interface BevelData {
 const bevel: JTDSchemaType<BevelData> = {
   properties: {
     bevelEnabled: { type: 'boolean' },
-    highlightColor: { type: 'int32' },
-    highlightAlpha: { type: 'int32' },
-    quality: { type: 'int32' },
-    angle: { type: 'int32' },
-    shadowColor: { type: 'int32' },
-    shadowAlpha: { type: 'int32' },
-    blurX: { type: 'int32' },
-    blurY: { type: 'int32' },
+    highlightColor: { type: 'float32' },
+    highlightAlpha: { type: 'float32' },
+    quality: { type: 'float32' },
+    angle: { type: 'float32' },
+    shadowColor: { type: 'float32' },
+    shadowAlpha: { type: 'float32' },
+    blurX: { type: 'float32' },
+    blurY: { type: 'float32' },
     type: { enum: ['inner', 'outer', 'full'] },
-    strength: { type: 'int32' },
-    distance: { type: 'int32' },
+    strength: { type: 'float32' },
+    distance: { type: 'float32' },
   },
 }
 
