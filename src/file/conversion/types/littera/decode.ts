@@ -19,20 +19,15 @@ import { DecodeProjectFunction } from '../type'
 import { LitteraData, FillData, StrokeData } from './schema'
 import check from './check'
 
-function colorToString(color: number, alpha: number) {
-  return Color(color).alpha(alpha).hex()
-}
-
 function transformFill(litteraFill: FillData | StrokeData): FontStyleConfig {
   const fill = {} as FontStyleConfig
   if (litteraFill.fillType === 'gradientFill') {
     // solid color
     if (litteraFill.gradientColors.length < 2) {
       fill.type = FillType.SOLID
-      fill.color = colorToString(
-        litteraFill.gradientColors[0],
-        litteraFill.gradientAlphas[0],
-      )
+      fill.color = Color(litteraFill.gradientColors[0])
+        .alpha(litteraFill.gradientAlphas[0])
+        .hex()
     } else {
       fill.type = FillType.GRADIENT
       fill.gradient = {} as Gradient
@@ -45,7 +40,7 @@ function transformFill(litteraFill: FillData | StrokeData): FontStyleConfig {
       litteraFill.gradientColors.forEach((color, idx) => {
         fill.gradient.palette.push({
           id: idx + 1,
-          color: colorToString(color, litteraFill.gradientAlphas[idx]),
+          color: Color(color).alpha(litteraFill.gradientAlphas[idx]).hex(),
           offset: litteraFill.gradientRatios[idx] / 255,
         })
       })
@@ -126,7 +121,7 @@ const decode: DecodeProjectFunction = (litteraData) => {
    */
   //#region style.shadow
   const shadow = {} as ShadowStyleConfig
-  shadow.color = colorToString(data.shadow.color, data.shadow.alpha)
+  shadow.color = Color(data.shadow.color).alpha(data.shadow.alpha).hex()
   shadow.blur = data.shadow.quality + data.shadow.blurX - data.shadow.strength
   shadow.offsetX = Math.round(
     Math.cos((data.shadow.angle * Math.PI) / 180) * data.shadow.distance,
