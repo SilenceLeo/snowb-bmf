@@ -11,7 +11,7 @@ const TEMP_KERNING = `<kerning first="$first$" second="$second$" amount="$amount
 
 const type = 'XML'
 
-const exts = ['fnt', 'txt']
+const exts = ['xml', 'fnt']
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
 const getString: FontToString = (bmfont) => {
