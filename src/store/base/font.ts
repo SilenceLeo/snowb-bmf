@@ -2,6 +2,8 @@ import { action, observable, computed, runInAction } from 'mobx'
 import getTextBaselines from 'src/utils/getTextBaselines'
 import { parse, Font as OpenType } from 'opentype.js'
 import updateFontFace from 'src/utils/updateFontFace'
+import getFontBaselines from 'src/utils/getFontBaselines'
+import is from 'src/utils/is'
 
 export interface FontResource {
   font: ArrayBuffer
@@ -16,7 +18,7 @@ class Font {
 
   @observable size: number
 
-  @observable lineHeight = 1.25
+  @observable lineHeight = 1
 
   @observable middle = 0
 
@@ -29,6 +31,8 @@ class Font {
   @observable ideographic = 0
 
   @observable bottom = 0
+
+  @observable sharp = 80
 
   @computed get mainFont() {
     if (this.fonts.length > 0) return this.fonts[0]
@@ -80,7 +84,8 @@ class Font {
 
   constructor(font: Partial<Font> = {}) {
     this.size = font.size || 72
-    this.lineHeight = font.lineHeight || 1.25
+    // this.lineHeight = font.lineHeight || 1.25
+    this.sharp = is.num(font.sharp) ? font.sharp : 80
     if (font.fonts && font.fonts.length) {
       font.fonts.forEach((fontResource) => this.addFont(fontResource.font))
     } else {
@@ -89,11 +94,16 @@ class Font {
   }
 
   updateBaseines(): void {
-    const bls = getTextBaselines('a', {
-      fontFamily: this.family,
-      fontSize: this.size,
-    })
-
+    let bls
+    if (this.mainFont?.opentype) {
+      bls = getFontBaselines(this.mainFont.opentype, this.size)
+    } else {
+      bls = getTextBaselines('a', {
+        fontFamily: this.family,
+        fontSize: this.size,
+      })
+    }
+    this.lineHeight = bls.lineHeight
     this.middle = bls.middle
     this.hanging = bls.hanging
     this.top = bls.top
@@ -134,6 +144,9 @@ class Font {
     const idx = this.fonts.indexOf(fontResource)
     if (idx === -1) return
     this.fonts.splice(idx, 1)
+    if (idx === 0) {
+      this.updateBaseines()
+    }
   }
 
   @action.bound setSize(size: number): void {
@@ -143,6 +156,10 @@ class Font {
 
   @action.bound setLineHeight(lineHeight: number): void {
     this.lineHeight = lineHeight
+  }
+
+  @action.bound setSharp(sharp: number): void {
+    this.sharp = sharp
   }
 }
 

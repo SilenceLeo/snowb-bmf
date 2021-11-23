@@ -1,4 +1,5 @@
 import { action } from 'mobx'
+import getFontGlyphInfo from 'src/utils/getFontGlyphInfo'
 import getGlyphInfo, { Config } from 'src/utils/getGlyphInfo'
 import GlyphBase from './glyphBase'
 
@@ -16,7 +17,12 @@ class GlyphFont extends GlyphBase {
     if (useStroke) config.stroke = stroke
     if (useShadow) config.shadow = shadow
 
-    const glyphInfo = getGlyphInfo(this.letter, config)
+    let glyphInfo
+    try {
+      glyphInfo = getFontGlyphInfo(this.letter, config as Style)
+    } catch (e) {
+      glyphInfo = getGlyphInfo(this.letter, config)
+    }
     this.source = glyphInfo.canvas
     this.width = glyphInfo.width
     this.height = glyphInfo.height

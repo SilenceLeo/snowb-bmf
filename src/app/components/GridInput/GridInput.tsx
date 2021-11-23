@@ -3,6 +3,7 @@ import React, {
   FunctionComponent,
   PropsWithChildren,
   ElementType,
+  CSSProperties,
 } from 'react'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
@@ -12,12 +13,13 @@ interface GridInputProps {
   after?: ReactNode
   component?: ElementType
   childrenWidth?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+  style?: CSSProperties
 }
 
 const GridInput: FunctionComponent<GridInputProps> = (
   props: PropsWithChildren<GridInputProps>,
 ): JSX.Element => {
-  const { before, children, component, after, childrenWidth } = props
+  const { before, children, component, after, childrenWidth, ...other } = props
   return (
     <Grid
       component={component || 'label'}
@@ -26,6 +28,7 @@ const GridInput: FunctionComponent<GridInputProps> = (
       wrap='nowrap'
       justifyContent='center'
       alignItems='center'
+      {...other}
     >
       <Grid item xs={4}>
         {typeof before === 'object' ? (

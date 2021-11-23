@@ -4,7 +4,7 @@ import Box from '@material-ui/core/Box'
 
 import FontFamily from './FontFamily'
 import FontSize from './FontSize'
-import LineHeight from './LineHeight'
+import Sharp from './Sharp'
 
 const Font: FunctionComponent<unknown> = () => {
   return (
@@ -19,7 +19,7 @@ const Font: FunctionComponent<unknown> = () => {
         <FontSize />
       </Box>
       <Box paddingX={2} marginY={4}>
-        <LineHeight />
+        <Sharp />
       </Box>
     </>
   )

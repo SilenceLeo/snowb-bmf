@@ -11,6 +11,7 @@ interface Baselines {
   alphabetic: number
   ideographic: number
   bottom: number
+  lineHeight: number
 }
 
 let canvas: HTMLCanvasElement
@@ -52,5 +53,6 @@ export default function getTextBaselines(
     ideographic:
       middle.actualBoundingBoxDescent - ideographic.actualBoundingBoxDescent,
     bottom: middle.actualBoundingBoxDescent - bottom.actualBoundingBoxDescent,
+    lineHeight: 1,
   }
 }

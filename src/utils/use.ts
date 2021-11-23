@@ -1,7 +1,7 @@
 import is from './is'
 
-const num = <T extends unknown>(a: T, b: number): number => {
-  if (is.num(a)) return a as number
+const num = (a: unknown, b: number): number => {
+  if (is.num(a)) return a
   return b
 }
 

@@ -23,9 +23,10 @@ const overrides: Overrides = {
       'input::-webkit-inner-spin-button': {
         marginLeft: '10px',
       },
-      'input:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-inner-spin-button': {
-        opacity: 0.3,
-      },
+      'input:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-inner-spin-button':
+        {
+          opacity: 0.3,
+        },
       '::-webkit-scrollbar': {
         width: '4px',
         height: '4px',
@@ -42,6 +43,14 @@ const overrides: Overrides = {
     input: {
       '&[type=number]': {
         textAlign: 'right',
+      },
+    },
+  },
+  MuiSlider: {
+    root: {
+      verticalAlign: 'top',
+      '&.Mui-disabled': {
+        opacity: 0.2,
       },
     },
   },
