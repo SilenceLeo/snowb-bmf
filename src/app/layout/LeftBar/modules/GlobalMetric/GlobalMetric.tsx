@@ -9,14 +9,8 @@ import FormAdjustMetric from 'src/app/layout/common/FormAdjustMetric'
 
 const GlobalMetric: FunctionComponent<unknown> = () => {
   const { globalAdjustMetric } = useProject()
-  const {
-    xAdvance,
-    xOffset,
-    yOffset,
-    setXAdvance,
-    setXOffset,
-    setYOffset,
-  } = globalAdjustMetric
+  const { xAdvance, xOffset, yOffset, setXAdvance, setXOffset, setYOffset } =
+    globalAdjustMetric
 
   return (
     <>

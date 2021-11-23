@@ -26,3 +26,5 @@ yarn-error.log*
 package-lock.json
 
 .eslintcache
+
+/test

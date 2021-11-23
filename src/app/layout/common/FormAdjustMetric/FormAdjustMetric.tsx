@@ -19,18 +19,12 @@ interface FormAdjustMetricProps {
 const FormAdjustMetric: FunctionComponent<FormAdjustMetricProps> = (
   props: FormAdjustMetricProps,
 ) => {
-  const {
-    xAdvance,
-    xOffset,
-    yOffset,
-    setXAdvance,
-    setXOffset,
-    setYOffset,
-  } = props
+  const { xAdvance, xOffset, yOffset, setXAdvance, setXOffset, setYOffset } =
+    props
 
-  const getHandle = (handleSet: SetHandle) => (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => handleSet(Number(e.target.value))
+  const getHandle =
+    (handleSet: SetHandle) => (e: React.ChangeEvent<HTMLInputElement>) =>
+      handleSet(Number(e.target.value))
 
   return (
     <>

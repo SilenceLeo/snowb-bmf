@@ -22,14 +22,8 @@ const FormImage: FunctionComponent<FormImageProps> = (
   props: FormImageProps,
 ) => {
   const { patternTexture } = props
-  const {
-    src,
-    scale,
-    repetition,
-    setRepetition,
-    setScale,
-    setImage,
-  } = patternTexture
+  const { src, scale, repetition, setRepetition, setScale, setImage } =
+    patternTexture
 
   return (
     <>
