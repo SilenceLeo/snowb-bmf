@@ -76,11 +76,13 @@ export default function toBmfInfo(project: Project): BMFont {
       xoffset:
         globalAdjustMetric.xOffset +
         glyph.adjustMetric.xOffset -
-        (isUnEmpty ? glyph.trimOffsetLeft : 0),
+        (isUnEmpty ? glyph.trimOffsetLeft : 0) -
+        (isUnEmpty ? layout.padding : 0),
       yoffset:
         globalAdjustMetric.yOffset +
         glyph.adjustMetric.yOffset -
-        (isUnEmpty ? glyph.trimOffsetTop : 0),
+        (isUnEmpty ? glyph.trimOffsetTop : 0) -
+        (isUnEmpty ? layout.padding : 0),
       xadvance:
         Math.ceil(glyph.fontWidth) +
         globalAdjustMetric.xAdvance +
