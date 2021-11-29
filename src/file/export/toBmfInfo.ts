@@ -39,7 +39,7 @@ export default function toBmfInfo(project: Project): BMFont {
 
   const common: BMFontCommon = {
     lineHeight: style.font.size,
-    base: style.font.size,
+    base: Math.round(style.font.alphabetic - style.font.top),
     scaleW: width,
     scaleH: height,
     pages: 1,
