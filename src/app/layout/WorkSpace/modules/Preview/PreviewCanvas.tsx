@@ -74,6 +74,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
         maxBaseLine,
       },
     },
+    layout: { padding },
     isPacking,
   } = project
   const { previewScale, previewOffsetX, previewOffsetY } = ui
@@ -209,6 +210,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
         kerningMap,
         lh,
         maxBaseLine - minBaseLine,
+        padding,
       )
       setData(() => obj)
     })
@@ -220,6 +222,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     project,
     size,
     ui.previewText,
+    padding,
   ])
 
   return (
