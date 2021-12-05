@@ -98,7 +98,7 @@ class Font {
     if (this.mainFont?.opentype) {
       bls = getFontBaselines(this.mainFont.opentype, this.size)
     } else {
-      bls = getTextBaselines('a', {
+      bls = getTextBaselines('x', {
         fontFamily: this.family,
         fontSize: this.size,
       })
