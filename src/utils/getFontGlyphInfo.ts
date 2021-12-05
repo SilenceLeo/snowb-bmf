@@ -93,8 +93,8 @@ export default function getFontGlyphInfo(
   const trimInfo = {
     text,
     font: font.family,
-    width: boundingBox.x2 - boundingBox.x1,
-    height: boundingBox.y2 - boundingBox.y1,
+    width: Math.ceil(boundingBox.x2) - Math.floor(boundingBox.x1),
+    height: Math.ceil(boundingBox.y2) - Math.floor(boundingBox.y1),
     fontWidth,
     fontHeight,
     trimOffsetTop: boundingBox.y1 * -1,
