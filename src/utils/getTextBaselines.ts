@@ -44,7 +44,7 @@ export default function getTextBaselines(
   ctx.textBaseline = 'bottom'
   const bottom = ctx.measureText(text)
 
-  return {
+  const baselines = {
     middle: 0,
     hanging: hanging.actualBoundingBoxAscent - middle.actualBoundingBoxAscent,
     top: top.actualBoundingBoxAscent - middle.actualBoundingBoxAscent,
@@ -55,4 +55,11 @@ export default function getTextBaselines(
     bottom: middle.actualBoundingBoxDescent - bottom.actualBoundingBoxDescent,
     lineHeight: 1,
   }
+
+  baselines.lineHeight =
+    (Math.max(baselines.ideographic, baselines.bottom) -
+      Math.min(baselines.hanging, baselines.top)) /
+    styleConig.fontSize
+
+  return baselines
 }
