@@ -65,7 +65,7 @@ export default function toBmfInfo(project: Project): BMFont {
 
   glyphList.forEach((glyph) => {
     const isUnEmpty = !!(glyph.width && glyph.height)
-    chars.list.push({
+    const info = {
       letter: glyph.letter,
       id: glyph.letter.charCodeAt(0),
       source: glyph.source,
@@ -89,7 +89,12 @@ export default function toBmfInfo(project: Project): BMFont {
         glyph.adjustMetric.xAdvance,
       page: 0,
       chnl: 15,
-    })
+    }
+
+    info.xoffset = Number(info.xoffset.toFixed(2))
+    info.yoffset = Number(info.yoffset.toFixed(2))
+    chars.list.push(info)
+
     if (opentype) {
       glyphList.forEach(({ letter }) => {
         const amount = Math.round(
