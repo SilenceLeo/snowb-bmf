@@ -61,7 +61,7 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
 
   const handleAdd = (offset: number) => {
     const list = [...palette]
-    const current = { offset, color: '#000' }
+    const current = { offset, color: 'rgba(0,0,0,1)' }
     let left: PaletteItem | undefined
     let right: PaletteItem | undefined
     setActiveId(0)

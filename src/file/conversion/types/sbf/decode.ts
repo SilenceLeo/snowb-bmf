@@ -22,9 +22,8 @@ const decode: DecodeProjectFunction = (buffer) => {
 
   const decodeProto =
     oldProto[version as keyof OldProto]?.Project || ProjectProto
-  console.log(oldProto, version, decodeProto)
+
   const project = decodeProto.decode(u8.slice(filePrefix.byteLength))
-  console.log(project)
 
   return toOriginBuffer(updateOldProject(project, version))
 }

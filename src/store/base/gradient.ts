@@ -38,7 +38,7 @@ class Gradient {
         })
       })
     } else {
-      this.addColor(0, '#FFF')
+      this.addColor(0, 'rgba(255,255,255,1)')
       this.addColor(1)
     }
   }
@@ -60,7 +60,7 @@ class Gradient {
     this.angle = angle
   }
 
-  @action.bound addColor(offset = 0, color = '#000000'): void {
+  @action.bound addColor(offset = 0, color = 'rgba(0,0,0,1)'): void {
     this.palette.push({ offset, color, id: this.nextId })
   }
 
