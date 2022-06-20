@@ -91,8 +91,8 @@ export default function toBmfInfo(project: Project): BMFont {
       chnl: 15,
     }
 
-    info.xoffset = Number(info.xoffset.toFixed(2))
-    info.yoffset = Number(info.yoffset.toFixed(2))
+    info.xoffset = Math.round(info.xoffset)
+    info.yoffset = Math.round(info.yoffset)
     chars.list.push(info)
 
     if (opentype) {
