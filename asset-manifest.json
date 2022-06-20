@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.js": "./static/js/main.82a3e630.chunk.js",
-    "main.js.map": "./static/js/main.82a3e630.chunk.js.map",
+    "main.js": "./static/js/main.212982c9.chunk.js",
+    "main.js.map": "./static/js/main.212982c9.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.9fab41b8.js",
     "runtime-main.js.map": "./static/js/runtime-main.9fab41b8.js.map",
-    "static/js/2.3d9d4973.chunk.js": "./static/js/2.3d9d4973.chunk.js",
-    "static/js/2.3d9d4973.chunk.js.map": "./static/js/2.3d9d4973.chunk.js.map",
+    "static/js/2.82a094a5.chunk.js": "./static/js/2.82a094a5.chunk.js",
+    "static/js/2.82a094a5.chunk.js.map": "./static/js/2.82a094a5.chunk.js.map",
     "index.html": "./index.html",
     "service-worker.js": "./service-worker.js",
     "service-worker.js.map": "./service-worker.js.map",
-    "static/js/2.3d9d4973.chunk.js.LICENSE.txt": "./static/js/2.3d9d4973.chunk.js.LICENSE.txt",
-    "static/js/AutoPacker.6093815e9c4b125e8885.worker.js": "./static/js/AutoPacker.6093815e9c4b125e8885.worker.js",
-    "static/js/AutoPacker.6093815e9c4b125e8885.worker.js.map": "./static/js/AutoPacker.6093815e9c4b125e8885.worker.js.map"
+    "static/js/2.82a094a5.chunk.js.LICENSE.txt": "./static/js/2.82a094a5.chunk.js.LICENSE.txt",
+    "static/js/AutoPacker.d4f5dd9550ff18a5dd82.worker.js": "./static/js/AutoPacker.d4f5dd9550ff18a5dd82.worker.js",
+    "static/js/AutoPacker.d4f5dd9550ff18a5dd82.worker.js.map": "./static/js/AutoPacker.d4f5dd9550ff18a5dd82.worker.js.map"
   },
   "entrypoints": [
     "static/js/runtime-main.9fab41b8.js",
-    "static/js/2.3d9d4973.chunk.js",
-    "static/js/main.82a3e630.chunk.js"
+    "static/js/2.82a094a5.chunk.js",
+    "static/js/main.212982c9.chunk.js"
   ]
 }
