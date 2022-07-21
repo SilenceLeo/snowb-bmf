@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx'
-import use from 'src/utils/use'
+import use from 'src/utils/supports/use'
 
 class Layout {
   @observable padding = 1
@@ -10,7 +10,7 @@ class Layout {
 
   @observable height = 1024
 
-  @observable auto = true
+  @observable autoPack = true
 
   @observable fixedSize = false
 
@@ -24,7 +24,7 @@ class Layout {
     this.height = use.num(layout.height, 1024)
 
     // Compatible with old files, default true.
-    this.auto = layout.auto === false ? false : true
+    this.autoPack = layout.autoPack === false ? false : true
 
     this.fixedSize = !!layout.fixedSize
   }
@@ -45,8 +45,8 @@ class Layout {
     this.height = height
   }
 
-  @action.bound setAuto(auto: boolean): void {
-    this.auto = auto
+  @action.bound setAutoPack(auto: boolean): void {
+    this.autoPack = auto
   }
 
   @action.bound setFixedSize(fixedSize: boolean): void {

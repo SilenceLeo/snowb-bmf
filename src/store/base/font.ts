@@ -1,9 +1,10 @@
-import { action, observable, computed, runInAction } from 'mobx'
-import getTextBaselines from 'src/utils/getTextBaselines'
-import { parse, Font as OpenType } from 'opentype.js'
-import updateFontFace from 'src/utils/updateFontFace'
-import getFontBaselines from 'src/utils/getFontBaselines'
-import is from 'src/utils/is'
+import { action, computed, observable, runInAction } from 'mobx'
+import getTextBaselines from 'src/utils/glyphFont/getTextBaselines'
+import { Font as OpenType, parse } from 'opentype.js'
+import updateFontFace from 'src/utils/glyphFont/updateFontFace'
+import getFontBaselines from 'src/utils/glyphFont/getFontBaselines'
+import is from 'src/utils/supports/is'
+import { CONFIG_DEFAULT } from '../config'
 
 export interface FontResource {
   font: ArrayBuffer
@@ -33,6 +34,17 @@ class Font {
   @observable bottom = 0
 
   @observable sharp = 80
+
+  constructor(font: Partial<Font> = {}) {
+    this.size = font.size || CONFIG_DEFAULT.fontSize
+    // this.lineHeight = font.lineHeight || 1.25
+    this.sharp = is.num(font.sharp) ? font.sharp : 80
+    if (font.fonts && font.fonts.length) {
+      font.fonts.forEach((fontResource) => this.addFont(fontResource.font))
+    } else {
+      this.updateBaseines()
+    }
+  }
 
   @computed get mainFont() {
     if (this.fonts.length > 0) return this.fonts[0]
@@ -80,17 +92,6 @@ class Font {
     )
     if (Number.isNaN(Number(max))) return this.size
     return max
-  }
-
-  constructor(font: Partial<Font> = {}) {
-    this.size = font.size || 72
-    // this.lineHeight = font.lineHeight || 1.25
-    this.sharp = is.num(font.sharp) ? font.sharp : 80
-    if (font.fonts && font.fonts.length) {
-      font.fonts.forEach((fontResource) => this.addFont(fontResource.font))
-    } else {
-      this.updateBaseines()
-    }
   }
 
   updateBaseines(): void {

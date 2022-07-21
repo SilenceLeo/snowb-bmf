@@ -14,7 +14,7 @@ import {
   ShadowStyleConfig,
   StrokeStyleConfig,
 } from 'src/store'
-import base64ToArrayBuffer from 'src/utils/base64ToArrayBuffer'
+import base64ToArrayBuffer from 'src/utils/supports/base64ToArrayBuffer'
 import { DecodeProjectFunction } from '../type'
 import { LitteraData, FillData, StrokeData } from './schema'
 import check from './check'
@@ -152,7 +152,7 @@ const decode: DecodeProjectFunction = (litteraData) => {
     project.layout.width = Number(data.glyphs.canvasHeight)
   }
   if (project.layout.width && project.layout.height) {
-    project.layout.auto = false
+    project.layout.autoPack = false
     project.layout.fixedSize = true
   }
 

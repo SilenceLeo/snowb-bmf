@@ -28,3 +28,6 @@ package-lock.json
 .eslintcache
 
 /test
+
+# jetbrains
+.idea

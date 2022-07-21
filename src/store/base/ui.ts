@@ -1,5 +1,6 @@
 import { action, observable } from 'mobx'
-import use from 'src/utils/use'
+import use from 'src/utils/supports/use'
+import { CONFIG_DEFAULT } from '../config'
 
 class Ui {
   @observable scale = 1
@@ -12,7 +13,7 @@ class Ui {
 
   @observable height = 0
 
-  @observable previewText = 'Hello World!\nHello Snow Bamboo!' // /\r\n|\r|\n/
+  @observable previewText = CONFIG_DEFAULT.previewText // /\r\n|\r|\n/
 
   @observable selectLetter = ''
 

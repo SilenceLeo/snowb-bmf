@@ -7,15 +7,15 @@ import { useLayout } from 'src/store/hooks'
 import GridInput from 'src/app/components/GridInput'
 
 const AutoPack: FunctionComponent<unknown> = () => {
-  const { auto, setAuto } = useLayout()
+  const { autoPack, setAutoPack } = useLayout()
 
   return (
     <GridInput before='Auto Pack:'>
       <Checkbox
-        checked={auto}
+        checked={autoPack}
         size='small'
         color='default'
-        onChange={(e) => setAuto(e.target.checked)}
+        onChange={(e) => setAutoPack(e.target.checked)}
       />
     </GridInput>
   )

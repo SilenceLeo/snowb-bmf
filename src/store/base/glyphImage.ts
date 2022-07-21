@@ -1,5 +1,5 @@
 import { action, observable, runInAction } from 'mobx'
-import getTrimImageInfo from 'src/utils/getTrimImageInfo'
+import getTrimImageInfo from 'src/utils/glyphTrim/getTrimImageInfo'
 
 import GlyphBase, { GlyphType } from './glyphBase'
 

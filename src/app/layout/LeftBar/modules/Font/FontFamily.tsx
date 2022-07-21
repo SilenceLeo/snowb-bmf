@@ -14,7 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 
 import { useFont } from 'src/store/hooks'
-import readFile from 'src/utils/readFile'
+import readFile from 'src/utils/supports/readFile'
 
 const FontFamily: FunctionComponent<unknown> = () => {
   const [loading, setLoading] = useState(false)

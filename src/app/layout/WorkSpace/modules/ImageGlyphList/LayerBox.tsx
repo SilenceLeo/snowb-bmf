@@ -19,7 +19,7 @@ import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary'
 import { FileInfo } from 'src/store'
 import { useProject } from 'src/store/hooks'
 
-import readFile from 'src/utils/readFile'
+import readFile from 'src/utils/supports/readFile'
 
 import ImageGlyphList from './ImageGlyphList'
 

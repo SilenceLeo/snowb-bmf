@@ -7,7 +7,7 @@ import GridInput from 'src/app/components/GridInput'
 import { useLayout } from 'src/store/hooks'
 
 const PackWidth: FunctionComponent<unknown> = () => {
-  const { width, auto, fixedSize, setWidth } = useLayout()
+  const { width, autoPack, fixedSize, setWidth } = useLayout()
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setWidth(Number(event.target.value))
@@ -21,7 +21,7 @@ const PackWidth: FunctionComponent<unknown> = () => {
         type='number'
         inputProps={{ min: 0 }}
         onChange={handleInput}
-        disabled={auto}
+        disabled={autoPack}
       />
     </GridInput>
   )

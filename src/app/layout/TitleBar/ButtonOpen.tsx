@@ -5,7 +5,7 @@ import * as Sentry from '@sentry/react'
 import Button from '@material-ui/core/Button'
 import { useWorkspace } from 'src/store/hooks'
 
-import readFile from 'src/utils/readFile'
+import readFile from 'src/utils/supports/readFile'
 import conversion from 'src/file/conversion'
 
 interface ButtonOpenProps {

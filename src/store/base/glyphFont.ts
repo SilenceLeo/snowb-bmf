@@ -1,37 +1,52 @@
 import { action } from 'mobx'
-import getFontGlyphInfo from 'src/utils/getFontGlyphInfo'
-import getGlyphInfo, { Config } from 'src/utils/getGlyphInfo'
+import getGlyphInfoFromFont from 'src/utils/glyphInfo/getGlyphInfoFromFont'
+import getGlyphInfo from 'src/utils/glyphInfo/getGlyphInfo'
 import GlyphBase from './glyphBase'
-
 import Style from './style'
+import { GlyphConfig } from '../../utils/glyphInfo/ds'
 
 class GlyphFont extends GlyphBase {
-  constructor(galyphFont: Partial<GlyphFont> = {}, textStyle: Style) {
-    super(galyphFont)
+  constructor(glyphFont: Partial<GlyphFont> = {}, textStyle: Style) {
+    super(glyphFont)
     this.setGlyphInfo(textStyle)
   }
 
   @action setGlyphInfo(textStyle: Style): void {
-    const { font, fill, useStroke, stroke, useShadow, shadow } = textStyle
-    const config: Config = { font, fill }
+    const {
+      font,
+      fill,
+      useStroke,
+      stroke,
+      useShadow,
+      shadow,
+      useBgFill,
+      bgFill,
+      fullHeight,
+    } = textStyle
+    /**
+     * @mark: font 和 fill 是必有的，其他几个根据控制再开启
+     */
+    const config: GlyphConfig = { font, fill, fullHeight }
     if (useStroke) config.stroke = stroke
     if (useShadow) config.shadow = shadow
+    if (useBgFill) config.bgFill = bgFill
 
     let glyphInfo
     try {
-      glyphInfo = getFontGlyphInfo(this.letter, config as Style)
+      glyphInfo = getGlyphInfoFromFont(this.letter, config)
     } catch (e) {
       glyphInfo = getGlyphInfo(this.letter, config)
     }
+
     this.source = glyphInfo.canvas
     this.width = glyphInfo.width
     this.height = glyphInfo.height
     this.fontWidth = glyphInfo.fontWidth
     this.fontHeight = glyphInfo.fontHeight
     this.trimOffsetTop = glyphInfo.trimOffsetTop
+    this.trimOffsetBottom = glyphInfo.trimOffsetBottom
     this.trimOffsetLeft = glyphInfo.trimOffsetLeft
     this.trimOffsetRight = glyphInfo.trimOffsetRight
-    this.trimOffsetBottom = glyphInfo.trimOffsetBottom
   }
 }
 

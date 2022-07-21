@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Box from '@material-ui/core/Box'
 
-import readFile from 'src/utils/readFile'
+import readFile from 'src/utils/supports/readFile'
 
 const useStyles = makeStyles((theme) =>
   createStyles({

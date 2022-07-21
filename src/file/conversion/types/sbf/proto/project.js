@@ -2502,7 +2502,7 @@ export const Layout = ($root.Layout = (() => {
    * @memberof Layout
    * @instance
    */
-  Layout.prototype.auto = false
+  Layout.prototype.autoPack = false
 
   /**
    * Layout fixedSize.

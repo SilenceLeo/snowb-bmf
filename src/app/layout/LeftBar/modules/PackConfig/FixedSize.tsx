@@ -7,7 +7,7 @@ import { useLayout } from 'src/store/hooks'
 import GridInput from 'src/app/components/GridInput'
 
 const FixedSize: FunctionComponent<unknown> = () => {
-  const { auto, fixedSize, setFixedSize } = useLayout()
+  const { autoPack, fixedSize, setFixedSize } = useLayout()
 
   return (
     <GridInput before='Fixed Size:'>
@@ -16,7 +16,7 @@ const FixedSize: FunctionComponent<unknown> = () => {
         size='small'
         color='default'
         onChange={(e) => setFixedSize(e.target.checked)}
-        disabled={auto}
+        disabled={autoPack}
       />
     </GridInput>
   )

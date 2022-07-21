@@ -4,6 +4,7 @@ import Font from './font'
 import Fill from './fill'
 import Stroke from './stroke'
 import Shadow from './shadow'
+import BgFill from './bgFill'
 
 class Style {
   @observable readonly font: Font
@@ -18,15 +19,22 @@ class Style {
 
   @observable readonly shadow: Shadow
 
-  @observable bgColor = 'rgba(0,0,0,0)'
+  @observable readonly bgFill: BgFill
+
+  @observable useBgFill: boolean
+
+  @observable fullHeight: boolean
 
   constructor(style: Partial<Style> = {}) {
     this.font = new Font(style.font)
     this.fill = new Fill(style.fill)
     this.stroke = new Stroke(style.stroke)
     this.shadow = new Shadow(style.shadow)
+    this.bgFill = new BgFill(style.bgFill)
     this.useShadow = !!style.useShadow
     this.useStroke = !!style.useStroke
+    this.useBgFill = !!style.useBgFill
+    this.fullHeight = !!style.fullHeight
   }
 
   @action.bound setUseStroke(useStroke: boolean): void {
@@ -37,8 +45,12 @@ class Style {
     this.useShadow = useShadow
   }
 
-  @action.bound setBgColor(bgColor: string): void {
-    this.bgColor = bgColor
+  @action.bound setUseBgFill(useBgFill: boolean): void {
+    this.useBgFill = useBgFill
+  }
+
+  @action.bound setFullHeight(fullHeight: boolean): void {
+    this.fullHeight = fullHeight
   }
 }
 

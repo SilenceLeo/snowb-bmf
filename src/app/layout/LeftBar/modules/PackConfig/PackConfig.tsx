@@ -9,6 +9,7 @@ import AutoPack from './AutoPack'
 import FixedSize from './FixedSize'
 import PackWidth from './PackWidth'
 import PackHeight from './PackHeight'
+import FullHeight from './FullHeight'
 
 const PackConfig: FunctionComponent<unknown> = () => {
   return (
@@ -21,6 +22,9 @@ const PackConfig: FunctionComponent<unknown> = () => {
       </Box>
       <Box paddingX={2} marginY={4}>
         <Spacing />
+      </Box>
+      <Box paddingX={2} marginY={4}>
+        <FullHeight />
       </Box>
       <Box paddingX={2} marginY={4}>
         <AutoPack />

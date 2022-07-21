@@ -1,6 +1,6 @@
 import { action, observable, runInAction } from 'mobx'
-import use from 'src/utils/use'
-import base64ToArrayBuffer from 'src/utils/base64ToArrayBuffer'
+import use from 'src/utils/supports/use'
+import base64ToArrayBuffer from 'src/utils/supports/base64ToArrayBuffer'
 
 export type Repetition = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 

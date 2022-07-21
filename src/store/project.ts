@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { action, computed, observable } from 'mobx'
 import { deepObserve } from 'mobx-utils'
 import { cancel, request } from 'requestidlecallback'
 import { GuillotineBinPack } from 'rectangle-packer'
@@ -13,7 +13,9 @@ import Layout from './base/layout'
 import Metric from './base/metric'
 import GlyphFont from './base/glyphFont'
 import GlyphImage, { FileInfo } from './base/glyphImage'
-import { GlyphType } from './base/glyphBase'
+import { GlyphType } from './base'
+import { CONFIG_DEFAULT } from './config'
+
 interface TextRectangle {
   width: number
   height: number
@@ -38,8 +40,10 @@ class Project {
 
   @observable isPacking = false
 
-  @observable text =
-    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!№;%:?*()_+-=.,/|"\'@#$^&{}[]'
+  /**
+   * 不能有空字符，否则会报错
+   */
+  @observable text = CONFIG_DEFAULT.projectText
 
   @observable.shallow glyphs: Map<string, GlyphFont> = new Map()
 
@@ -57,7 +61,7 @@ class Project {
 
   constructor(project: Partial<Project> = {}) {
     this.id = project.id || Date.now()
-    this.name = project.name || 'Unnamed'
+    this.name = project.name || CONFIG_DEFAULT.fileName
     this.text = project.text || this.text
     this.ui = new Ui(project.ui)
     this.style = new Style(project.style)
@@ -116,8 +120,12 @@ class Project {
     if (this.idleId) return
     if (this.worker) this.worker.terminate()
     this.isPacking = true
+
+    /**
+     * @mark: sort the order
+     */
     const packList = this.rectangleList.sort((a, b) => b.height - a.height)
-    if (!this.layout.auto) {
+    if (!this.layout.autoPack) {
       const packer = new GuillotineBinPack<TextRectangle>(
         this.layout.width + this.layout.spacing,
         this.layout.height + this.layout.spacing,
@@ -158,7 +166,7 @@ class Project {
     const imgList = this.glyphImages
     let maxWidth = 0
     let maxHeight = 0
-    const { auto, fixedSize, width, height, spacing } = this.layout
+    const { autoPack, fixedSize, width, height, spacing } = this.layout
 
     list.forEach((rectangle) => {
       const { letter, x, y, type, width, height } = rectangle
@@ -166,8 +174,7 @@ class Project {
 
       if (type === 'image') {
         glyph = imgList.find((gi) => {
-          if (gi && gi.letter === letter) return true
-          return false
+          return gi && gi.letter === letter
         })
       }
 
@@ -191,8 +198,7 @@ class Project {
 
         if (type === 'image') {
           glyph = imgList.find((gi) => {
-            if (gi && gi.letter === letter) return true
-            return false
+            return gi && gi.letter === letter
           })
         }
 
@@ -210,7 +216,7 @@ class Project {
       this.ui.setPackFailed(false)
     }
 
-    if (!auto && fixedSize) {
+    if (!autoPack && fixedSize) {
       this.ui.setSize(width, height)
       return
     }

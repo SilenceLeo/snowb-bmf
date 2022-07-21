@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx'
-import use from 'src/utils/use'
+import use from 'src/utils/supports/use'
 
 class Shadow {
   @observable color: string

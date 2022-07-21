@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography'
 import Fill from './modules/Fill'
 import Stroke from './modules/Stroke'
 import Shadow from './modules/Shadow'
-import BackgroundColor from './modules/BackgroundColor'
+import BgFill from './modules/BgFill'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -39,7 +39,7 @@ const RightBar: FunctionComponent<unknown> = () => {
         <Divider />
         <Shadow />
         <Divider />
-        <BackgroundColor />
+        <BgFill />
       </Box>
     </Box>
   )

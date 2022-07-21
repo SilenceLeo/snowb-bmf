@@ -50,9 +50,14 @@ const PackCanvas: FunctionComponent<unknown> = () => {
   const {
     isPacking,
     ui,
-    layout: { padding, auto, fixedSize, width: packWidth, height: packHeight },
+    layout: {
+      padding,
+      autoPack,
+      fixedSize,
+      width: packWidth,
+      height: packHeight,
+    },
     glyphList,
-    style: { bgColor },
     packCanvas,
     setCanvas,
   } = useProject()
@@ -112,11 +117,6 @@ const PackCanvas: FunctionComponent<unknown> = () => {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    if (bgColor) {
-      ctx.fillStyle = bgColor
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-    }
-
     glyphList.forEach((glyph) => {
       if (
         glyph.source &&
@@ -131,13 +131,12 @@ const PackCanvas: FunctionComponent<unknown> = () => {
       }
     })
   }, [
-    bgColor,
     glyphList,
     isPacking,
     height,
     width,
     padding,
-    auto,
+    autoPack,
     fixedSize,
     packWidth,
     packHeight,

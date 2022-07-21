@@ -1,4 +1,4 @@
-import getVersionNumber from 'src/utils/getVersionNumber'
+import getVersionNumber from 'src/utils/supports/getVersionNumber'
 import prefix from './prefix'
 
 export default function decode(buffer: unknown): number {

@@ -1,4 +1,4 @@
-import formatStr from 'src/utils/formatStr'
+import formatStr from 'src/utils/supports/formatStr'
 import { Output, FontToString } from '../type'
 
 const TEMP_INFO = `<info face="$face$" size="$size$" bold="$bold$" italic="$italic$" charset="$charset$" unicode="$unicode$" stretchH="$stretchH$" smooth="$smooth$" aa="$aa$" padding="$padding$" spacing="$spacing$" />`
