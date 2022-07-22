@@ -66,8 +66,12 @@ ctx.addEventListener(
   'message',
   function converter(msg) {
     const { data } = msg
-    const list = packing(data as Rectangle[])
-    ctx.postMessage(list)
+    if (data.length > 1) {
+      const list = packing(data as Rectangle[])
+      ctx.postMessage(list)
+    } else {
+      ctx.postMessage(data || [])
+    }
   },
   false,
 )
