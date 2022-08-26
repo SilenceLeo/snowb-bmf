@@ -9,7 +9,7 @@ import {
 } from './type'
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
-export default function toBmfInfo(project: Project): BMFont {
+export default function toBmfInfo(project: Project, fontFamily = ''): BMFont {
   const {
     name,
     style,
@@ -24,7 +24,7 @@ export default function toBmfInfo(project: Project): BMFont {
     fontScale = (1 / opentype.unitsPerEm) * size
   }
   const info: BMFontInfo = {
-    face: style.font.mainFamily,
+    face: fontFamily || style.font.mainFamily,
     size: style.font.size,
     bold: 0,
     italic: 0,
