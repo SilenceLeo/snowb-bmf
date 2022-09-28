@@ -6,9 +6,9 @@ class Layout {
 
   @observable spacing = 1
 
-  @observable width = 1024
+  @observable width = 512
 
-  @observable height = 1024
+  @observable height = 512
 
   @observable auto = true
 
@@ -19,9 +19,9 @@ class Layout {
 
     this.spacing = use.num(layout.spacing, 1)
 
-    this.width = use.num(layout.width, 1024)
+    this.width = use.num(layout.width, 512)
 
-    this.height = use.num(layout.height, 1024)
+    this.height = use.num(layout.height, 512)
 
     // Compatible with old files, default true.
     this.auto = layout.auto === false ? false : true
