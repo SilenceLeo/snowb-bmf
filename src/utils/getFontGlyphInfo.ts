@@ -121,45 +121,67 @@ export default function getFontGlyphInfo(
   canvas.width = width + addX * 2
   canvas.height = height + addY * 2
 
-  if (shadow) {
-    ctx.shadowColor = shadow.color
-    ctx.shadowBlur = shadow.blur
-    ctx.shadowOffsetX = shadow.offsetX
-    ctx.shadowOffsetY = shadow.offsetY
-  }
+  ctx.translate(addX + trimOffsetLeft, addY + trimOffsetTop)
+  ctxDoPath(ctx, path.commands)
+  ctx.fillStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, fill)
+  ctx.fill()
 
   if (stroke && lineWidth) {
     const strokCanvas = document.createElement('canvas')
     strokCanvas.width = canvas.width
     strokCanvas.height = canvas.height
-    const sctx = strokCanvas.getContext('2d') as CanvasRenderingContext2D
-    sctx.translate(addX + trimOffsetLeft, addY + trimOffsetTop)
-
-    sctx.lineCap = stroke.lineCap
-    sctx.lineJoin = stroke.lineJoin
-    sctx.lineWidth = path.strokeWidth = lineWidth
-    sctx.strokeStyle = path.stroke = getCanvasStyle(
-      sctx,
+    const strokCtx = strokCanvas.getContext('2d') as CanvasRenderingContext2D
+    strokCtx.translate(addX + trimOffsetLeft, addY + trimOffsetTop)
+    strokCtx.lineCap = stroke.lineCap
+    strokCtx.lineJoin = stroke.lineJoin
+    strokCtx.strokeStyle = path.stroke = getCanvasStyle(
+      strokCtx,
       0,
       0,
       fontWidth,
       fontHeight,
       stroke,
     ) as string
+    strokCtx.fillStyle = '#000000'
 
-    ctxDoPath(sctx, path.commands)
-    sctx.stroke()
-    sctx.globalCompositeOperation = 'destination-out'
-    sctx.fill()
-    sctx.globalCompositeOperation = 'source-over'
-    sctx.fillStyle = getCanvasStyle(sctx, 0, 0, fontWidth, fontHeight, fill)
-    sctx.fill()
+    if (stroke.strokeType === 1) {
+      strokCtx.lineWidth = path.strokeWidth = stroke.width
+    } else {
+      strokCtx.lineWidth = path.strokeWidth = lineWidth
+    }
+
+    ctxDoPath(strokCtx, path.commands)
+
+    if (stroke.strokeType === 2) {
+      strokCtx.fill()
+      strokCtx.globalCompositeOperation = 'source-in'
+      strokCtx.stroke()
+    } else if (stroke.strokeType === 1) {
+      strokCtx.stroke()
+    } else {
+      strokCtx.stroke()
+      strokCtx.globalCompositeOperation = 'destination-out'
+      strokCtx.fill()
+    }
+    strokCtx.globalCompositeOperation = 'source-over'
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.drawImage(strokCanvas, 0, 0)
-  } else {
-    ctx.translate(addX + trimOffsetLeft, addY + trimOffsetTop)
-    ctxDoPath(ctx, path.commands)
-    ctx.fillStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, fill)
-    ctx.fill()
+  }
+
+  if (shadow) {
+    const cvs = document.createElement('canvas')
+    cvs.width = width + addX * 2
+    cvs.height = height + addY * 2
+    const newCtx = cvs.getContext('2d') as CanvasRenderingContext2D
+
+    newCtx.shadowColor = shadow.color
+    newCtx.shadowBlur = shadow.blur
+    newCtx.shadowOffsetX = shadow.offsetX
+    newCtx.shadowOffsetY = shadow.offsetY
+    newCtx.drawImage(canvas, 0, 0)
+
+    canvas = cvs
+    ctx = newCtx
   }
 
   if (canvas.width === 0 || canvas.height === 0) {

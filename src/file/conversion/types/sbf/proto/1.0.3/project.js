@@ -978,7 +978,6 @@ export const Fill = ($root.Fill = (() => {
    * @property {number|null} [width] Fill width
    * @property {string|null} [lineCap] Fill lineCap
    * @property {string|null} [lineJoin] Fill lineJoin
-   * @property {number|null} [strokeType] Fill strokeType
    */
 
   /**
@@ -1052,14 +1051,6 @@ export const Fill = ($root.Fill = (() => {
   Fill.prototype.lineJoin = ''
 
   /**
-   * Fill strokeType.
-   * @member {number} strokeType
-   * @memberof Fill
-   * @instance
-   */
-  Fill.prototype.strokeType = 0
-
-  /**
    * Creates a new Fill instance using the specified properties.
    * @function create
    * @memberof Fill
@@ -1114,11 +1105,6 @@ export const Fill = ($root.Fill = (() => {
       Object.hasOwnProperty.call(message, 'lineJoin')
     )
       writer.uint32(/* id 7, wireType 2 =*/ 58).string(message.lineJoin)
-    if (
-      message.strokeType != null &&
-      Object.hasOwnProperty.call(message, 'strokeType')
-    )
-      writer.uint32(/* id 8, wireType 0 =*/ 64).int32(message.strokeType)
     return writer
   }
 
@@ -1177,9 +1163,6 @@ export const Fill = ($root.Fill = (() => {
         case 7:
           message.lineJoin = reader.string()
           break
-        case 8:
-          message.strokeType = reader.int32()
-          break
         default:
           reader.skipType(tag & 7)
           break
@@ -1235,9 +1218,6 @@ export const Fill = ($root.Fill = (() => {
       if (!$util.isString(message.lineCap)) return 'lineCap: string expected'
     if (message.lineJoin != null && message.hasOwnProperty('lineJoin'))
       if (!$util.isString(message.lineJoin)) return 'lineJoin: string expected'
-    if (message.strokeType != null && message.hasOwnProperty('strokeType'))
-      if (!$util.isInteger(message.strokeType))
-        return 'strokeType: integer expected'
     return null
   }
 
@@ -1269,7 +1249,6 @@ export const Fill = ($root.Fill = (() => {
     if (object.width != null) message.width = object.width | 0
     if (object.lineCap != null) message.lineCap = String(object.lineCap)
     if (object.lineJoin != null) message.lineJoin = String(object.lineJoin)
-    if (object.strokeType != null) message.strokeType = object.strokeType | 0
     return message
   }
 
@@ -1293,7 +1272,6 @@ export const Fill = ($root.Fill = (() => {
       object.width = 0
       object.lineCap = ''
       object.lineJoin = ''
-      object.strokeType = 0
     }
     if (message.type != null && message.hasOwnProperty('type'))
       object.type = message.type
@@ -1315,8 +1293,6 @@ export const Fill = ($root.Fill = (() => {
       object.lineCap = message.lineCap
     if (message.lineJoin != null && message.hasOwnProperty('lineJoin'))
       object.lineJoin = message.lineJoin
-    if (message.strokeType != null && message.hasOwnProperty('strokeType'))
-      object.strokeType = message.strokeType
     return object
   }
 

@@ -35,6 +35,7 @@ interface Stroke extends Fill {
   width: number
   lineJoin: CanvasLineJoin
   lineCap: CanvasLineCap
+  strokeType: 0 | 1 | 2
 }
 
 interface Font {
@@ -96,21 +97,6 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
     fontFamily: font.family,
   })
 
-  if (stroke && lineWidth) {
-    ctx.lineWidth = lineWidth
-    ctx.lineCap = stroke.lineCap
-    ctx.lineJoin = stroke.lineJoin
-    ctx.strokeStyle = getCanvasStyle(
-      ctx,
-      styleX,
-      styleY,
-      font.size,
-      font.size,
-      stroke,
-    )
-    ctx.strokeText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
-  }
-
   ctx.fillStyle = getCanvasStyle(
     ctx,
     styleX,
@@ -120,6 +106,54 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
     fill,
   )
   ctx.fillText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
+
+  if (stroke && lineWidth) {
+    const strokCanvas = document.createElement('canvas')
+    strokCanvas.width = canvas.width
+    strokCanvas.height = canvas.height
+    const strokCtx = strokCanvas.getContext('2d') as CanvasRenderingContext2D
+
+    strokCtx.textAlign = 'left'
+    strokCtx.textBaseline = 'top'
+
+    strokCtx.font = fontStyleStringify({
+      fontSize: font.size,
+      fontFamily: font.family,
+    })
+
+    strokCtx.lineCap = stroke.lineCap
+    strokCtx.lineJoin = stroke.lineJoin
+    strokCtx.strokeStyle = getCanvasStyle(
+      strokCtx,
+      styleX,
+      styleY,
+      font.size,
+      font.size,
+      stroke,
+    )
+
+    strokCtx.fillStyle = '#000000'
+
+    if (stroke.strokeType === 1) {
+      strokCtx.lineWidth = stroke.width
+    } else {
+      strokCtx.lineWidth = lineWidth
+    }
+
+    if (stroke.strokeType === 2) {
+      strokCtx.fillText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
+      strokCtx.globalCompositeOperation = 'source-in'
+      strokCtx.strokeText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
+    } else if (stroke.strokeType === 1) {
+      strokCtx.strokeText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
+    } else {
+      strokCtx.strokeText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
+      strokCtx.globalCompositeOperation = 'destination-out'
+      strokCtx.fillText(text, addX + trimOffsetLeft, addY + trimOffsetTop)
+    }
+    strokCtx.globalCompositeOperation = 'source-over'
+    ctx.drawImage(strokCanvas, 0, 0)
+  }
 
   if (shadow) {
     const cvs = document.createElement('canvas')

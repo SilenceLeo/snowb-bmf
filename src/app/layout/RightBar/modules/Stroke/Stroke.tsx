@@ -28,7 +28,15 @@ const useStyles = makeStyles(() =>
 const Stroke: FunctionComponent<unknown> = () => {
   const classes = useStyles()
   const { stroke, useStroke, setUseStroke } = useStyle()
-  const { setWidth, lineJoin, setLineJoin, lineCap, setLineCap } = stroke
+  const {
+    setWidth,
+    lineJoin,
+    setLineJoin,
+    lineCap,
+    setLineCap,
+    strokeType,
+    setStrokeType,
+  } = stroke
 
   return (
     <>
@@ -60,6 +68,31 @@ const Stroke: FunctionComponent<unknown> = () => {
               inputProps={{ min: 0 }}
               onChange={(e) => setWidth(Number(e.target.value))}
             />
+          </GridInput>
+        </Box>
+
+        <Box paddingX={2} marginY={4}>
+          <GridInput before='Type:' component='div' childrenWidth={8}>
+            <ButtonGroup size='small' color='primary'>
+              <Button
+                onClick={() => setStrokeType(0)}
+                variant={strokeType === 0 ? 'contained' : 'outlined'}
+              >
+                Outer
+              </Button>
+              <Button
+                onClick={() => setStrokeType(1)}
+                variant={strokeType === 1 ? 'contained' : 'outlined'}
+              >
+                Middle
+              </Button>
+              <Button
+                onClick={() => setStrokeType(2)}
+                variant={strokeType === 2 ? 'contained' : 'outlined'}
+              >
+                Inner
+              </Button>
+            </ButtonGroup>
           </GridInput>
         </Box>
 
