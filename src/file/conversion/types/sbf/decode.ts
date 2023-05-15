@@ -4,7 +4,7 @@ import {
   oldProto,
   OldProto,
   toOriginBuffer,
-} from './proto'
+} from './proto/index'
 import prefix from './prefix'
 import getVersion from './getVersion'
 import updateOldProject from './updateOldProject'

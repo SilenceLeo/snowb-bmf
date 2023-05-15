@@ -37,9 +37,11 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   const [fileName, setFileName] = useState(project.name)
 
   const handleOpen = useCallback(() => {
+    setFontName(project.style.font.mainFamily)
+    setFileName(project.name)
     setShowPreview(false)
     setOpen(true)
-  }, [setShowPreview])
+  }, [project.name, project.style.font.mainFamily, setShowPreview])
 
   const handleClose = () => {
     setOpen(false)

@@ -46,8 +46,6 @@ message Fill {
   string lineCap = 6;
 
   string lineJoin = 7;
-
-  int32 strokeType = 8;
 }
 
 message FontResource {

@@ -1,4 +1,4 @@
-import { IProject, oldProto, OldProto } from './proto'
+import { IProject, oldProto, OldProto } from './proto/index'
 
 type OldKey = keyof OldProto
 

@@ -474,9 +474,6 @@ export interface IFill {
 
   /** Fill lineJoin */
   lineJoin?: string | null
-
-  /** Fill strokeType */
-  strokeType?: number | null
 }
 
 /** Represents a Fill. */
@@ -507,9 +504,6 @@ export class Fill implements IFill {
 
   /** Fill lineJoin. */
   public lineJoin: string
-
-  /** Fill strokeType. */
-  public strokeType: number
 
   /**
    * Creates a new Fill instance using the specified properties.

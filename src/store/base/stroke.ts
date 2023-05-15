@@ -20,11 +20,21 @@ class Stroke extends Fill {
    */
   @observable lineJoin: CanvasLineJoin
 
+  /**
+   * Stroke Type
+   *
+   * 0 outer stroke
+   * 1 middle stroke
+   * 2 inner stroke
+   */
+  @observable strokeType: 0 | 1 | 2
+
   constructor(stroke: Partial<Stroke> = {}) {
     super(stroke)
     this.width = use.num(stroke.width, 1)
     this.lineCap = stroke.lineCap || 'round'
     this.lineJoin = stroke.lineJoin || 'round'
+    this.strokeType = stroke.strokeType || 0
   }
 
   @action.bound setWidth(width: number): void {
@@ -37,6 +47,10 @@ class Stroke extends Fill {
 
   @action.bound setLineJoin(lineJoin: CanvasLineJoin): void {
     this.lineJoin = lineJoin
+  }
+
+  @action.bound setStrokeType(strokeType: 0 | 1 | 2): void {
+    this.strokeType = strokeType
   }
 }
 
