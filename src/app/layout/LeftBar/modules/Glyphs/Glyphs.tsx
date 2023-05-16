@@ -5,9 +5,9 @@ import React, {
   useEffect,
 } from 'react'
 
-import Box from '@material-ui/core/Box'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 import { observer } from 'mobx-react'
 
@@ -47,10 +47,10 @@ const Glyphs: FunctionComponent<unknown> = () => {
 
   return (
     <>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <Typography>Glyphs</Typography>
       </Box>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <TextField
           margin='none'
           value={isIME ? inputText : text}

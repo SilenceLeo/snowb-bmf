@@ -1,52 +1,16 @@
 import React, { useRef, useEffect, FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { useTheme } from '@mui/material/styles'
 
 import { useProject } from 'src/store/hooks'
 import useWheel from 'src/app/hooks/useWheel'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 
-interface StyleProps {
-  width: number
-  height: number
-  scale: number
-  offsetX: number
-  offsetY: number
-  dragState: number
-}
-
-const useStyles = makeStyles(({ bgPixel }) =>
-  createStyles({
-    root: {
-      position: 'relative',
-      width: '100%',
-      height: '100%',
-      overflow: 'hidden',
-      flex: 1,
-      cursor: (props: StyleProps) => {
-        if (props.dragState === 2) return 'grabbing'
-        if (props.dragState === 1) return 'grab'
-        return 'default'
-      },
-    },
-    canvas: {
-      ...bgPixel,
-      transformOrigin: '50% 50%',
-      position: 'absolute',
-      left: '50%',
-      top: '50%',
-      width: (props: StyleProps) => `${props.width}px`,
-      height: (props: StyleProps) => `${props.height}px`,
-      marginLeft: (props: StyleProps) => `${props.width / -2}px`,
-      marginTop: (props: StyleProps) => `${props.height / -2}px`,
-      transform: (props: StyleProps) =>
-        `scale(${props.scale}) translate(${props.offsetX}px,${props.offsetY}px)`,
-      imageRendering: 'pixelated',
-    },
-  }),
-)
+import styles from './PackCanvas.module.scss'
 
 const PackCanvas: FunctionComponent<unknown> = () => {
+  const { bgPixel } = useTheme()
+
   const {
     isPacking,
     ui,
@@ -70,15 +34,6 @@ const PackCanvas: FunctionComponent<unknown> = () => {
     },
     [ui],
   )
-
-  const classes = useStyles({
-    width,
-    height,
-    scale,
-    offsetX,
-    offsetY,
-    dragState,
-  })
 
   useWheel(
     domRef,
@@ -147,10 +102,25 @@ const PackCanvas: FunctionComponent<unknown> = () => {
     <div
       aria-hidden
       ref={domRef}
-      className={classes.root}
+      className={styles.root}
+      style={{
+        cursor:
+          dragState === 2 ? 'grabbing' : dragState === 1 ? 'grab' : 'default',
+      }}
       onMouseDown={handleMouseDown}
     >
-      <canvas ref={canvasRef} className={classes.canvas} />
+      <canvas
+        ref={canvasRef}
+        className={styles.canvas}
+        style={{
+          ...bgPixel,
+          width: `${width}px`,
+          height: `${height}px`,
+          marginLeft: `${width / -2}px`,
+          marginTop: `${height / -2}px`,
+          transform: `scale(${scale}) translate(${offsetX}px,${offsetY}px)`,
+        }}
+      />
     </div>
   )
 }

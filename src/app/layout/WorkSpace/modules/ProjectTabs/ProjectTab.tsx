@@ -1,71 +1,9 @@
 import React, { useRef, useState, useEffect, FunctionComponent } from 'react'
-// import { observer } from 'mobx-react'
 import clsx from 'clsx'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-// import Input from '@material-ui/core/Input'
-import CloseIcon from '@material-ui/icons/Close'
+import { useTheme } from '@mui/material/styles'
+import CloseIcon from '@mui/icons-material/Close'
 
-const useStyles = makeStyles(({ palette }) =>
-  createStyles({
-    root: {
-      minHeight: 'auto',
-      minWidth: '80px',
-      maxWidth: 'none',
-      height: '34px',
-      lineHeight: '16px',
-      padding: '10px',
-      color: 'rgba(255,255,255,0.5)',
-      backgroundColor: 'rgb(45, 45, 45)',
-      borderRight: `1px solid ${palette.background.default}`,
-      textTransform: 'none',
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      cursor: 'pointer',
-      '&:hover': {
-        '& $icon': {
-          opacity: 1,
-        },
-      },
-      '&:last-child': {
-        borderRight: '0 none',
-      },
-    },
-    selected: {
-      background: palette.background.default,
-      color: '#fff',
-      '& $icon': {
-        opacity: 1,
-      },
-    },
-    name: {
-      whiteSpace: 'nowrap',
-      position: 'relative',
-      background: 'inherit',
-    },
-    editor: {
-      color: 'rgba(0,0,0,0)',
-    },
-    input: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      left: 0,
-      fontSize: 'inherit',
-      padding: 0,
-      border: '0 none',
-      appearance: 'none',
-      color: 'inherit',
-      background: 'inherit',
-    },
-    icon: {
-      width: '16px',
-      height: '16px',
-      marginLeft: '10px',
-      opacity: 0,
-    },
-  }),
-)
+import styles from './ProjectTab.module.scss'
 
 interface ProjectTabProps {
   name: string
@@ -97,10 +35,10 @@ const ProjectTab: FunctionComponent<ProjectTabProps> = (
     onRemove,
     onRename,
   } = props
+  const { palette } = useTheme()
   const [editor, setEditor] = useState(false)
   const [sname, setSName] = useState(name)
   const editorRef = useRef<HTMLInputElement>(null)
-  const classes = useStyles()
 
   const handleRemove = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.stopPropagation()
@@ -151,17 +89,21 @@ const ProjectTab: FunctionComponent<ProjectTabProps> = (
   return (
     <div
       aria-hidden
-      className={clsx(classes.root, {
-        [classes.selected]: selected,
+      className={clsx(styles.root, {
+        [styles.selected]: selected,
       })}
+      style={{
+        borderRight: `1px solid ${palette.background.default}`,
+        ...(selected ? { background: palette.background.default } : {}),
+      }}
       onClick={handleSelect}
       onDoubleClick={handleDoubleClick}
       title='Double click rename'
     >
-      <span aria-hidden className={classes.name}>
+      <span aria-hidden className={styles.name}>
         {editor ? sname : name}
         <input
-          className={classes.input}
+          className={styles.input}
           hidden={!editor}
           ref={editorRef}
           value={editor ? sname : name}
@@ -174,7 +116,7 @@ const ProjectTab: FunctionComponent<ProjectTabProps> = (
       </span>
       {useRemove ? (
         <CloseIcon
-          className={classes.icon}
+          className={styles.icon}
           onClick={handleRemove}
           onDoubleClick={handleRemove}
         />

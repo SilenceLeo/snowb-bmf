@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, FunctionComponent } from 'react'
+import { autorun } from 'mobx'
 import { observer } from 'mobx-react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { useTheme } from '@mui/material/styles'
 
 import { useProject } from 'src/store/hooks'
 import useWheel from 'src/app/hooks/useWheel'
@@ -9,53 +10,11 @@ import { BMFontChar, toBmfInfo } from 'src/file/export'
 
 import getPreviewCanvas, { PreviewObject } from './getPreviewCanvas'
 import LetterList from './LetterList'
-import { autorun } from 'mobx'
 
-interface StyleProps {
-  width: number
-  height: number
-  scale: number
-  offsetX: number
-  offsetY: number
-  dragState: number
-}
-
-const useStyles = makeStyles(({ bgPixel }) =>
-  createStyles({
-    root: {
-      position: 'relative',
-      flex: 1,
-      width: '100%',
-      height: '100%',
-      overflow: 'hidden',
-      ...bgPixel,
-      cursor: (props: StyleProps) => {
-        if (props.dragState === 2) return 'grabbing'
-        if (props.dragState === 1) return 'grab'
-        return 'default'
-      },
-    },
-    wrap: {
-      transformOrigin: '50% 50%',
-      position: 'absolute',
-      left: '50%',
-      top: '50%',
-      width: (props: StyleProps) => `${props.width}px`,
-      height: (props: StyleProps) => `${props.height}px`,
-      marginLeft: (props: StyleProps) => `${props.width / -2}px`,
-      marginTop: (props: StyleProps) => `${props.height / -2}px`,
-      transform: (props: StyleProps) =>
-        `scale(${props.scale}) translate(${props.offsetX}px,${props.offsetY}px)`,
-    },
-    canvas: {
-      width: '100%',
-      height: '100%',
-      imageRendering: 'pixelated',
-    },
-  }),
-)
+import styles from './PreviewCanvas.module.scss'
 
 const PreviewCanvas: FunctionComponent<unknown> = () => {
+  const { bgPixel } = useTheme()
   const project = useProject()
   const [data, setData] = useState<PreviewObject | null>(null)
   const {
@@ -97,14 +56,6 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     },
     [ui],
   )
-  const classes = useStyles({
-    width: data ? data.width : 0,
-    height: data ? data.height : 0,
-    scale: previewScale,
-    offsetX: previewOffsetX,
-    offsetY: previewOffsetY,
-    dragState,
-  })
 
   useWheel(
     domRef,
@@ -229,12 +180,26 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     <div
       aria-hidden
       ref={domRef}
-      className={classes.root}
+      className={styles.root}
+      style={{
+        ...bgPixel,
+        cursor:
+          dragState === 2 ? 'grabbing' : dragState === 1 ? 'grab' : 'default',
+      }}
       onMouseDown={handleMouseDown}
       onClick={() => ui.setSelectLetter('', '')}
     >
-      <div className={classes.wrap}>
-        <canvas ref={canvasRef} className={classes.canvas} />
+      <div
+        className={styles.wrap}
+        style={{
+          width: `${data ? data.width : 0}px`,
+          height: `${data ? data.height : 0}px`,
+          marginLeft: `${(data ? data.width : 0) / -2}px`,
+          marginTop: `${(data ? data.height : 0) / -2}px`,
+          transform: `scale(${previewScale}) translate(${previewOffsetX}px,${previewOffsetY}px)`,
+        }}
+      >
+        <canvas ref={canvasRef} className={styles.canvas} />
         {data ? <LetterList data={data} /> : null}
       </div>
     </div>

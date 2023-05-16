@@ -1,32 +1,18 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Input from '@material-ui/core/Input'
-import Switch from '@material-ui/core/Switch'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-import ButtonGroup from '@material-ui/core/ButtonGroup'
+import Box from '@mui/material/Box'
+import Input from '@mui/material/Input'
+import Switch from '@mui/material/Switch'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import ButtonGroup from '@mui/material/ButtonGroup'
 
 import { useStyle } from 'src/store/hooks'
 import GridInput from 'src/app/components/GridInput'
 
 import FormFill from 'src/app/layout/common/FormFill'
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    disabled: {
-      opacity: 0.3,
-      pointerEvents: 'none',
-    },
-    title: {
-      flex: 1,
-    },
-  }),
-)
-
-const Stroke: FunctionComponent<unknown> = () => {
-  const classes = useStyles()
+const Stroke: FunctionComponent = () => {
   const { stroke, useStroke, setUseStroke } = useStyle()
   const {
     setWidth,
@@ -42,12 +28,19 @@ const Stroke: FunctionComponent<unknown> = () => {
     <>
       <Box
         component='label'
-        display='flex'
-        alignItems='center'
-        paddingX={2}
-        marginY={4}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          px: 2,
+          my: 4,
+        }}
       >
-        <Typography component='div' className={classes.title}>
+        <Typography
+          component='div'
+          sx={{
+            flex: 1,
+          }}
+        >
           Stroke
         </Typography>
         Off
@@ -58,8 +51,17 @@ const Stroke: FunctionComponent<unknown> = () => {
         />
         On
       </Box>
-      <div className={useStroke ? '' : classes.disabled}>
-        <Box paddingX={2} marginY={4}>
+      <Box
+        sx={
+          useStroke
+            ? {}
+            : {
+                opacity: 0.3,
+                pointerEvents: 'none',
+              }
+        }
+      >
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Width:' after='px'>
             <Input
               value={stroke?.width || 0}
@@ -71,7 +73,7 @@ const Stroke: FunctionComponent<unknown> = () => {
           </GridInput>
         </Box>
 
-        <Box paddingX={2} marginY={4}>
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Type:' component='div' childrenWidth={8}>
             <ButtonGroup size='small' color='primary'>
               <Button
@@ -96,7 +98,7 @@ const Stroke: FunctionComponent<unknown> = () => {
           </GridInput>
         </Box>
 
-        <Box paddingX={2} marginY={4}>
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Line Cap:' component='div' childrenWidth={8}>
             <ButtonGroup size='small' color='primary'>
               <Button
@@ -121,7 +123,7 @@ const Stroke: FunctionComponent<unknown> = () => {
           </GridInput>
         </Box>
 
-        <Box paddingX={2} marginY={4}>
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Line Join:' component='div' childrenWidth={8}>
             <ButtonGroup size='small' color='primary'>
               <Button
@@ -146,7 +148,7 @@ const Stroke: FunctionComponent<unknown> = () => {
           </GridInput>
         </Box>
         <FormFill config={stroke} />
-      </div>
+      </Box>
     </>
   )
 }

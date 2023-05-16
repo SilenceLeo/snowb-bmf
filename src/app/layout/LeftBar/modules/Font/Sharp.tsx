@@ -1,6 +1,6 @@
-import React, { FunctionComponent, ChangeEvent } from 'react'
+import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import Slider from '@material-ui/core/Slider'
+import Slider from '@mui/material/Slider'
 
 import GridInput from 'src/app/components/GridInput/GridInput'
 
@@ -9,10 +9,7 @@ import { useFont } from 'src/store/hooks'
 const Sharp: FunctionComponent<unknown> = () => {
   const { sharp, setSharp, mainFont } = useFont()
 
-  const handleInput = (
-    event: ChangeEvent<{}>,
-    value: number | number[],
-  ): void => {
+  const handleInput = (event: Event, value: number | number[]): void => {
     setSharp(value as unknown as number)
   }
 

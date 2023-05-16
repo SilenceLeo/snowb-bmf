@@ -1,0 +1,16 @@
+.root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  display: flex;
+  flex: 1;
+  position: relative;
+  height: 0;
+  overflow: hidden;
+}
+.loadingBackdrop {
+  color: #fff;
+}

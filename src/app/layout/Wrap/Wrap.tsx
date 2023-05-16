@@ -1,9 +1,8 @@
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import Box from '@material-ui/core/Box'
-import Backdrop from '@material-ui/core/Backdrop'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import Box from '@mui/material/Box'
+import Backdrop from '@mui/material/Backdrop'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import useStores from 'src/store/hooks'
 
@@ -13,42 +12,21 @@ import RightBar from '../RightBar'
 import WorkSpace from '../WorkSpace'
 import UpdateToast from './UpdateToast'
 
-const useStyles = makeStyles(({ zIndex }) =>
-  createStyles({
-    root: {
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: {
-      display: 'flex',
-      flex: 1,
-      position: 'relative',
-      height: '0',
-      overflow: 'hidden',
-    },
-    loadingBackdrop: {
-      zIndex: zIndex.drawer + 1,
-      color: '#fff',
-    },
-  }),
-)
+import styles from './Wrap.module.css'
 
 const Wrap: FunctionComponent<unknown> = () => {
-  const classes = useStyles()
   const { ui } = useStores()
 
   return (
-    <Box className={classes.root}>
+    <Box className={styles.root}>
       <TitleBar />
       <UpdateToast />
-      <Box className={classes.content}>
+      <Box className={styles.content}>
         <LeftBar />
         <WorkSpace />
         <RightBar />
       </Box>
-      <Backdrop className={classes.loadingBackdrop} open={!!ui.globalLoader}>
+      <Backdrop className={styles.loadingBackdrop} open={!!ui.globalLoader}>
         <CircularProgress color='inherit' />
       </Backdrop>
     </Box>

@@ -1,0 +1,14 @@
+.letter {
+  position: absolute;
+  &:hover,
+  &.select {
+    background: rgba(0, 0, 0, 0.2);
+    outline: 1px solid #000;
+  }
+}
+.select {
+  & + .next {
+    background: rgba(0, 0, 0, 0.1);
+    outline: 1px dashed #666;
+  }
+}

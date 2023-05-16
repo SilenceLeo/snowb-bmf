@@ -1,57 +1,54 @@
 import React, { FunctionComponent } from 'react'
-import Box from '@material-ui/core/Box'
-import GitHubIcon from '@material-ui/icons/GitHub'
-import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import GitHubIcon from '@mui/icons-material/GitHub'
 
 import ButtonNew from './ButtonNew'
 import ButtonOpen from './ButtonOpen'
 import ButtonSave from './ButtonSave'
 import ButtonExport from './ButtonExport'
 
-const useStyles = makeStyles(({ zIndex, spacing }) =>
-  createStyles({
-    root: {
-      position: 'relative',
-      zIndex: zIndex.appBar,
-    },
-    appName: {
-      fontSize: '1.25rem',
-      fontWeight: 'bolder',
-      marginRight: spacing(4),
-    },
-    appNameSup: {
-      fontWeight: 'lighter',
-      fontSize: '0.5em',
-      marginLeft: '0.5rem',
-    },
-    btn: {
-      textTransform: 'none',
-    },
-  }),
-)
+import styles from './TitleBar.module.css'
 
 const TitleBar: FunctionComponent<unknown> = () => {
-  const classes = useStyles()
+  const { zIndex, breakpoints } = useTheme()
 
   return (
     <Box
-      className={classes.root}
-      bgcolor='background.titleBar'
-      paddingX={4}
-      display='flex'
-      alignItems='center'
+      className={styles.root}
+      sx={{
+        zIndex: zIndex.appBar,
+        px: 4,
+        bgcolor: 'background.titleBar',
+      }}
     >
-      <Typography variant='h1' className={classes.appName}>
+      <Typography
+        variant='h1'
+        sx={{
+          mr: 4,
+          fontSize: '1.25rem',
+          fontWeight: 'bolder',
+          [breakpoints.down('md')]: {
+            fontSize: '1.25rem',
+          },
+          [breakpoints.up('md')]: {
+            fontSize: '1.25rem',
+          },
+          [breakpoints.up('lg')]: {
+            fontSize: '1.25rem',
+          },
+        }}
+      >
         SnowB BMF
-        <sup className={classes.appNameSup}>BETA</sup>
+        <sup className={styles.appNameSup}>BETA</sup>
       </Typography>
-      <Box flex='auto' paddingX={4}>
-        <ButtonNew className={classes.btn} />
-        <ButtonOpen className={classes.btn} />
-        <ButtonSave className={classes.btn} />
-        <ButtonExport className={classes.btn} />
+      <Box sx={{ flex: 'auto', px: 4 }}>
+        <ButtonNew className={styles.btn} />
+        <ButtonOpen className={styles.btn} />
+        <ButtonSave className={styles.btn} />
+        <ButtonExport className={styles.btn} />
       </Box>
       <IconButton
         size='small'

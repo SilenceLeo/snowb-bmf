@@ -1,25 +1,18 @@
 import React, { FunctionComponent, useState, useRef } from 'react'
 import { observer } from 'mobx-react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
-import Popper from '@material-ui/core/Popper'
-import Slider from '@material-ui/core/Slider'
-import Switch from '@material-ui/core/Switch'
-import MenuItem from '@material-ui/core/MenuItem'
-import MenuList from '@material-ui/core/MenuList'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Button from '@mui/material/Button'
+import Popper from '@mui/material/Popper'
+import Slider from '@mui/material/Slider'
+import Switch from '@mui/material/Switch'
+import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 
 import { useProjectUi } from 'src/store/hooks'
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    slider: {
-      width: '200px',
-    },
-  }),
-)
+import styles from './ControlerBar.module.css'
 
 const ControlerBar: FunctionComponent<unknown> = () => {
   const {
@@ -30,7 +23,6 @@ const ControlerBar: FunctionComponent<unknown> = () => {
     showPreview,
     setShowPreview,
   } = useProjectUi()
-  const classes = useStyles()
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
   const [list] = useState([0.25, 0.5, 0.75, 1, 1.25, 1.5, 5, 10])
@@ -38,7 +30,7 @@ const ControlerBar: FunctionComponent<unknown> = () => {
     setOpen((prevOpen) => !prevOpen)
   }
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
+  const handleClose = (event: MouseEvent | TouchEvent) => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
@@ -64,8 +56,8 @@ const ControlerBar: FunctionComponent<unknown> = () => {
   }
 
   return (
-    <Box paddingX={2} display='flex' justifyContent='space-between'>
-      <Box component='label' display='flex' alignItems='center'>
+    <Box className={styles.root} sx={{ px: 2 }}>
+      <Box component='label' className={styles.preview}>
         Preview
         <Switch
           size='small'
@@ -75,7 +67,7 @@ const ControlerBar: FunctionComponent<unknown> = () => {
         />
       </Box>
       <Slider
-        className={classes.slider}
+        className={styles.slider}
         value={showPreview ? previewScale : scale}
         min={0.01}
         max={10}

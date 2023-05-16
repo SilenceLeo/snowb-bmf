@@ -1,0 +1,35 @@
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translate(0, -100%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+.root {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.toast {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  padding: 2px;
+  animation-name: slideDown;
+  animation-duration: 300ms;
+  pointer-events: none;
+}
+.icon {
+  margin-right: 5px;
+}

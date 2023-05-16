@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  position: relative;
+}
+.fixed {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999999;
+  width: 100%;
+  height: 100%;
+  & .panel {
+    max-height: none;
+  }
+}
+.panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: 305px;
+}
+.continer {
+  flex: 1;
+  overflow: hidden;
+  overflow-y: auto;
+}
+.listWrap {
+  min-height: 224px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+}

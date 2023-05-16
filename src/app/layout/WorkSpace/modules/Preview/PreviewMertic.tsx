@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import Box from '@material-ui/core/Box'
-import Typography from '@material-ui/core/Typography'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
 import { useProject } from 'src/store/hooks'
 

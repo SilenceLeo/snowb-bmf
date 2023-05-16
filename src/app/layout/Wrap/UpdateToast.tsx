@@ -1,17 +1,8 @@
 import React from 'react'
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Snackbar from '@material-ui/core/Snackbar'
-import IconButton from '@material-ui/core/IconButton'
-import CloseIcon from '@material-ui/icons/Close'
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    close: {
-      padding: theme.spacing(0.5),
-    },
-  }),
-)
+import Button from '@mui/material/Button'
+import Snackbar from '@mui/material/Snackbar'
+import IconButton from '@mui/material/IconButton'
+import CloseIcon from '@mui/icons-material/Close'
 
 export interface SnackbarMessage {
   message: string
@@ -25,11 +16,10 @@ export interface State {
 }
 
 export default function ConsecutiveSnackbars() {
-  const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
   const handleClose = (
-    event: React.SyntheticEvent | MouseEvent,
+    event: React.SyntheticEvent<any> | Event,
     reason?: string,
   ) => {
     if (reason === 'clickaway') {
@@ -38,10 +28,13 @@ export default function ConsecutiveSnackbars() {
     setOpen(false)
   }
 
-  const updateVersion = React.useCallback((event) => {
-    const { detail } = event
-    setOpen(!!detail)
-  }, [])
+  const updateVersion = React.useCallback(
+    (event: Event & { detail?: boolean }) => {
+      const { detail } = event
+      setOpen(!!detail)
+    },
+    [],
+  )
 
   const handleReload = () => {
     window.location.reload()
@@ -70,7 +63,7 @@ export default function ConsecutiveSnackbars() {
           <IconButton
             aria-label='close'
             color='inherit'
-            className={classes.close}
+            sx={{ p: 0.5 }}
             onClick={handleClose}
           >
             <CloseIcon />

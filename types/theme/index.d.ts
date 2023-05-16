@@ -21,3 +21,21 @@ declare module '@material-ui/core/styles/createTheme' {
     bgPixel?: CSSProperties
   }
 }
+
+declare module '@mui/material/styles/createPalette' {
+  interface TypeBackground {
+    titleBar: string
+    activityBar: string
+    sidebar: string
+  }
+}
+
+declare module '@mui/material/styles' {
+  interface Theme {
+    bgPixel: CSSProperties
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    bgPixel?: CSSProperties
+  }
+}

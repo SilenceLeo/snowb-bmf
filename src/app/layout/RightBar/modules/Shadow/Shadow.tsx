@@ -1,42 +1,30 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
-import Typography from '@material-ui/core/Typography'
-import Input from '@material-ui/core/Input'
-import Switch from '@material-ui/core/Switch'
+import Box from '@mui/material/Box'
+import Input from '@mui/material/Input'
+import Switch from '@mui/material/Switch'
+import Typography from '@mui/material/Typography'
 
 import { useStyle } from 'src/store/hooks'
 import GridInput from 'src/app/components/GridInput'
 import FormColor from '../../../common/FormColor'
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    disabled: {
-      opacity: 0.3,
-      pointerEvents: 'none',
-    },
-    title: {
-      flex: 1,
-    },
-  }),
-)
-
 const Shadow: FunctionComponent<unknown> = () => {
   const { shadow, useShadow, setUseShadow } = useStyle()
   const { setOffsetX, setOffsetY, setBlur, setColor } = shadow
-  const classes = useStyles()
 
   return (
     <>
       <Box
         component='label'
-        display='flex'
-        alignItems='center'
-        paddingX={2}
-        marginY={4}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          px: 2,
+          my: 4,
+        }}
       >
-        <Typography component='div' className={classes.title}>
+        <Typography component='div' sx={{ flex: 1 }}>
           Shadow
         </Typography>
         Off
@@ -47,8 +35,17 @@ const Shadow: FunctionComponent<unknown> = () => {
         />
         On
       </Box>
-      <div className={useShadow ? '' : classes.disabled}>
-        <Box paddingX={2} marginY={4}>
+      <Box
+        sx={
+          useShadow
+            ? {}
+            : {
+                opacity: 0.3,
+                pointerEvents: 'none',
+              }
+        }
+      >
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Offset X:' after='px'>
             <Input
               value={shadow?.offsetX || 0}
@@ -59,7 +56,7 @@ const Shadow: FunctionComponent<unknown> = () => {
             />
           </GridInput>
         </Box>
-        <Box paddingX={2} marginY={4}>
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Offset Y:' after='px'>
             <Input
               value={shadow?.offsetY || 0}
@@ -70,7 +67,7 @@ const Shadow: FunctionComponent<unknown> = () => {
             />
           </GridInput>
         </Box>
-        <Box paddingX={2} marginY={4}>
+        <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Blur:' after='px'>
             <Input
               value={shadow?.blur || 0}
@@ -82,10 +79,10 @@ const Shadow: FunctionComponent<unknown> = () => {
             />
           </GridInput>
         </Box>
-        <Box paddingX={2} marginY={4}>
+        <Box sx={{ px: 2, my: 4 }}>
           <FormColor color={shadow?.color || ''} onChange={setColor} />
         </Box>
-      </div>
+      </Box>
     </>
   )
 }

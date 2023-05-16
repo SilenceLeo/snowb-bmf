@@ -1,7 +1,9 @@
 import React, { FunctionComponent } from 'react'
+import { observer } from 'mobx-react'
 import { SketchPicker, ColorResult } from 'react-color'
-import { useTheme, makeStyles, createStyles } from '@material-ui/core/styles'
-import Popper, { PopperPlacementType } from '@material-ui/core/Popper'
+import Popper, { PopperPlacementType } from '@mui/material/Popper'
+import { useTheme } from '@mui/material/styles'
+import type { Theme } from '@mui/material/styles'
 
 export interface ChildrenProps {
   open: boolean
@@ -11,11 +13,10 @@ export interface ChildrenProps {
   onChange(color: string): void
 }
 
-const usePickerStyle = () => {
-  const theme = useTheme()
+const usePickerStyle = (theme: Theme) => {
   const { palette } = theme
 
-  if (palette.type === 'light') return {}
+  if (palette.mode === 'light') return {}
 
   return {
     default: {
@@ -33,40 +34,38 @@ const usePickerStyle = () => {
   }
 }
 
-const useStyles = makeStyles(({ palette }) =>
-  createStyles({
-    picker: {
-      '& *': {
-        color: `${palette.text.primary} !important`,
-        borderColor: `${palette.divider} !important`,
-      },
-      '& input': {
-        background: 'none',
-        color: `${palette.text.primary} !important`,
-        boxShadow: `none !important`,
-        border: `1px solid ${palette.divider} !important`,
-      },
-    },
-  }),
-)
-
 const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
   props: Partial<ChildrenProps>,
 ) => {
   const { open, anchorEl, color, onChange, placement } = props
-  const classes = useStyles()
-  const pickerStyle = usePickerStyle()
+  const theme = useTheme()
+  const pickerStyle = usePickerStyle(theme)
+  const { palette } = theme
+
   return (
     <Popper
       open={!!open}
       anchorEl={anchorEl}
       placement={placement || 'bottom'}
       style={{ zIndex: 999999 }}
+      sx={{
+        '& *': {
+          color: `${palette.text.primary} !important`,
+          borderColor: `${palette.divider} !important`,
+        },
+        '& input': {
+          background: 'none',
+          color: `${palette.text.primary} !important`,
+          boxShadow: `none !important`,
+          border: `1px solid ${palette.divider} !important`,
+        },
+      }}
     >
+      {/* @ts-ignore */}
       <SketchPicker
         color={color}
         styles={pickerStyle}
-        className={classes.picker}
+        // className={classes.picker}
         onChange={({ rgb }: ColorResult) => {
           if (onChange)
             onChange(
@@ -80,4 +79,4 @@ const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
   )
 }
 
-export default WrappedSketchPicker
+export default observer(WrappedSketchPicker)

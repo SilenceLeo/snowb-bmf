@@ -1,10 +1,11 @@
 import React, { FunctionComponent } from 'react'
+import { observer } from 'mobx-react'
 
 import GridInput from 'src/app/components/GridInput'
-import Box from '@material-ui/core/Box'
-import Input from '@material-ui/core/Input'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
+import Box from '@mui/material/Box'
+import Input from '@mui/material/Input'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 
 import { PatternTexture, Repetition } from 'src/store'
 
@@ -43,16 +44,17 @@ const FormImage: FunctionComponent<FormImageProps> = (
         </GridInput>
       </Box>
       <Box paddingX={2} marginY={4}>
-        <GridInput before='Repeat:'>
+        <GridInput before='Repeat:' after={repetition}>
           <Select
             value={repetition}
             onChange={(e) => setRepetition(e.target.value as Repetition)}
             displayEmpty
             fullWidth
+            variant='standard'
           >
             <MenuItem value='repeat'>Repeat</MenuItem>
-            <MenuItem value='repeat-x'>Repeat-x</MenuItem>
-            <MenuItem value='repeat-y'>Repeat-y</MenuItem>
+            <MenuItem value='repeat-x'>Repeat-X</MenuItem>
+            <MenuItem value='repeat-y'>Repeat-Y</MenuItem>
             <MenuItem value='no-repeat'>No Repeat</MenuItem>
           </Select>
         </GridInput>
@@ -61,4 +63,4 @@ const FormImage: FunctionComponent<FormImageProps> = (
   )
 }
 
-export default FormImage
+export default observer(FormImage)

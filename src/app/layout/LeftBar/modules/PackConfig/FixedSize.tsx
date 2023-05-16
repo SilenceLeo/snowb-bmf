@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import Checkbox from '@material-ui/core/Checkbox'
+import Checkbox from '@mui/material/Checkbox'
 
 import { useLayout } from 'src/store/hooks'
 

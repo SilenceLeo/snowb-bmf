@@ -1,29 +1,8 @@
 import React, { FunctionComponent } from 'react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import Box from '@material-ui/core/Box'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
 
 import readFile from 'src/utils/readFile'
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: theme.spacing(12),
-      height: theme.spacing(12),
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      border: `1px solid ${theme.palette.primary.main}`,
-      cursor: 'pointer',
-      ...theme.bgPixel,
-    },
-    image: {
-      maxWidth: '100%',
-      maxHeight: '100%',
-      pointerEvents: 'none',
-    },
-  }),
-)
 
 interface FileSelectorProps {
   src: string
@@ -34,7 +13,7 @@ const FileSelector: FunctionComponent<FileSelectorProps> = (
   props: FileSelectorProps,
 ) => {
   const { src, onChange } = props
-  const classes = useStyles()
+  const theme = useTheme()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target.files) return
@@ -46,7 +25,20 @@ const FileSelector: FunctionComponent<FileSelectorProps> = (
   }
 
   return (
-    <Box component='label' className={classes.root}>
+    <Box
+      component='label'
+      sx={{
+        width: theme.spacing(12),
+        height: theme.spacing(12),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        border: `1px solid ${theme.palette.primary.main}`,
+        cursor: 'pointer',
+        ...theme.bgPixel,
+      }}
+    >
       <input
         hidden
         type='file'
@@ -54,7 +46,15 @@ const FileSelector: FunctionComponent<FileSelectorProps> = (
         accept='image/*'
         onChange={handleChange}
       />
-      <img className={classes.image} src={src} alt='' />
+      <img
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          pointerEvents: 'none',
+        }}
+        src={src}
+        alt=''
+      />
     </Box>
   )
 }

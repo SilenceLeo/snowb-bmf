@@ -5,15 +5,16 @@ import React, {
   ElementType,
   CSSProperties,
 } from 'react'
-import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
+import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Grid'
 
 interface GridInputProps {
-  before?: ReactNode
+  before?: ReactNode | string
   after?: ReactNode
   component?: ElementType
   childrenWidth?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
   style?: CSSProperties
+  children?: ReactNode
 }
 
 const GridInput: FunctionComponent<GridInputProps> = (

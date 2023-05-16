@@ -1,50 +1,17 @@
 import React, { useState, FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
 
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
-import Checkbox from '@material-ui/core/Checkbox'
-import InputBase from '@material-ui/core/InputBase'
-import IconButton from '@material-ui/core/IconButton'
-import DeleteIcon from '@material-ui/icons/Delete'
+import Paper from '@mui/material/Paper'
+import Grid from '@mui/material/Grid'
+import Checkbox from '@mui/material/Checkbox'
+import InputBase from '@mui/material/InputBase'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import { GlyphImage } from 'src/store'
 import { useProject } from 'src/store/hooks'
 
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: theme.spacing(24),
-      height: theme.spacing(24),
-      margin: theme.spacing(2),
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-    },
-    image: {
-      maxWidth: '100%',
-      maxHeight: '100%',
-      pointerEvents: 'none',
-    },
-    actions: {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      left: 0,
-      top: 0,
-    },
-    inputLabel: {
-      width: '100%',
-      height: '100%',
-      '& input': {
-        textAlign: 'center',
-      },
-    },
-  }),
-)
+import styles from './ImageGlyph.module.scss'
 
 interface ImageGlyphProps {
   glyph: GlyphImage
@@ -54,7 +21,6 @@ interface ImageGlyphProps {
 const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
   props: ImageGlyphProps,
 ) => {
-  const classes = useStyles()
   const { removeImage } = useProject()
   const [isIME, setIsIME] = useState(false)
   const { glyph } = props
@@ -78,10 +44,14 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
   }
 
   return (
-    <Paper variant='outlined' className={classes.root}>
-      <img className={classes.image} src={glyph.src} alt={glyph.fileName} />
-      <Grid container direction='column' className={classes.actions}>
-        <Grid item container justifyContent='space-between' alignItems='center'>
+    <Paper variant='outlined' className={styles.root}>
+      <img className={styles.image} src={glyph.src} alt={glyph.fileName} />
+      <Grid container sx={{ direction: 'column' }} className={styles.actions}>
+        <Grid
+          item
+          container
+          sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+        >
           <Checkbox
             checked={selected}
             size='small'
@@ -96,14 +66,7 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
             <DeleteIcon fontSize='small' />
           </IconButton>
         </Grid>
-        <Grid
-          item
-          xs
-          component='label'
-          className={classes.inputLabel}
-          container
-          alignItems='flex-end'
-        >
+        <Grid item xs component='label' className={styles.inputLabel} container>
           <InputBase
             fullWidth
             value={isIME ? inputValue : glyph.letter}

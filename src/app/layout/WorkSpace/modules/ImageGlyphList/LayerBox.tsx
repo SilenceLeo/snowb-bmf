@@ -1,20 +1,19 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { observer } from 'mobx-react'
 import clsx from 'clsx'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
 
-import Box from '@material-ui/core/Box'
-import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
-import Accordion from '@material-ui/core/Accordion'
-import AccordionSummary from '@material-ui/core/AccordionSummary'
-import AccordionDetails from '@material-ui/core/AccordionDetails'
-import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import FullscreenIcon from '@material-ui/icons/Fullscreen'
-import FullscreenExitIcon from '@material-ui/icons/FullscreenExit'
-import IconButton from '@material-ui/core/IconButton'
-import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+import Accordion from '@mui/material/Accordion'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
 
 import { FileInfo } from 'src/store'
 import { useProject } from 'src/store/hooks'
@@ -23,50 +22,12 @@ import readFile from 'src/utils/readFile'
 
 import ImageGlyphList from './ImageGlyphList'
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      display: 'flex',
-      position: 'relative',
-    },
-    fixed: {
-      position: 'fixed',
-      left: 0,
-      top: 0,
-      zIndex: 999999,
-      width: '100%',
-      height: '100%',
-      '& $panel': {
-        maxHeight: 'none',
-      },
-    },
-    panel: {
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      maxHeight: '305px',
-    },
-    continer: {
-      flex: 1,
-      overflow: 'hidden',
-      overflowY: 'auto',
-    },
-    listWrap: {
-      minHeight: '224px',
-      height: '100%',
-      width: '100%',
-      overflow: 'hidden',
-      overflowY: 'auto',
-    },
-  }),
-)
+import styles from './LayerBox.module.scss'
 
 const LayerBox: FunctionComponent<unknown> = () => {
-  const classes = useStyles()
   const { addImages } = useProject()
   const [isFullscreen, setFullscreen] = useState(false)
   const [open, setOpen] = useState(false)
-  // const [isDroping, setIsDroping] = useState(false)
 
   const handleLoadFile = (files: FileList) => {
     const list = Array.from(files).filter((file) => /^image\//.test(file.type))
@@ -131,14 +92,15 @@ const LayerBox: FunctionComponent<unknown> = () => {
       onDragOver={(e) => e.preventDefault()}
       // onDragLeave={handleDrop}
       onDrop={handleDrop}
-      className={clsx(classes.root, {
-        [classes.fixed]: isFullscreen,
+      className={clsx(styles.root, {
+        [styles.fixed]: isFullscreen,
       })}
     >
       <Accordion
-        className={classes.panel}
+        className={styles.panel}
         expanded={isFullscreen || open}
         onChange={handleToggleOpen}
+        elevation={0}
         TransitionProps={{
           style:
             isFullscreen || open
@@ -178,8 +140,8 @@ const LayerBox: FunctionComponent<unknown> = () => {
             </Grid>
           </Grid>
         </AccordionSummary>
-        <AccordionDetails className={classes.continer}>
-          <Box className={classes.listWrap}>
+        <AccordionDetails className={styles.continer}>
+          <Box className={styles.listWrap}>
             <ImageGlyphList />
           </Box>
         </AccordionDetails>

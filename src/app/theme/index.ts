@@ -1,11 +1,11 @@
-import { createTheme, responsiveFontSizes } from '@material-ui/core/styles'
+import { responsiveFontSizes, createTheme } from '@mui/material/styles'
 
-import props from './props'
-import overrides from './overrides'
+// import props from './props'
+import components from './components'
 
 const theme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: { main: '#444' },
     secondary: { main: '#424242' },
     background: {
@@ -38,8 +38,8 @@ const theme = createTheme({
     create: () => 'none',
   },
   shape: { borderRadius: 0 },
-  props,
-  overrides,
+  // props,
+  components,
 })
 
 export default responsiveFontSizes(theme)

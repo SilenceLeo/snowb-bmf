@@ -1,25 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import Tabs from '@material-ui/core/Tabs'
+import Tabs from '@mui/material/Tabs'
+import { useTheme } from '@mui/material/styles'
+
 import { useWorkspace } from 'src/store/hooks'
 import ProjectTab from './ProjectTab'
 
-const useStyles = makeStyles(({ palette, shadows }) =>
-  createStyles({
-    root: {
-      minHeight: 'auto',
-      width: '100%',
-      boxShadow: shadows[2],
-      background: palette.background.sidebar,
-      position: 'relative',
-      zIndex: 1,
-    },
-  }),
-)
-
 const ProjectTabs: FunctionComponent<unknown> = () => {
-  const classes = useStyles()
+  const { palette, shadows } = useTheme()
   const workSpace = useWorkspace()
   const {
     addProject,
@@ -47,13 +35,20 @@ const ProjectTabs: FunctionComponent<unknown> = () => {
 
   return (
     <Tabs
-      classes={classes}
+      sx={{
+        minHeight: 'auto',
+        width: '100%',
+        boxShadow: shadows[2],
+        background: palette.background.sidebar,
+        position: 'relative',
+        zIndex: 1,
+      }}
       value={activeId}
       onChange={handleChange}
       indicatorColor='primary'
       textColor='primary'
       variant='scrollable'
-      scrollButtons='off'
+      scrollButtons={false}
       selectionFollowsFocus
       TabIndicatorProps={{ hidden: true }}
       onDoubleClick={handleDoubleClick}

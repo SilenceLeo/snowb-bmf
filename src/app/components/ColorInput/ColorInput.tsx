@@ -1,38 +1,21 @@
 import React, { FunctionComponent, useRef, useState } from 'react'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
+import { useTheme } from '@mui/material/styles'
 
 import WrappedSketchPicker from '../WrappedSketchPicker'
+
+import styles from './ColorInput.module.css'
 
 export interface ColorInputProps {
   color?: string
   onChange?: (color: string) => void
 }
 
-const useStyles = makeStyles(({ palette, bgPixel }: Theme) =>
-  createStyles({
-    root: {
-      overflow: 'hidden',
-    },
-    swatch: {
-      ...bgPixel,
-      display: 'inline-block',
-      cursor: 'pointer',
-    },
-    color: {
-      width: '46px',
-      height: '24px',
-      border: `5px solid ${palette.primary.main}`,
-      backgroundColor: (props: ColorInputProps) => props.color || '',
-    },
-  }),
-)
-
 const ColorInput: FunctionComponent<ColorInputProps> = (
   props: ColorInputProps,
 ) => {
   const { color, onChange } = props
-  const classes = useStyles(props)
+  const { palette, bgPixel } = useTheme()
   const anchorEl = useRef(null)
   const [open, setOpen] = useState(false)
 
@@ -41,10 +24,21 @@ const ColorInput: FunctionComponent<ColorInputProps> = (
       mouseEvent='onMouseDown'
       onClickAway={() => setOpen(false)}
     >
-      <div aria-hidden className={classes.swatch} ref={anchorEl}>
+      <div
+        aria-hidden
+        className={styles.swatch}
+        style={{
+          ...bgPixel,
+        }}
+        ref={anchorEl}
+      >
         <div
           aria-hidden
-          className={classes.color}
+          className={styles.color}
+          style={{
+            borderColor: palette.primary.main,
+            backgroundColor: props.color,
+          }}
           onClick={() => setOpen(!open)}
         />
         <WrappedSketchPicker

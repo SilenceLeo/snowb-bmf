@@ -1,44 +1,26 @@
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
+import LinearProgress from '@mui/material/LinearProgress'
+
 import { useProject } from 'src/store/hooks'
 
-const useStyles = makeStyles(({ palette }) =>
-  createStyles({
-    root: {
-      width: '100%',
-      background: palette.background.paper,
-      textAlign: 'center',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: 12,
-      padding: 2,
-      animationDuration: '300ms',
-      pointerEvents: 'none',
-      color: palette.text.secondary,
-      position: 'relative',
-    },
-    loading: {
-      position: 'absolute',
-      left: 0,
-      top: '100%',
-      width: '100%',
-    },
-  }),
-)
+import styles from './PackSizeBar.module.css'
 
 const PackSizeBar: FunctionComponent<unknown> = () => {
+  const { palette } = useTheme()
   const { isPacking, ui } = useProject()
   const { width, height } = ui
-  const classes = useStyles()
 
   return (
-    <div className={classes.root}>
+    <Box
+      className={styles.root}
+      sx={{ bgcolor: 'background.paper', color: palette.text.secondary }}
+    >
       Packed texture size: {width} x {height}
-      {isPacking ? <LinearProgress className={classes.loading} /> : null}
-    </div>
+      {isPacking ? <LinearProgress className={styles.loading} /> : null}
+    </Box>
   )
 }
 

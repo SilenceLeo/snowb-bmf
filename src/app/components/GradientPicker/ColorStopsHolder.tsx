@@ -7,9 +7,10 @@ import React, {
   useEffect,
 } from 'react'
 import clsx from 'clsx'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 import ColorStop from './ColorStop'
+
+import styles from './ColorStopsHolder.module.css'
 
 export interface AddPaletteItem {
   offset: number
@@ -31,22 +32,10 @@ interface ColorStopsHolderProps {
   onSelect(id?: number): void
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      width: '100%',
-      height: '17px',
-      position: 'relative',
-      cursor: 'crosshair',
-    },
-  }),
-)
-
 const ColorStopsHolder: FunctionComponent<ColorStopsHolderProps> = (
   props: ColorStopsHolderProps,
 ) => {
   const { className, palette, activeId, onAdd, onUpdate, onSelect } = props
-  const classes = useStyles(props)
   const [width, setWidth] = useState(0)
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0, offset: 0 })
   const [isDragging, setIsDragging] = useState(false)
@@ -146,7 +135,7 @@ const ColorStopsHolder: FunctionComponent<ColorStopsHolderProps> = (
     <div
       aria-hidden
       ref={rootRef}
-      className={clsx(classes.root, className)}
+      className={clsx(styles.root, className)}
       onMouseDown={handleAddPalette}
     >
       {palette.map((paletteItem) => (

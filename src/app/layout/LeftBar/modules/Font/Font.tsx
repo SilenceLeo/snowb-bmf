@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
-import Typography from '@material-ui/core/Typography'
-import Box from '@material-ui/core/Box'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 
 import FontFamily from './FontFamily'
 import FontSize from './FontSize'
@@ -9,16 +9,16 @@ import Sharp from './Sharp'
 const Font: FunctionComponent<unknown> = () => {
   return (
     <>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <Typography>Font</Typography>
       </Box>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <FontFamily />
       </Box>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <FontSize />
       </Box>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <Sharp />
       </Box>
     </>

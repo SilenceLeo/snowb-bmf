@@ -1,0 +1,18 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.appName {
+  font-size: 1.25rem;
+  font-weight: bolder;
+}
+.appNameSup {
+  font-weight: lighter;
+  font-size: 0.5em;
+  margin-left: 0.5rem;
+}
+.btn {
+  text-transform: none;
+  color: #fff;
+}

@@ -1,0 +1,55 @@
+.root {
+  min-height: auto;
+  min-width: 80px;
+  max-width: none;
+  height: 34px;
+  line-height: 16px;
+  padding: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgb(45, 45, 45);
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  &:hover {
+    & .icon {
+      opacity: 1;
+    }
+  }
+  &:last-child {
+    border-right: 0 none;
+  }
+}
+.selected {
+  color: #fff;
+  & .icon {
+    opacity: 1;
+  }
+}
+.name {
+  white-space: nowrap;
+  position: relative;
+  background: inherit;
+}
+.editor {
+  color: rgba(0, 0, 0, 0);
+}
+.input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  font-size: inherit;
+  padding: 0;
+  border: 0 none;
+  appearance: none;
+  color: inherit;
+  background: inherit;
+}
+.icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  opacity: 0;
+}

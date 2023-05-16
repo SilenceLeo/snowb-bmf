@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'
-import Input from '@material-ui/core/Input'
+import Input from '@mui/material/Input'
 
 import GridInput from 'src/app/components/GridInput'
 import AnglePicker, { AnglePickerProps } from 'src/app/components/AnglePicker'

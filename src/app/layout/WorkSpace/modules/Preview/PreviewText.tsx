@@ -1,9 +1,9 @@
 import React, { useState, FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
 
-import Box from '@material-ui/core/Box'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 
 import { useProjectUi } from 'src/store/hooks'
 

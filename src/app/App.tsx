@@ -1,8 +1,8 @@
-import React from 'react'
 import { Provider } from 'mobx-react'
 import { SnackbarProvider } from 'notistack'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import { ThemeProvider } from '@material-ui/core/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import { ThemeProvider } from '@mui/material/styles'
+import { StyledEngineProvider } from '@mui/material/styles'
 
 import createStore from 'src/store'
 import theme from './theme'
@@ -11,19 +11,21 @@ import Wrap from './layout/Wrap'
 
 function App(): JSX.Element {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Provider {...createStore()}>
-        <SnackbarProvider
-          anchorOrigin={{
-            horizontal: 'center',
-            vertical: 'top',
-          }}
-        >
-          <Wrap />
-        </SnackbarProvider>
-      </Provider>
-    </ThemeProvider>
+    <Provider {...createStore()}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <SnackbarProvider
+            anchorOrigin={{
+              horizontal: 'center',
+              vertical: 'top',
+            }}
+          >
+            <Wrap />
+          </SnackbarProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </Provider>
   )
 }
 

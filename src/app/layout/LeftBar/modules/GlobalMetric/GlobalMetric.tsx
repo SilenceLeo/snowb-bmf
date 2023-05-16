@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import Box from '@material-ui/core/Box'
-import Typography from '@material-ui/core/Typography'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
 import { useProject } from 'src/store/hooks'
 
@@ -14,7 +14,7 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
 
   return (
     <>
-      <Box paddingX={2} marginY={4}>
+      <Box sx={{ px: 2, my: 4 }}>
         <Typography>Global Metric Adjustment</Typography>
       </Box>
       <FormAdjustMetric

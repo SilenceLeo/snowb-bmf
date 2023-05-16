@@ -1,0 +1,8 @@
+.root {
+  border: 1px solid #ccc;
+}
+.svg {
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+}

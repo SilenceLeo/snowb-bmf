@@ -1,0 +1,18 @@
+.root {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  padding: 2px;
+  animation-duration: 300ms;
+  pointer-events: none;
+  position: relative;
+}
+.loading {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+}

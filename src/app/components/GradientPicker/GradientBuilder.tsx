@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useRef, useState, useEffect } from 'react'
 import Color from 'color'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 
 import ColorStopsHolder, {
   AddPaletteItem,

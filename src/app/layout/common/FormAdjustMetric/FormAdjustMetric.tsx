@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
-import Box from '@material-ui/core/Box'
-import Input from '@material-ui/core/Input'
+import Box from '@mui/material/Box'
+import Input from '@mui/material/Input'
 import GridInput from 'src/app/components/GridInput'
 
 interface SetHandle {

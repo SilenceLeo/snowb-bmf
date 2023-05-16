@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react'
-import Grid from '@material-ui/core/Grid'
+import Grid from '@mui/material/Grid'
 
 import PreviewCanvas from './PreviewCanvas'
 import PreviewText from './PreviewText'

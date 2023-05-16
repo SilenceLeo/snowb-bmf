@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver'
 import { observer } from 'mobx-react'
 import { useSnackbar } from 'notistack'
 import * as Sentry from '@sentry/react'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 
 import { encode } from 'src/file/conversion'
 import { useWorkspace } from 'src/store/hooks'

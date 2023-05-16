@@ -1,9 +1,9 @@
 import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
-import Box from '@material-ui/core/Box'
-import Radio from '@material-ui/core/Radio'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Box from '@mui/material/Box'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
 import GradientPicker from 'src/app/components/GradientPicker'
 import WrappedSketchPicker from 'src/app/components/WrappedSketchPicker'

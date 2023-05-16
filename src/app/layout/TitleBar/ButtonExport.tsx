@@ -6,15 +6,15 @@ import React, {
 } from 'react'
 import hotkeys from 'hotkeys-js'
 import { observer } from 'mobx-react'
-import Box from '@material-ui/core/Box'
-import Input from '@material-ui/core/Input'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogActions from '@material-ui/core/DialogActions'
+import Box from '@mui/material/Box'
+import Input from '@mui/material/Input'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 
 import { useProject } from 'src/store/hooks'
 import { configList, exportFile } from 'src/file/export'
@@ -55,12 +55,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
     setFileName(e.target.value)
   }
 
-  const handleChange = (
-    e: React.ChangeEvent<{
-      name?: string | undefined
-      value: unknown
-    }>,
-  ) => {
+  const handleChange = (e: SelectChangeEvent<number>) => {
     setVal(e.target.value as number)
   }
 
@@ -89,7 +84,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
       <Dialog onClose={handleClose} open={open} fullWidth maxWidth='xs'>
         <DialogTitle>Export Config</DialogTitle>
         <DialogContent dividers>
-          <Box paddingX={2} marginY={4}>
+          <Box sx={{ px: 2, my: 4 }}>
             <GridInput before='Font Name:' childrenWidth={6}>
               <Input
                 fullWidth
@@ -100,7 +95,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
               />
             </GridInput>
           </Box>
-          <Box paddingX={2} marginY={4}>
+          <Box sx={{ px: 2, my: 4 }}>
             <GridInput before='File Name:' after='.zip' childrenWidth={6}>
               <Input
                 fullWidth
@@ -111,7 +106,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
               />
             </GridInput>
           </Box>
-          <Box paddingX={2} marginY={4}>
+          <Box sx={{ px: 2, my: 4 }}>
             <GridInput before='Export Type:' childrenWidth={6}>
               <Select
                 displayEmpty
@@ -131,7 +126,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleSave} color='default'>
+          <Button autoFocus onClick={handleSave} color='inherit'>
             Save
           </Button>
         </DialogActions>

@@ -5,7 +5,8 @@ import React, {
   FunctionComponent,
   useCallback,
 } from 'react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+
+import styles from './AnglePicker.module.css'
 
 export interface AnglePickerProps {
   width?: number
@@ -13,44 +14,12 @@ export interface AnglePickerProps {
   onChange(angle: number): void
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    root: {
-      width: (props: AnglePickerProps) =>
-        props.width ? `${props.width}px` : '36px',
-      height: (props) => (props.width ? `${props.width}px` : '36px'),
-      position: 'relative',
-      cursor: 'crosshair',
-      overflow: 'hidden',
-      borderRadius: '100%',
-      background: '#FFF',
-    },
-    point: {
-      width: '6px',
-      height: '6px',
-      borderRadius: '100%',
-      position: 'relative',
-      left: '50%',
-      top: '50%',
-      marginTop: '-2px',
-      background: '#000',
-      pointerEvents: 'none',
-      transformOrigin: `0 50%`,
-      transform: (props) =>
-        `rotate(${props.angle || 0}deg) translate(${
-          (props.width || 36) / 2 - 8
-        }px, 0)`,
-    },
-  }),
-)
-
 const AnglePicker: FunctionComponent<AnglePickerProps> = (
   props: AnglePickerProps,
 ) => {
   const { onChange } = props
   const rootRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const classes = useStyles(props)
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement, MouseEvent> | MouseEvent) => {
@@ -97,11 +66,22 @@ const AnglePicker: FunctionComponent<AnglePickerProps> = (
   return (
     <div
       aria-hidden
-      className={classes.root}
+      className={styles.root}
       ref={rootRef}
       onMouseDown={handleMouseDown}
+      style={{
+        width: props.width ? `${props.width}px` : '36px',
+        height: props.width ? `${props.width}px` : '36px',
+      }}
     >
-      <div className={classes.point} />
+      <div
+        className={styles.point}
+        style={{
+          transform: `rotate(${props.angle || 0}deg) translate(${
+            (props.width || 36) / 2 - 8
+          }px, 0)`,
+        }}
+      />
     </div>
   )
 }

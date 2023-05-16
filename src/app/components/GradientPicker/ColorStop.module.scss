@@ -1,0 +1,35 @@
+.root {
+  width: 12px;
+  height: 12px;
+  border-style: solid;
+  border-width: 0 1px 1px;
+  position: absolute;
+  cursor: pointer;
+  margin-left: -6px;
+  z-index: 1;
+  &:before,
+  &:after {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid;
+    left: 0;
+  }
+  &:before {
+    top: -6px;
+    left: -1px;
+    border-width: 0 6px 6px 6px;
+    // border-color: transparent;
+  }
+  &:after {
+    top: -5px;
+    border-width: 0 5px 5px 5px;
+    // border-color: transparent;
+  }
+}
+.color {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}

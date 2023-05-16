@@ -1,9 +1,9 @@
 import React, { useState, useEffect, FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
 import { deepObserve } from 'mobx-utils'
-import Box from '@material-ui/core/Box'
-import Typography from '@material-ui/core/Typography'
-import Input from '@material-ui/core/Input'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Input from '@mui/material/Input'
 import GridInput from 'src/app/components/GridInput'
 
 import { useProject } from 'src/store/hooks'
