@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.js": "./static/js/main.84a13091.chunk.js",
-    "main.js.map": "./static/js/main.84a13091.chunk.js.map",
+    "main.js": "./static/js/main.a500ce75.chunk.js",
+    "main.js.map": "./static/js/main.a500ce75.chunk.js.map",
     "runtime-main.js": "./static/js/runtime-main.9fab41b8.js",
     "runtime-main.js.map": "./static/js/runtime-main.9fab41b8.js.map",
-    "static/js/2.2089a7f1.chunk.js": "./static/js/2.2089a7f1.chunk.js",
-    "static/js/2.2089a7f1.chunk.js.map": "./static/js/2.2089a7f1.chunk.js.map",
+    "static/js/2.5108fcbb.chunk.js": "./static/js/2.5108fcbb.chunk.js",
+    "static/js/2.5108fcbb.chunk.js.map": "./static/js/2.5108fcbb.chunk.js.map",
     "index.html": "./index.html",
     "service-worker.js": "./service-worker.js",
     "service-worker.js.map": "./service-worker.js.map",
-    "static/js/2.2089a7f1.chunk.js.LICENSE.txt": "./static/js/2.2089a7f1.chunk.js.LICENSE.txt",
+    "static/js/2.5108fcbb.chunk.js.LICENSE.txt": "./static/js/2.5108fcbb.chunk.js.LICENSE.txt",
     "static/js/AutoPacker.ea1294b4f722df64607a.worker.js": "./static/js/AutoPacker.ea1294b4f722df64607a.worker.js",
     "static/js/AutoPacker.ea1294b4f722df64607a.worker.js.map": "./static/js/AutoPacker.ea1294b4f722df64607a.worker.js.map"
   },
   "entrypoints": [
     "static/js/runtime-main.9fab41b8.js",
-    "static/js/2.2089a7f1.chunk.js",
-    "static/js/main.84a13091.chunk.js"
+    "static/js/2.5108fcbb.chunk.js",
+    "static/js/main.a500ce75.chunk.js"
   ]
 }
