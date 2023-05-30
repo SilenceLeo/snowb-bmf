@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from 'react'
+import React, { FunctionComponent, useRef, useState } from 'react'
 import { observer } from 'mobx-react'
 import { useSnackbar } from 'notistack'
 import * as Sentry from '@sentry/react'
@@ -20,6 +20,7 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
 
   const worckSpace = useWorkspace()
   const labelRef = useRef<HTMLLabelElement>(null)
+  const [inputKey, changeInputKey] = useState(Date.now())
   const { addProject } = worckSpace
 
   const handleLoad = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -31,12 +32,18 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
       try {
         const project = conversion(buffer)
         if (!project.name) project.name = file.name
-        addProject(project)
+        if (addProject(project)) {
+          enqueueSnackbar(
+            'The project already exists and has been switched to the current tab.',
+            { variant: 'success' },
+          )
+        }
       } catch (e) {
         console.log(e)
         Sentry.captureException(e)
         enqueueSnackbar((e as Error).toString(), { variant: 'error' })
       }
+      changeInputKey(Date.now())
     })
   }
 
@@ -48,7 +55,13 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
       ref={labelRef}
     >
       Open
-      <input type='file' onChange={handleLoad} accept='.sbf,.ltr' hidden />
+      <input
+        type='file'
+        key={inputKey}
+        onChange={handleLoad}
+        accept='.sbf,.ltr'
+        hidden
+      />
     </Button>
   )
 }

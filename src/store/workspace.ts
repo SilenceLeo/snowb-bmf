@@ -41,10 +41,10 @@ class Workspace {
     this.projectList.delete(id)
   }
 
-  @action.bound addProject(p: Partial<Project> = {}): void {
+  @action.bound addProject(p: Partial<Project> = {}): number {
     if (p.id && this.projectList.has(p.id)) {
       this.activeId = p.id
-      return
+      return 1
     }
     if (!p.name) {
       p.name = 'Unnamed'
@@ -63,6 +63,7 @@ class Workspace {
     const project = new Project(p)
     this.projectList.set(project.id, project)
     this.activeId = project.id
+    return 0
   }
 
   @action.bound setProjectName(name: string, value: number): void {
