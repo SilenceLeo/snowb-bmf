@@ -45,7 +45,7 @@ const TitleBar: FunctionComponent<unknown> = () => {
     >
       <Typography variant='h1' className={classes.appName}>
         SnowB BMF
-        <sup className={classes.appNameSup}>BETA</sup>
+        {/* <sup className={classes.appNameSup}>BETA</sup> */}
       </Typography>
       <Box flex='auto' paddingX={4}>
         <ButtonNew className={classes.btn} />
