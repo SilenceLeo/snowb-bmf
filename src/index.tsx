@@ -1,19 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import * as Sentry from '@sentry/react'
-import { Integrations } from '@sentry/tracing'
 
 import App from './app/App'
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
-if (process.env.REACT_APP_SENTRY_DSN) {
+if (process.env.NODE_ENV === 'production' && process.env.REACT_APP_SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     release: process.env.REACT_APP_SENTRY_RELEASE || 'test',
-    integrations: [new Integrations.BrowserTracing()],
+    integrations: [new Sentry.BrowserTracing(), new Sentry.Replay()],
     tracesSampleRate: 1.0,
     environment: process.env.NODE_ENV,
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 1.0,
   })
 }
 

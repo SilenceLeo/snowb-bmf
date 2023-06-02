@@ -6,7 +6,7 @@ interface TrimInfo extends TrimImageInfo {
 
 export default function getTrimImageInfo(
   image: HTMLImageElement,
-  threshold = 10,
+  threshold = 0,
 ): TrimInfo {
   const width = image.naturalWidth
   const height = image.naturalHeight

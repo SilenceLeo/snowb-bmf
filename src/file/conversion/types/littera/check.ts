@@ -25,7 +25,7 @@ const check: CheckFunction = (litteraStr) => {
       Sentry.addBreadcrumb({
         category: 'littera',
         message: 'Littera validate error',
-        level: Sentry.Severity.Info,
+        level: 'info',
         data: item,
       })
     })

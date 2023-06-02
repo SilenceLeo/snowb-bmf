@@ -72,7 +72,10 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
         (!left || left.offset < item.offset)
       ) {
         left = item
-      } else if (!right || right.offset > item.offset) {
+      } else if (
+        item.offset > current.offset &&
+        (!right || right.offset > item.offset)
+      ) {
         right = item
       }
     })

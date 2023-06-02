@@ -42,7 +42,7 @@ const TitleBar: FunctionComponent<unknown> = () => {
         }}
       >
         SnowB BMF
-        <sup className={styles.appNameSup}>BETA</sup>
+        {/* <sup className={classes.appNameSup}>BETA</sup> */}
       </Typography>
       <Box sx={{ flex: 'auto', px: 4 }}>
         <ButtonNew className={styles.btn} />
