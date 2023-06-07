@@ -44,7 +44,7 @@ const TitleBar: FunctionComponent<unknown> = () => {
       alignItems='center'
     >
       <Typography variant='h1' className={classes.appName}>
-        SnowB BMF
+        SnowB Bitmap Font
         {/* <sup className={classes.appNameSup}>BETA</sup> */}
       </Typography>
       <Box flex='auto' paddingX={4}>
