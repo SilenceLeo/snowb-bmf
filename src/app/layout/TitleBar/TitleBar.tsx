@@ -13,7 +13,7 @@ import ButtonExport from './ButtonExport'
 import styles from './TitleBar.module.css'
 
 const TitleBar: FunctionComponent<unknown> = () => {
-  const { zIndex, breakpoints } = useTheme()
+  const { zIndex } = useTheme()
 
   return (
     <Box
@@ -24,24 +24,8 @@ const TitleBar: FunctionComponent<unknown> = () => {
         bgcolor: 'background.titleBar',
       }}
     >
-      <Typography
-        variant='h1'
-        sx={{
-          mr: 4,
-          fontSize: '1.25rem',
-          fontWeight: 'bolder',
-          [breakpoints.down('md')]: {
-            fontSize: '1.25rem',
-          },
-          [breakpoints.up('md')]: {
-            fontSize: '1.25rem',
-          },
-          [breakpoints.up('lg')]: {
-            fontSize: '1.25rem',
-          },
-        }}
-      >
-        SnowB BMF
+      <Typography variant='h1' className={styles.appName}>
+        SnowB Bitmap Font
         {/* <sup className={classes.appNameSup}>BETA</sup> */}
       </Typography>
       <Box sx={{ flex: 'auto', px: 4 }}>
