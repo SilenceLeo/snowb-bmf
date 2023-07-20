@@ -129,15 +129,18 @@ export const Metric = ($root.Metric = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.xAdvance = reader.sint32()
           break
-        case 2:
+        }
+        case 2: {
           message.xOffset = reader.sint32()
           break
-        case 3:
+        }
+        case 3: {
           message.yOffset = reader.sint32()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -234,6 +237,21 @@ export const Metric = ($root.Metric = (() => {
    */
   Metric.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Metric
+   * @function getTypeUrl
+   * @memberof Metric
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Metric.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Metric'
   }
 
   return Metric
@@ -350,15 +368,18 @@ export const GradientColor = ($root.GradientColor = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.id = reader.int32()
           break
-        case 2:
+        }
+        case 2: {
           message.offset = reader.float()
           break
-        case 3:
+        }
+        case 3: {
           message.color = reader.string()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -457,6 +478,21 @@ export const GradientColor = ($root.GradientColor = (() => {
    */
   GradientColor.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for GradientColor
+   * @function getTypeUrl
+   * @memberof GradientColor
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  GradientColor.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/GradientColor'
   }
 
   return GradientColor
@@ -578,18 +614,21 @@ export const Gradient = ($root.Gradient = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.type = reader.int32()
           break
-        case 2:
+        }
+        case 2: {
           message.angle = reader.float()
           break
-        case 3:
+        }
+        case 3: {
           if (!(message.palette && message.palette.length)) message.palette = []
           message.palette.push(
             $root.GradientColor.decode(reader, reader.uint32()),
           )
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -710,6 +749,21 @@ export const Gradient = ($root.Gradient = (() => {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
   }
 
+  /**
+   * Gets the default type url for Gradient
+   * @function getTypeUrl
+   * @memberof Gradient
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Gradient.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Gradient'
+  }
+
   return Gradient
 })())
 
@@ -827,15 +881,18 @@ export const PatternTexture = ($root.PatternTexture = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.buffer = reader.bytes()
           break
-        case 2:
+        }
+        case 2: {
           message.scale = reader.double()
           break
-        case 3:
+        }
+        case 3: {
           message.repetition = reader.string()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -906,7 +963,7 @@ export const PatternTexture = ($root.PatternTexture = (() => {
           )),
           0,
         )
-      else if (object.buffer.length) message.buffer = object.buffer
+      else if (object.buffer.length >= 0) message.buffer = object.buffer
     if (object.scale != null) message.scale = Number(object.scale)
     if (object.repetition != null)
       message.repetition = String(object.repetition)
@@ -961,6 +1018,21 @@ export const PatternTexture = ($root.PatternTexture = (() => {
    */
   PatternTexture.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for PatternTexture
+   * @function getTypeUrl
+   * @memberof PatternTexture
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  PatternTexture.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/PatternTexture'
   }
 
   return PatternTexture
@@ -1153,33 +1225,41 @@ export const Fill = ($root.Fill = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.type = reader.int32()
           break
-        case 2:
+        }
+        case 2: {
           message.color = reader.string()
           break
-        case 3:
+        }
+        case 3: {
           message.gradient = $root.Gradient.decode(reader, reader.uint32())
           break
-        case 4:
+        }
+        case 4: {
           message.patternTexture = $root.PatternTexture.decode(
             reader,
             reader.uint32(),
           )
           break
-        case 5:
+        }
+        case 5: {
           message.width = reader.int32()
           break
-        case 6:
+        }
+        case 6: {
           message.lineCap = reader.string()
           break
-        case 7:
+        }
+        case 7: {
           message.lineJoin = reader.string()
           break
-        case 8:
+        }
+        case 8: {
           message.strokeType = reader.int32()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -1331,6 +1411,21 @@ export const Fill = ($root.Fill = (() => {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
   }
 
+  /**
+   * Gets the default type url for Fill
+   * @function getTypeUrl
+   * @memberof Fill
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Fill.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Fill'
+  }
+
   return Fill
 })())
 
@@ -1423,9 +1518,10 @@ export const FontResource = ($root.FontResource = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.font = reader.bytes()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -1489,7 +1585,7 @@ export const FontResource = ($root.FontResource = (() => {
           (message.font = $util.newBuffer($util.base64.length(object.font))),
           0,
         )
-      else if (object.font.length) message.font = object.font
+      else if (object.font.length >= 0) message.font = object.font
     return message
   }
 
@@ -1530,6 +1626,21 @@ export const FontResource = ($root.FontResource = (() => {
    */
   FontResource.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for FontResource
+   * @function getTypeUrl
+   * @memberof FontResource
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  FontResource.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/FontResource'
   }
 
   return FontResource
@@ -1654,16 +1765,19 @@ export const Font = ($root.Font = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (!(message.fonts && message.fonts.length)) message.fonts = []
           message.fonts.push($root.FontResource.decode(reader, reader.uint32()))
           break
-        case 2:
+        }
+        case 2: {
           message.size = reader.int32()
           break
-        case 3:
+        }
+        case 3: {
           message.lineHeight = reader.int32()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -1777,6 +1891,21 @@ export const Font = ($root.Font = (() => {
    */
   Font.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Font
+   * @function getTypeUrl
+   * @memberof Font
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Font.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Font'
   }
 
   return Font
@@ -1913,13 +2042,15 @@ export const GlyphFont = ($root.GlyphFont = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.letter = reader.string()
           break
-        case 2:
+        }
+        case 2: {
           message.adjustMetric = $root.Metric.decode(reader, reader.uint32())
           break
-        case 3:
+        }
+        case 3: {
           if (message.kerning === $util.emptyObject) message.kerning = {}
           let end2 = reader.uint32() + reader.pos
           key = ''
@@ -1940,6 +2071,7 @@ export const GlyphFont = ($root.GlyphFont = (() => {
           }
           message.kerning[key] = value
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -2059,6 +2191,21 @@ export const GlyphFont = ($root.GlyphFont = (() => {
    */
   GlyphFont.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for GlyphFont
+   * @function getTypeUrl
+   * @memberof GlyphFont
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  GlyphFont.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/GlyphFont'
   }
 
   return GlyphFont
@@ -2248,25 +2395,31 @@ export const GlyphImage = ($root.GlyphImage = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.letter = reader.string()
           break
-        case 2:
+        }
+        case 2: {
           message.adjustMetric = $root.Metric.decode(reader, reader.uint32())
           break
-        case 3:
+        }
+        case 3: {
           message.buffer = reader.bytes()
           break
-        case 4:
+        }
+        case 4: {
           message.fileName = reader.string()
           break
-        case 5:
+        }
+        case 5: {
           message.fileType = reader.string()
           break
-        case 6:
+        }
+        case 6: {
           message.selected = reader.bool()
           break
-        case 7:
+        }
+        case 7: {
           if (message.kerning === $util.emptyObject) message.kerning = {}
           let end2 = reader.uint32() + reader.pos
           key = ''
@@ -2287,6 +2440,7 @@ export const GlyphImage = ($root.GlyphImage = (() => {
           }
           message.kerning[key] = value
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -2381,7 +2535,7 @@ export const GlyphImage = ($root.GlyphImage = (() => {
           )),
           0,
         )
-      else if (object.buffer.length) message.buffer = object.buffer
+      else if (object.buffer.length >= 0) message.buffer = object.buffer
     if (object.fileName != null) message.fileName = String(object.fileName)
     if (object.fileType != null) message.fileType = String(object.fileType)
     if (object.selected != null) message.selected = Boolean(object.selected)
@@ -2456,6 +2610,21 @@ export const GlyphImage = ($root.GlyphImage = (() => {
    */
   GlyphImage.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for GlyphImage
+   * @function getTypeUrl
+   * @memberof GlyphImage
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  GlyphImage.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/GlyphImage'
   }
 
   return GlyphImage
@@ -2614,24 +2783,30 @@ export const Layout = ($root.Layout = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.padding = reader.int32()
           break
-        case 2:
+        }
+        case 2: {
           message.spacing = reader.int32()
           break
-        case 3:
+        }
+        case 3: {
           message.width = reader.int32()
           break
-        case 4:
+        }
+        case 4: {
           message.height = reader.int32()
           break
-        case 5:
+        }
+        case 5: {
           message.auto = reader.bool()
           break
-        case 6:
+        }
+        case 6: {
           message.fixedSize = reader.bool()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -2746,6 +2921,21 @@ export const Layout = ($root.Layout = (() => {
    */
   Layout.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Layout
+   * @function getTypeUrl
+   * @memberof Layout
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Layout.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Layout'
   }
 
   return Layout
@@ -2879,18 +3069,22 @@ export const Shadow = ($root.Shadow = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.color = reader.string()
           break
-        case 2:
+        }
+        case 2: {
           message.blur = reader.int32()
           break
-        case 3:
+        }
+        case 3: {
           message.offsetX = reader.sint32()
           break
-        case 4:
+        }
+        case 4: {
           message.offsetY = reader.sint32()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -2992,6 +3186,21 @@ export const Shadow = ($root.Shadow = (() => {
    */
   Shadow.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Shadow
+   * @function getTypeUrl
+   * @memberof Shadow
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Shadow.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Shadow'
   }
 
   return Shadow
@@ -3173,27 +3382,34 @@ export const Style = ($root.Style = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.font = $root.Font.decode(reader, reader.uint32())
           break
-        case 2:
+        }
+        case 2: {
           message.fill = $root.Fill.decode(reader, reader.uint32())
           break
-        case 3:
+        }
+        case 3: {
           message.useStroke = reader.bool()
           break
-        case 4:
+        }
+        case 4: {
           message.stroke = $root.Fill.decode(reader, reader.uint32())
           break
-        case 5:
+        }
+        case 5: {
           message.useShadow = reader.bool()
           break
-        case 6:
+        }
+        case 6: {
           message.shadow = $root.Shadow.decode(reader, reader.uint32())
           break
-        case 7:
+        }
+        case 7: {
           message.bgColor = reader.string()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -3341,6 +3557,21 @@ export const Style = ($root.Style = (() => {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
   }
 
+  /**
+   * Gets the default type url for Style
+   * @function getTypeUrl
+   * @memberof Style
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Style.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Style'
+  }
+
   return Style
 })())
 
@@ -3436,9 +3667,10 @@ export const Ui = ($root.Ui = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.previewText = reader.string()
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -3522,6 +3754,21 @@ export const Ui = ($root.Ui = (() => {
    */
   Ui.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Ui
+   * @function getTypeUrl
+   * @memberof Ui
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Ui.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Ui'
   }
 
   return Ui
@@ -3743,16 +3990,19 @@ export const Project = ($root.Project = (() => {
     while (reader.pos < end) {
       let tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           message.id = reader.int64()
           break
-        case 2:
+        }
+        case 2: {
           message.name = reader.string()
           break
-        case 3:
+        }
+        case 3: {
           message.text = reader.string()
           break
-        case 4:
+        }
+        case 4: {
           if (message.glyphs === $util.emptyObject) message.glyphs = {}
           let end2 = reader.uint32() + reader.pos
           key = ''
@@ -3773,28 +4023,34 @@ export const Project = ($root.Project = (() => {
           }
           message.glyphs[key] = value
           break
-        case 5:
+        }
+        case 5: {
           if (!(message.glyphImages && message.glyphImages.length))
             message.glyphImages = []
           message.glyphImages.push(
             $root.GlyphImage.decode(reader, reader.uint32()),
           )
           break
-        case 6:
+        }
+        case 6: {
           message.style = $root.Style.decode(reader, reader.uint32())
           break
-        case 7:
+        }
+        case 7: {
           message.layout = $root.Layout.decode(reader, reader.uint32())
           break
-        case 8:
+        }
+        case 8: {
           message.globalAdjustMetric = $root.Metric.decode(
             reader,
             reader.uint32(),
           )
           break
-        case 9:
+        }
+        case 9: {
           message.ui = $root.Ui.decode(reader, reader.uint32())
           break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -4045,6 +4301,21 @@ export const Project = ($root.Project = (() => {
    */
   Project.prototype.toJSON = function toJSON() {
     return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Project
+   * @function getTypeUrl
+   * @memberof Project
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Project.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Project'
   }
 
   return Project

@@ -1,4 +1,4 @@
-import { action, computed, observable } from 'mobx'
+import { action, computed, observable, makeObservable } from 'mobx'
 
 // import GradientPaletteItem from './gradientPaletteItem'
 
@@ -21,13 +21,25 @@ export interface GradientColorOption extends GradientColor {
 }
 
 class Gradient {
-  @observable type: GradientType = 0
+  type: GradientType = 0
 
-  @observable angle: number
+  angle: number
 
-  @observable.shallow palette: GradientPaletteItem[] = []
+  palette: GradientPaletteItem[] = []
 
   constructor(gradient: Partial<Gradient> = {}) {
+    makeObservable(this, {
+      type: observable,
+      angle: observable,
+      palette: observable.shallow,
+      ids: computed,
+      nextId: computed,
+      setType: action.bound,
+      setAngle: action.bound,
+      addColor: action.bound,
+      updatePalette: action.bound,
+    })
+
     this.type = gradient.type && GradientType[gradient.type] ? gradient.type : 0
     this.angle = gradient.angle || 0
     if (gradient.palette) {
@@ -43,28 +55,28 @@ class Gradient {
     }
   }
 
-  @computed get ids(): number[] {
+  get ids(): number[] {
     return this.palette.map((color) => color.id)
   }
 
-  @computed get nextId(): number {
+  get nextId(): number {
     if (this.ids.length === 0) return 1
     return Math.max(...this.ids) + 1
   }
 
-  @action.bound setType(type: GradientType): void {
+  setType(type: GradientType): void {
     this.type = type
   }
 
-  @action.bound setAngle(angle: number): void {
+  setAngle(angle: number): void {
     this.angle = angle
   }
 
-  @action.bound addColor(offset = 0, color = 'rgba(0,0,0,1)'): void {
+  addColor(offset = 0, color = 'rgba(0,0,0,1)'): void {
     this.palette.push({ offset, color, id: this.nextId })
   }
 
-  @action.bound updatePalette(palette: GradientPaletteItem[]): void {
+  updatePalette(palette: GradientPaletteItem[]): void {
     this.palette = palette
   }
 }

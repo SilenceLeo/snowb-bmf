@@ -1,13 +1,24 @@
-import { action, observable, runInAction, computed } from 'mobx'
+import { action, observable, computed, makeObservable, runInAction } from 'mobx'
 
 import Project from './project'
 
 class Workspace {
-  @observable activeId = 0
+  activeId = 0
 
-  @observable.shallow projectList: Map<number, Project> = new Map()
+  projectList: Map<number, Project> = new Map()
 
   constructor() {
+    makeObservable(this, {
+      activeId: observable,
+      projectList: observable.shallow,
+      currentProject: computed,
+      namedList: computed,
+      selectProject: action.bound,
+      removeProject: action.bound,
+      addProject: action.bound,
+      setProjectName: action.bound,
+    })
+
     runInAction(() => {
       this.activeId = Date.now()
       const project = new Project({ id: this.activeId })
@@ -15,11 +26,11 @@ class Workspace {
     })
   }
 
-  @computed get currentProject(): Project {
+  get currentProject(): Project {
     return this.projectList.get(this.activeId) as Project
   }
 
-  @computed get namedList(): { id: number; name: string }[] {
+  get namedList(): { id: number; name: string }[] {
     const list: { id: number; name: string }[] = []
     this.projectList.forEach((value) => {
       list.push({
@@ -30,18 +41,18 @@ class Workspace {
     return list
   }
 
-  @action.bound selectProject(id: number): void {
+  selectProject(id: number): void {
     if (this.projectList.has(id)) this.activeId = id
   }
 
-  @action.bound removeProject(id: number): void {
+  removeProject(id: number): void {
     const list = this.namedList.filter((item) => item.id !== id)
     if (list.length === 0) return
     this.activeId = list[0].id
     this.projectList.delete(id)
   }
 
-  @action.bound addProject(p: Partial<Project> = {}): number {
+  addProject(p: Partial<Project> = {}): number {
     if (p.id && this.projectList.has(p.id)) {
       this.activeId = p.id
       return 1
@@ -66,7 +77,7 @@ class Workspace {
     return 0
   }
 
-  @action.bound setProjectName(name: string, value: number): void {
+  setProjectName(name: string, value: number): void {
     const project = this.projectList.get(value)
     if (project) {
       project.setName(name)

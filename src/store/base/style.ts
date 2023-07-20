@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, observable, makeObservable } from 'mobx'
 
 import Font from './font'
 import Fill from './fill'
@@ -6,21 +6,33 @@ import Stroke from './stroke'
 import Shadow from './shadow'
 
 class Style {
-  @observable readonly font: Font
+  readonly font: Font
 
-  @observable readonly fill: Fill
+  readonly fill: Fill
 
-  @observable useStroke: boolean
+  useStroke: boolean
 
-  @observable readonly stroke: Stroke
+  readonly stroke: Stroke
 
-  @observable useShadow: boolean
+  useShadow: boolean
 
-  @observable readonly shadow: Shadow
+  readonly shadow: Shadow
 
-  @observable bgColor = 'rgba(0,0,0,0)'
+  bgColor = 'rgba(0,0,0,0)'
 
   constructor(style: Partial<Style> = {}) {
+    makeObservable(this, {
+      font: observable,
+      fill: observable,
+      useStroke: observable,
+      stroke: observable,
+      useShadow: observable,
+      shadow: observable,
+      bgColor: observable,
+      setUseStroke: action.bound,
+      setUseShadow: action.bound,
+      setBgColor: action.bound,
+    })
     this.font = new Font(style.font)
     this.fill = new Fill(style.fill)
     this.stroke = new Stroke(style.stroke)
@@ -29,15 +41,15 @@ class Style {
     this.useStroke = !!style.useStroke
   }
 
-  @action.bound setUseStroke(useStroke: boolean): void {
+  setUseStroke(useStroke: boolean): void {
     this.useStroke = useStroke
   }
 
-  @action.bound setUseShadow(useShadow: boolean): void {
+  setUseShadow(useShadow: boolean): void {
     this.useShadow = useShadow
   }
 
-  @action.bound setBgColor(bgColor: string): void {
+  setBgColor(bgColor: string): void {
     this.bgColor = bgColor
   }
 }

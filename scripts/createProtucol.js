@@ -3,8 +3,8 @@ const fs = require('fs')
 const path = require('path')
 const { exec } = require('child_process')
 
-const pbjs = require('protobufjs/cli/pbjs')
-const pbts = require('protobufjs/cli/pbts')
+const pbjs = require('protobufjs-cli/pbjs')
+const pbts = require('protobufjs-cli/pbts')
 
 const inputFile = path.join(
   process.cwd(),

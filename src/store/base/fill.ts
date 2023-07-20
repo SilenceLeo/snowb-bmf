@@ -1,4 +1,4 @@
-import { action, observable } from 'mobx'
+import { action, observable, makeObservable } from 'mobx'
 
 import Gradient from './gradient'
 import PatternTexture from './patternTexture'
@@ -10,26 +10,34 @@ export enum FillType {
 }
 
 class Fill {
-  @observable type: FillType
+  type: FillType
 
-  @observable color: string
+  color: string
 
-  @observable.shallow gradient: Gradient
+  gradient: Gradient
 
-  @observable.shallow patternTexture: PatternTexture
+  patternTexture: PatternTexture
 
   constructor(fill: Partial<Fill> = {}) {
+    makeObservable(this, {
+      type: observable,
+      color: observable,
+      gradient: observable,
+      patternTexture: observable,
+      setType: action.bound,
+      setColor: action.bound,
+    })
     this.color = fill.color || '#000000'
     this.type = fill.type && FillType[fill.type] ? fill.type : 0
     this.gradient = new Gradient(fill.gradient)
     this.patternTexture = new PatternTexture(fill.patternTexture)
   }
 
-  @action.bound setType(type: FillType = 0): void {
+  setType(type: FillType = 0): void {
     this.type = type
   }
 
-  @action.bound setColor(color = '#000000'): void {
+  setColor(color = '#000000'): void {
     this.color = color
   }
 }

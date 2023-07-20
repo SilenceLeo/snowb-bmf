@@ -1,4 +1,4 @@
-import { action, observable, runInAction } from 'mobx'
+import { action, observable, runInAction, makeObservable } from 'mobx'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 
 import GlyphBase, { GlyphType } from './glyphBase'
@@ -13,18 +13,28 @@ export interface FileInfo {
 class GlyphImage extends GlyphBase {
   readonly type: GlyphType = 'image'
 
-  @observable src = '' // 仅显示列表中
+  src = '' // 仅显示列表中
 
-  @observable.ref buffer: ArrayBuffer | null = null
+  buffer: ArrayBuffer | null = null
 
-  @observable fileName = ''
+  fileName = ''
 
-  @observable fileType = ''
+  fileType = ''
 
-  @observable selected = true
+  selected = true
 
   constructor(glyphImage: Partial<GlyphImage>) {
     super(glyphImage)
+    makeObservable(this, {
+      src: observable,
+      fileName: observable,
+      fileType: observable,
+      selected: observable,
+      buffer: observable.ref,
+      initImage: action.bound,
+      setGlyph: action.bound,
+      changeSelect: action.bound,
+    })
     this.letter = glyphImage.letter || ''
     this.fileName = glyphImage.fileName || ''
     this.fileType = glyphImage.fileType || ''
@@ -35,11 +45,11 @@ class GlyphImage extends GlyphBase {
     }
   }
 
-  @action.bound initImage(): Promise<void> {
+  initImage(): Promise<void> {
     return new Promise((resolve) => {
       const image = new Image()
       image.onload = () => {
-        runInAction('trimImage', () => {
+        runInAction(() => {
           const { naturalWidth, naturalHeight } = image
           this.fontWidth = naturalWidth
           this.fontHeight = naturalHeight
@@ -62,11 +72,11 @@ class GlyphImage extends GlyphBase {
     })
   }
 
-  @action.bound setGlyph(text: string): void {
+  setGlyph(text: string): void {
     this.letter = text[0] || ''
   }
 
-  @action.bound changeSelect(isSelect: boolean): void {
+  changeSelect(isSelect: boolean): void {
     this.selected = isSelect
   }
 }

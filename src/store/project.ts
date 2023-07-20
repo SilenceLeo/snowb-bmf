@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, makeObservable } from 'mobx'
 import { deepObserve } from 'mobx-utils'
 import { cancel, request } from 'requestidlecallback'
 import { GuillotineBinPack } from 'rectangle-packer'
@@ -24,7 +24,7 @@ interface TextRectangle {
 }
 
 class Project {
-  @observable name = 'Unnamed'
+  name = 'Unnamed'
 
   id: number
 
@@ -36,26 +36,50 @@ class Project {
 
   idleId = 0
 
-  @observable isPacking = false
+  isPacking = false
 
-  @observable text =
+  text =
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!№;%:?*()_+-=.,/|"\'@#$^&{}[]'
 
-  @observable.shallow glyphs: Map<string, GlyphFont> = new Map()
+  glyphs: Map<string, GlyphFont> = new Map()
 
-  @observable.shallow glyphImages: GlyphImage[] = []
+  glyphImages: GlyphImage[] = []
 
-  @observable.ref style: Style
+  style: Style
 
-  @observable.ref layout: Layout
+  layout: Layout
 
-  @observable.ref globalAdjustMetric: Metric
+  globalAdjustMetric: Metric
 
-  @observable.ref packCanvas: HTMLCanvasElement | null = null
+  packCanvas: HTMLCanvasElement | null = null
 
-  @observable.ref ui: Ui = new Ui()
+  ui: Ui = new Ui()
 
   constructor(project: Partial<Project> = {}) {
+    makeObservable(this, {
+      name: observable,
+      isPacking: observable,
+      text: observable,
+      glyphs: observable.shallow,
+      glyphImages: observable.shallow,
+      style: observable.ref,
+      layout: observable.ref,
+      globalAdjustMetric: observable.ref,
+      packCanvas: observable.ref,
+      ui: observable.ref,
+      glyphList: computed,
+      rectangleList: computed,
+      pack: action.bound,
+      setPack: action.bound,
+      packStyle: action.bound,
+      throttlePack: action.bound,
+      setText: action.bound,
+      addGlyphs: action.bound,
+      addImages: action.bound,
+      removeImage: action.bound,
+      setCanvas: action.bound,
+      setName: action.bound,
+    })
     this.id = project.id || Date.now()
     this.name = project.name || 'Unnamed'
     this.text = project.text || this.text
@@ -82,7 +106,7 @@ class Project {
     this.pack()
   }
 
-  @computed get glyphList(): (GlyphFont | GlyphImage)[] {
+  get glyphList(): (GlyphFont | GlyphImage)[] {
     const obj: { [key: string]: GlyphImage } = {}
 
     this.glyphImages.forEach((glyph) => {
@@ -97,7 +121,7 @@ class Project {
     })
   }
 
-  @computed get rectangleList(): TextRectangle[] {
+  get rectangleList(): TextRectangle[] {
     const { padding, spacing } = this.layout
     return this.glyphList.map((glyph) => {
       const isUnEmpty = !!(glyph.width && glyph.height)
@@ -112,7 +136,7 @@ class Project {
     })
   }
 
-  @action.bound pack(): void {
+  pack(): void {
     if (this.idleId) return
     if (this.worker) this.worker.terminate()
     this.isPacking = true
@@ -151,10 +175,7 @@ class Project {
     )
   }
 
-  @action.bound setPack(
-    list: TextRectangle[],
-    failedList?: TextRectangle[],
-  ): void {
+  setPack(list: TextRectangle[], failedList?: TextRectangle[]): void {
     const imgList = this.glyphImages
     let maxWidth = 0
     let maxHeight = 0
@@ -218,7 +239,7 @@ class Project {
     this.ui.setSize(maxWidth - spacing, maxHeight - spacing)
   }
 
-  @action.bound packStyle(): void {
+  packStyle(): void {
     this.isPacking = true
     if (this.worker) {
       this.worker.terminate()
@@ -254,7 +275,7 @@ class Project {
     runTasks()
   }
 
-  @action.bound throttlePack(): void {
+  throttlePack(): void {
     if (this.idleId) return
     window.clearTimeout(this.packTimer)
     if (Date.now() - this.packStart > 500) {
@@ -289,13 +310,13 @@ class Project {
     })
   }
 
-  @action.bound setText(str: string): void {
+  setText(str: string): void {
     const oldText = this.text
     this.text = str.replace(/\s/gm, '')
     this.addGlyphs(oldText)
   }
 
-  @action.bound addGlyphs(oldText = ''): void {
+  addGlyphs(oldText = ''): void {
     const currentList = Array.from(new Set(this.text.split('')))
     const oldList = Array.from(new Set(oldText.split('')))
     this.text = currentList.join('')
@@ -317,7 +338,7 @@ class Project {
     })
   }
 
-  @action.bound addImages<T extends FileInfo>(list: T[]): void {
+  addImages<T extends FileInfo>(list: T[]): void {
     Promise.all(
       list.map((img) => {
         const glyphImage = new GlyphImage(img)
@@ -327,16 +348,16 @@ class Project {
     ).then(this.pack)
   }
 
-  @action.bound removeImage(image: GlyphImage): void {
+  removeImage(image: GlyphImage): void {
     const idx = this.glyphImages.indexOf(image)
     if (idx > -1) this.glyphImages.splice(idx, 1)
   }
 
-  @action.bound setCanvas(canvas: HTMLCanvasElement): void {
+  setCanvas(canvas: HTMLCanvasElement): void {
     this.packCanvas = canvas
   }
 
-  @action.bound setName(name: string): void {
+  setName(name: string): void {
     this.name = name || this.name
   }
 }

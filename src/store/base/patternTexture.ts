@@ -28,7 +28,7 @@ class PatternTexture {
     const src = URL.createObjectURL(new Blob([buffer]))
     const img = new Image()
     img.onload = () => {
-      runInAction('setPatternTextureImage', () => {
+      runInAction(() => {
         this.buffer = buffer
         this.image = img
         this.src = src

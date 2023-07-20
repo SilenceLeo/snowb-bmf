@@ -1,5 +1,6 @@
 /* eslint-disable */
 import * as $protobuf from 'protobufjs'
+import Long = require('long')
 /** Properties of a Metric. */
 export interface IMetric {
   /** Metric xAdvance */
@@ -110,6 +111,13 @@ export class Metric implements IMetric {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Metric
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a GradientColor. */
@@ -224,6 +232,13 @@ export class GradientColor implements IGradientColor {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for GradientColor
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Gradient. */
@@ -336,6 +351,13 @@ export class Gradient implements IGradient {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Gradient
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a PatternTexture. */
@@ -450,6 +472,13 @@ export class PatternTexture implements IPatternTexture {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for PatternTexture
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Fill. */
@@ -592,6 +621,13 @@ export class Fill implements IFill {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Fill
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a FontResource. */
@@ -694,6 +730,13 @@ export class FontResource implements IFontResource {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for FontResource
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Font. */
@@ -806,6 +849,13 @@ export class Font implements IFont {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Font
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a GlyphFont. */
@@ -920,6 +970,13 @@ export class GlyphFont implements IGlyphFont {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for GlyphFont
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a GlyphImage. */
@@ -1058,6 +1115,13 @@ export class GlyphImage implements IGlyphImage {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for GlyphImage
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Layout. */
@@ -1188,6 +1252,13 @@ export class Layout implements ILayout {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Layout
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Shadow. */
@@ -1306,6 +1377,13 @@ export class Shadow implements IShadow {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Shadow
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Style. */
@@ -1442,6 +1520,13 @@ export class Style implements IStyle {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Style
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of an Ui. */
@@ -1542,6 +1627,13 @@ export class Ui implements IUi {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Ui
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
 /** Properties of a Project. */
@@ -1690,4 +1782,11 @@ export class Project implements IProject {
    * @returns JSON object
    */
   public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Project
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
 }

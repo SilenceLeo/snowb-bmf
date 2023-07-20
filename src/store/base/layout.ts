@@ -1,20 +1,34 @@
-import { action, observable } from 'mobx'
+import { action, observable, makeObservable } from 'mobx'
 import use from 'src/utils/use'
 
 class Layout {
-  @observable padding = 1
+  padding = 1
 
-  @observable spacing = 1
+  spacing = 1
 
-  @observable width = 512
+  width = 512
 
-  @observable height = 512
+  height = 512
 
-  @observable auto = true
+  auto = true
 
-  @observable fixedSize = false
+  fixedSize = false
 
   constructor(layout: Partial<Layout> = {}) {
+    makeObservable(this, {
+      padding: observable,
+      spacing: observable,
+      width: observable,
+      height: observable,
+      auto: observable,
+      fixedSize: observable,
+      setPadding: action.bound,
+      setSpacing: action.bound,
+      setWidth: action.bound,
+      setHeight: action.bound,
+      setAuto: action.bound,
+      setFixedSize: action.bound,
+    })
     this.padding = use.num(layout.padding, 1)
 
     this.spacing = use.num(layout.spacing, 1)
@@ -29,27 +43,27 @@ class Layout {
     this.fixedSize = !!layout.fixedSize
   }
 
-  @action.bound setPadding(padding: number): void {
+  setPadding(padding: number): void {
     this.padding = padding
   }
 
-  @action.bound setSpacing(spacing: number): void {
+  setSpacing(spacing: number): void {
     this.spacing = spacing
   }
 
-  @action.bound setWidth(width: number): void {
+  setWidth(width: number): void {
     this.width = width
   }
 
-  @action.bound setHeight(height: number): void {
+  setHeight(height: number): void {
     this.height = height
   }
 
-  @action.bound setAuto(auto: boolean): void {
+  setAuto(auto: boolean): void {
     this.auto = auto
   }
 
-  @action.bound setFixedSize(fixedSize: boolean): void {
+  setFixedSize(fixedSize: boolean): void {
     this.fixedSize = fixedSize
   }
 }

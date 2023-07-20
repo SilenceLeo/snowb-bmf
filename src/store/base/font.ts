@@ -1,4 +1,4 @@
-import { action, observable, computed, runInAction } from 'mobx'
+import { action, observable, computed, runInAction, makeObservable } from 'mobx'
 import getTextBaselines from 'src/utils/getTextBaselines'
 import { parse, Font as OpenType } from 'opentype.js'
 import updateFontFace from 'src/utils/updateFontFace'
@@ -14,49 +14,49 @@ export interface FontResource {
 const DEFAULT_FAMILY = 'sans-serif'
 
 class Font {
-  @observable fonts: FontResource[] = []
+  fonts: FontResource[] = []
 
-  @observable size: number
+  size: number
 
-  @observable lineHeight = 1
+  lineHeight = 1
 
-  @observable middle = 0
+  middle = 0
 
-  @observable hanging = 0
+  hanging = 0
 
-  @observable top = 0
+  top = 0
 
-  @observable alphabetic = 0
+  alphabetic = 0
 
-  @observable ideographic = 0
+  ideographic = 0
 
-  @observable bottom = 0
+  bottom = 0
 
-  @observable sharp = 80
+  sharp = 80
 
-  @computed get mainFont() {
+  get mainFont() {
     if (this.fonts.length > 0) return this.fonts[0]
     return null
   }
 
-  @computed get mainFamily() {
+  get mainFamily() {
     if (this.mainFont) return this.mainFont.family
     return DEFAULT_FAMILY
   }
 
-  @computed get opentype() {
+  get opentype() {
     if (this.mainFont) return this.mainFont.opentype
     return null
   }
 
-  @computed get family(): string {
+  get family(): string {
     return (
       this.fonts.map((fontResource) => `"${fontResource.family}"`).join(',') ||
       DEFAULT_FAMILY
     )
   }
 
-  @computed get minBaseLine() {
+  get minBaseLine() {
     const min = Math.min(
       this.middle,
       this.hanging,
@@ -69,7 +69,7 @@ class Font {
     return min
   }
 
-  @computed get maxBaseLine() {
+  get maxBaseLine() {
     const max = Math.max(
       this.middle,
       this.hanging,
@@ -83,6 +83,29 @@ class Font {
   }
 
   constructor(font: Partial<Font> = {}) {
+    makeObservable(this, {
+      fonts: observable,
+      size: observable,
+      lineHeight: observable,
+      middle: observable,
+      hanging: observable,
+      top: observable,
+      alphabetic: observable,
+      ideographic: observable,
+      bottom: observable,
+      sharp: observable,
+      mainFont: computed,
+      mainFamily: computed,
+      opentype: computed,
+      family: computed,
+      minBaseLine: computed,
+      maxBaseLine: computed,
+      addFont: action.bound,
+      removeFont: action.bound,
+      setSize: action.bound,
+      setLineHeight: action.bound,
+      setSharp: action.bound,
+    })
     this.size = font.size || 72
     // this.lineHeight = font.lineHeight || 1.25
     this.sharp = is.num(font.sharp) ? font.sharp : 80
@@ -112,35 +135,34 @@ class Font {
     this.bottom = bls.bottom
   }
 
-  @action.bound addFont(font: ArrayBuffer): Promise<void> {
+  async addFont(font: ArrayBuffer): Promise<void> {
     let opentype: OpenType
-    try {
-      opentype = parse(font, { lowMemory: true })
-    } catch (e) {
-      return Promise.reject(e)
-    }
+
+    opentype = parse(font, { lowMemory: true })
+
     const { names } = opentype
     const family = names.postScriptName[Object.keys(names.postScriptName)[0]]
     const hasFont = this.fonts.find(
       (fontResource) => fontResource.family === family,
     )
     if (hasFont) {
-      return Promise.reject(new Error('Font already exists.'))
+      throw new Error('Font already exists.')
     }
     const url = URL.createObjectURL(new Blob([font]))
-    return updateFontFace(family, url).then(() => {
-      runInAction(() => {
-        this.fonts.push({
-          font,
-          family,
-          opentype,
-        })
-        this.updateBaseines()
+
+    await updateFontFace(family, url)
+
+    runInAction(() => {
+      this.fonts.push({
+        font,
+        family,
+        opentype,
       })
+      this.updateBaseines()
     })
   }
 
-  @action.bound removeFont(fontResource: FontResource) {
+  removeFont(fontResource: FontResource) {
     const idx = this.fonts.indexOf(fontResource)
     if (idx === -1) return
     this.fonts.splice(idx, 1)
@@ -149,16 +171,16 @@ class Font {
     }
   }
 
-  @action.bound setSize(size: number): void {
+  setSize(size: number): void {
     this.size = size
     this.updateBaseines()
   }
 
-  @action.bound setLineHeight(lineHeight: number): void {
+  setLineHeight(lineHeight: number): void {
     this.lineHeight = lineHeight
   }
 
-  @action.bound setSharp(sharp: number): void {
+  setSharp(sharp: number): void {
     this.sharp = sharp
   }
 }

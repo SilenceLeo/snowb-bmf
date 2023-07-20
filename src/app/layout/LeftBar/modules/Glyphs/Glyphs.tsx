@@ -59,6 +59,7 @@ const Glyphs: FunctionComponent<unknown> = () => {
           rows={4}
           variant='outlined'
           inputProps={{ spellCheck: false }}
+          size='small'
           onChange={handleInput}
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}

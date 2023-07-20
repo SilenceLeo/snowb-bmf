@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, makeObservable } from 'mobx'
 
 import Metric from './metric'
 
@@ -7,35 +7,53 @@ export type GlyphType = 'text' | 'image'
 class GlyphBase {
   readonly type: GlyphType = 'text'
 
-  @observable letter = ''
+  letter = ''
 
-  @observable.ref source: HTMLImageElement | HTMLCanvasElement | null = null
+  source: HTMLImageElement | HTMLCanvasElement | null = null
 
-  @observable width = 0
+  width = 0
 
-  @observable height = 0
+  height = 0
 
-  @observable x = 0
+  x = 0
 
-  @observable y = 0
+  y = 0
 
-  @observable fontWidth = 0
+  fontWidth = 0
 
-  @observable fontHeight = 0
+  fontHeight = 0
 
-  @observable trimOffsetTop = 0
+  trimOffsetTop = 0
 
-  @observable trimOffsetLeft = 0
+  trimOffsetLeft = 0
 
-  @observable trimOffsetRight = 0
+  trimOffsetRight = 0
 
-  @observable trimOffsetBottom = 0
+  trimOffsetBottom = 0
 
-  @observable.ref adjustMetric: Metric
+  adjustMetric: Metric
 
-  @observable kerning: Map<string, number> = new Map()
+  kerning: Map<string, number> = new Map()
 
   constructor(glyph: Partial<GlyphBase> = {}) {
+    makeObservable(this, {
+      letter: observable,
+      width: observable,
+      height: observable,
+      x: observable,
+      y: observable,
+      fontWidth: observable,
+      fontHeight: observable,
+      trimOffsetTop: observable,
+      trimOffsetLeft: observable,
+      trimOffsetRight: observable,
+      trimOffsetBottom: observable,
+      kerning: observable,
+      source: observable.ref,
+      adjustMetric: observable.ref,
+      steKerning: action.bound,
+    })
+
     this.letter = glyph.letter || ''
     this.adjustMetric = new Metric(glyph.adjustMetric)
 
@@ -44,7 +62,7 @@ class GlyphBase {
     }
   }
 
-  @action.bound steKerning(text: string, kerning: number) {
+  steKerning(text: string, kerning: number) {
     this.kerning.set(text, kerning)
   }
 }

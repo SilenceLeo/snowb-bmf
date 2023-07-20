@@ -6,6 +6,7 @@
 .appName {
   font-size: 1.25rem;
   font-weight: bolder;
+  margin-right: 1rem;
 }
 .appNameSup {
   font-weight: lighter;

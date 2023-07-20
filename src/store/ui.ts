@@ -1,13 +1,21 @@
-import { action, observable } from 'mobx'
+import { action, observable, makeObservable } from 'mobx'
 
 class Ui {
-  @observable globalLoader = 0
+  globalLoader = 0
 
-  @action.bound showGlobalLoader(num = 1): void {
+  constructor() {
+    makeObservable(this, {
+      globalLoader: observable,
+      showGlobalLoader: action.bound,
+      hideGlobalLoader: action.bound,
+    })
+  }
+
+  showGlobalLoader(num = 1): void {
     this.globalLoader += num
   }
 
-  @action.bound hideGlobalLoader(num = -1): void {
+  hideGlobalLoader(num = -1): void {
     this.globalLoader += num
   }
 }

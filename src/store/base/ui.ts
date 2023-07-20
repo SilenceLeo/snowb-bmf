@@ -1,34 +1,56 @@
-import { action, observable } from 'mobx'
+import { action, observable, makeObservable } from 'mobx'
 import use from 'src/utils/use'
 
 class Ui {
-  @observable scale = 1
+  scale = 1
 
-  @observable offsetX = 0
+  offsetX = 0
 
-  @observable offsetY = 0
+  offsetY = 0
 
-  @observable width = 0
+  width = 0
 
-  @observable height = 0
+  height = 0
 
-  @observable previewText = 'Hello World!\nHello Snow Bamboo!' // /\r\n|\r|\n/
+  previewText = 'Hello World!\nHello Snow Bamboo!' // /\r\n|\r|\n/
 
-  @observable selectLetter = ''
+  selectLetter = ''
 
-  @observable selectNextLetter = ''
+  selectNextLetter = ''
 
-  @observable showPreview = false
+  showPreview = false
 
-  @observable previewScale = 1
+  previewScale = 1
 
-  @observable previewOffsetX = 0
+  previewOffsetX = 0
 
-  @observable previewOffsetY = 0
+  previewOffsetY = 0
 
-  @observable packFailed = false
+  packFailed = false
 
   constructor(ui: Partial<Ui> = {}) {
+    makeObservable(this, {
+      scale: observable,
+      offsetX: observable,
+      offsetY: observable,
+      width: observable,
+      height: observable,
+      previewText: observable,
+      selectLetter: observable,
+      selectNextLetter: observable,
+      showPreview: observable,
+      previewScale: observable,
+      previewOffsetX: observable,
+      previewOffsetY: observable,
+      packFailed: observable,
+      setTransform: action.bound,
+      setSize: action.bound,
+      setPreviewText: action.bound,
+      setShowPreview: action.bound,
+      setPreviewTransform: action.bound,
+      setSelectLetter: action.bound,
+      setPackFailed: action.bound,
+    })
     if (ui.previewText) {
       this.previewText = ui.previewText
     }
@@ -46,28 +68,28 @@ class Ui {
     this.scale = Math.max(this.scale, 0.01)
   }
 
-  @action.bound setTransform(trans: Partial<Ui>): void {
+  setTransform(trans: Partial<Ui>): void {
     this.scale = use.num(trans.scale, this.scale)
     this.offsetX = use.num(trans.offsetX, this.offsetX)
     this.offsetY = use.num(trans.offsetY, this.offsetY)
     this.reOffset()
   }
 
-  @action.bound setSize(width: number, height: number): void {
+  setSize(width: number, height: number): void {
     this.width = width
     this.height = height
     this.reOffset()
   }
 
-  @action.bound setPreviewText(text: string): void {
+  setPreviewText(text: string): void {
     this.previewText = text
   }
 
-  @action.bound setShowPreview(showPreview: boolean): void {
+  setShowPreview(showPreview: boolean): void {
     this.showPreview = showPreview
   }
 
-  @action.bound setPreviewTransform(trans: Partial<Ui>): void {
+  setPreviewTransform(trans: Partial<Ui>): void {
     this.previewScale = Math.max(
       use.num(trans.previewScale, this.previewScale),
       0.01,
@@ -76,12 +98,12 @@ class Ui {
     this.previewOffsetY = use.num(trans.previewOffsetY, this.previewOffsetY)
   }
 
-  @action.bound setSelectLetter(letter: string = '', next: string = ''): void {
+  setSelectLetter(letter: string = '', next: string = ''): void {
     this.selectLetter = letter
     this.selectNextLetter = next
   }
 
-  @action.bound setPackFailed(packFailed: boolean): void {
+  setPackFailed(packFailed: boolean): void {
     this.packFailed = packFailed
   }
 }

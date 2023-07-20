@@ -1,5 +1,6 @@
 import { Project } from 'src/store'
 import { Project as ProjectProto, IProject } from './project'
+import deepMapToObject from 'src/utils/deepMapToObject'
 
 export default function saveProject(project: Project): Uint8Array {
   // font
@@ -29,6 +30,6 @@ export default function saveProject(project: Project): Uint8Array {
   }
 
   return ProjectProto.encode(
-    ProjectProto.create(project as unknown as IProject),
+    ProjectProto.create(deepMapToObject(project) as unknown as IProject),
   ).finish()
 }
