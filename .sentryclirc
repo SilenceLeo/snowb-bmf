@@ -1,6 +1,3 @@
 [defaults]
 project=snowb
 org=silencleo
-
-[auth]
-token=888f48a1ae8f47b6a9c70faceb0f4050a577b314415546bab3a8f504a2a15c22
