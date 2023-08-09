@@ -28,3 +28,4 @@ package-lock.json
 .eslintcache
 
 /test
+.sentryclirc
