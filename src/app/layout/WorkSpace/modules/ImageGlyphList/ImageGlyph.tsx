@@ -46,7 +46,7 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
   return (
     <Paper variant='outlined' className={styles.root}>
       <img className={styles.image} src={glyph.src} alt={glyph.fileName} />
-      <Grid container sx={{ direction: 'column' }} className={styles.actions}>
+      <Grid container className={styles.actions}>
         <Grid
           item
           container
@@ -59,7 +59,7 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
             onChange={(e) => changeSelect(e.target.checked)}
           />
           <IconButton
-            color='primary'
+            color='info'
             size='small'
             onClick={() => removeImage(glyph)}
           >
