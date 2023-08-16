@@ -79,7 +79,9 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       maxBaseLine - minBaseLine,
       padding,
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    isPacking,
     canvas,
     lineHeight,
     maxBaseLine,
