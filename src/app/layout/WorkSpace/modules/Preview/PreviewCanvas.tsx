@@ -119,13 +119,18 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     if (!ctx) return
     // TODO: LINEHEIGHT
     const lh = size * lineHeight
+    const drawYOffset = Math.max((lh - size) / 2, 0)
 
     canvas.width = data.width
     canvas.height = data.height
     data.list.forEach((item) => {
       if (!item.source || item.source.width === 0 || item.source.height === 0)
         return
-      ctx.drawImage(item.source, item.x - data.xOffset, item.y - data.yOffset)
+      ctx.drawImage(
+        item.source,
+        item.x - data.xOffset,
+        item.y - data.yOffset + drawYOffset,
+      )
     })
 
     for (let index = 0; index < data.lines; index += 1) {
@@ -133,8 +138,8 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
         (baseLine) => {
           const basey = Math.round(baseLine - minBaseLine + index * lh)
           ctx.beginPath()
-          ctx.moveTo(-data.xOffset, basey + 0.5 - data.yOffset)
-          ctx.lineTo(data.width, basey + 0.5 - data.yOffset)
+          ctx.moveTo(-data.xOffset, basey + 0.5 - data.yOffset + drawYOffset)
+          ctx.lineTo(data.width, basey + 0.5 - data.yOffset + drawYOffset)
           if (baseLine === minBaseLine || baseLine === maxBaseLine) {
             ctx.strokeStyle = 'rgba(0,0,0,1)'
             ctx.setLineDash([])
@@ -146,10 +151,10 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
         },
       )
       ctx.beginPath()
-      ctx.moveTo(-data.xOffset + 0.5, index * lh - data.yOffset)
+      ctx.moveTo(-data.xOffset + 0.5, index * lh - data.yOffset + drawYOffset)
       ctx.lineTo(
         -data.xOffset + 0.5,
-        index * lh - data.yOffset + maxBaseLine - minBaseLine,
+        index * lh - data.yOffset + maxBaseLine - minBaseLine + drawYOffset,
       )
       ctx.strokeStyle = 'rgba(0,0,0,1)'
       ctx.setLineDash([])
@@ -195,7 +200,12 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
         }}
       >
         <canvas ref={(node) => setCanvas(node)} className={styles.canvas} />
-        {data ? <LetterList data={data} /> : null}
+        {data ? (
+          <LetterList
+            data={data}
+            drawYOffset={Math.max((size * lineHeight - size) / 2, 0)}
+          />
+        ) : null}
       </div>
     </div>
   )

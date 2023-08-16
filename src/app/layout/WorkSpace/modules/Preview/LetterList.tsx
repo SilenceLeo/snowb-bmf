@@ -10,6 +10,7 @@ import styles from './LetterList.module.scss'
 
 interface LetterListProps {
   data: PreviewObject
+  drawYOffset: number
 }
 
 const LetterList: FunctionComponent<LetterListProps> = (
@@ -17,8 +18,10 @@ const LetterList: FunctionComponent<LetterListProps> = (
 ) => {
   const {
     data: { xOffset, yOffset, list },
+    drawYOffset,
   } = props
   const ui = useProjectUi()
+
   const handleSelect = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     letter: string,
@@ -43,7 +46,7 @@ const LetterList: FunctionComponent<LetterListProps> = (
               width: item.width,
               height: item.height,
               left: `${item.x - xOffset}px`,
-              top: `${item.y - yOffset}px`,
+              top: `${item.y - yOffset + drawYOffset}px`,
             }}
             key={key}
             onClick={(e) => handleSelect(e, item.letter, item.next)}
