@@ -54,7 +54,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     [ui],
   )
   const data = useMemo(() => {
-    if (!canvas || isPacking) return
+    if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
@@ -81,7 +81,6 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     )
   }, [
     canvas,
-    isPacking,
     lineHeight,
     maxBaseLine,
     minBaseLine,
