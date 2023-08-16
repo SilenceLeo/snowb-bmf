@@ -9,4 +9,4 @@
 
 Recently, [Google Chrome officially says goodbye to Flash](https://www.blog.google/products/chrome/saying-goodbye-flash-chrome/), [Adobe will not support Flash Player any longer as well](https://www.adobe.com/products/flashplayer/end-of-life.html). That also means the online tool Littera which we frequently applied before is no longer available in Chrome. SnowBamboo applied Canvas API and follows modern browsers' specification, making it simple to edit Bitmap Font online. It is compatible with Littera files (.ltr) and can be easily converted to SnowBamboo files (.sbf).
 
-[![SnowBamboo Bitmap Font Generator Preview](https://user-images.githubusercontent.com/4632034/261012079-8e926140-d7ea-48c3-8cd3-abbee95a1679.png)](https://snowb.org/)
+[![SnowBamboo Bitmap Font Generator Preview](https://github.com/SilenceLeo/snowb-bmf/assets/4632034/182efea8-6254-4bb7-80a1-1d4c3be1e928)](https://snowb.org/)
