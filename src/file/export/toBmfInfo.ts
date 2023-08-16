@@ -38,7 +38,8 @@ export default function toBmfInfo(project: Project, fontFamily = ''): BMFont {
   }
 
   const common: BMFontCommon = {
-    lineHeight: style.font.size,
+    // TODO: LINEHEIGHT EXPORT
+    lineHeight: Math.round(style.font.size * style.font.lineHeight),
     base: Math.round(style.font.alphabetic - style.font.top),
     scaleW: width,
     scaleH: height,

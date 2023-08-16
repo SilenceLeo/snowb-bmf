@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect, FunctionComponent } from 'react'
-import { autorun } from 'mobx'
+import { useRef, useState, useEffect, FunctionComponent, useMemo } from 'react'
 import { observer } from 'mobx-react'
 import { useTheme } from '@mui/material/styles'
 
@@ -8,7 +7,7 @@ import useWheel from 'src/app/hooks/useWheel'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import { BMFontChar, toBmfInfo } from 'src/file/export'
 
-import getPreviewCanvas, { PreviewObject } from './getPreviewCanvas'
+import getPreviewCanvas from './getPreviewCanvas'
 import LetterList from './LetterList'
 
 import styles from './PreviewCanvas.module.scss'
@@ -16,7 +15,6 @@ import styles from './PreviewCanvas.module.scss'
 const PreviewCanvas: FunctionComponent<unknown> = () => {
   const { bgPixel } = useTheme()
   const project = useProject()
-  const [data, setData] = useState<PreviewObject | null>(null)
   const {
     ui,
     style: {
@@ -37,8 +35,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     isPacking,
   } = project
   const { previewScale, previewOffsetX, previewOffsetY } = ui
-
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
   const domRef = useRef<HTMLDivElement>(null)
   const [dragState, handleMouseDown] = useSpaceDrag(
     (offsetInfo) => {
@@ -56,6 +53,43 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     },
     [ui],
   )
+  const data = useMemo(() => {
+    if (!canvas || isPacking) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const { chars, kernings } = toBmfInfo(project)
+    const kerningMap: Map<number, Map<number, number>> = new Map()
+    kernings.list.forEach(({ first, second, amount }) => {
+      if (!kerningMap.has(first)) kerningMap.set(first, new Map())
+      const k = kerningMap.get(first)
+      k?.set(second, amount)
+    })
+    const charMap: Map<string, BMFontChar> = new Map()
+    chars.list.forEach((char) => {
+      charMap.set(char.letter, char)
+    })
+    // TODO: LINEHEIGHT
+    const lh = size * lineHeight
+    return getPreviewCanvas(
+      ui.previewText,
+      charMap,
+      kerningMap,
+      lh,
+      maxBaseLine - minBaseLine,
+      padding,
+    )
+  }, [
+    canvas,
+    isPacking,
+    lineHeight,
+    maxBaseLine,
+    minBaseLine,
+    padding,
+    project,
+    size,
+    ui.previewText,
+  ])
 
   useWheel(
     domRef,
@@ -79,11 +113,10 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   )
 
   useEffect(() => {
-    if (!canvasRef.current || isPacking || !data) return
-
-    const canvas = canvasRef.current
+    if (!canvas || isPacking || !data) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    // TODO: LINEHEIGHT
     const lh = size * lineHeight
 
     canvas.width = data.width
@@ -124,6 +157,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   }, [
     alphabetic,
     bottom,
+    canvas,
     data,
     hanging,
     ideographic,
@@ -134,46 +168,6 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     minBaseLine,
     size,
     top,
-  ])
-
-  useEffect(() => {
-    autorun(() => {
-      if (!canvasRef.current || isPacking) return
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
-
-      const { chars, kernings } = toBmfInfo(project)
-      const kerningMap: Map<number, Map<number, number>> = new Map()
-      kernings.list.forEach(({ first, second, amount }) => {
-        if (!kerningMap.has(first)) kerningMap.set(first, new Map())
-        const k = kerningMap.get(first)
-        k?.set(second, amount)
-      })
-      const charMap: Map<string, BMFontChar> = new Map()
-      chars.list.forEach((char) => {
-        charMap.set(char.letter, char)
-      })
-      const lh = size * lineHeight
-      const obj = getPreviewCanvas(
-        ui.previewText,
-        charMap,
-        kerningMap,
-        lh,
-        maxBaseLine - minBaseLine,
-        padding,
-      )
-      setData(() => obj)
-    })
-  }, [
-    isPacking,
-    lineHeight,
-    maxBaseLine,
-    minBaseLine,
-    project,
-    size,
-    ui.previewText,
-    padding,
   ])
 
   return (
@@ -199,7 +193,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
           transform: `scale(${previewScale}) translate(${previewOffsetX}px,${previewOffsetY}px)`,
         }}
       >
-        <canvas ref={canvasRef} className={styles.canvas} />
+        <canvas ref={(node) => setCanvas(node)} className={styles.canvas} />
         {data ? <LetterList data={data} /> : null}
       </div>
     </div>

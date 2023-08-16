@@ -56,6 +56,7 @@ export default function getTextBaselines(
     lineHeight: 1,
   }
 
+  // TODO: LINEHEIGHT
   baselines.lineHeight =
     (Math.max(baselines.ideographic, baselines.bottom) -
       Math.min(baselines.hanging, baselines.top)) /

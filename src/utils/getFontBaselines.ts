@@ -26,6 +26,6 @@ export default function getFontBaselines(
     alphabetic: alphabetic - fontHeight / 2,
     ideographic: 0,
     bottom: fontHeight / 2,
-    lineHeight: height / font.unitsPerEm,
+    lineHeight: height / font.unitsPerEm, // TODO: LINEHEIGHT
   }
 }

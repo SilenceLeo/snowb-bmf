@@ -18,6 +18,7 @@ class Font {
 
   size: number
 
+  // TODO: LINEHEIGHT
   lineHeight = 1
 
   middle = 0
@@ -107,7 +108,8 @@ class Font {
       setSharp: action.bound,
     })
     this.size = font.size || 72
-    // this.lineHeight = font.lineHeight || 1.25
+    // TODO: LINEHEIGHT
+    this.lineHeight = font.lineHeight || 1.25
     this.sharp = is.num(font.sharp) ? font.sharp : 80
     if (font.fonts && font.fonts.length) {
       font.fonts.forEach((fontResource) => this.addFont(fontResource.font))
@@ -126,6 +128,7 @@ class Font {
         fontSize: this.size,
       })
     }
+    // TODO: LINEHEIGHT
     this.lineHeight = bls.lineHeight
     this.middle = bls.middle
     this.hanging = bls.hanging
@@ -176,6 +179,7 @@ class Font {
     this.updateBaseines()
   }
 
+  // TODO: LINEHEIGHT
   setLineHeight(lineHeight: number): void {
     this.lineHeight = lineHeight
   }
