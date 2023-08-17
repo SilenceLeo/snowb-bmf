@@ -15,7 +15,7 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
   return (
     <>
       <Box sx={{ px: 2, my: 4 }}>
-        <Typography>Global Metric Adjustment</Typography>
+        <Typography>Global Metric Adjustments</Typography>
       </Box>
       <FormAdjustMetric
         xAdvance={xAdvance}

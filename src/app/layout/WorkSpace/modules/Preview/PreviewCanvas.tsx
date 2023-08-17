@@ -88,6 +88,9 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     minBaseLine,
     padding,
     project,
+    project.globalAdjustMetric.xAdvance,
+    project.globalAdjustMetric.yOffset,
+    project.globalAdjustMetric.xOffset,
     size,
     ui.previewText,
   ])
