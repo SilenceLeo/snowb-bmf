@@ -1,16 +1,14 @@
-import { useRef, useState, useEffect, FunctionComponent, useMemo } from 'react'
-import { observer } from 'mobx-react'
 import { useTheme } from '@mui/material/styles'
-
-import { useProject } from 'src/store/hooks'
-import useWheel from 'src/app/hooks/useWheel'
+import { observer } from 'mobx-react-lite'
+import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
+import useWheel from 'src/app/hooks/useWheel'
 import { BMFontChar, toBmfInfo } from 'src/file/export'
+import { useProject } from 'src/store/hooks'
 
-import getPreviewCanvas from './getPreviewCanvas'
 import LetterList from './LetterList'
-
 import styles from './PreviewCanvas.module.scss'
+import getPreviewCanvas from './getPreviewCanvas'
 
 const PreviewCanvas: FunctionComponent<unknown> = () => {
   const { bgPixel } = useTheme()
@@ -69,7 +67,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     chars.list.forEach((char) => {
       charMap.set(char.letter, char)
     })
-    // TODO: LINEHEIGHT
+
     const lh = size * lineHeight
     return getPreviewCanvas(
       ui.previewText,
@@ -120,7 +118,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     if (!canvas || isPacking || !data) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    // TODO: LINEHEIGHT
+
     const lh = size * lineHeight
     const drawYOffset = Math.max((lh - size) / 2, 0)
 

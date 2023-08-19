@@ -12,7 +12,6 @@ const components: ThemeOptions['components'] = {
       },
       body: {
         margin: 0,
-        // fontFamily: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
         WebkitFontSmoothing: 'antialiased',
         MozOsxFontSmoothing: 'grayscale',
         userSelect: 'none',
@@ -67,7 +66,13 @@ const components: ThemeOptions['components'] = {
       size: 'small',
     },
   },
-
+  MuiPaper: {
+    styleOverrides: {
+      root: {
+        backgroundImage: 'none',
+      },
+    },
+  },
   MuiButton: {
     defaultProps: {
       size: 'small',

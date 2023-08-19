@@ -1,14 +1,13 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import GradientPicker from 'src/app/components/GradientPicker'
+import GridInput from 'src/app/components/GridInput'
 import WrappedSketchPicker from 'src/app/components/WrappedSketchPicker'
 import { Gradient, GradientType } from 'src/store'
-import GridInput from 'src/app/components/GridInput'
 
 import FormAngle from '../FormAngle'
 

@@ -1,4 +1,4 @@
-import { observable, action, makeObservable } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 
 import Metric from './metric'
 
@@ -27,10 +27,6 @@ class GlyphBase {
 
   trimOffsetLeft = 0
 
-  trimOffsetRight = 0
-
-  trimOffsetBottom = 0
-
   adjustMetric: Metric
 
   kerning: Map<string, number> = new Map()
@@ -46,8 +42,6 @@ class GlyphBase {
       fontHeight: observable,
       trimOffsetTop: observable,
       trimOffsetLeft: observable,
-      trimOffsetRight: observable,
-      trimOffsetBottom: observable,
       kerning: observable,
       source: observable.ref,
       adjustMetric: observable.ref,

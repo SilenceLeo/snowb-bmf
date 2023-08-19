@@ -27,7 +27,6 @@ export default function getPreviewCanvas(
   fontHeight: number,
   padding: number = 0,
 ): PreviewObject {
-  // const letters = Array.from(new Set(text.replace(/\r\n|\r|\n/g, '').split('')))
   const list: PreviewItem[] = []
   const lines = text.split(/\r\n|\r|\n/)
   let minX = 0

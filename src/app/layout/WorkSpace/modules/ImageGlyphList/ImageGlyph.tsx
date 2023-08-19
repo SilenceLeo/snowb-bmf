@@ -1,13 +1,11 @@
-import React, { useState, FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
-
-import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
-import Checkbox from '@mui/material/Checkbox'
-import InputBase from '@mui/material/InputBase'
-import IconButton from '@mui/material/IconButton'
 import DeleteIcon from '@mui/icons-material/Delete'
-
+import Checkbox from '@mui/material/Checkbox'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import InputBase from '@mui/material/InputBase'
+import Paper from '@mui/material/Paper'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useState } from 'react'
 import { GlyphImage } from 'src/store'
 import { useProject } from 'src/store/hooks'
 

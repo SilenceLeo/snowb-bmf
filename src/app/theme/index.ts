@@ -1,6 +1,5 @@
-import { responsiveFontSizes, createTheme } from '@mui/material/styles'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
-// import props from './props'
 import components from './components'
 
 const theme = createTheme({
@@ -38,7 +37,6 @@ const theme = createTheme({
     create: () => 'none',
   },
   shape: { borderRadius: 0 },
-  // props,
   components,
 })
 

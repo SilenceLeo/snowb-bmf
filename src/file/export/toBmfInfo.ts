@@ -1,11 +1,12 @@
 import { Project } from 'src/store'
+
 import {
   BMFont,
-  BMFontInfo,
-  BMFontPage,
   BMFontChars,
   BMFontCommon,
+  BMFontInfo,
   BMFontKernings,
+  BMFontPage,
 } from './type'
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
@@ -38,7 +39,6 @@ export default function toBmfInfo(project: Project, fontFamily = ''): BMFont {
   }
 
   const common: BMFontCommon = {
-    // TODO: LINEHEIGHT EXPORT
     lineHeight: Math.round(style.font.size * style.font.lineHeight),
     base: Math.round(style.font.alphabetic - style.font.top),
     scaleW: width,

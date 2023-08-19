@@ -1,4 +1,4 @@
-import { action, observable, runInAction, makeObservable } from 'mobx'
+import { action, makeObservable, observable, runInAction } from 'mobx'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 
 import GlyphBase, { GlyphType } from './glyphBase'
@@ -13,7 +13,7 @@ export interface FileInfo {
 class GlyphImage extends GlyphBase {
   readonly type: GlyphType = 'image'
 
-  src = '' // 仅显示列表中
+  src = ''
 
   buffer: ArrayBuffer | null = null
 
@@ -59,10 +59,6 @@ class GlyphImage extends GlyphBase {
           this.height = trimInfo.height
           this.trimOffsetLeft = trimInfo.trimOffsetLeft
           this.trimOffsetTop = trimInfo.trimOffsetTop
-          this.trimOffsetRight =
-            trimInfo.width - trimInfo.trimOffsetLeft - naturalWidth
-          this.trimOffsetBottom =
-            trimInfo.height - trimInfo.trimOffsetTop - naturalHeight
 
           this.source = trimInfo.canvas
           resolve()

@@ -1,7 +1,6 @@
 /**
  * Snap code from: https://opentype.js.org/
  */
-
 import type { Path } from 'opentype.js'
 
 function sharp(v: number, distance: number = 1, strength: number = 80) {

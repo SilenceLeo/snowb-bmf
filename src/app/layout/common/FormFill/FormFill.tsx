@@ -1,11 +1,10 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-
-import { FontStyleConfig, FillType } from 'src/store'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
+import { FillType, FontStyleConfig } from 'src/store'
 
 import FormColor from '../FormColor'
 import FormGradient from '../FormGradient'
@@ -57,8 +56,6 @@ const FormFill: FunctionComponent<FormFillProps> = (props: FormFillProps) => {
           patternTexture={patternTexture}
           src={patternTexture.src}
           scale={patternTexture.scale}
-          // onChangeImage={patternTexture.setImage}
-          // onChangeScale={patternTexture.setScale}
         />
       ) : null}
     </>

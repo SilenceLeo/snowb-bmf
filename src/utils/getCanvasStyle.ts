@@ -35,12 +35,12 @@ export default function getCanvasStyle(
   height: number,
   config: Config,
 ): string | CanvasGradient | CanvasPattern {
-  // 纯色
+  // Solid
   if (config.type === 0) {
     return config.color
   }
 
-  // 渐变
+  // Gradient
   if (config.type === 1) {
     const { type, palette, angle } = config.gradient
     let gradient: CanvasGradient

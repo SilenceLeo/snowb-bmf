@@ -1,4 +1,4 @@
-import { action, observable, computed, makeObservable, runInAction } from 'mobx'
+import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 
 import Project from './project'
 

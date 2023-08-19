@@ -1,13 +1,11 @@
-import React, { useState, useEffect, FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
-import { deepObserve } from 'mobx-utils'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import Input from '@mui/material/Input'
+import Typography from '@mui/material/Typography'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import GridInput from 'src/app/components/GridInput'
-
-import { useProject } from 'src/store/hooks'
 import { GlyphFont, GlyphImage } from 'src/store'
+import { useProject } from 'src/store/hooks'
 
 const GlobalMetric: FunctionComponent<unknown> = () => {
   const {
@@ -19,7 +17,6 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
   } = useProject()
   const [offset, setOffset] = useState(0)
   const [glyph, setGlyph] = useState<GlyphFont | GlyphImage | undefined>()
-  const [kerning, setKerning] = useState(0)
 
   useEffect(() => {
     setGlyph(glyphList.find((gl) => gl.letter === ui.selectLetter))
@@ -46,19 +43,6 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
       glyph.steKerning(ui.selectNextLetter, Number(e.target.value) - offset)
   }
 
-  useEffect(() => {
-    let disposer
-
-    if (glyph) {
-      setKerning(glyph.kerning.get(ui.selectNextLetter) || 0)
-      disposer = deepObserve(glyph.kerning, () => {
-        setKerning(glyph.kerning.get(ui.selectNextLetter) || 0)
-      })
-    }
-
-    return disposer
-  }, [glyph, ui.selectNextLetter])
-
   if (!glyph || !ui.selectNextLetter) return null
 
   return (
@@ -69,7 +53,7 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
       <Box paddingX={2} marginY={4}>
         <GridInput before='Amount:' after='px'>
           <Input
-            value={kerning + offset}
+            value={(glyph.kerning.get(ui.selectNextLetter) || 0) + offset}
             fullWidth
             type='number'
             onChange={handleChange}

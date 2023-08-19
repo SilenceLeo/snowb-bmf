@@ -1,12 +1,10 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import clsx from 'clsx'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import { useProjectUi } from 'src/store/hooks'
 
-import { PreviewObject } from './getPreviewCanvas'
-
 import styles from './LetterList.module.scss'
+import { PreviewObject } from './getPreviewCanvas'
 
 interface LetterListProps {
   data: PreviewObject
@@ -27,7 +25,6 @@ const LetterList: FunctionComponent<LetterListProps> = (
     letter: string,
     next: string,
   ) => {
-    // setSelectLetter
     e.stopPropagation()
     ui.setSelectLetter(letter, next)
   }

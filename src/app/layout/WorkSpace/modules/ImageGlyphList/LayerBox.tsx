@@ -1,27 +1,23 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
-import { observer } from 'mobx-react'
-import clsx from 'clsx'
-
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
-import Accordion from '@mui/material/Accordion'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
-
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import clsx from 'clsx'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import { FileInfo } from 'src/store'
 import { useProject } from 'src/store/hooks'
-
 import readFile from 'src/utils/readFile'
 
 import ImageGlyphList from './ImageGlyphList'
-
 import styles from './LayerBox.module.scss'
 
 const LayerBox: FunctionComponent<unknown> = () => {
@@ -90,7 +86,6 @@ const LayerBox: FunctionComponent<unknown> = () => {
     <Box
       onDragEnter={(e) => e.preventDefault()}
       onDragOver={(e) => e.preventDefault()}
-      // onDragLeave={handleDrop}
       onDrop={handleDrop}
       className={clsx(styles.root, {
         [styles.fixed]: isFullscreen,

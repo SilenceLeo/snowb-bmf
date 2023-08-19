@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect, FunctionComponent } from 'react'
-import clsx from 'clsx'
-import { useTheme } from '@mui/material/styles'
 import CloseIcon from '@mui/icons-material/Close'
+import { useTheme } from '@mui/material/styles'
+import clsx from 'clsx'
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react'
 
 import styles from './ProjectTab.module.scss'
 
@@ -110,7 +110,6 @@ const ProjectTab: FunctionComponent<ProjectTabProps> = (
           type='text'
           onKeyDown={handleKeyDown}
           onBlur={handleEditorEnd}
-          //   onInput={handleInput}
           onChange={handleInput}
         />
       </span>

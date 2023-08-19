@@ -1,11 +1,13 @@
-import trimImageData from './trimImageData'
-import { TextSize } from './getTextSize'
-import getCanvasStyle from './getCanvasStyle'
+// TODO: remove
 import { Style } from 'src/store'
-import pathDoSharp from './pathDoSharp'
-import ctxDoPath from './ctxDoPath'
 
-export interface GlyphInfo extends TextSize {
+import ctxDoPath from './ctxDoPath'
+import getCanvasStyle from './getCanvasStyle'
+import { LetterSize } from './getLetterSizeFromCssText'
+import pathDoSharp from './pathDoSharp'
+import trimImageData from './trimImageData'
+
+export interface GlyphInfo extends LetterSize {
   canvas: HTMLCanvasElement | null
 }
 
@@ -84,26 +86,28 @@ export default function getFontGlyphInfo(
   const scale = font.size / opentype.unitsPerEm
   const baseline = Math.ceil(opentype.ascender * scale)
 
-  let path = glyph.getPath(0, baseline, font.size)
+  const path = glyph.getPath(0, baseline, font.size)
   pathDoSharp(path, font.sharp)
-  let boundingBox = path.getBoundingBox()
+  const boundingBox = path.getBoundingBox()
 
   const fontWidth = opentype.getAdvanceWidth(text, font.size)
   const fontHeight = (opentype.ascender - opentype.descender) * scale
+  const width = Math.ceil(boundingBox.x2) - Math.floor(boundingBox.x1)
+  const height = Math.ceil(boundingBox.y2) - Math.floor(boundingBox.y1)
+  const trimOffsetLeft = Math.round(boundingBox.x1) * -1
+  const trimOffsetTop = Math.round(boundingBox.y1) * -1
   const trimInfo = {
     text,
+    letter: text,
     font: font.family,
-    width: Math.ceil(boundingBox.x2) - Math.floor(boundingBox.x1),
-    height: Math.ceil(boundingBox.y2) - Math.floor(boundingBox.y1),
+    width,
+    height,
     fontWidth,
     fontHeight,
-    trimOffsetTop: Math.round(boundingBox.y1) * -1,
-    trimOffsetLeft: Math.round(boundingBox.x1) * -1,
-    trimOffsetRight: Math.round(fontWidth - boundingBox.x1) * -1,
-    trimOffsetBottom: Math.round(fontHeight - boundingBox.y2) * -1,
+    trimOffsetTop,
+    trimOffsetLeft,
   }
 
-  const { width, height, trimOffsetLeft, trimOffsetTop } = trimInfo
   if (width === 0 || height === 0) return { canvas: null, ...trimInfo }
 
   const lineWidth = stroke ? stroke.width * 2 : 0 // canvas is center stroke
@@ -178,6 +182,7 @@ export default function getFontGlyphInfo(
     newCtx.shadowBlur = shadow.blur
     newCtx.shadowOffsetX = shadow.offsetX
     newCtx.shadowOffsetY = shadow.offsetY
+
     newCtx.drawImage(canvas, 0, 0)
 
     canvas = cvs
@@ -204,9 +209,6 @@ export default function getFontGlyphInfo(
 
   trimInfo.trimOffsetLeft += addX + styleTrimInfo.trimOffsetLeft
   trimInfo.trimOffsetTop += addY + styleTrimInfo.trimOffsetTop
-  trimInfo.trimOffsetBottom +=
-    addY +
-    (height + addY * 2 + styleTrimInfo.trimOffsetTop - styleTrimInfo.height)
 
   return {
     canvas,

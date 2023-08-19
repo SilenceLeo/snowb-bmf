@@ -1,6 +1,6 @@
-import { action, observable, runInAction } from 'mobx'
-import use from 'src/utils/use'
+import { action, makeObservable, observable, runInAction } from 'mobx'
 import base64ToArrayBuffer from 'src/utils/base64ToArrayBuffer'
+import use from 'src/utils/use'
 
 export type Repetition = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 
@@ -8,23 +8,33 @@ const DEFAULT_IMAGE =
   'iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX////MzMw46qqDAAAADklEQVQI12Pgh8IPEAgAEeAD/Xk4HBcAAAAASUVORK5CYII='
 
 class PatternTexture {
-  @observable.ref buffer: ArrayBuffer = base64ToArrayBuffer(DEFAULT_IMAGE)
+  buffer: ArrayBuffer = base64ToArrayBuffer(DEFAULT_IMAGE)
 
-  @observable.ref image: HTMLImageElement | null = null
+  image: HTMLImageElement | null = null
 
-  @observable src = ''
+  src = ''
 
-  @observable repetition: Repetition = 'repeat'
+  repetition: Repetition = 'repeat'
 
-  @observable scale: number
+  scale: number
 
   constructor(pt: Partial<PatternTexture> = {}) {
+    makeObservable(this, {
+      buffer: observable.ref,
+      image: observable.ref,
+      src: observable,
+      repetition: observable,
+      scale: observable,
+      setImage: action.bound,
+      setRepetition: action.bound,
+      setScale: action.bound,
+    })
     this.scale = use.num(pt.scale, 1)
     this.repetition = pt.repetition || 'repeat'
     this.setImage(pt.buffer || this.buffer)
   }
 
-  @action.bound setImage(buffer: ArrayBuffer): void {
+  setImage(buffer: ArrayBuffer): void {
     const src = URL.createObjectURL(new Blob([buffer]))
     const img = new Image()
     img.onload = () => {
@@ -38,11 +48,11 @@ class PatternTexture {
     img.src = src
   }
 
-  @action.bound setRepetition(repetition: Repetition): void {
+  setRepetition(repetition: Repetition): void {
     this.repetition = repetition
   }
 
-  @action.bound setScale(scale: number): void {
+  setScale(scale: number): void {
     this.scale = scale
   }
 }

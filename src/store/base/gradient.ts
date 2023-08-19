@@ -1,6 +1,4 @@
-import { action, computed, observable, makeObservable } from 'mobx'
-
-// import GradientPaletteItem from './gradientPaletteItem'
+import { action, computed, makeObservable, observable } from 'mobx'
 
 export enum GradientType {
   LINEAR,

@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Tabs from '@mui/material/Tabs'
 import { useTheme } from '@mui/material/styles'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import { useWorkspace } from 'src/store/hooks'
+
 import ProjectTab from './ProjectTab'
 
 const ProjectTabs: FunctionComponent<unknown> = () => {

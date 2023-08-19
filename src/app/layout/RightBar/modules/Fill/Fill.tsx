@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import { useFill } from 'src/store/hooks'
+
 import FormFill from '../../../common/FormFill'
 
 const Fill: FunctionComponent<unknown> = () => {

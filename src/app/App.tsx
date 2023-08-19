@@ -1,17 +1,15 @@
-import { Provider } from 'mobx-react'
-import { SnackbarProvider } from 'notistack'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
 import { StyledEngineProvider } from '@mui/material/styles'
-
-import createStore from 'src/store'
-import theme from './theme'
+import { SnackbarProvider } from 'notistack'
+import createStore, { StoreContext } from 'src/store'
 
 import Wrap from './layout/Wrap'
+import theme from './theme'
 
 function App(): JSX.Element {
   return (
-    <Provider {...createStore()}>
+    <StoreContext.Provider value={createStore()}>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
@@ -25,7 +23,7 @@ function App(): JSX.Element {
           </SnackbarProvider>
         </ThemeProvider>
       </StyledEngineProvider>
-    </Provider>
+    </StoreContext.Provider>
   )
 }
 

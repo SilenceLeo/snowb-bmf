@@ -10,7 +10,7 @@ interface Baselines {
   lineHeight: number
 }
 
-export default function getFontBaselines(
+export default function getBaselinesFromOpentypeFont(
   font: Font,
   fontSize: number,
 ): Baselines {
@@ -26,6 +26,6 @@ export default function getFontBaselines(
     alphabetic: alphabetic - fontHeight / 2,
     ideographic: 0,
     bottom: fontHeight / 2,
-    lineHeight: height / font.unitsPerEm, // TODO: LINEHEIGHT
+    lineHeight: height / font.unitsPerEm,
   }
 }

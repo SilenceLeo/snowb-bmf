@@ -1,9 +1,9 @@
-import { action, observable, computed, runInAction, makeObservable } from 'mobx'
-import getTextBaselines from 'src/utils/getTextBaselines'
-import { parse, Font as OpenType } from 'opentype.js'
-import updateFontFace from 'src/utils/updateFontFace'
-import getFontBaselines from 'src/utils/getFontBaselines'
+import { action, computed, makeObservable, observable, runInAction } from 'mobx'
+import { Font as OpenType, parse } from 'opentype.js'
+import getBaselinesFromCssText from 'src/utils/getBaselinesFromCssText'
+import getBaselinesFromOpentypeFont from 'src/utils/getBaselinesFromOpentypeFont'
 import is from 'src/utils/is'
+import updateFontFace from 'src/utils/updateFontFace'
 
 export interface FontResource {
   font: ArrayBuffer
@@ -18,7 +18,6 @@ class Font {
 
   size: number
 
-  // TODO: LINEHEIGHT
   lineHeight = 1
 
   middle = 0
@@ -85,7 +84,7 @@ class Font {
 
   constructor(font: Partial<Font> = {}) {
     makeObservable(this, {
-      fonts: observable,
+      fonts: observable.shallow,
       size: observable,
       lineHeight: observable,
       middle: observable,
@@ -108,7 +107,6 @@ class Font {
       setSharp: action.bound,
     })
     this.size = font.size || 72
-    // TODO: LINEHEIGHT
     this.lineHeight = font.lineHeight || 1.25
     this.sharp = is.num(font.sharp) ? font.sharp : 80
     if (font.fonts && font.fonts.length) {
@@ -121,14 +119,13 @@ class Font {
   updateBaseines(): void {
     let bls
     if (this.mainFont?.opentype) {
-      bls = getFontBaselines(this.mainFont.opentype, this.size)
+      bls = getBaselinesFromOpentypeFont(this.mainFont.opentype, this.size)
     } else {
-      bls = getTextBaselines('x', {
+      bls = getBaselinesFromCssText('x', {
         fontFamily: this.family,
         fontSize: this.size,
       })
     }
-    // TODO: LINEHEIGHT
     this.lineHeight = bls.lineHeight
     this.middle = bls.middle
     this.hanging = bls.hanging
@@ -179,7 +176,6 @@ class Font {
     this.updateBaseines()
   }
 
-  // TODO: LINEHEIGHT
   setLineHeight(lineHeight: number): void {
     this.lineHeight = lineHeight
   }

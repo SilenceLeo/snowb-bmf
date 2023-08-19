@@ -1,12 +1,10 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
-
-import GridInput from 'src/app/components/GridInput'
 import Box from '@mui/material/Box'
 import Input from '@mui/material/Input'
-import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
-
+import Select from '@mui/material/Select'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
+import GridInput from 'src/app/components/GridInput'
 import { PatternTexture, Repetition } from 'src/store'
 
 import FileSelector from './FileSelector'
@@ -15,8 +13,6 @@ interface FormImageProps {
   patternTexture: PatternTexture
   scale: number
   src: string
-  // onChangeImage(buffer: ArrayBuffer): void
-  // onChangeScale(scale: number): void
 }
 
 const FormImage: FunctionComponent<FormImageProps> = (

@@ -1,15 +1,14 @@
-import React, { FunctionComponent, useState, useRef } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import Button from '@mui/material/Button'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
+import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
+import Paper from '@mui/material/Paper'
 import Popper from '@mui/material/Popper'
 import Slider from '@mui/material/Slider'
 import Switch from '@mui/material/Switch'
-import MenuItem from '@mui/material/MenuItem'
-import MenuList from '@mui/material/MenuList'
-import ClickAwayListener from '@mui/material/ClickAwayListener'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useRef, useState } from 'react'
 import { useProjectUi } from 'src/store/hooks'
 
 import styles from './ControlerBar.module.css'
@@ -50,7 +49,6 @@ const ControlerBar: FunctionComponent<unknown> = () => {
   }
 
   const handleSelect = (val: number) => {
-    // setTransform({ scale: val })
     handleChange(null, val)
     setOpen(false)
   }

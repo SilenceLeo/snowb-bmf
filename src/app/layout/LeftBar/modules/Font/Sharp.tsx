@@ -1,9 +1,7 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Slider from '@mui/material/Slider'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
-
 import { useFont } from 'src/store/hooks'
 
 const Sharp: FunctionComponent<unknown> = () => {

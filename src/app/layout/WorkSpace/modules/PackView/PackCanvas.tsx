@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import { useTheme } from '@mui/material/styles'
-
-import { useProject } from 'src/store/hooks'
-import useWheel from 'src/app/hooks/useWheel'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useEffect, useRef } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
+import useWheel from 'src/app/hooks/useWheel'
+import { useProject } from 'src/store/hooks'
 
 import styles from './PackCanvas.module.scss'
 

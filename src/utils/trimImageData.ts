@@ -19,10 +19,9 @@ export default function trimImageData(
   let leftStatus = true
   let rightStatus = true
 
-  let h: number = Math.ceil(height / 2)
-  const w: number = Math.ceil(width / 2)
+  let h: number = height
 
-  for (let i = 0; i < h; i += 1) {
+  for (let i = 0; i < height; i += 1) {
     for (let j = 0; j < width; j += 1) {
       if (topStatus && data[(i * width + j) * 4 + 3] > threshold) {
         topStatus = false
@@ -56,7 +55,7 @@ export default function trimImageData(
 
   h = height - bottomTrim
 
-  for (let i = 0; i < w; i += 1) {
+  for (let i = 0; i < width; i += 1) {
     for (let j = topTrim; j < h; j += 1) {
       if (leftStatus && data[(width * j + i) * 4 + 3] > threshold) {
         leftStatus = false

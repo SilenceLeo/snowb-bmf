@@ -1,19 +1,20 @@
-import { observable, action, computed, makeObservable } from 'mobx'
+import { action, computed, makeObservable, observable } from 'mobx'
 import { deepObserve } from 'mobx-utils'
-import { cancel, request } from 'requestidlecallback'
 import { GuillotineBinPack } from 'rectangle-packer'
+import { cancel, request } from 'requestidlecallback'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 // import RectanglePacker from 'worker-loader?filename=static/js/RectanglePacker.[hash].worker.js!src/workers/RectanglePacker.worker'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import AutoPacker from 'worker-loader?filename=static/js/AutoPacker.[hash].worker.js!src/workers/AutoPacker.worker'
 
-import Ui from './base/ui'
-import Style from './base/style'
-import Layout from './base/layout'
-import Metric from './base/metric'
+import { GlyphType } from './base/glyphBase'
 import GlyphFont from './base/glyphFont'
 import GlyphImage, { FileInfo } from './base/glyphImage'
-import { GlyphType } from './base/glyphBase'
+import Layout from './base/layout'
+import Metric from './base/metric'
+import Style from './base/style'
+import Ui from './base/ui'
+
 interface TextRectangle {
   width: number
   height: number
@@ -258,7 +259,6 @@ class Project {
         const tr = deadline.timeRemaining()
         const start = Date.now()
         while (tasks.length && tr - (Date.now() - start) > -100) {
-          // while (tasks.length) {
           const glyph = tasks.shift()
           if (glyph) glyph.setGlyphInfo(this.style)
         }

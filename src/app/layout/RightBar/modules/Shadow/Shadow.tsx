@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
 import Input from '@mui/material/Input'
 import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
-
-import { useStyle } from 'src/store/hooks'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
+import { useStyle } from 'src/store/hooks'
+
 import FormColor from '../../../common/FormColor'
 
 const Shadow: FunctionComponent<unknown> = () => {

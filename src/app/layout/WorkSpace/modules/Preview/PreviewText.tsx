@@ -1,10 +1,8 @@
-import React, { useState, FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
-
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useState } from 'react'
 import { useProjectUi } from 'src/store/hooks'
 
 const Preview: FunctionComponent<unknown> = () => {

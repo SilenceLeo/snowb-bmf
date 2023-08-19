@@ -1,18 +1,19 @@
 import { useContext } from 'react'
-import { MobXProviderContext } from 'mobx-react'
+
 import {
-  TStore,
-  Workspace,
+  Font,
+  FontStyleConfig,
   Layout,
   Project,
-  Style,
-  Font,
   ProjectUi,
-  FontStyleConfig,
+  Store,
+  StoreContext,
+  Style,
+  Workspace,
 } from '.'
 
-export default function useStores(): TStore {
-  return useContext(MobXProviderContext) as TStore
+export default function useStores(): Store {
+  return useContext(StoreContext) as Store
 }
 
 export function useWorkspace(): Workspace {

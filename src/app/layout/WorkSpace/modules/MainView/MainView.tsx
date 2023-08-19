@@ -1,13 +1,11 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
-import Box from '@mui/material/Box'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
-
+import Box from '@mui/material/Box'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import { useProjectUi } from 'src/store/hooks'
 
 import PackView from '../PackView'
 import Preview from '../Preview'
-
 import styles from './MainView.module.css'
 
 const MainView: FunctionComponent<unknown> = () => {

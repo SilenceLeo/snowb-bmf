@@ -1,12 +1,11 @@
-import React, { FunctionComponent, useRef, useState } from 'react'
-import { observer } from 'mobx-react'
-import { useSnackbar } from 'notistack'
-import * as Sentry from '@sentry/react'
 import Button from '@mui/material/Button'
-import { useWorkspace } from 'src/store/hooks'
-
-import readFile from 'src/utils/readFile'
+import * as Sentry from '@sentry/react'
+import { observer } from 'mobx-react-lite'
+import { useSnackbar } from 'notistack'
+import React, { FunctionComponent, useRef, useState } from 'react'
 import conversion from 'src/file/conversion'
+import { useWorkspace } from 'src/store/hooks'
+import readFile from 'src/utils/readFile'
 
 interface ButtonOpenProps {
   className?: string

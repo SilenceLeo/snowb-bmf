@@ -1,10 +1,8 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Input from '@mui/material/Input'
-
-import { useLayout } from 'src/store/hooks'
-
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
+import { useLayout } from 'src/store/hooks'
 
 const Spacing: FunctionComponent<unknown> = () => {
   const { spacing, setSpacing } = useLayout()

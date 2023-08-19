@@ -1,4 +1,5 @@
 import { configure } from 'mobx'
+import { createContext } from 'react'
 
 import Ui from './ui'
 import Workspace from './workspace'
@@ -20,7 +21,7 @@ export default function createStore(): Store {
   return store
 }
 
-export type TStore = ReturnType<typeof createStore>
+export const StoreContext = createContext<Store>(createStore())
 
 export { default as Ui } from './ui'
 export { default as Project } from './project'

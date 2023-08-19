@@ -1,8 +1,8 @@
 import { action, makeObservable } from 'mobx'
 import getFontGlyphInfo from 'src/utils/getFontGlyphInfo'
 import getGlyphInfo, { Config } from 'src/utils/getGlyphInfo'
-import GlyphBase from './glyphBase'
 
+import GlyphBase from './glyphBase'
 import Style from './style'
 
 class GlyphFont extends GlyphBase {
@@ -33,8 +33,6 @@ class GlyphFont extends GlyphBase {
     this.fontHeight = glyphInfo.fontHeight
     this.trimOffsetTop = glyphInfo.trimOffsetTop
     this.trimOffsetLeft = glyphInfo.trimOffsetLeft
-    this.trimOffsetRight = glyphInfo.trimOffsetRight
-    this.trimOffsetBottom = glyphInfo.trimOffsetBottom
   }
 }
 

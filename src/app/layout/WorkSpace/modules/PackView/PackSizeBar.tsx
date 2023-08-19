@@ -1,9 +1,8 @@
-import { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material/styles'
 import LinearProgress from '@mui/material/LinearProgress'
-
+import { useTheme } from '@mui/material/styles'
+import { observer } from 'mobx-react-lite'
+import { FunctionComponent } from 'react'
 import { useProject } from 'src/store/hooks'
 
 import styles from './PackSizeBar.module.css'

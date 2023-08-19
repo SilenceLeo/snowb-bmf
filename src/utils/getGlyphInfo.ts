@@ -1,9 +1,12 @@
-import trimImageData from './trimImageData'
-import getTextSize, { TextSize } from './getTextSize'
+// TODO: remove
 import fontStyleStringify from './fontStyleStringify'
 import getCanvasStyle from './getCanvasStyle'
+import getLetterSizeFromCssText, {
+  LetterSize,
+} from './getLetterSizeFromCssText'
+import trimImageData from './trimImageData'
 
-export interface GlyphInfo extends TextSize {
+export interface GlyphInfo extends LetterSize {
   canvas: HTMLCanvasElement | null
 }
 
@@ -65,7 +68,7 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
     fontFamily: font.family,
   }
 
-  const trimInfo = getTextSize(text, styleConig)
+  const trimInfo = getLetterSizeFromCssText(text, styleConig)
   const { width, height, trimOffsetLeft, trimOffsetTop } = trimInfo
   if (width === 0 || height === 0) return { canvas: null, ...trimInfo }
 
@@ -181,20 +184,17 @@ export default function getGlyphInfo(text: string, config: Config): GlyphInfo {
 
   const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   const styleTrimInfo = trimImageData(imgData)
-  canvas.width = styleTrimInfo.width
-  canvas.height = styleTrimInfo.height
-  trimInfo.width = styleTrimInfo.width
-  trimInfo.height = styleTrimInfo.height
+  canvas.width = trimInfo.width = styleTrimInfo.width
+  canvas.height = trimInfo.height = styleTrimInfo.height
+
   ctx.putImageData(
     imgData,
     styleTrimInfo.trimOffsetLeft,
     styleTrimInfo.trimOffsetTop,
   )
+
   trimInfo.trimOffsetLeft += addX + styleTrimInfo.trimOffsetLeft
   trimInfo.trimOffsetTop += addY + styleTrimInfo.trimOffsetTop
-  trimInfo.trimOffsetBottom +=
-    addY +
-    (height + addY * 2 + styleTrimInfo.trimOffsetTop - styleTrimInfo.height)
 
   return {
     canvas,

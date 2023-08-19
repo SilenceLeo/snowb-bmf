@@ -8,11 +8,6 @@ interface Rectangle {
   letter: string
 }
 
-const STOP = 0
-const DO_PLACING = 1
-const INCREASE = 2
-const REDUCE = 3
-
 function maxMin(list: Rectangle[]) {
   const widthList = list.map((item) => item.width)
   const heightList = list.map((item) => item.height)
@@ -28,33 +23,20 @@ function packing(list: Rectangle[]) {
   const sizes = maxMin(list)
   let min = Math.max(sizes.minWidth, sizes.minHeight)
   let max = Math.max(sizes.maxWidth, sizes.maxHeight)
-  let state = DO_PLACING
+  let state = 1
   let placed: Rectangle[] = []
   while (state) {
-    switch (state) {
-      case DO_PLACING:
-        const packer = new GuillotineBinPack<Rectangle>(
-          min + Math.ceil((max - min) / 2),
-          min + Math.ceil((max - min) / 2),
-        )
-        packer.InsertSizes([...list], true, 1, 1)
-        if (max - min < 2) {
-          state = STOP
-        } else if (list.length > packer.usedRectangles.length) {
-          state = INCREASE
-        } else {
-          placed = packer.usedRectangles
-          state = REDUCE
-        }
-        break
-      case INCREASE:
-        min += Math.ceil((max - min) / 2)
-        state = DO_PLACING
-        break
-      case REDUCE:
-        max -= Math.floor((max - min) / 2)
-        state = DO_PLACING
-        break
+    const size = min + Math.ceil((max - min) / 2)
+    const packer = new GuillotineBinPack<Rectangle>(size, size)
+    packer.InsertSizes([...list], true, 1, 1)
+
+    if (max - min < 2) {
+      state = 0
+    } else if (list.length > packer.usedRectangles.length) {
+      min += Math.ceil((max - min) / 2)
+    } else {
+      placed = packer.usedRectangles
+      max -= Math.floor((max - min) / 2)
     }
   }
   return placed

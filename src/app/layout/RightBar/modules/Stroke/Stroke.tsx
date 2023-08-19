@@ -1,16 +1,14 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import ButtonGroup from '@mui/material/ButtonGroup'
 import Input from '@mui/material/Input'
 import Switch from '@mui/material/Switch'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import ButtonGroup from '@mui/material/ButtonGroup'
-
-import { useStyle } from 'src/store/hooks'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-
 import FormFill from 'src/app/layout/common/FormFill'
+import { useStyle } from 'src/store/hooks'
 
 const Stroke: FunctionComponent = () => {
   const { stroke, useStroke, setUseStroke } = useStyle()

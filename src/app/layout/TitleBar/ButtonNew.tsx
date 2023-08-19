@@ -1,8 +1,7 @@
-import React, { useEffect, FunctionComponent, useCallback } from 'react'
-import hotkeys from 'hotkeys-js'
-import { observer } from 'mobx-react'
 import Button from '@mui/material/Button'
-
+import hotkeys from 'hotkeys-js'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent, useCallback, useEffect } from 'react'
 import { useWorkspace } from 'src/store/hooks'
 
 interface ButtonNewProps {

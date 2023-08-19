@@ -1,16 +1,13 @@
-import React, {
-  useState,
-  FunctionComponent,
-  useCallback,
-  useEffect,
-} from 'react'
-
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-
-import { observer } from 'mobx-react'
-
+import { observer } from 'mobx-react-lite'
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { useProject } from 'src/store/hooks'
 
 const Glyphs: FunctionComponent<unknown> = () => {

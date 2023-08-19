@@ -1,5 +1,6 @@
-import formatStr from 'src/utils/formatStr'
-import { Output, FontToString } from '../type'
+import formatStr from 'src/utils/replaceVariables'
+
+import { FontToString, Output } from '../type'
 
 const TEMP_INFO = `info face="$face$" size=$size$ bold=$bold$ italic=$italic$ charset=$charset$ unicode=$unicode$ stretchH=$stretchH$ smooth=$smooth$ aa=$aa$ padding=$padding$ spacing=$spacing$\n`
 const TEMP_COMMON = `common lineHeight=$lineHeight$ base=$base$ scaleW=$scaleW$ scaleH=$scaleH$ pages=$pages$ packed=$packed$\n`

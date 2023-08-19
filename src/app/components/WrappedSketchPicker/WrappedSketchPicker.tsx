@@ -1,9 +1,9 @@
-import React, { FunctionComponent } from 'react'
-import { observer } from 'mobx-react'
-import { SketchPicker, ColorResult } from 'react-color'
 import Popper, { PopperPlacementType } from '@mui/material/Popper'
 import { useTheme } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
+import { observer } from 'mobx-react-lite'
+import React, { FunctionComponent } from 'react'
+import { ColorResult, SketchPicker } from 'react-color'
 
 export interface ChildrenProps {
   open: boolean
@@ -65,7 +65,6 @@ const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
       <SketchPicker
         color={color}
         styles={pickerStyle}
-        // className={classes.picker}
         onChange={({ rgb }: ColorResult) => {
           if (onChange)
             onChange(

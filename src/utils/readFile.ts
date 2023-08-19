@@ -1,4 +1,4 @@
-function readFile(
+export default function readFile(
   file: File,
   isText?: boolean,
 ): Promise<string | ArrayBuffer | null> {
@@ -18,5 +18,3 @@ function readFile(
     }
   })
 }
-
-export default readFile

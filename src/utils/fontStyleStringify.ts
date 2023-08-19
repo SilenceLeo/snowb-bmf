@@ -59,7 +59,6 @@ export default function fontStyleStringify(
   }
 
   if (config.lineHeight) {
-    // TODO: LINEHEIGHT
     arr.push(`${config.fontSize}/${config.lineHeight}`)
   } else {
     arr.push(config.fontSize)
