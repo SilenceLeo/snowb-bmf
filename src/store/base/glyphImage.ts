@@ -15,6 +15,8 @@ class GlyphImage extends GlyphBase {
 
   src = ''
 
+  source: HTMLImageElement | HTMLCanvasElement | null = null
+
   buffer: ArrayBuffer | null = null
 
   fileName = ''

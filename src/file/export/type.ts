@@ -29,7 +29,6 @@ export interface BMFontPage extends Record<string, unknown> {
 export interface BMFontChar extends Record<string, unknown> {
   letter: string
   id: number
-  source: HTMLImageElement | HTMLCanvasElement | null
   x: number
   y: number
   width: number

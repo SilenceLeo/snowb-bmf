@@ -1,14 +1,20 @@
 import { useTheme } from '@mui/material/styles'
 import { observer } from 'mobx-react-lite'
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
+import { IChange, deepObserve } from 'mobx-utils'
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
-import { BMFontChar, toBmfInfo } from 'src/file/export'
+import { GlyphFont, GlyphImage } from 'src/store/base'
 import { useProject } from 'src/store/hooks'
 
 import LetterList from './LetterList'
 import styles from './PreviewCanvas.module.scss'
-import getPreviewCanvas from './getPreviewCanvas'
 
 const PreviewCanvas: FunctionComponent<unknown> = () => {
   const { bgPixel } = useTheme()
@@ -31,6 +37,8 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     },
     layout: { padding },
     isPacking,
+    globalAdjustMetric,
+    packCanvas,
   } = project
   const { previewScale, previewOffsetX, previewOffsetY } = ui
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
@@ -51,46 +59,114 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     },
     [ui],
   )
-  const data = useMemo(() => {
+  const [data, setData] = useState<{
+    lines: number
+    list: {
+      x: number
+      y: number
+      width: number
+      height: number
+      letter: string
+      next: string
+      glyph: GlyphImage | GlyphFont
+    }[]
+    xOffset: number
+    yOffset: number
+    width: number
+    height: number
+  } | null>(null)
+
+  const initData = useCallback(() => {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const { chars, kernings } = toBmfInfo(project)
-    const kerningMap: Map<number, Map<number, number>> = new Map()
-    kernings.list.forEach(({ first, second, amount }) => {
-      if (!kerningMap.has(first)) kerningMap.set(first, new Map())
-      const k = kerningMap.get(first)
-      k?.set(second, amount)
-    })
-    const charMap: Map<string, BMFontChar> = new Map()
-    chars.list.forEach((char) => {
-      charMap.set(char.letter, char)
+    const lh = size * lineHeight
+    const fontHeight = maxBaseLine - minBaseLine
+    const list: {
+      x: number
+      y: number
+      width: number
+      height: number
+      letter: string
+      next: string
+      glyph: GlyphImage | GlyphFont
+    }[] = []
+    const lines = ui.previewText.split(/\r\n|\r|\n/)
+    let minX = 0
+    let minY = 0
+    let maxX = 0
+    let maxY = 0
+    lines.forEach((str, index) => {
+      let y = lh * index
+      let x = 0
+      const arr = Array.from(str)
+      arr.forEach((letter, idx) => {
+        const glyph = project.getGlyph(letter)
+        if (!glyph) return
+        const next = arr[idx + 1]
+        const isUnEmpty = !!(glyph && glyph.width && glyph.height)
+        const width = isUnEmpty ? glyph.width + padding * 2 : 0
+        const height = isUnEmpty ? glyph.height + padding * 2 : 0
+        const xoffset =
+          globalAdjustMetric.xOffset +
+          glyph.adjustMetric.xOffset -
+          (isUnEmpty ? glyph.trimOffsetLeft : 0) -
+          (isUnEmpty ? padding : 0)
+        const yoffset =
+          globalAdjustMetric.yOffset +
+          glyph.adjustMetric.yOffset -
+          (isUnEmpty ? glyph.trimOffsetTop : 0) -
+          (isUnEmpty ? padding : 0)
+        const xadvance =
+          Math.ceil(glyph.fontWidth) +
+          globalAdjustMetric.xAdvance +
+          glyph.adjustMetric.xAdvance
+
+        const obj = {
+          x: x + xoffset + (width === 0 ? 0 : padding),
+          y: y + yoffset + (width === 0 ? 0 : padding),
+          width: (width || xadvance) - (width === 0 ? 0 : padding * 2),
+          height: (height || fontHeight) - (width === 0 ? 0 : padding * 2),
+          letter,
+          next,
+          glyph,
+        }
+
+        x += xadvance
+
+        if (glyph.kerning.get(next)) {
+          x += glyph.kerning.get(next) as number
+        }
+
+        minX = Math.min(obj.x, minX)
+        minY = Math.min(obj.y, minY)
+        maxX = Math.max(obj.x + obj.width, maxX)
+        maxY = Math.max(obj.y + obj.height, maxY)
+        list.push(obj)
+      })
     })
 
-    const lh = size * lineHeight
-    return getPreviewCanvas(
-      ui.previewText,
-      charMap,
-      kerningMap,
-      lh,
-      maxBaseLine - minBaseLine,
-      padding,
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setData({
+      lines: lines.length,
+      list,
+      xOffset: minX,
+      yOffset: minY,
+      width: maxX - minX,
+      height: Math.max(maxY - minY, lines.length * lh - minY) + 2,
+    })
   }, [
-    isPacking,
     canvas,
+    size,
     lineHeight,
     maxBaseLine,
     minBaseLine,
-    padding,
-    project,
-    project.globalAdjustMetric.xAdvance,
-    project.globalAdjustMetric.yOffset,
-    project.globalAdjustMetric.xOffset,
-    size,
     ui.previewText,
+    project,
+    padding,
+    globalAdjustMetric.xOffset,
+    globalAdjustMetric.yOffset,
+    globalAdjustMetric.xAdvance,
   ])
 
   useWheel(
@@ -125,13 +201,25 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     canvas.width = data.width
     canvas.height = data.height
     data.list.forEach((item) => {
-      if (!item.source || item.source.width === 0 || item.source.height === 0)
-        return
-      ctx.drawImage(
-        item.source,
-        item.x - data.xOffset,
-        item.y - data.yOffset + drawYOffset,
-      )
+      if (item.glyph instanceof GlyphImage && item.glyph.source) {
+        ctx.drawImage(
+          item.glyph.source,
+          item.x - data.xOffset,
+          item.y - data.yOffset + drawYOffset,
+        )
+      } else if (item.glyph instanceof GlyphFont && packCanvas) {
+        ctx.drawImage(
+          packCanvas,
+          item.glyph.canvasX,
+          item.glyph.canvasY,
+          item.glyph.width,
+          item.glyph.height,
+          item.x - data.xOffset,
+          item.y - data.yOffset + drawYOffset,
+          item.glyph.width,
+          item.glyph.height,
+        )
+      }
     })
 
     for (let index = 0; index < data.lines; index += 1) {
@@ -173,9 +261,24 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     maxBaseLine,
     middle,
     minBaseLine,
+    packCanvas,
     size,
     top,
   ])
+
+  useEffect(() => {
+    initData()
+    const names = ['xAdvance', 'xOffset', 'yOffset']
+    const observer = (change: IChange) =>
+      names.includes(change.name) && initData()
+
+    const glyphsDisposer = deepObserve(project.glyphs, observer)
+    const imagesDisposer = deepObserve(project.glyphImages, observer)
+    return () => {
+      glyphsDisposer()
+      imagesDisposer()
+    }
+  }, [initData, project.glyphImages, project.glyphs])
 
   return (
     <div

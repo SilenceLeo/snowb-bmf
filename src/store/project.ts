@@ -1,9 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx'
 import { deepObserve } from 'mobx-utils'
 import { GuillotineBinPack } from 'rectangle-packer'
-import { cancel, request } from 'requestidlecallback'
-// eslint-disable-next-line import/no-webpack-loader-syntax
-// import RectanglePacker from 'worker-loader?filename=static/js/RectanglePacker.[hash].worker.js!src/workers/RectanglePacker.worker'
+import getFontGlyphs from 'src/utils/getFontGlyphs'
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import AutoPacker from 'worker-loader?filename=static/js/AutoPacker.[hash].worker.js!src/workers/AutoPacker.worker'
 
@@ -91,7 +89,7 @@ class Project {
 
     if (project.glyphs) {
       project.glyphs.forEach((value, key) => {
-        this.glyphs.set(key, new GlyphFont(value, this.style))
+        this.glyphs.set(key, new GlyphFont(value))
       })
     }
 
@@ -100,26 +98,17 @@ class Project {
     })
 
     if (!this.glyphs.has(' '))
-      this.glyphs.set(' ', new GlyphFont({ letter: ' ' }, this.style))
+      this.glyphs.set(' ', new GlyphFont({ letter: ' ' }))
 
     this.addGlyphs(project.text || '')
     this.addAutoRun()
     this.pack()
   }
 
-  get glyphList(): (GlyphFont | GlyphImage)[] {
-    const obj: { [key: string]: GlyphImage } = {}
-
-    this.glyphImages.forEach((glyph) => {
-      if (glyph.letter && glyph.selected) {
-        obj[glyph.letter] = glyph
-      }
-    })
-
-    return ` ${this.text}`.split('').map((letter) => {
-      if (obj[letter]) return obj[letter]
-      return this.glyphs.get(letter) as GlyphFont
-    })
+  get glyphList() {
+    return ` ${this.text}`
+      .split('')
+      .map((letter) => this.getGlyph(letter) as GlyphFont | GlyphImage)
   }
 
   get rectangleList(): TextRectangle[] {
@@ -135,6 +124,14 @@ class Project {
         y: 0,
       }
     })
+  }
+
+  getGlyph(letter: string) {
+    const glyph = this.glyphImages.find(
+      (glyph) => glyph.letter === letter && glyph.selected,
+    )
+    if (glyph) return glyph
+    return this.glyphs.get(letter)
   }
 
   pack(): void {
@@ -246,37 +243,51 @@ class Project {
       this.worker.terminate()
       this.worker = null
     }
-    cancel(this.idleId)
 
-    const tasks: GlyphFont[] = []
-
-    this.glyphs.forEach((glyph) => {
-      tasks.push(glyph)
+    const { canvas, glyphs } = getFontGlyphs(` ${this.text}`, {
+      font: this.style.font,
+      fill: this.style.fill,
+      stroke: this.style.useStroke ? this.style.stroke : void 0,
+      shadow: this.style.useShadow ? this.style.shadow : void 0,
     })
 
-    const runTasks = () => {
-      this.idleId = request((deadline) => {
-        const tr = deadline.timeRemaining()
-        const start = Date.now()
-        while (tasks.length && tr - (Date.now() - start) > -100) {
-          const glyph = tasks.shift()
-          if (glyph) glyph.setGlyphInfo(this.style)
-        }
+    Array.from(glyphs.values()).forEach((glyph) => {
+      const g = this.glyphs.get(glyph.letter)
+      if (g) g.setGlyphInfo(glyph)
+    })
+    this.setCanvas(canvas)
+    this.throttlePack()
+    // cancel(this.idleId)
 
-        if (tasks.length) {
-          runTasks()
-        } else {
-          this.idleId = 0
-          this.pack()
-        }
-      })
-    }
+    // const tasks: GlyphFont[] = []
 
-    runTasks()
+    // this.glyphs.forEach((glyph) => {
+    //   tasks.push(glyph)
+    // })
+
+    // const runTasks = () => {
+    //   this.idleId = request((deadline) => {
+    //     const tr = deadline.timeRemaining()
+    //     const start = Date.now()
+    //     while (tasks.length && tr - (Date.now() - start) > -100) {
+    //       const glyph = tasks.shift()
+    //       if (glyph) glyph.setGlyphInfo(this.style)
+    //     }
+
+    //     if (tasks.length) {
+    //       runTasks()
+    //     } else {
+    //       this.idleId = 0
+    //       this.pack()
+    //     }
+    //   })
+    // }
+
+    // runTasks()
   }
 
   throttlePack(): void {
-    if (this.idleId) return
+    // if (this.idleId) return
     window.clearTimeout(this.packTimer)
     if (Date.now() - this.packStart > 500) {
       Promise.resolve().then(this.pack)
@@ -292,10 +303,6 @@ class Project {
     const isName = (obj: { name?: unknown }, name: string): boolean =>
       !!(obj.name && obj.name === name)
 
-    deepObserve(this.glyphs, () => {
-      this.throttlePack()
-    })
-
     deepObserve(this.glyphImages, () => {
       this.throttlePack()
     })
@@ -304,8 +311,18 @@ class Project {
       this.throttlePack()
     })
 
-    deepObserve(this.style, (change) => {
-      if (isName(change, 'bgColor') || isName(change, 'lineHeight')) return
+    deepObserve(this.style, (change, path, root) => {
+      if (
+        isName(change, 'bgColor') ||
+        (path === 'font' &&
+          !(
+            isName(change, 'size') ||
+            isName(change, 'fonts') ||
+            isName(change, 'sharp')
+          ))
+      )
+        return
+
       this.packStyle()
     })
   }
@@ -320,6 +337,7 @@ class Project {
     const currentList = Array.from(new Set(this.text.split('')))
     const oldList = Array.from(new Set(oldText.split('')))
     this.text = currentList.join('')
+    currentList.unshift(' ')
     const diffList = oldText
       ? Array.from(new Set(currentList.concat(oldList))).filter(
           (t) => !(currentList.includes(t) && oldList.includes(t)),
@@ -330,12 +348,13 @@ class Project {
 
     diffList.forEach((letter) => {
       if (currentList.includes(letter)) {
-        this.glyphs.set(letter, new GlyphFont({ letter }, this.style))
+        this.glyphs.set(letter, new GlyphFont({ letter }))
       } else {
         // in diff
         this.glyphs.delete(letter)
       }
     })
+    this.packStyle()
   }
 
   addImages<T extends FileInfo>(list: T[]): void {

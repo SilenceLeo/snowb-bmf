@@ -9,8 +9,6 @@ class GlyphBase {
 
   letter = ''
 
-  source: HTMLImageElement | HTMLCanvasElement | null = null
-
   width = 0
 
   height = 0
@@ -43,7 +41,6 @@ class GlyphBase {
       trimOffsetTop: observable,
       trimOffsetLeft: observable,
       kerning: observable,
-      source: observable.ref,
       adjustMetric: observable.ref,
       steKerning: action.bound,
     })

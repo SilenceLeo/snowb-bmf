@@ -4,6 +4,7 @@ import React, { FunctionComponent, useEffect, useRef } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
 import { useProject } from 'src/store/hooks'
+import drawPackCanvas from 'src/utils/drawPackCanvas'
 
 import styles from './PackCanvas.module.scss'
 
@@ -17,7 +18,6 @@ const PackCanvas: FunctionComponent<unknown> = () => {
     glyphList,
     style: { bgColor },
     packCanvas,
-    setCanvas,
   } = useProject()
   const { width, height, scale, offsetX, offsetY } = ui
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -51,11 +51,6 @@ const PackCanvas: FunctionComponent<unknown> = () => {
   )
 
   useEffect(() => {
-    if (canvasRef.current && canvasRef.current !== packCanvas)
-      setCanvas(canvasRef.current)
-  }, [canvasRef, packCanvas, setCanvas])
-
-  useEffect(() => {
     if (!glyphList || isPacking || !width || !height) return
     const canvas = canvasRef.current
     if (!canvas) return
@@ -70,21 +65,9 @@ const PackCanvas: FunctionComponent<unknown> = () => {
       ctx.fillStyle = bgColor
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
-
-    glyphList.forEach((glyph) => {
-      if (
-        glyph.source &&
-        glyph.source.width !== 0 &&
-        glyph.source.height !== 0
-      ) {
-        ctx.drawImage(
-          glyph.source as HTMLCanvasElement,
-          glyph.x + (padding || 0),
-          glyph.y + (padding || 0),
-        )
-      }
-    })
+    drawPackCanvas(canvas, packCanvas, glyphList, padding)
   }, [
+    packCanvas,
     bgColor,
     glyphList,
     isPacking,

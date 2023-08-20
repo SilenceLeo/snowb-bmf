@@ -1,38 +1,30 @@
 import { action, makeObservable } from 'mobx'
-import getFontGlyphInfo from 'src/utils/getFontGlyphInfo'
-import getGlyphInfo, { Config } from 'src/utils/getGlyphInfo'
+import { GlyphItem } from 'src/utils/getFontGlyphs'
 
 import GlyphBase from './glyphBase'
-import Style from './style'
 
 class GlyphFont extends GlyphBase {
-  constructor(galyphFont: Partial<GlyphFont> = {}, textStyle: Style) {
+  canvasX = 0
+
+  canvasY = 0
+
+  constructor(galyphFont: Partial<GlyphFont> = {}, glyphInfo?: GlyphItem) {
     super(galyphFont)
     makeObservable(this, {
       setGlyphInfo: action,
     })
-    this.setGlyphInfo(textStyle)
+    if (glyphInfo) this.setGlyphInfo(glyphInfo)
   }
 
-  setGlyphInfo(textStyle: Style): void {
-    const { font, fill, useStroke, stroke, useShadow, shadow } = textStyle
-    const config: Config = { font, fill }
-    if (useStroke) config.stroke = stroke
-    if (useShadow) config.shadow = shadow
-
-    let glyphInfo
-    try {
-      glyphInfo = getFontGlyphInfo(this.letter, config as Style)
-    } catch (e) {
-      glyphInfo = getGlyphInfo(this.letter, config)
-    }
-    this.source = glyphInfo.canvas
+  setGlyphInfo(glyphInfo: GlyphItem): void {
     this.width = glyphInfo.width
     this.height = glyphInfo.height
     this.fontWidth = glyphInfo.fontWidth
     this.fontHeight = glyphInfo.fontHeight
     this.trimOffsetTop = glyphInfo.trimOffsetTop
     this.trimOffsetLeft = glyphInfo.trimOffsetLeft
+    this.canvasX = glyphInfo.canvasX
+    this.canvasY = glyphInfo.canvasY
   }
 }
 

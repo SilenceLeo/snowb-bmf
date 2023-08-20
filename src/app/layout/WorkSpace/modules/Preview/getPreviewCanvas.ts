@@ -5,7 +5,6 @@ interface PreviewItem {
   y: number
   width: number
   height: number
-  source: HTMLImageElement | HTMLCanvasElement | null
   letter: string
   next: string
 }
@@ -56,7 +55,6 @@ export default function getPreviewCanvas(
           (char.width || char.xadvance) - (char.width === 0 ? 0 : padding * 2),
         height:
           (char.height || fontHeight) - (char.width === 0 ? 0 : padding * 2),
-        source: char.source,
         letter: char.letter,
         next,
       }

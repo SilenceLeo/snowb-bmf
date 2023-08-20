@@ -69,7 +69,6 @@ export default function toBmfInfo(project: Project, fontFamily = ''): BMFont {
     const info = {
       letter: glyph.letter,
       id: glyph.letter.charCodeAt(0),
-      source: glyph.source,
       x: glyph.x,
       y: glyph.y,
       width: isUnEmpty ? glyph.width + layout.padding * 2 : 0,
