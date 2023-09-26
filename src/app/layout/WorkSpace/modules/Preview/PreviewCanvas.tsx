@@ -268,10 +268,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
 
   useEffect(() => {
     initData()
-    const names = ['xAdvance', 'xOffset', 'yOffset']
-    const observer = (change: IChange) =>
-      names.includes(change.name) && initData()
-
+    const observer = (change: IChange) => initData()
     const glyphsDisposer = deepObserve(project.glyphs, observer)
     const imagesDisposer = deepObserve(project.glyphImages, observer)
     return () => {
