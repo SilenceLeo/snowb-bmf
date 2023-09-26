@@ -18,7 +18,7 @@ class Font {
 
   size: number
 
-  lineHeight = 1
+  lineHeight = 1.25
 
   middle = 0
 
@@ -126,7 +126,8 @@ class Font {
         fontSize: this.size,
       })
     }
-    this.lineHeight = bls.lineHeight
+
+    if (this.lineHeight === 1.25) this.lineHeight = bls.lineHeight
     this.middle = bls.middle
     this.hanging = bls.hanging
     this.top = bls.top

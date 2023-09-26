@@ -1,5 +1,5 @@
 export const PREFIX_STR = 'SnowBambooBMF'
 const prefix = (): Uint8Array =>
-  new Uint8Array([...PREFIX_STR.split('').map((s) => s.charCodeAt(0)), 1, 1, 1])
+  new Uint8Array([...PREFIX_STR.split('').map((s) => s.charCodeAt(0)), 1, 1, 2])
 
 export default prefix

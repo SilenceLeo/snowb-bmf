@@ -59,7 +59,7 @@ message Font {
 
   int32 size = 2;
 
-  float lineHeight = 3;
+  int32 lineHeight = 3;
 }
 
 message GlyphFont {

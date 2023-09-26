@@ -1730,7 +1730,7 @@ export const Font = ($root.Font = (() => {
       message.lineHeight != null &&
       Object.hasOwnProperty.call(message, 'lineHeight')
     )
-      writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.lineHeight)
+      writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.lineHeight)
     return writer
   }
 
@@ -1775,7 +1775,7 @@ export const Font = ($root.Font = (() => {
           break
         }
         case 3: {
-          message.lineHeight = reader.float()
+          message.lineHeight = reader.int32()
           break
         }
         default:
@@ -1822,8 +1822,8 @@ export const Font = ($root.Font = (() => {
     if (message.size != null && message.hasOwnProperty('size'))
       if (!$util.isInteger(message.size)) return 'size: integer expected'
     if (message.lineHeight != null && message.hasOwnProperty('lineHeight'))
-      if (typeof message.lineHeight !== 'number')
-        return 'lineHeight: number expected'
+      if (!$util.isInteger(message.lineHeight))
+        return 'lineHeight: integer expected'
     return null
   }
 
@@ -1849,8 +1849,7 @@ export const Font = ($root.Font = (() => {
       }
     }
     if (object.size != null) message.size = object.size | 0
-    if (object.lineHeight != null)
-      message.lineHeight = Number(object.lineHeight)
+    if (object.lineHeight != null) message.lineHeight = object.lineHeight | 0
     return message
   }
 
@@ -1879,10 +1878,7 @@ export const Font = ($root.Font = (() => {
     if (message.size != null && message.hasOwnProperty('size'))
       object.size = message.size
     if (message.lineHeight != null && message.hasOwnProperty('lineHeight'))
-      object.lineHeight =
-        options.json && !isFinite(message.lineHeight)
-          ? String(message.lineHeight)
-          : message.lineHeight
+      object.lineHeight = message.lineHeight
     return object
   }
 
