@@ -47,6 +47,7 @@ const getString: FontToString = (bmfont) => {
       'text/xml',
     )
     charsDoc.childNodes[0].appendChild(charDoc.childNodes[0])
+    charsDoc.childNodes[0].appendChild(new Comment(` ${char.letter} `))
   })
 
   xmlDOM.documentElement.appendChild(charsDoc.childNodes[0])
