@@ -46,7 +46,7 @@ export default function getFontGlyphs(text: string, config: Config) {
   }
   const itemWidth = font.size + addX * 2
   const itemHeight = font.size + addY * 2
-  const padding = 10
+  const padding = font.size
 
   let canvas = document.createElement('canvas')
   let ctx = canvas.getContext('2d', {
@@ -311,7 +311,7 @@ export default function getFontGlyphs(text: string, config: Config) {
     letterSize.canvasX = startX - styleTrimInfo.trimOffsetLeft
     letterSize.canvasY = startY - styleTrimInfo.trimOffsetTop
   }
-
+  console.log(canvas.toDataURL())
   return {
     canvas,
     glyphs: map,
