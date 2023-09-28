@@ -311,7 +311,7 @@ export default function getFontGlyphs(text: string, config: Config) {
     letterSize.canvasX = startX - styleTrimInfo.trimOffsetLeft
     letterSize.canvasY = startY - styleTrimInfo.trimOffsetTop
   }
-  console.log(canvas.toDataURL())
+
   return {
     canvas,
     glyphs: map,
