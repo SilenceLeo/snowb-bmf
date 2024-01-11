@@ -31,7 +31,7 @@ export interface Config {
   shadow?: ShadowStyleConfig
 }
 
-export default function getFontGlyphs(text: string, config: Config) {
+export default function getFontGlyphs(text: string[], config: Config) {
   const { font, stroke, shadow, fill } = config
   const columnNum = Math.ceil(Math.sqrt(text.length))
   const lineNum = Math.ceil(text.length / columnNum)

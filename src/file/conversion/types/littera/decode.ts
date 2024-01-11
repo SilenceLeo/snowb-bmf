@@ -71,8 +71,7 @@ const decode: DecodeProjectFunction = (litteraData) => {
 
   project.glyphs = new Map()
 
-  data.glyphs.glyphs
-    .split('')
+  Array.from(data.glyphs.glyphs)
     .forEach((letter) => project.glyphs?.set(letter, { letter } as GlyphFont))
 
   /**
