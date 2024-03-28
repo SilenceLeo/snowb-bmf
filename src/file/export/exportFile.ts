@@ -15,8 +15,12 @@ export default function exportFile(
   const zip = new JSZip()
   const { packCanvas, glyphList, name, layout, ui } = project
   const bmfont = toBmfInfo(project, fontName)
-  const text = config.getString(bmfont)
+  let text = config.getString(bmfont)
   const saveFileName = fileName || name
+
+  if (name !== saveFileName) {
+    text = text.replace(`file="${name}.png"`, `file="${saveFileName}.png"`)
+  }
 
   zip.file(`${saveFileName}.${config.ext}`, text)
 
