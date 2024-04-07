@@ -106,8 +106,7 @@ class Project {
   }
 
   get glyphList() {
-    return ` ${this.text}`
-      .split('')
+    return Array.from(` ${this.text}`)
       .map((letter) => this.getGlyph(letter) as GlyphFont | GlyphImage)
   }
 
@@ -244,7 +243,7 @@ class Project {
       this.worker = null
     }
 
-    const { canvas, glyphs } = getFontGlyphs(` ${this.text}`, {
+    const { canvas, glyphs } = getFontGlyphs(Array.from(` ${this.text}`), {
       font: this.style.font,
       fill: this.style.fill,
       stroke: this.style.useStroke ? this.style.stroke : void 0,
@@ -332,10 +331,10 @@ class Project {
     this.text = str.replace(/\s/gm, '')
     this.addGlyphs(oldText)
   }
-
+  
   addGlyphs(oldText = ''): void {
-    const currentList = Array.from(new Set(this.text.split('')))
-    const oldList = Array.from(new Set(oldText.split('')))
+    const currentList = Array.from(new Set(Array.from(this.text)))
+    const oldList = Array.from(new Set(Array.from(oldText)))
     this.text = currentList.join('')
     currentList.unshift(' ')
     const diffList = oldText

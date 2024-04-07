@@ -17,7 +17,7 @@ const Glyphs: FunctionComponent<unknown> = () => {
 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     const { value } = event.target
-    const str = Array.from(new Set(value.split(''))).join('')
+    const str = Array.from(new Set(Array.from(value))).join('')
     if (isIME) {
       setInputText(value)
     } else {
@@ -33,7 +33,7 @@ const Glyphs: FunctionComponent<unknown> = () => {
 
   const handleCompositionEnd = (): void => {
     setIsIME(false)
-    const str = Array.from(new Set(inputText.split(''))).join('')
+    const str = Array.from(new Set(Array.from(inputText))).join('')
     setInputText(str)
     if (str !== text) setText(str)
   }
