@@ -108,6 +108,7 @@ class Project {
   get glyphList() {
     return Array.from(` ${this.text}`)
       .map((letter) => this.getGlyph(letter) as GlyphFont | GlyphImage)
+      .filter((glyph) => glyph)
   }
 
   get rectangleList(): TextRectangle[] {
@@ -331,7 +332,7 @@ class Project {
     this.text = str.replace(/\s/gm, '')
     this.addGlyphs(oldText)
   }
-  
+
   addGlyphs(oldText = ''): void {
     const currentList = Array.from(new Set(Array.from(this.text)))
     const oldList = Array.from(new Set(Array.from(oldText)))
