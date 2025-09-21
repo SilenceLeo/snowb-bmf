@@ -1,0 +1,105 @@
+---
+title: SnowB BMF Documentation
+description: Master bitmap font creation with the official SnowB BMF documentation. Learn everything from basic setup to advanced styling, texture packing, and exporting for game engines like Unity, Unreal, and Godot.
+template: splash
+hero:
+  title: SnowB BMF Documentation
+  tagline: The definitive guide to creating professional, game-ready bitmap fonts. Master advanced typography, styling, and optimization—all in your browser.
+  actions:
+    - text: Get Started
+      link: /en/docs/getting-started/overview/
+      icon: right-arrow
+    - text: Font Design Guide
+      link: /en/docs/font-design/character-sets/
+      icon: document
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { ContainerSection } from 'starlight-theme-black/components'
+
+<ContainerSection>
+
+## Key Features
+
+<CardGrid stagger>
+	<Card title="100% Free & Private" icon="laptop">
+		No installation required. Runs entirely in your browser. All processing happens locally, so your data and fonts remain private.
+	</Card>
+	<Card title="Advanced Font Styling" icon="pen">
+		Apply solid colors, gradients, and image patterns. Add definition with strokes (outlines), depth with shadows, and control anti-aliasing with a powerful Sharpness setting.
+	</Card>
+	<Card title="Professional Typography" icon="pencil">
+		Fine-tune glyph metrics, line height, and configure kerning pairs for pixel-perfect text layout and readability.
+	</Card>
+	<Card title="Smart Texture Packing" icon="puzzle">
+		Leverages an efficient Guillotine algorithm to auto-pack glyphs into the smallest texture atlas, or lets you define fixed, power-of-two dimensions for GPU optimization.
+	</Card>
+	<Card title="Broad Export Compatibility" icon="document">
+		Export in Text (.fnt/.txt), XML, and Binary formats compatible with popular game engines like Unity, Godot, and Unreal Engine.
+	</Card>
+	<Card title="Real-Time Preview" icon="magnifier">
+		See your changes instantly. The live canvas provides immediate feedback on styling, metrics, and kerning adjustments.
+	</Card>
+</CardGrid>
+
+## Character & Glyph Management
+
+<CardGrid stagger>
+	<Card title="Full Unicode Support" icon="translate">
+		Includes full support for international scripts, emoji, and symbols, with IME compatibility for easy character input.
+	</Card>
+	<Card title="Flexible Font Import" icon="add-document">
+		Import TTF, OTF, and WOFF files. A robust fallback system lets you combine multiple fonts to expand character coverage.
+	</Card>
+	<Card title="Image Glyphs" icon="seti:image">
+		Integrate custom icons, symbols, or logos directly into your font by mapping images to specific characters.
+	</Card>
+	<Card title="Automatic Deduplication" icon="approve-check-circle">
+		Smart character processing automatically removes duplicates, ensuring an efficient and clean character set.
+	</Card>
+</CardGrid>
+
+## Advanced Features
+
+<CardGrid stagger>
+	<Card title="Pixel-Perfect Control" icon="puzzle">
+		Use the unique 'Sharp' feature to snap glyph vectors to the pixel grid, transforming smooth fonts into crisp, pixel-perfect art with a single slider.
+	</Card>
+	<Card title="Interactive Gradient Editor" icon="star">
+		Create linear and radial gradients with unlimited color stops. Visually edit colors, positions, and angles with instant feedback.
+	</Card>
+	<Card title="Visual Kerning" icon="setting">
+		Visually adjust the spacing between character pairs. The tool provides highlighting and precise pixel-level control for professional results.
+	</Card>
+	<Card title="Project Management" icon="open-book">
+		Save and load projects in the native .sbf format. The tool also supports importing legacy .ltr files from Littera for easy migration.
+	</Card>
+</CardGrid>
+
+## Documentation Sections
+
+<CardGrid>
+	<Card title="Getting Started" icon="rocket">
+		Learn the basics of SnowB BMF, explore the interface, and understand the bitmap font creation workflow.
+
+		[View Getting Started →](/en/docs/getting-started/overview/)
+	</Card>
+	<Card title="Font Design" icon="pencil">
+		A deep dive into character sets, fill styles, strokes, shadows, and texture packing to master font creation.
+
+		[View Font Design →](/en/docs/font-design/character-sets/)
+	</Card>
+	<Card title="Project Management" icon="setting">
+		Manage your projects, preview results, and export in various formats for use in games and applications.
+
+		[View Project Management →](/en/docs/project-management/project-operations/)
+	</Card>
+	<Card title="FAQ" icon="information">
+		Find answers to commonly asked questions and troubleshooting tips for SnowB BMF.
+
+		[View FAQ →](/en/docs/faq/)
+	</Card>
+</CardGrid>
+
+</ContainerSection>

@@ -1,0 +1,231 @@
+---
+import { Image } from 'astro:assets'
+// site/node_modules/@astrojs/starlight/src/constants
+import { PAGE_TITLE_ID } from '../constants'
+// import { PAGE_TITLE_ID } from 'starlight-theme-black/src/constants.ts'
+// site/node_modules/@astrojs/starlight/user-components/LinkButton.astro
+// import LinkButton from '../../node_modules/@astrojs/starlight/user-components/LinkButton.astro';
+import { LinkButton } from '@astrojs/starlight/components'
+// import ContentPanel from '../../node_modules/@astrojs/starlight/components/ContentPanel.astro'
+
+import video from '../assets/background.mp4'
+import background from '../assets/background.png'
+const { data } = Astro.locals.starlightRoute.entry
+const { title = data.title, tagline, image, actions = [] } = data.hero || {}
+
+const imageAttrs = {
+  loading: 'eager' as const,
+  decoding: 'async' as const,
+  width: 2352,
+  height: 1410,
+  alt: image?.alt || '',
+}
+
+let darkImage: ImageMetadata | undefined
+let lightImage: ImageMetadata | undefined
+let rawHtml: string | undefined
+if (image) {
+  if ('file' in image) {
+    darkImage = image.file
+  } else if ('dark' in image) {
+    darkImage = image.dark
+    lightImage = image.light
+  } else {
+    rawHtml = image.html
+  }
+}
+---
+
+<div class='hero'>
+  <div
+    class='home-content-video-wrapper absolute pointer-events-none top-0 max-w-2200px w-full -z-0 light:sl-hidden'
+  >
+    <video
+      class='home-content-video w-full opacity-60'
+      src={video}
+      poster={background.src}
+      autoplay=''
+      loop=''
+      playsinline=''
+      muted></video>
+    <div class='home-content-video-mask-wrapper absolute inset-0'>
+      <div class='home-content-video-mask'></div>
+    </div>
+  </div>
+  <div class='container-section relative z-10'>
+    <div class='container-wrapper'>
+      <div class='container container-padding'>
+        {rawHtml && <div class='hero-html sl-flex' set:html={rawHtml} />}
+
+        <div class='sl-flex stack items-center'>
+          <div class='sl-flex copy justify-center'>
+            <h1 id={PAGE_TITLE_ID} data-page-title set:html={title} />
+            {tagline && <div class='tagline' set:html={tagline} />}
+          </div>
+          {
+            actions.length > 0 && (
+              <div class='sl-flex actions justify-center'>
+                {actions.map(
+                  ({
+                    attrs: { class: className, ...attrs } = {},
+                    icon,
+                    link: href,
+                    text,
+                    variant,
+                  }) => (
+                    <LinkButton
+                      {href}
+                      {variant}
+                      icon={icon?.name}
+                      class:list={[className]}
+                      {...attrs}
+                    >
+                      {text}
+                      {icon?.html && <Fragment set:html={icon.html} />}
+                    </LinkButton>
+                  ),
+                )}
+              </div>
+            )
+          }
+        </div>
+
+        {
+          darkImage && (
+            <Image
+              src={darkImage}
+              {...imageAttrs}
+              class:list={{ 'light:sl-hidden': Boolean(lightImage) }}
+              class='mt-8 w-8/12 block mx-auto'
+            />
+          )
+        }
+        {
+          lightImage && (
+            <Image
+              src={lightImage}
+              {...imageAttrs}
+              class='dark:sl-hidden  mt-2'
+            />
+          )
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  @layer website {
+    .hero img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .hero .container-section {
+      border: none;
+    }
+
+    .home-content-video-mask-wrapper .home-content-video-mask {
+      content: '';
+      display: block;
+      height: 50%;
+      width: 100%;
+      bottom: -5px;
+      left: 0;
+      right: 0;
+      position: absolute;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0), #000 100%);
+      z-index: 1;
+    }
+    .home-content-video-mask-wrapper:before {
+      content: '';
+      display: block;
+      height: 100%;
+      width: 250px;
+      bottom: 0;
+      top: 0;
+      left: -5px;
+      position: absolute;
+      background: linear-gradient(to right, #000, #0000);
+      z-index: 1;
+    }
+    .home-content-video-mask-wrapper:after {
+      content: '';
+      display: block;
+      height: 100%;
+      width: 250px;
+      bottom: 0;
+      top: 0;
+      right: -5px;
+      position: absolute;
+      background: linear-gradient(to left, #000, #0000);
+      z-index: 1;
+    }
+    .stack {
+      flex-direction: column;
+      gap: clamp(1.5rem, calc(1.5rem + 1vw), 2rem);
+      text-align: center;
+    }
+
+    .copy {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .copy > * {
+      max-width: calc(8 / 12 * 100%);
+    }
+
+    h1 {
+      font-size: clamp(
+        var(--sl-text-3xl),
+        calc(0.25rem + 5vw),
+        var(--sl-text-6xl)
+      );
+      line-height: var(--sl-line-height-headings);
+      font-weight: 600;
+      color: var(--sl-color-white);
+    }
+
+    .tagline {
+      font-size: clamp(
+        var(--sl-text-base),
+        calc(0.0625rem + 2vw),
+        var(--sl-text-xl)
+      );
+      color: var(--sl-color-gray-2);
+    }
+
+    .actions {
+      gap: 1rem 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @media (min-width: 50rem) {
+      .hero {
+        grid-template-columns: 7fr 4fr;
+        gap: 3%;
+        padding-block: clamp(2.5rem, calc(1rem + 10vmin), 10rem);
+      }
+
+      .hero > img,
+      .hero > .hero-html {
+        order: 2;
+        width: min(100%, 25rem);
+      }
+
+      .stack {
+        text-align: start;
+      }
+      /* 
+      .copy {
+        align-items: flex-start;
+      } */
+
+      .actions {
+        justify-content: flex-start;
+      }
+    }
+  }
+</style>

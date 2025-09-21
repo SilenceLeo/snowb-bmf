@@ -1,4 +1,4 @@
-import { useEffect, useCallback, RefObject, DependencyList } from 'react'
+import { DependencyList, RefObject, useCallback, useEffect } from 'react'
 
 interface DeltaInfo {
   deltaScale: number
@@ -11,7 +11,7 @@ interface WheelCallback {
 }
 
 function useWheel(
-  ref: RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement | null>,
   onWheel: WheelCallback,
   deps: DependencyList = [],
 ): void {

@@ -41,12 +41,14 @@ export default function getPreviewCanvas(
     const arr = Array.from(str)
     arr.forEach((letter, idx) => {
       const char = chars.get(letter)
-      if (!char) return
+      if (!char) {
+        return
+      }
       const next = arr[idx + 1]
-      const lk = kernings.get(letter.charCodeAt(0))
+      const lk = kernings.get(letter.codePointAt(0) || 0)
       let kering = 0
-      if (next && lk && lk.has(next.charCodeAt(0))) {
-        kering = lk.get(next.charCodeAt(0)) || 0
+      if (next && lk?.has(next.codePointAt(0) || 0)) {
+        kering = lk.get(next.codePointAt(0) || 0) || 0
       }
       const obj = {
         x: x + char.xoffset + (char.width === 0 ? 0 : padding),

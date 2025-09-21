@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
 import { observer } from 'mobx-react-lite'
 import { IChange, deepObserve } from 'mobx-utils'
@@ -14,7 +15,6 @@ import { GlyphFont, GlyphImage } from 'src/store/base'
 import { useProject } from 'src/store/hooks'
 
 import LetterList from './LetterList'
-import styles from './PreviewCanvas.module.scss'
 
 const PreviewCanvas: FunctionComponent<unknown> = () => {
   const { bgPixel } = useTheme()
@@ -38,7 +38,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     layout: { padding },
     isPacking,
     globalAdjustMetric,
-    packCanvas,
+    packCanvases,
   } = project
   const { previewScale, previewOffsetX, previewOffsetY } = ui
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
@@ -77,9 +77,13 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   } | null>(null)
 
   const initData = useCallback(() => {
-    if (!canvas) return
+    if (!canvas) {
+      return
+    }
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {
+      return
+    }
 
     const lh = size * lineHeight
     const fontHeight = maxBaseLine - minBaseLine
@@ -98,12 +102,14 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     let maxX = 0
     let maxY = 0
     lines.forEach((str, index) => {
-      let y = lh * index
+      const y = lh * index
       let x = 0
       const arr = Array.from(str)
       arr.forEach((letter, idx) => {
         const glyph = project.getGlyph(letter)
-        if (!glyph) return
+        if (!glyph) {
+          return
+        }
         const next = arr[idx + 1]
         const isUnEmpty = !!(glyph && glyph.width && glyph.height)
         const width = isUnEmpty ? glyph.width + padding * 2 : 0
@@ -191,15 +197,20 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   )
 
   useEffect(() => {
-    if (!canvas || isPacking || !data) return
+    if (!canvas || isPacking || !data) {
+      return
+    }
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {
+      return
+    }
 
     const lh = size * lineHeight
     const drawYOffset = Math.max((lh - size) / 2, 0)
 
     canvas.width = data.width
     canvas.height = data.height
+
     data.list.forEach((item) => {
       if (item.glyph instanceof GlyphImage && item.glyph.source) {
         ctx.drawImage(
@@ -207,28 +218,42 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
           item.x - data.xOffset,
           item.y - data.yOffset + drawYOffset,
         )
-      } else if (item.glyph instanceof GlyphFont && packCanvas) {
-        ctx.drawImage(
-          packCanvas,
-          item.glyph.canvasX,
-          item.glyph.canvasY,
-          item.glyph.width,
-          item.glyph.height,
-          item.x - data.xOffset,
-          item.y - data.yOffset + drawYOffset,
-          item.glyph.width,
-          item.glyph.height,
-        )
+      } else if (item.glyph instanceof GlyphFont) {
+        // Unified coordinate processing: always use packed page coordinates
+        const glyphPage = item.glyph.page || 0
+        const sourceCanvas = packCanvases?.[glyphPage]
+
+        if (sourceCanvas) {
+          try {
+            // Use packed position coordinates consistently (coordinates from packCanvases)
+            ctx.drawImage(
+              sourceCanvas,
+              item.glyph.x + padding,
+              item.glyph.y + padding,
+              item.glyph.width,
+              item.glyph.height,
+              item.x - data.xOffset,
+              item.y - data.yOffset + drawYOffset,
+              item.glyph.width,
+              item.glyph.height,
+            )
+          } catch (error) {
+            console.warn(
+              `⚠️ Failed to draw glyph ${item.glyph.letter} from page ${glyphPage}:`,
+              error,
+            )
+          }
+        }
       }
     })
 
     for (let index = 0; index < data.lines; index += 1) {
       ;[middle, hanging, top, alphabetic, ideographic, bottom].forEach(
         (baseLine) => {
-          const basey = Math.round(baseLine - minBaseLine + index * lh)
+          const baseY = Math.round(baseLine - minBaseLine + index * lh)
           ctx.beginPath()
-          ctx.moveTo(-data.xOffset, basey + 0.5 - data.yOffset + drawYOffset)
-          ctx.lineTo(data.width, basey + 0.5 - data.yOffset + drawYOffset)
+          ctx.moveTo(-data.xOffset, baseY + 0.5 - data.yOffset + drawYOffset)
+          ctx.lineTo(data.width, baseY + 0.5 - data.yOffset + drawYOffset)
           if (baseLine === minBaseLine || baseLine === maxBaseLine) {
             ctx.strokeStyle = 'rgba(0,0,0,1)'
             ctx.setLineDash([])
@@ -261,14 +286,15 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     maxBaseLine,
     middle,
     minBaseLine,
-    packCanvas,
+    packCanvases,
+    padding,
     size,
     top,
   ])
 
   useEffect(() => {
     initData()
-    const observer = (change: IChange) => initData()
+    const observer = (_change: IChange) => initData()
     const glyphsDisposer = deepObserve(project.glyphs, observer)
     const imagesDisposer = deepObserve(project.glyphImages, observer)
     return () => {
@@ -278,11 +304,15 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   }, [initData, project.glyphImages, project.glyphs])
 
   return (
-    <div
+    <Box
       aria-hidden
       ref={domRef}
-      className={styles.root}
       style={{
+        position: 'relative',
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
         ...bgPixel,
         cursor:
           dragState === 2 ? 'grabbing' : dragState === 1 ? 'grab' : 'default',
@@ -290,25 +320,33 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       onMouseDown={handleMouseDown}
       onClick={() => ui.setSelectLetter('', '')}
     >
-      <div
-        className={styles.wrap}
-        style={{
+      <Box
+        sx={{
+          transformOrigin: '50% 50%',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
           width: `${data ? data.width : 0}px`,
           height: `${data ? data.height : 0}px`,
           marginLeft: `${(data ? data.width : 0) / -2}px`,
           marginTop: `${(data ? data.height : 0) / -2}px`,
           transform: `scale(${previewScale}) translate(${previewOffsetX}px,${previewOffsetY}px)`,
+          '& canvas': {
+            width: '100%',
+            height: '100%',
+            imageRendering: 'pixelated' as const,
+          },
         }}
       >
-        <canvas ref={(node) => setCanvas(node)} className={styles.canvas} />
+        <canvas ref={(node) => setCanvas(node)} />
         {data ? (
           <LetterList
             data={data}
             drawYOffset={Math.max((size * lineHeight - size) / 2, 0)}
           />
         ) : null}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
 

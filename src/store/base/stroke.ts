@@ -7,16 +7,16 @@ class Stroke extends Fill {
   width = 1
 
   /**
-   * butt   默认。向线条的每个末端添加平直的边缘。
-   * round  向线条的每个末端添加圆形线帽。
-   * square 向线条的每个末端添加正方形线帽。
+   * butt   Default. Adds a flat edge to each end of the line.
+   * round  Adds a rounded line cap to each end of the line.
+   * square Adds a square line cap to each end of the line.
    */
   lineCap: CanvasLineCap
 
   /**
-   * bevel 创建斜角。
-   * round 创建圆角。
-   * miter 默认。创建尖角。
+   * bevel Creates a beveled corner.
+   * round Creates a rounded corner.
+   * miter Default. Creates a sharp corner.
    */
   lineJoin: CanvasLineJoin
 

@@ -2,7 +2,7 @@ import Popper, { PopperPlacementType } from '@mui/material/Popper'
 import { useTheme } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
 import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { ColorResult, SketchPicker } from 'react-color'
 
 export interface ChildrenProps {

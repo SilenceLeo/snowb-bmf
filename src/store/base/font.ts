@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
 import { Font as OpenType, parse } from 'opentype.js'
-import getBaselinesFromCssText from 'src/utils/getBaselinesFromCssText'
-import getBaselinesFromOpentypeFont from 'src/utils/getBaselinesFromOpentypeFont'
+import getFontBaselinesFromCanvas from 'src/utils/getFontBaselinesFromCanvas'
+import getFontBaselinesFromMetrics from 'src/utils/getFontBaselinesFromMetrics'
 import is from 'src/utils/is'
 import updateFontFace from 'src/utils/updateFontFace'
 
@@ -35,17 +35,23 @@ class Font {
   sharp = 80
 
   get mainFont() {
-    if (this.fonts.length > 0) return this.fonts[0]
+    if (this.fonts.length > 0) {
+      return this.fonts[0]
+    }
     return null
   }
 
   get mainFamily() {
-    if (this.mainFont) return this.mainFont.family
+    if (this.mainFont) {
+      return this.mainFont.family
+    }
     return DEFAULT_FAMILY
   }
 
   get opentype() {
-    if (this.mainFont) return this.mainFont.opentype
+    if (this.mainFont) {
+      return this.mainFont.opentype
+    }
     return null
   }
 
@@ -65,7 +71,9 @@ class Font {
       this.ideographic,
       this.bottom,
     )
-    if (Number.isNaN(Number(min))) return 0
+    if (Number.isNaN(Number(min))) {
+      return 0
+    }
     return min
   }
 
@@ -78,7 +86,9 @@ class Font {
       this.ideographic,
       this.bottom,
     )
-    if (Number.isNaN(Number(max))) return this.size
+    if (Number.isNaN(Number(max))) {
+      return this.size
+    }
     return max
   }
 
@@ -109,25 +119,27 @@ class Font {
     this.size = font.size || 72
     this.lineHeight = font.lineHeight || 1.25
     this.sharp = is.num(font.sharp) ? font.sharp : 80
-    if (font.fonts && font.fonts.length) {
+    if (font.fonts?.length) {
       font.fonts.forEach((fontResource) => this.addFont(fontResource.font))
     } else {
-      this.updateBaseines()
+      this.updateBaselines()
     }
   }
 
-  updateBaseines(): void {
+  updateBaselines(): void {
     let bls
     if (this.mainFont?.opentype) {
-      bls = getBaselinesFromOpentypeFont(this.mainFont.opentype, this.size)
+      bls = getFontBaselinesFromMetrics(this.mainFont.opentype, this.size)
     } else {
-      bls = getBaselinesFromCssText('x', {
+      bls = getFontBaselinesFromCanvas('Ag', {
         fontFamily: this.family,
         fontSize: this.size,
       })
     }
 
-    if (this.lineHeight === 1.25) this.lineHeight = bls.lineHeight
+    if (this.lineHeight === 1.25) {
+      this.lineHeight = bls.lineHeight
+    }
     this.middle = bls.middle
     this.hanging = bls.hanging
     this.top = bls.top
@@ -137,9 +149,7 @@ class Font {
   }
 
   async addFont(font: ArrayBuffer): Promise<void> {
-    let opentype: OpenType
-
-    opentype = parse(font, { lowMemory: true })
+    const opentype: OpenType = parse(font, { lowMemory: true })
 
     const { names } = opentype
     const family = names.postScriptName[Object.keys(names.postScriptName)[0]]
@@ -159,22 +169,24 @@ class Font {
         family,
         opentype,
       })
-      this.updateBaseines()
+      this.updateBaselines()
     })
   }
 
   removeFont(fontResource: FontResource) {
     const idx = this.fonts.indexOf(fontResource)
-    if (idx === -1) return
+    if (idx === -1) {
+      return
+    }
     this.fonts.splice(idx, 1)
     if (idx === 0) {
-      this.updateBaseines()
+      this.updateBaselines()
     }
   }
 
   setSize(size: number): void {
     this.size = size
-    this.updateBaseines()
+    this.updateBaselines()
   }
 
   setLineHeight(lineHeight: number): void {

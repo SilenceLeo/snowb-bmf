@@ -1,8 +1,7 @@
-import React, { FunctionComponent, useState } from 'react'
-import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
+import { FunctionComponent, useState } from 'react'
 
-import styles from './Palette.module.css'
 export interface PaletteItem {
   id: number | string
   offset: number
@@ -15,22 +14,32 @@ interface PaletteProps {
   palette: PaletteItem[]
 }
 
-const Palette: FunctionComponent<PaletteProps> = (
-  props: PaletteProps,
-): JSX.Element => {
+const Palette: FunctionComponent<PaletteProps> = (props: PaletteProps) => {
   const { palette, width, height } = props
   const { bgPixel } = useTheme()
-  const [id] = useState(`palette_${Math.random().toString().substr(2, 9)}`)
+  const [id] = useState(
+    `palette_${Math.random().toString(36).substring(2, 11)}`,
+  )
   const sortedPalette = [...palette].sort(
     ({ offset: offset1 }, { offset: offset2 }) => offset1 - offset2,
   )
 
   return (
     <Box
-      className={styles.root}
-      sx={{ ...bgPixel, width: width || '100%', height: height || '100%' }}
+      sx={{
+        border: '1px solid #ccc',
+        ...bgPixel,
+        width: width || '100%',
+        height: height || '100%',
+      }}
     >
-      <svg className={styles.svg}>
+      <svg
+        style={{
+          width: '100%',
+          height: '100%',
+          verticalAlign: 'top',
+        }}
+      >
         <defs>
           <linearGradient id={id} x1='0' y1='0.5' x2='1' y2='0.5'>
             {sortedPalette.map((item) => (

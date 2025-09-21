@@ -16,14 +16,18 @@ const Preview: FunctionComponent<unknown> = () => {
       setInputText(value)
     } else {
       setInputText(value)
-      if (value !== previewText) setPreviewText(value)
+      if (value !== previewText) {
+        setPreviewText(value)
+      }
     }
   }
 
   const handleCompositionEnd = (): void => {
     setIsIME(false)
     setInputText(inputText)
-    if (inputText !== previewText) setPreviewText(inputText)
+    if (inputText !== previewText) {
+      setPreviewText(inputText)
+    }
   }
 
   return (
@@ -39,10 +43,12 @@ const Preview: FunctionComponent<unknown> = () => {
           multiline
           rows={7}
           variant='outlined'
-          inputProps={{ spellCheck: false }}
           onChange={handleInput}
           onCompositionStart={() => setIsIME(true)}
           onCompositionEnd={handleCompositionEnd}
+          slotProps={{
+            htmlInput: { spellCheck: false },
+          }}
         />
       </Box>
     </Box>

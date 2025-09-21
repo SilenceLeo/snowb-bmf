@@ -13,7 +13,7 @@ import {
 } from '.'
 
 export default function useStores(): Store {
-  return useContext(StoreContext) as Store
+  return useContext(StoreContext)
 }
 
 export function useWorkspace(): Workspace {

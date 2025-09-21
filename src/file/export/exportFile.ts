@@ -1,7 +1,6 @@
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { Project } from 'src/store'
-import drawPackCanvas from 'src/utils/drawPackCanvas'
 
 import toBmfInfo from './toBmfInfo'
 import { ConfigItem } from './type'
@@ -13,24 +12,48 @@ export default function exportFile(
   fileName: string,
 ): void {
   const zip = new JSZip()
-  const { packCanvas, glyphList, name, layout, ui } = project
-  const bmfont = toBmfInfo(project, fontName)
-  let text = config.getString(bmfont)
-  const saveFileName = fileName || name
+  const { packCanvases, layout } = project
+  const saveFileName = fileName || project.name
 
-  if (name !== saveFileName) {
-    text = text.replace(`file="${name}.png"`, `file="${saveFileName}.png"`)
+  // Generate BMFont info with correct file names from the start
+  const bmfont = toBmfInfo(project, fontName, saveFileName)
+  const content = config.getContent(bmfont)
+
+  // Add the font descriptor file to zip
+  zip.file(`${saveFileName}.${config.ext}`, content)
+
+  // Create texture files for each page
+  const pagePromises: Promise<void>[] = []
+
+  for (let pageIndex = 0; pageIndex < layout.page; pageIndex++) {
+    let sourceCanvas: HTMLCanvasElement | null = null
+
+    // Use the appropriate source canvas
+    if (packCanvases && packCanvases[pageIndex]) {
+      // Use the rendered page canvas (works for both single and multi-page)
+      sourceCanvas = packCanvases[pageIndex]
+    }
+
+    if (!sourceCanvas) continue
+
+    const pagePromise = new Promise<void>((resolve) => {
+      sourceCanvas!.toBlob((blob) => {
+        if (blob) {
+          const fileName =
+            layout.page > 1
+              ? `${saveFileName}_${pageIndex}.png`
+              : `${saveFileName}.png`
+          zip.file(fileName, blob)
+        }
+        resolve()
+      })
+    })
+
+    pagePromises.push(pagePromise)
   }
 
-  zip.file(`${saveFileName}.${config.ext}`, text)
-
-  const canvas = document.createElement('canvas')
-  canvas.width = ui.width
-  canvas.height = ui.height
-  drawPackCanvas(canvas, packCanvas, glyphList, layout.padding)
-
-  canvas.toBlob((blob) => {
-    if (blob) zip.file(`${saveFileName}.png`, blob)
+  // Wait for all pages to be processed, then generate the zip
+  Promise.all(pagePromises).then(() => {
     zip
       .generateAsync({ type: 'blob' })
       .then((content) => saveAs(content, `${saveFileName}.zip`))

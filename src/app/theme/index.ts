@@ -2,6 +2,15 @@ import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 
 import components from './components'
 
+// Extend theme, add custom background colors
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    activityBar: string
+    titleBar: string
+    sidebar: string
+  }
+}
+
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -38,6 +47,6 @@ const theme = createTheme({
   },
   shape: { borderRadius: 0 },
   components,
-})
+} as any)
 
 export default responsiveFontSizes(theme)

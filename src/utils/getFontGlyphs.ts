@@ -1,3 +1,4 @@
+import { toJS } from 'mobx'
 import {
   Font,
   FontStyleConfig,
@@ -5,14 +6,12 @@ import {
   StrokeStyleConfig,
 } from 'src/store'
 
+import createCanvasFontString from './createCanvasFontString'
 import ctxDoPath from './ctxDoPath'
-import fontStyleStringify from './fontStyleStringify'
 import getCanvasStyle from './getCanvasStyle'
-import getLetterSizeFromCssText, {
-  LetterSize,
-} from './getLetterSizeFromCssText'
+import measureTextSize, { LetterSize } from './measureTextSize'
 import pathDoSharp from './pathDoSharp'
-import trimImageData from './trimImageData'
+import trimTransparentPixels from './trimTransparentPixels'
 
 export interface GlyphItem extends LetterSize {
   canvasX: number
@@ -32,7 +31,15 @@ export interface Config {
 }
 
 export default function getFontGlyphs(text: string[], config: Config) {
-  const { font, stroke, shadow, fill } = config
+  // Convert MobX observables to plain objects to avoid reactive context warnings
+  const plainConfig = {
+    font: toJS(config.font),
+    stroke: config.stroke ? toJS(config.stroke) : undefined,
+    shadow: config.shadow ? toJS(config.shadow) : undefined,
+    fill: toJS(config.fill),
+  }
+
+  const { font, stroke, shadow, fill } = plainConfig
   const columnNum = Math.ceil(Math.sqrt(text.length))
   const lineNum = Math.ceil(text.length / columnNum)
   const lineWidth = stroke ? stroke.width * 2 : 0 // canvas is center stroke
@@ -55,8 +62,8 @@ export default function getFontGlyphs(text: string[], config: Config) {
     alpha: true,
     colorSpace: 'srgb',
   }) as CanvasRenderingContext2D
-  const strokCanvas = document.createElement('canvas')
-  const strokCtx = strokCanvas.getContext('2d', {
+  const strokeCanvas = document.createElement('canvas')
+  const strokeCtx = strokeCanvas.getContext('2d', {
     willReadFrequently: true,
     desynchronized: true,
     alpha: true,
@@ -64,21 +71,21 @@ export default function getFontGlyphs(text: string[], config: Config) {
   }) as CanvasRenderingContext2D
   canvas.width = (itemWidth + padding * 2) * columnNum
   canvas.height = (itemHeight + padding * 2) * lineNum
-  strokCanvas.width = canvas.width
-  strokCanvas.height = canvas.height
+  strokeCanvas.width = canvas.width
+  strokeCanvas.height = canvas.height
 
   const map = new Map<string, GlyphItem>()
 
   if (stroke && lineWidth) {
-    strokCtx.textAlign = 'left'
-    strokCtx.textBaseline = 'top'
-    strokCtx.lineCap = stroke.lineCap
-    strokCtx.lineJoin = stroke.lineJoin
-    strokCtx.lineWidth = stroke.width
+    strokeCtx.textAlign = 'left'
+    strokeCtx.textBaseline = 'top'
+    strokeCtx.lineCap = stroke.lineCap
+    strokeCtx.lineJoin = stroke.lineJoin
+    strokeCtx.lineWidth = stroke.width
     ctx.lineCap = stroke.lineCap
     ctx.lineJoin = stroke.lineJoin
     ctx.lineWidth = stroke.width
-    strokCtx.fillStyle = '#000000'
+    strokeCtx.fillStyle = '#000000'
   }
 
   for (let i = 0; i < text.length; i++) {
@@ -87,8 +94,10 @@ export default function getFontGlyphs(text: string[], config: Config) {
       Math.floor(i / columnNum) * (itemHeight + padding * 2) + padding
     const letter = text[i]
     let letterSize: GlyphItem
-    const fontResource = font.fonts.find(({ opentype }) => {
-      if (!opentype) return false
+    const fontResource = font.fonts?.find(({ opentype }) => {
+      if (!opentype) {
+        return false
+      }
 
       const glyph = opentype.charToGlyph(letter)
       if (glyph.unicode) {
@@ -111,7 +120,6 @@ export default function getFontGlyphs(text: string[], config: Config) {
       const fontHeight = (opentype.ascender - opentype.descender) * scale
 
       letterSize = {
-        text: letter,
         letter,
         width: Math.ceil(boundingBox.x2) - Math.floor(boundingBox.x1),
         height: Math.ceil(boundingBox.y2) - Math.floor(boundingBox.y1),
@@ -172,7 +180,7 @@ export default function getFontGlyphs(text: string[], config: Config) {
       ctx.setTransform(1, 0, 0, 1, 0, 0)
     } else {
       letterSize = {
-        ...getLetterSizeFromCssText(letter, {
+        ...measureTextSize(letter, {
           fontSize: font.size,
           fontFamily: font.family,
         }),
@@ -191,7 +199,7 @@ export default function getFontGlyphs(text: string[], config: Config) {
       ctx.textAlign = 'left'
       ctx.textBaseline = 'top'
 
-      ctx.font = fontStyleStringify({
+      ctx.font = createCanvasFontString({
         fontSize: font.size,
         fontFamily: font.family,
       })
@@ -236,34 +244,34 @@ export default function getFontGlyphs(text: string[], config: Config) {
         ctx.lineWidth = stroke.width
         ctx.strokeText(letter, drawX, drawY)
       } else if (stroke && lineWidth && stroke.strokeType === 2) {
-        strokCtx.save()
-        strokCtx.beginPath()
-        strokCtx.rect(
+        strokeCtx.save()
+        strokeCtx.beginPath()
+        strokeCtx.rect(
           startX - padding,
           startY - padding,
           itemWidth + padding * 2,
           itemHeight + padding * 2,
         )
 
-        strokCtx.clip()
+        strokeCtx.clip()
 
-        strokCtx.font = ctx.font
-        strokCtx.fillStyle = '#000000'
-        strokCtx.strokeStyle = getCanvasStyle(
-          strokCtx,
+        strokeCtx.font = ctx.font
+        strokeCtx.fillStyle = '#000000'
+        strokeCtx.strokeStyle = getCanvasStyle(
+          strokeCtx,
           styleX,
           drawY,
           font.size,
           font.size,
           stroke,
         )
-        strokCtx.lineWidth = lineWidth
+        strokeCtx.lineWidth = lineWidth
 
-        strokCtx.fillText(letter, drawX, drawY)
-        strokCtx.globalCompositeOperation = 'source-in'
-        strokCtx.strokeText(letter, drawX, drawY)
-        strokCtx.globalCompositeOperation = 'source-over'
-        strokCtx.restore()
+        strokeCtx.fillText(letter, drawX, drawY)
+        strokeCtx.globalCompositeOperation = 'source-in'
+        strokeCtx.strokeText(letter, drawX, drawY)
+        strokeCtx.globalCompositeOperation = 'source-over'
+        strokeCtx.restore()
       }
     }
 
@@ -271,12 +279,12 @@ export default function getFontGlyphs(text: string[], config: Config) {
   }
 
   if (stroke && lineWidth && stroke.strokeType === 2) {
-    ctx.drawImage(strokCanvas, 0, 0)
+    ctx.drawImage(strokeCanvas, 0, 0)
   }
 
   if (shadow) {
-    const cvs = strokCanvas
-    const newCtx = strokCtx
+    const cvs = strokeCanvas
+    const newCtx = strokeCtx
     cvs.width = canvas.width
     cvs.height = canvas.height
     newCtx.shadowBlur = shadow.blur
@@ -293,16 +301,20 @@ export default function getFontGlyphs(text: string[], config: Config) {
     const startY = Math.floor(i / columnNum) * (itemHeight + padding * 2)
     const letter = text[i]
     const letterSize = map.get(letter)
-    if (!letterSize) continue
+    if (!letterSize) {
+      continue
+    }
     const { width, height } = letterSize
-    if (width === 0 || height === 0) continue
+    if (width === 0 || height === 0) {
+      continue
+    }
     const imgData = ctx.getImageData(
       startX,
       startY,
       itemWidth + padding * 2,
       itemHeight + padding * 2,
     )
-    const styleTrimInfo = trimImageData(imgData)
+    const styleTrimInfo = trimTransparentPixels(imgData)
 
     letterSize.width = styleTrimInfo.width
     letterSize.height = styleTrimInfo.height

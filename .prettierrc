@@ -11,7 +11,6 @@
   "arrowParens": "always",
   "quoteProps": "as-needed",
   "bracketSpacing": true,
-  "jsxBracketSameLine": false,
 
   "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
   "importOrderSeparation": true,

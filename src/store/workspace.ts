@@ -42,12 +42,16 @@ class Workspace {
   }
 
   selectProject(id: number): void {
-    if (this.projectList.has(id)) this.activeId = id
+    if (this.projectList.has(id)) {
+      this.activeId = id
+    }
   }
 
   removeProject(id: number): void {
     const list = this.namedList.filter((item) => item.id !== id)
-    if (list.length === 0) return
+    if (list.length === 0) {
+      return
+    }
     this.activeId = list[0].id
     this.projectList.delete(id)
   }

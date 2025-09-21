@@ -1,20 +1,21 @@
 import Button from '@mui/material/Button'
+import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
 import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent, useCallback, useEffect } from 'react'
+import { FunctionComponent, useCallback, useEffect } from 'react'
 import { useWorkspace } from 'src/store/hooks'
 
 interface ButtonNewProps {
-  className?: string
+  sx?: SxProps<Theme>
 }
 
 const ButtonNew: FunctionComponent<ButtonNewProps> = (
   props: ButtonNewProps,
 ) => {
-  const { className } = props
+  const { sx } = props
 
-  const worckSpace = useWorkspace()
-  const { addProject } = worckSpace
+  const workSpace = useWorkspace()
+  const { addProject } = workSpace
 
   const handleNewProject = useCallback(
     (e: { preventDefault(): void }) => {
@@ -34,11 +35,7 @@ const ButtonNew: FunctionComponent<ButtonNewProps> = (
   }, [handleNewProject])
 
   return (
-    <Button
-      className={className}
-      title='New Project (ALT + N)'
-      onClick={handleNewProject}
-    >
+    <Button sx={sx} title='New Project (ALT + N)' onClick={handleNewProject}>
       New
     </Button>
   )

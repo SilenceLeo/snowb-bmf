@@ -1,7 +1,6 @@
-import React, { FunctionComponent } from 'react'
-
-import GridInput from 'src/app/components/GridInput'
+import { FunctionComponent } from 'react'
 import ColorInput from 'src/app/components/ColorInput'
+import GridInput from 'src/app/components/GridInput'
 
 interface FormColorProps {
   color: string

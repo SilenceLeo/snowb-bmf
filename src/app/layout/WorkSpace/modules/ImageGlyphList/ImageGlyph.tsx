@@ -1,15 +1,14 @@
 import DeleteIcon from '@mui/icons-material/Delete'
+import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
-import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
 import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent, useState } from 'react'
 import { GlyphImage } from 'src/store'
 import { useProject } from 'src/store/hooks'
-
-import styles from './ImageGlyph.module.scss'
 
 interface ImageGlyphProps {
   glyph: GlyphImage
@@ -42,12 +41,41 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
   }
 
   return (
-    <Paper variant='outlined' className={styles.root}>
-      <img className={styles.image} src={glyph.src} alt={glyph.fileName} />
-      <Grid container className={styles.actions}>
-        <Grid
-          item
-          container
+    <Paper
+      variant='outlined'
+      sx={{
+        width: 80,
+        height: 80,
+        display: 'flex',
+        position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden',
+        '& img': {
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          pointerEvents: 'none',
+        },
+      }}
+    >
+      <img src={glyph.src} alt={glyph.fileName} />
+      <Stack
+        direction='column'
+        spacing={0}
+        sx={{
+          justifyContent: 'space-between',
+          alignItems: 'stretch',
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+        }}
+      >
+        <Stack
+          direction='row'
           sx={{ justifyContent: 'space-between', alignItems: 'center' }}
         >
           <Checkbox
@@ -63,8 +91,19 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
           >
             <DeleteIcon fontSize='small' />
           </IconButton>
-        </Grid>
-        <Grid item xs component='label' className={styles.inputLabel} container>
+        </Stack>
+        <Box
+          component='label'
+          sx={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            background:
+              'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.8))',
+          }}
+        >
           <InputBase
             fullWidth
             value={isIME ? inputValue : glyph.letter}
@@ -72,9 +111,16 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
             onInput={handleChangeGlyph}
             onCompositionEnd={handleCompositionEnd}
             onCompositionStart={() => setIsIME(true)}
+            slotProps={{
+              input: {
+                sx: {
+                  textAlign: 'center',
+                },
+              },
+            }}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Stack>
     </Paper>
   )
 }

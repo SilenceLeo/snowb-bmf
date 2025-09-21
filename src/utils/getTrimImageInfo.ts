@@ -1,4 +1,4 @@
-import trimImageData, { TrimImageInfo } from './trimImageData'
+import trimTransparentPixels, { TrimImageInfo } from './trimTransparentPixels'
 
 interface TrimInfo extends TrimImageInfo {
   canvas: HTMLCanvasElement
@@ -17,7 +17,7 @@ export default function getTrimImageInfo(
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
   ctx.drawImage(image, 0, 0)
   const imageData = ctx.getImageData(0, 0, width, height)
-  const trimInfo = trimImageData(imageData, threshold)
+  const trimInfo = trimTransparentPixels(imageData, threshold)
   canvas.width = trimInfo.width
   canvas.height = trimInfo.height
   ctx.drawImage(image, trimInfo.trimOffsetLeft, trimInfo.trimOffsetTop)

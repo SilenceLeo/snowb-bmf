@@ -18,15 +18,17 @@ const ProjectTabs: FunctionComponent<unknown> = () => {
     activeId,
   } = workSpace
 
-  const handleChange = (e: unknown, value: number): void => {
+  const handleChange = (_e: unknown, value: number): void => {
     selectProject(value)
   }
 
   const handleRemove = (
-    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    _e: React.MouseEvent<SVGSVGElement, MouseEvent>,
     value?: number,
   ): void => {
-    if (typeof value !== 'undefined') removeProject(value)
+    if (typeof value !== 'undefined') {
+      removeProject(value)
+    }
   }
 
   const handleDoubleClick = (): void => {
@@ -50,8 +52,10 @@ const ProjectTabs: FunctionComponent<unknown> = () => {
       variant='scrollable'
       scrollButtons={false}
       selectionFollowsFocus
-      TabIndicatorProps={{ hidden: true }}
       onDoubleClick={handleDoubleClick}
+      slotProps={{
+        indicator: { hidden: true },
+      }}
     >
       {namedList.map((item) => {
         return (

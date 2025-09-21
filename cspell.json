@@ -1,0 +1,38 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "bmfont",
+    "chnl",
+    "clickaway",
+    "computeds",
+    "debouncer",
+    "fallbackfont",
+    "hhea",
+    "hocs",
+    "kering",
+    "kernings",
+    "Kernings",
+    "KERNINGS",
+    "littera",
+    "Littera",
+    "precached",
+    "precaching",
+    "scalings",
+    "snowbamboo",
+    "VITE",
+    "vmax",
+    "vmin",
+    "xadvance"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "public",
+    ".git",
+    "src/file/conversion/fileTypes/sbf/proto/**/*.js",
+    "src/file/conversion/fileTypes/sbf/proto/**/*.d.ts"
+  ]
+}

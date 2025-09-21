@@ -66,6 +66,11 @@ class GlyphImage extends GlyphBase {
           resolve()
         })
       }
+      image.onerror = () => {
+        console.error(`Failed to load image: ${this.fileName}`)
+        // Resolve even on error to prevent blocking the entire packing process
+        resolve()
+      }
       image.src = this.src
     })
   }

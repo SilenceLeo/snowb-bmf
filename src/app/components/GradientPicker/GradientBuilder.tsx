@@ -1,19 +1,24 @@
-import React, { FunctionComponent, useRef, useState, useEffect } from 'react'
-import Color from 'color'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
+import Color from 'color'
+import React, {
+  FunctionComponent,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
+import Palette from '../Palette'
 import ColorStopsHolder, {
   AddPaletteItem,
   PaletteItem,
 } from './ColorStopsHolder'
-import Palette from '../Palette'
 
-export interface GradientBuilderProps {
-  children?: JSX.Element
+export type GradientBuilderProps = PropsWithChildren<{
   palette: PaletteItem[]
   onAdd: (addPaletteItem: AddPaletteItem) => void
   onUpdate: (palette: PaletteItem[]) => void
-}
+}>
 
 export interface ChildrenProps {
   open: boolean
@@ -26,7 +31,7 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
   props: GradientBuilderProps,
 ) => {
   const { children, palette, onUpdate, onAdd } = props
-  const rootEl: React.MutableRefObject<HTMLDivElement | null> = useRef(null)
+  const rootEl = useRef<HTMLDivElement | null>(null)
   const [oldPalette, setOldPalette] = useState([...palette])
   const [activeId, setActiveId] = useState<number>(0)
   const [activeColor, setActiveColor] = useState<string>('')
@@ -141,17 +146,17 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
           onUpdate={handleUpdate}
           onSelect={(id) => setActiveId(id || 0)}
         />
-        {children
-          ? React.cloneElement(children, {
-              open: !!activeId || isAdd,
-              anchorEl: rootEl.current,
-              color: activeColor,
-              onChange: (color: string) =>
-                handleUpdate({
-                  color,
-                }),
-            })
-          : null}
+        {children &&
+          React.isValidElement<ChildrenProps>(children) &&
+          React.cloneElement(children, {
+            open: !!activeId || isAdd,
+            anchorEl: rootEl.current,
+            color: activeColor,
+            onChange: (color: string) =>
+              handleUpdate({
+                color,
+              }),
+          })}
       </div>
     </ClickAwayListener>
   )

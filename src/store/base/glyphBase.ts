@@ -17,6 +17,8 @@ class GlyphBase {
 
   y = 0
 
+  page = 0
+
   fontWidth = 0
 
   fontHeight = 0
@@ -36,11 +38,14 @@ class GlyphBase {
       height: observable,
       x: observable,
       y: observable,
-      fontWidth: observable,
-      fontHeight: observable,
-      trimOffsetTop: observable,
-      trimOffsetLeft: observable,
-      kerning: observable,
+      page: observable,
+      // Optimization: Set rarely changing size properties as observable.struct
+      fontWidth: observable.struct,
+      fontHeight: observable.struct,
+      trimOffsetTop: observable.struct,
+      trimOffsetLeft: observable.struct,
+      // Optimization: Use shallow observable for kerning to avoid deep tracking
+      kerning: observable.shallow,
       adjustMetric: observable.ref,
       steKerning: action.bound,
     })

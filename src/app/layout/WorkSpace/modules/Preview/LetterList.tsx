@@ -1,9 +1,8 @@
-import clsx from 'clsx'
+import Box from '@mui/material/Box'
 import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import { useProjectUi } from 'src/store/hooks'
 
-import styles from './LetterList.module.scss'
 import { PreviewObject } from './getPreviewCanvas'
 
 interface LetterListProps {
@@ -33,17 +32,26 @@ const LetterList: FunctionComponent<LetterListProps> = (
       {list.map((item, idx) => {
         const key = `${item.letter}${idx}`
         return (
-          <div
+          <Box
             aria-hidden
-            className={clsx(styles.letter, {
-              [styles.select]: item.letter === ui.selectLetter,
-              [styles.next]: item.letter === ui.selectNextLetter,
-            })}
-            style={{
+            sx={{
+              position: 'absolute',
               width: item.width,
               height: item.height,
               left: `${item.x - xOffset}px`,
               top: `${item.y - yOffset + drawYOffset}px`,
+              '&:hover': {
+                background: 'rgba(0, 0, 0, 0.2)',
+                outline: '1px solid #000',
+              },
+              ...(item.letter === ui.selectLetter && {
+                background: 'rgba(0, 0, 0, 0.2)',
+                outline: '1px solid #000',
+              }),
+              ...(item.letter === ui.selectNextLetter && {
+                background: 'rgba(0, 0, 0, 0.1)',
+                outline: '1px dashed #666',
+              }),
             }}
             key={key}
             onClick={(e) => handleSelect(e, item.letter, item.next)}

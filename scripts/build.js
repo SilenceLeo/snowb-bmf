@@ -1,14 +1,54 @@
 #!/usr/bin/env node
-const path = require('path')
-const corssEnv = require('cross-env')
-const getGitRelease = require('./getGitRelease')
+import { spawn } from 'child_process'
+import getGitRelease from './getGitRelease.js'
 
-const bin = path.join(process.cwd(), 'node_modules', '.bin')
-const reactScripts = path.join(bin, 'react-scripts')
 
-async function setSentryRelease() {
-  const release = await getGitRelease()
-  corssEnv([`REACT_APP_SENTRY_RELEASE=${release}`, reactScripts, `build`])
+async function buildWithSentryRelease() {
+  try {
+    const release = await getGitRelease()
+    console.log(`Building with Sentry release: ${release}`)
+
+    // Set environment variables and execute Vite build
+    const env = {
+      ...process.env,
+      VITE_SENTRY_RELEASE: release,
+      REACT_APP_SENTRY_RELEASE: release, // Maintain backward compatibility
+    }
+
+    // Execute TypeScript compilation check
+    console.log('Running TypeScript compilation check...')
+    const tscProcess = spawn('npx', ['tsc', '--noEmit'], {
+      stdio: 'inherit',
+      env,
+      shell: true,
+    })
+
+    tscProcess.on('close', (code) => {
+      if (code !== 0) {
+        console.error('TypeScript compilation failed')
+        process.exit(1)
+      }
+
+      console.log('Running Vite build...')
+      // Execute Vite build
+      const buildProcess = spawn('npx', ['vite', 'build'], {
+        stdio: 'inherit',
+        env,
+        shell: true,
+      })
+
+      buildProcess.on('close', (buildCode) => {
+        if (buildCode !== 0) {
+          console.error('Vite build failed')
+          process.exit(1)
+        }
+        console.log('Build completed successfully')
+      })
+    })
+  } catch (error) {
+    console.error('Failed to get git release:', error)
+    process.exit(1)
+  }
 }
 
-setSentryRelease()
+buildWithSentryRelease()

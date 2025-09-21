@@ -1,4 +1,4 @@
-import { action, observable, makeObservable } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 import use from 'src/utils/use'
 
 class Ui {
@@ -8,9 +8,9 @@ class Ui {
 
   offsetY = 0
 
-  width = 0
+  width = 512
 
-  height = 0
+  height = 512
 
   previewText = 'Hello World!\nHello Snow Bamboo!' // /\r\n|\r|\n/
 

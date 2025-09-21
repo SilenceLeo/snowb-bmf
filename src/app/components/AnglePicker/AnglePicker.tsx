@@ -1,12 +1,11 @@
+import Box from '@mui/material/Box'
 import React, {
-  useState,
-  useRef,
-  useEffect,
   FunctionComponent,
   useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from 'react'
-
-import styles from './AnglePicker.module.css'
 
 export interface AnglePickerProps {
   width?: number
@@ -64,25 +63,38 @@ const AnglePicker: FunctionComponent<AnglePickerProps> = (
   }, [handleMouseMove, handleMouseUp, isDragging])
 
   return (
-    <div
+    <Box
       aria-hidden
-      className={styles.root}
-      ref={rootRef}
-      onMouseDown={handleMouseDown}
-      style={{
+      sx={{
         width: props.width ? `${props.width}px` : '36px',
         height: props.width ? `${props.width}px` : '36px',
+        position: 'relative',
+        cursor: 'crosshair',
+        overflow: 'hidden',
+        borderRadius: '100%',
+        background: '#fff',
       }}
+      ref={rootRef}
+      onMouseDown={handleMouseDown}
     >
-      <div
-        className={styles.point}
-        style={{
+      <Box
+        sx={{
+          width: '6px',
+          height: '6px',
+          borderRadius: '100%',
+          position: 'relative',
+          left: '50%',
+          top: '50%',
+          marginTop: '-2px',
+          background: '#000',
+          pointerEvents: 'none',
+          transformOrigin: '0 50%',
           transform: `rotate(${props.angle || 0}deg) translate(${
             (props.width || 36) / 2 - 8
           }px, 0)`,
         }}
       />
-    </div>
+    </Box>
   )
 }
 

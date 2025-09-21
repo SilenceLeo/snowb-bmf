@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { FillType, FontStyleConfig } from 'src/store'
 
 import FormColor from '../FormColor'

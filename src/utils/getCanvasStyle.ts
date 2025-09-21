@@ -1,13 +1,13 @@
 import getPointOnCircle from './getPointOnCircle'
 
-interface GarentColor {
+interface GradientColor {
   offset: number
   color: string
 }
 
-interface Pradient {
+interface Gradient {
   type: 0 | 1
-  palette: GarentColor[]
+  palette: GradientColor[]
   angle: number
 }
 
@@ -20,7 +20,7 @@ interface PatternTexture {
 interface Config {
   type: number
   color: string
-  gradient: Pradient
+  gradient: Gradient
   patternTexture: PatternTexture
 }
 
@@ -68,10 +68,14 @@ export default function getCanvasStyle(
   }
 
   const { image, repetition, scale } = config.patternTexture
-  if (!image) return 'rgba(0,0,0,0)'
+  if (!image) {
+    return 'rgba(0,0,0,0)'
+  }
 
   const pattern = ctx.createPattern(image, repetition)
-  if (!pattern) return 'rgba(0,0,0,0)'
+  if (!pattern) {
+    return 'rgba(0,0,0,0)'
+  }
   // TODO: Add trim translate and rotate.
   pattern.setTransform(matrix.scale(scale).translate(x, y))
   return pattern

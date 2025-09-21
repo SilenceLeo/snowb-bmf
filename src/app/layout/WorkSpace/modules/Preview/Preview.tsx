@@ -1,23 +1,23 @@
-import React, { FunctionComponent } from 'react'
 import Grid from '@mui/material/Grid'
+import { FunctionComponent } from 'react'
 
 import PreviewCanvas from './PreviewCanvas'
-import PreviewText from './PreviewText'
-import PreviewMertic from './PreviewMertic'
 import PreviewKerning from './PreviewKerning'
+import PreviewMetric from './PreviewMetric'
+import PreviewText from './PreviewText'
 
 const Preview: FunctionComponent<unknown> = () => {
   return (
     <>
       <PreviewCanvas />
       <Grid container alignItems='flex-start'>
-        <Grid item xs={4}>
+        <Grid size={4}>
           <PreviewText />
         </Grid>
-        <Grid item xs={4}>
-          <PreviewMertic />
+        <Grid size={4}>
+          <PreviewMetric />
         </Grid>
-        <Grid item xs={4}>
+        <Grid size={4}>
           <PreviewKerning />
         </Grid>
       </Grid>

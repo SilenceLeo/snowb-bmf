@@ -1,8 +1,7 @@
-import React, { FunctionComponent } from 'react'
 import Input from '@mui/material/Input'
-
-import GridInput from 'src/app/components/GridInput'
+import { FunctionComponent } from 'react'
 import AnglePicker, { AnglePickerProps } from 'src/app/components/AnglePicker'
+import GridInput from 'src/app/components/GridInput'
 
 const FormAngle: FunctionComponent<AnglePickerProps> = (
   props: AnglePickerProps,

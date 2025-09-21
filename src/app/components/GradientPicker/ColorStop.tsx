@@ -1,37 +1,53 @@
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
-import clsx from 'clsx'
+import { SxProps, Theme } from '@mui/material/styles'
 import React, { FunctionComponent } from 'react'
 
-import styles from './ColorStop.module.scss'
-
-interface ColorStopPorps {
-  className?: string
+interface ColorStopProps {
+  sx?: SxProps<Theme>
   left?: string | number
-  top?: string | number
   color: string
   isActive: boolean
   onMouseDown: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
-const ColorStop: FunctionComponent<ColorStopPorps> = (
-  props: ColorStopPorps,
+const ColorStop: FunctionComponent<ColorStopProps> = (
+  props: ColorStopProps,
 ) => {
-  const { left, top, color, isActive, className, ...divProps } = props
+  const { left, color, isActive, sx, ...divProps } = props
   const { bgPixel, palette } = useTheme()
 
   return (
     <Box
-      className={clsx(styles.root, className)}
       sx={{
+        width: '12px',
+        height: '12px',
+        borderStyle: 'solid',
+        borderWidth: '0 1px 1px',
+        position: 'absolute',
+        cursor: 'pointer',
+        marginLeft: '-6px',
+        zIndex: isActive ? 2 : 1,
         ...bgPixel,
         borderColor: palette.primary.main,
         left: left || 0,
-        zIndex: isActive ? 2 : 1,
+        '&:before, &:after': {
+          position: 'absolute',
+          content: '""',
+          width: 0,
+          height: 0,
+          borderStyle: 'solid',
+          left: 0,
+        },
         '&:before': {
+          top: '-6px',
+          left: '-1px',
+          borderWidth: '0 6px 6px 6px',
           borderColor: `transparent transparent ${palette.primary.dark} transparent`,
         },
         '&:after': {
+          top: '-5px',
+          borderWidth: '0 5px 5px 5px',
           borderColor: `transparent transparent ${
             isActive
               ? palette.mode === 'dark'
@@ -40,12 +56,15 @@ const ColorStop: FunctionComponent<ColorStopPorps> = (
               : palette.grey[600]
           } transparent`,
         },
+        ...sx,
       }}
       {...divProps}
     >
       <Box
-        className={styles.color}
         sx={{
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
           backgroundColor: color || 'transparent',
         }}
       />

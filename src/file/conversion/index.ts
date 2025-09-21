@@ -1,9 +1,12 @@
-import conversionList from './types'
-export { encode } from './types/sbf'
+import conversionList from './fileTypes'
+
+export { encode } from './fileTypes/sbf'
 
 function conversion(inputFile: unknown) {
   const conversion = conversionList.find((item) => item.check(inputFile))
-  if (!conversion) throw new Error('unknow file')
+  if (!conversion) {
+    throw new Error('unknown file')
+  }
   return conversion.decode(inputFile)
 }
 

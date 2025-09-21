@@ -1,4 +1,4 @@
-import { action, observable, makeObservable } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 import use from 'src/utils/use'
 
 class Layout {
@@ -14,6 +14,12 @@ class Layout {
 
   fixedSize = false
 
+  page = 1
+
+  packWidth = 512
+
+  packHeight = 512
+
   constructor(layout: Partial<Layout> = {}) {
     makeObservable(this, {
       padding: observable,
@@ -22,12 +28,17 @@ class Layout {
       height: observable,
       auto: observable,
       fixedSize: observable,
+      page: observable,
+      packWidth: observable,
+      packHeight: observable,
       setPadding: action.bound,
       setSpacing: action.bound,
       setWidth: action.bound,
       setHeight: action.bound,
       setAuto: action.bound,
       setFixedSize: action.bound,
+      setPage: action.bound,
+      setPackSize: action.bound,
     })
     this.padding = use.num(layout.padding, 1)
 
@@ -41,6 +52,12 @@ class Layout {
     this.auto = layout.auto === false ? false : true
 
     this.fixedSize = !!layout.fixedSize
+
+    this.page = use.num(layout.page, 1)
+
+    this.packWidth = use.num(layout.packWidth, 512)
+
+    this.packHeight = use.num(layout.packHeight, 512)
   }
 
   setPadding(padding: number): void {
@@ -65,6 +82,16 @@ class Layout {
 
   setFixedSize(fixedSize: boolean): void {
     this.fixedSize = fixedSize
+  }
+
+  setPage(page: number): void {
+    this.page = Math.max(1, Math.floor(page))
+  }
+
+  setPackSize(width: number, height: number): void {
+    if (this.packWidth === width && this.packHeight === height) return
+    this.packWidth = width
+    this.packHeight = height
   }
 }
 

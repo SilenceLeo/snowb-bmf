@@ -1,0 +1,62 @@
+---
+title: 'SnowB BMF: Free & Open-Source Bitmap Font Generator'
+description: 'Create professional, game-ready bitmap fonts with SnowB BMF, the ultimate browser-based generator. Design stunning text effects with real-time previews, advanced styling, and powerful texture packing. Perfect for developers using Unity, Unreal, Godot, Pixi, or Phaser.'
+template: splash
+hero:
+  title: SnowB BMF
+  tagline: 'The Professional Bitmap Font Generator for Modern Game Development. Create, style, and export game-ready fonts—all in your browser.'
+  image:
+    file: ~/assets/interface-overview.png
+  actions:
+    - text: Launch App
+      link: /
+      icon: right-arrow
+    - text: Font Design Guide
+      link: /en/docs/font-design/character-sets/
+      icon: document
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import interfaceOverview from '~/assets/interface-overview.png';
+import { ContainerSection } from 'starlight-theme-black/components'
+
+<ContainerSection>
+<CardGrid >
+	<Card title="Browser-Based & Installation-Free" icon="laptop">
+		No downloads, no installations, no sign-ups required. Launch a professional-grade font creation tool directly in your Chrome or Edge browser.
+	</Card>
+	<Card title="Intuitive & User-Friendly Interface" icon="pen">
+		With a visually-driven interface and real-time previews, font design becomes effortless. Drag-and-drop functionality makes it accessible for both beginners and experts.
+	</Card>
+	<Card title="Real-Time Visual Feedback" icon="magnifier">
+		Instantly see the results of your adjustments. Every change to color, shadow, or stroke is reflected immediately, ensuring a true WYSIWYG editing experience.
+	</Card>
+	<Card title="Privacy & Copyright Protection" icon="approve-check-circle">
+		100% local processing. Your proprietary fonts and project data never leave your machine, guaranteeing both privacy and copyright protection.
+	</Card>
+	<Card title="Empowering Indie Developers & Artists" icon="star">
+		Access professional bitmap font creation tools that were once exclusive to large studios. Now, individual creators can produce high-quality assets with ease.
+	</Card>
+	<Card title="Completely Free & Open-Source" icon="open-book">
+		Avoid expensive software licenses. SnowB BMF is free to use, with transparent, open-source code that fosters community-driven development and trust.
+	</Card>
+</CardGrid>
+
+## Ready to Start?
+
+<CardGrid>
+	<Card title="Launch App" icon="rocket">
+		Jump straight into the app and start creating your first bitmap font.
+
+		[Launch App →](/)
+	</Card>
+	<Card title="Learn the Basics" icon="document">
+		New to bitmap fonts? Get up to speed with our quick start guide.
+
+		[Get Started →](/en/docs/getting-started/overview/)
+	</Card>
+</CardGrid>
+</ContainerSection>
+

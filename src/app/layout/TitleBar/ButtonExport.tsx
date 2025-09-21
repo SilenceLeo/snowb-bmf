@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
 import { observer } from 'mobx-react-lite'
 import React, {
@@ -20,13 +21,13 @@ import { configList, exportFile } from 'src/file/export'
 import { useProject } from 'src/store/hooks'
 
 interface ButtonExportProps {
-  className?: string
+  sx?: SxProps<Theme>
 }
 
 const ButtonExport: FunctionComponent<ButtonExportProps> = (
   props: ButtonExportProps,
 ) => {
-  const { className } = props
+  const { sx } = props
   const project = useProject()
   const { setShowPreview } = project.ui
   const [open, setOpen] = useState(false)
@@ -55,7 +56,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   }
 
   const handleChange = (e: SelectChangeEvent<number>) => {
-    setVal(e.target.value as number)
+    setVal(e.target.value)
   }
 
   const handleSave = useCallback(() => {
@@ -73,11 +74,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
 
   return (
     <>
-      <Button
-        className={className}
-        title='Export BitmapFont (⌘⇧ + S)'
-        onClick={handleOpen}
-      >
+      <Button sx={sx} title='Export BitmapFont (⌘⇧ + S)' onClick={handleOpen}>
         Export
       </Button>
       <Dialog onClose={handleClose} open={open} fullWidth maxWidth='xs'>

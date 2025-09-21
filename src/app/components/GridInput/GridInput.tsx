@@ -1,25 +1,25 @@
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import { SxProps, Theme } from '@mui/material/styles'
 import React, {
-  ReactNode,
+  ElementType,
   FunctionComponent,
   PropsWithChildren,
-  ElementType,
-  CSSProperties,
+  ReactNode,
 } from 'react'
-import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
 
 interface GridInputProps {
   before?: ReactNode | string
   after?: ReactNode
   component?: ElementType
   childrenWidth?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-  style?: CSSProperties
+  sx?: SxProps<Theme>
   children?: ReactNode
 }
 
 const GridInput: FunctionComponent<GridInputProps> = (
   props: PropsWithChildren<GridInputProps>,
-): JSX.Element => {
+): React.JSX.Element => {
   const { before, children, component, after, childrenWidth, ...other } = props
   return (
     <Grid
@@ -31,7 +31,7 @@ const GridInput: FunctionComponent<GridInputProps> = (
       alignItems='center'
       {...other}
     >
-      <Grid item xs={4}>
+      <Grid size={4}>
         {typeof before === 'object' ? (
           before
         ) : (
@@ -40,10 +40,8 @@ const GridInput: FunctionComponent<GridInputProps> = (
           </Typography>
         )}
       </Grid>
-      <Grid item xs={childrenWidth || 5}>
-        {children}
-      </Grid>
-      <Grid item xs>
+      <Grid size={childrenWidth || 6}>{children}</Grid>
+      <Grid size='grow'>
         {typeof after === 'object' ? (
           after
         ) : (

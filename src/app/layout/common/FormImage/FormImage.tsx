@@ -3,7 +3,7 @@ import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
 import { PatternTexture, Repetition } from 'src/store'
 

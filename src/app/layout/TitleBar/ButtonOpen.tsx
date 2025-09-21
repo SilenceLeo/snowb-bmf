@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import { SxProps, Theme } from '@mui/material/styles'
 import * as Sentry from '@sentry/react'
 import { observer } from 'mobx-react-lite'
 import { useSnackbar } from 'notistack'
@@ -8,29 +9,33 @@ import { useWorkspace } from 'src/store/hooks'
 import readFile from 'src/utils/readFile'
 
 interface ButtonOpenProps {
-  className?: string
+  sx?: SxProps<Theme>
 }
 
 const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
   props: ButtonOpenProps,
 ) => {
-  const { className } = props
+  const { sx } = props
   const { enqueueSnackbar } = useSnackbar()
 
-  const worckSpace = useWorkspace()
+  const workSpace = useWorkspace()
   const labelRef = useRef<HTMLLabelElement>(null)
   const [inputKey, changeInputKey] = useState(Date.now())
-  const { addProject } = worckSpace
+  const { addProject } = workSpace
 
   const handleLoad = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (!e.target?.files || !e.target.files[0]) return
+    if (!e.target?.files?.[0]) {
+      return
+    }
     const file = e.target.files[0]
     const isText = /\.ltr$/.test(file.name)
 
     readFile(file, isText).then((buffer) => {
       try {
         const project = conversion(buffer)
-        if (!project.name) project.name = file.name
+        if (!project.name) {
+          project.name = file.name
+        }
         if (addProject(project)) {
           enqueueSnackbar(
             'The project already exists and has been switched to the current tab.',
@@ -48,7 +53,7 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
 
   return (
     <Button
-      className={className}
+      sx={sx}
       title='Open Project (⌘ + O)'
       component='label'
       ref={labelRef}

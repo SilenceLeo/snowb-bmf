@@ -39,11 +39,14 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
-    if (glyph)
+    if (glyph) {
       glyph.steKerning(ui.selectNextLetter, Number(e.target.value) - offset)
+    }
   }
 
-  if (!glyph || !ui.selectNextLetter) return null
+  if (!glyph || !ui.selectNextLetter) {
+    return null
+  }
 
   return (
     <>

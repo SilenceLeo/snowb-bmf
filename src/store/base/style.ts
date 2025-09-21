@@ -1,9 +1,9 @@
-import { action, observable, makeObservable } from 'mobx'
+import { action, makeObservable, observable } from 'mobx'
 
-import Font from './font'
 import Fill from './fill'
-import Stroke from './stroke'
+import Font from './font'
 import Shadow from './shadow'
+import Stroke from './stroke'
 
 class Style {
   readonly font: Font

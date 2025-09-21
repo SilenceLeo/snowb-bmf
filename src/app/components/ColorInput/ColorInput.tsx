@@ -1,10 +1,9 @@
-import React, { FunctionComponent, useRef, useState } from 'react'
+import Box from '@mui/material/Box'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { useTheme } from '@mui/material/styles'
+import { FunctionComponent, useRef, useState } from 'react'
 
 import WrappedSketchPicker from '../WrappedSketchPicker'
-
-import styles from './ColorInput.module.css'
 
 export interface ColorInputProps {
   color?: string
@@ -24,18 +23,21 @@ const ColorInput: FunctionComponent<ColorInputProps> = (
       mouseEvent='onMouseDown'
       onClickAway={() => setOpen(false)}
     >
-      <div
+      <Box
         aria-hidden
-        className={styles.swatch}
-        style={{
+        sx={{
+          display: 'inline-block',
+          cursor: 'pointer',
           ...bgPixel,
         }}
         ref={anchorEl}
       >
-        <div
+        <Box
           aria-hidden
-          className={styles.color}
-          style={{
+          sx={{
+            width: '46px',
+            height: '24px',
+            border: '5px solid',
             borderColor: palette.primary.main,
             backgroundColor: props.color,
           }}
@@ -47,7 +49,7 @@ const ColorInput: FunctionComponent<ColorInputProps> = (
           color={color || '#000000'}
           onChange={onChange}
         />
-      </div>
+      </Box>
     </ClickAwayListener>
   )
 }

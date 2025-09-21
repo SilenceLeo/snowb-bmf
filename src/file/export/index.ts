@@ -1,24 +1,25 @@
+import binary from './fileTypes/binary'
+import text from './fileTypes/text'
+import xml from './fileTypes/xml'
 import { ConfigItem } from './type'
-import text from './types/text'
-import xml from './types/xml'
 
-const list = [text, xml]
+const list = [text, xml, binary]
 
 export const configList: ConfigItem[] = []
 
-list.forEach(({ type, exts, getString }) => {
+list.forEach(({ type, exts, getContent }) => {
   exts.forEach((ext) => {
     configList.push({
       id: type + ext,
       ext,
       type,
-      getString,
+      getContent,
     })
   })
 })
 
-export * from './type'
+export { default as exportFile } from './exportFile'
 export * from './toBmfInfo'
 export { default as toBmfInfo } from './toBmfInfo'
-export { default as exportFile } from './exportFile'
+export * from './type'
 export default configList

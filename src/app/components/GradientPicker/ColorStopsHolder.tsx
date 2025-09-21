@@ -1,16 +1,14 @@
+import Box from '@mui/material/Box'
+import { SxProps, Theme } from '@mui/material/styles'
 import React, {
   FunctionComponent,
   useCallback,
-  useRef,
-  MutableRefObject,
-  useState,
   useEffect,
+  useRef,
+  useState,
 } from 'react'
-import clsx from 'clsx'
 
 import ColorStop from './ColorStop'
-
-import styles from './ColorStopsHolder.module.css'
 
 export interface AddPaletteItem {
   offset: number
@@ -24,7 +22,7 @@ export interface PaletteItem extends AddPaletteItem {
 }
 
 interface ColorStopsHolderProps {
-  className?: string
+  sx?: SxProps<Theme>
   palette: PaletteItem[]
   activeId?: number
   onAdd(offset: number): void
@@ -35,11 +33,11 @@ interface ColorStopsHolderProps {
 const ColorStopsHolder: FunctionComponent<ColorStopsHolderProps> = (
   props: ColorStopsHolderProps,
 ) => {
-  const { className, palette, activeId, onAdd, onUpdate, onSelect } = props
+  const { sx, palette, activeId, onAdd, onUpdate, onSelect } = props
   const [width, setWidth] = useState(0)
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0, offset: 0 })
   const [isDragging, setIsDragging] = useState(false)
-  const rootRef: MutableRefObject<HTMLDivElement | null> = useRef(null)
+  const rootRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (rootRef.current) {
@@ -132,10 +130,16 @@ const ColorStopsHolder: FunctionComponent<ColorStopsHolderProps> = (
   }, [handleMouseMove, handleMouseUp, isDragging])
 
   return (
-    <div
+    <Box
       aria-hidden
       ref={rootRef}
-      className={clsx(styles.root, className)}
+      sx={{
+        width: '100%',
+        height: '17px',
+        position: 'relative',
+        cursor: 'crosshair',
+        ...sx,
+      }}
       onMouseDown={handleAddPalette}
     >
       {palette.map((paletteItem) => (
@@ -147,7 +151,7 @@ const ColorStopsHolder: FunctionComponent<ColorStopsHolderProps> = (
           onMouseDown={(e) => handleMouseDown(e, paletteItem)}
         />
       ))}
-    </div>
+    </Box>
   )
 }
 

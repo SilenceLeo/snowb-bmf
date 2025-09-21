@@ -20,9 +20,7 @@ export interface GradientColorOption extends GradientColor {
 
 class Gradient {
   type: GradientType = 0
-
   angle: number
-
   palette: GradientPaletteItem[] = []
 
   constructor(gradient: Partial<Gradient> = {}) {
@@ -58,7 +56,9 @@ class Gradient {
   }
 
   get nextId(): number {
-    if (this.ids.length === 0) return 1
+    if (this.ids.length === 0) {
+      return 1
+    }
     return Math.max(...this.ids) + 1
   }
 

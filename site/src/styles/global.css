@@ -1,0 +1,15 @@
+@layer base, starlight, theme, components, utilities, black, website;
+
+@import '@astrojs/starlight-tailwind';
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@layer website {
+  .sl-link-button.minimal {
+    padding-inline: 0.9375rem 1.25rem;
+    backdrop-filter: blur(8px);
+  }
+  .markdown-wrapper {
+    position: relative;
+  }
+}

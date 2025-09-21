@@ -1,19 +1,26 @@
-import { FunctionComponent } from 'react'
 import Box from '@mui/material/Box'
+import { FunctionComponent } from 'react'
 
+import ControllerBar from './modules/ControllerBar'
+import ImageGlyphList from './modules/ImageGlyphList'
 import MainView from './modules/MainView'
 import ProjectTabs from './modules/ProjectTabs'
-import ControlerBar from './modules/ControlerBar'
-import ImageGlyphList from './modules/ImageGlyphList'
-
-import styles from './WorkSpace.module.css'
 
 const WorkSpace: FunctionComponent<unknown> = () => {
   return (
-    <Box className={styles.root}>
+    <Box
+      sx={{
+        position: 'relative',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        width: 0,
+      }}
+    >
       <ProjectTabs />
       <MainView />
-      <ControlerBar />
+      <ControllerBar />
       <ImageGlyphList />
     </Box>
   )
