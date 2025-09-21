@@ -18,7 +18,7 @@
     "find-unused": "node scripts/find-unused-files.js",
     "find-unused:cleanup": "node scripts/find-unused-files.js --cleanup",
     "find-unused:dry-run": "node scripts/find-unused-files.js --cleanup --dry-run",
-    "predeploy": "sentry-cli login && node scripts/build.js",
+    "predeploy": "sentry-cli login && yarn build:all",
     "deploy": "gh-pages -d build",
     "postdeploy": "node scripts/sentry.js",
     "prepare": "husky",
