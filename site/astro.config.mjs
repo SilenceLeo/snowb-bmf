@@ -23,27 +23,39 @@ export default defineConfig({
     starlight({
       title: 'SnowB BMF',
       defaultLocale: 'en',
+      favicon: '/favicon.ico',
       customCss: ['./src/styles/global.css'],
+      head: [
+        {
+          tag: 'script',
+          attrs: {
+            src: 'https://www.googletagmanager.com/gtag/js?id=G-8KVLZM97BB',
+            defer: true,
+            async: true,
+          },
+        },
+        {
+          tag: 'script',
+          content:
+            'window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config", "G-8KVLZM97BB")',
+        },
+      ],
       plugins: [
         starlightThemeBlack({
           navLinks: [
             {
-              // optional
               label: 'App',
               link: 'https://snowb.org',
             },
             {
-              // optional
               label: 'Home',
               link: '/',
             },
             {
-              // optional
               label: 'Docs',
-              link: '/docs',
+              link: '/docs/',
             },
           ],
-          //optional
           footerText: '',
         }),
       ],
@@ -63,9 +75,7 @@ export default defineConfig({
         },
       ],
       components: {
-        // Header: './src/components/CustomHeader.astro',
         Hero: './src/components/Hero.astro',
-        // ContentPanel: '@astrojs/starlight/components/ContentPanel.astro',
       },
       sidebar: [
         {

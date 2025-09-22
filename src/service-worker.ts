@@ -22,9 +22,8 @@ clientsClaim()
 // even if you decide not to use precaching. See https://cra.link/PWA
 precacheAndRoute(self.__WB_MANIFEST)
 
-// Set up App Shell-style routing, so that all navigation requests
-// are fulfilled with your index.html shell. Learn more at
-// https://developers.google.com/web/fundamentals/architecture/app-shell
+// Set up App Shell-style routing for React app routes only
+// This excludes static pages managed by other programs
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$')
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
@@ -39,13 +38,20 @@ registerRoute(
       return false
     }
 
+    // Skip static pages - only handle root and React app routes
+    // Allow other static pages (e.g., /en/, /docs/, etc.) to be served normally
+    if (url.pathname !== '/' && !url.pathname.startsWith('/?')) {
+      // If this is a static page path, let it pass through
+      return false
+    }
+
     // If this looks like a URL for a resource, because it contains
     // a file extension, skip.
     if (url.pathname.match(fileExtensionRegexp)) {
       return false
     }
 
-    // Return true to signal that we want to use the handler.
+    // Only handle root path and query parameters for React app
     return true
   },
   createHandlerBoundToURL(`${import.meta.env.BASE_URL}index.html`),

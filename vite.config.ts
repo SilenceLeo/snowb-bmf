@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 import { resolve } from 'path'
 
 /// <reference types="vitest" />
@@ -10,6 +11,38 @@ export default defineConfig(({}) => ({
     react({
       // Enable Fast Refresh
       jsxImportSource: '@emotion/react',
+    }),
+    VitePWA({
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'service-worker.ts',
+      injectRegister: false,
+      manifest: {
+        short_name: 'SnowB Bitmap Font',
+        name: 'Snow Bamboo BitmapFont',
+        description: 'Snow Bamboo BitmapFont Editor Online.',
+        icons: [
+          {
+            src: 'favicon.ico',
+            sizes: '128x128 64x64 32x32 24x24 16x16',
+            type: 'image/x-icon'
+          },
+          {
+            src: 'logo192.png',
+            type: 'image/png',
+            sizes: '192x192'
+          },
+          {
+            src: 'logo512.png',
+            type: 'image/png',
+            sizes: '512x512'
+          }
+        ],
+        start_url: '.',
+        display: 'fullscreen',
+        theme_color: '#1e1e1e',
+        background_color: '#1e1e1e'
+      }
     }),
   ],
   
