@@ -62,10 +62,12 @@ export default defineConfig({
       locales: {
         en: {
           label: 'English',
+          lang: 'en', // lang 是 root 语言必须的
         },
-        // 'zh-cn': {
-        //   label: '简体中文',
-        // },
+        'zh-cn': {
+          label: '简体中文',
+          lang: 'zh-CN',
+        },
       },
       social: [
         {
@@ -80,61 +82,154 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Getting Started',
+          translations: {
+            'zh-CN': '快速开始',
+          },
           items: [
-            { label: 'Overview', slug: 'docs/getting-started/overview' },
+            {
+              label: 'Overview',
+              translations: {
+                'zh-CN': '概述',
+              },
+              slug: 'docs/getting-started/overview',
+            },
             {
               label: 'Interface Guide',
+              translations: {
+                'zh-CN': '界面指南',
+              },
               slug: 'docs/getting-started/interface-guide',
             },
             {
               label: 'Workflow Guide',
+              translations: {
+                'zh-CN': '工作流指南',
+              },
               slug: 'docs/getting-started/workflow-guide',
             },
           ],
         },
         {
           label: 'Font Design',
+          translations: {
+            'zh-CN': '字体设计',
+          },
           items: [
             {
               label: 'Character Sets',
+              translations: {
+                'zh-CN': '字符集',
+              },
               slug: 'docs/font-design/character-sets',
             },
-            { label: 'Font Import', slug: 'docs/font-design/font-import' },
-            { label: 'Sharp', slug: 'docs/font-design/sharp' },
-            { label: 'Font Size', slug: 'docs/font-design/font-size' },
-            { label: 'Image Glyphs', slug: 'docs/font-design/image-glyphs' },
+            {
+              label: 'Font Import',
+              translations: {
+                'zh-CN': '导入字体',
+              },
+              slug: 'docs/font-design/font-import',
+            },
+            {
+              label: 'Sharp',
+              translations: {
+                'zh-CN': '锐化',
+              },
+              slug: 'docs/font-design/sharp',
+            },
+            {
+              label: 'Font Size',
+              translations: {
+                'zh-CN': '字号',
+              },
+              slug: 'docs/font-design/font-size',
+            },
+            {
+              label: 'Image Glyphs',
+              translations: {
+                'zh-CN': '图片字形',
+              },
+              slug: 'docs/font-design/image-glyphs',
+            },
             {
               label: 'Layout Settings',
+              translations: {
+                'zh-CN': '布局设置',
+              },
               slug: 'docs/font-design/layout-settings',
             },
             {
               label: 'Texture Packing',
+              translations: {
+                'zh-CN': '纹理打包',
+              },
               slug: 'docs/font-design/texture-packing',
             },
-            { label: 'Glyph Metrics', slug: 'docs/font-design/glyph-metrics' },
-            { label: 'Fill Styles', slug: 'docs/font-design/fill-styles' },
-            { label: 'Stroke Styles', slug: 'docs/font-design/stroke-styles' },
+            {
+              label: 'Glyph Metrics',
+              translations: {
+                'zh-CN': '字形度量',
+              },
+              slug: 'docs/font-design/glyph-metrics',
+            },
+            {
+              label: 'Fill Styles',
+              translations: {
+                'zh-CN': '填充样式',
+              },
+              slug: 'docs/font-design/fill-styles',
+            },
+            {
+              label: 'Stroke Styles',
+              translations: {
+                'zh-CN': '描边样式',
+              },
+              slug: 'docs/font-design/stroke-styles',
+            },
             {
               label: 'Shadow Effects',
+              translations: {
+                'zh-CN': '阴影效果',
+              },
               slug: 'docs/font-design/shadow-effects',
             },
-            { label: 'Kerning Pairs', slug: 'docs/font-design/kerning-pairs' },
+            {
+              label: 'Kerning Pairs',
+              translations: {
+                'zh-CN': '字偶距',
+              },
+              slug: 'docs/font-design/kerning-pairs',
+            },
           ],
         },
         {
           label: 'Project Management',
+          translations: {
+            'zh-CN': '项目管理',
+          },
           items: [
             {
               label: 'Project Operations',
+              translations: {
+                'zh-CN': '项目操作',
+              },
               slug: 'docs/project-management/project-operations',
             },
             {
               label: 'Export Formats',
+              translations: {
+                'zh-CN': '导出BMF',
+              },
               slug: 'docs/project-management/export-formats',
             },
           ],
         },
-        { label: 'FAQ', slug: 'docs/faq' },
+        {
+          label: 'FAQ',
+          translations: {
+            'zh-CN': '常见问题',
+          },
+          slug: 'docs/faq',
+        },
       ],
     }),
   ],

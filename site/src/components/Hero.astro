@@ -1,12 +1,7 @@
 ---
 import { Image } from 'astro:assets'
-// site/node_modules/@astrojs/starlight/src/constants
 import { PAGE_TITLE_ID } from '../constants'
-// import { PAGE_TITLE_ID } from 'starlight-theme-black/src/constants.ts'
-// site/node_modules/@astrojs/starlight/user-components/LinkButton.astro
-// import LinkButton from '../../node_modules/@astrojs/starlight/user-components/LinkButton.astro';
 import { LinkButton } from '@astrojs/starlight/components'
-// import ContentPanel from '../../node_modules/@astrojs/starlight/components/ContentPanel.astro'
 
 import video from '../assets/background.mp4'
 import background from '../assets/background.png'
@@ -173,7 +168,7 @@ if (image) {
     }
 
     .copy > * {
-      max-width: calc(8 / 12 * 100%);
+      max-width: 1000px;
     }
 
     h1 {

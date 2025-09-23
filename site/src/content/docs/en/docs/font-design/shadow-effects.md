@@ -24,7 +24,6 @@ Fine-tune your shadow's appearance with these settings:
 
 #### Blur Radius
 - **Description**: Softens the shadow's edges. A higher value creates a more diffused, softer look, while a value of `0` results in a sharp, crisp shadow.
-- **Range**: `0` to any positive number.
 - **Default**: `1px`
 
 #### Shadow Color

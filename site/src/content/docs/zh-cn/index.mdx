@@ -1,0 +1,61 @@
+---
+title: 'SnowB BMF: 免费开源的位图字体生成器'
+description: '使用 SnowB BMF 创建专业的、游戏级的位图字体，这是一款终极的基于浏览器的生成器。通过实时预览、高级样式和强大的纹理打包功能，设计出令人惊叹的文本效果。非常适合使用 Unity、Unreal、Godot、Pixi 或 Phaser 的开发者。'
+template: splash
+hero:
+  title: SnowB BMF
+  tagline: '为现代游戏开发量身打造的专业位图字体生成器。在浏览器中即可创建、设计和导出游戏级字体。'
+  image:
+    file: ~/assets/interface-overview.png
+  actions:
+    - text: 启动应用
+      link: /
+      icon: right-arrow
+    - text: 字体设计指南
+      link: /zh-cn/docs/font-design/character-sets/
+      icon: document
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import interfaceOverview from '~/assets/interface-overview.png';
+import { ContainerSection } from 'starlight-theme-black/components'
+
+<ContainerSection>
+<CardGrid >
+	<Card title="基于浏览器 & 免安装" icon="laptop">
+		无需下载、无需安装、无需注册。直接在您的 Chrome 或 Edge 浏览器中启动专业级字体创建工具。
+	</Card>
+	<Card title="直观易用的界面" icon="pen">
+		凭借可视化驱动的界面和实时预览，字体设计变得毫不费力。拖放功能使其对初学者和专家都很容易上手。
+	</Card>
+	<Card title="实时视觉反馈" icon="magnifier">
+		即时查看您的调整结果。对颜色、阴影或描边的每一次更改都会立即反映出来，确保真正的所见即所得编辑体验。
+	</Card>
+	<Card title="隐私与版权保护" icon="approve-check-circle">
+		100% 本地处理。您的专有字体和项目数据永远不会离开您的机器，保证了隐私和版权保护。
+	</Card>
+	<Card title="赋能独立开发者和艺术家" icon="star">
+		获取曾经为大型工作室专有的专业位图字体创建工具。现在，个人创作者可以轻松制作高质量的资产。
+	</Card>
+	<Card title="完全免费和开源" icon="open-book">
+		避免昂贵的软件许可证。SnowB BMF 是免费使用的，其透明的开源代码促进了社区驱动的开发和信任。
+	</Card>
+</CardGrid>
+
+## 准备好开始了吗？
+
+<CardGrid>
+	<Card title="启动应用" icon="rocket">
+		直接进入应用，开始创建您的第一个位图字体。
+
+		[启动应用 →](/)
+	</Card>
+	<Card title="学习基础知识" icon="document">
+		不熟悉位图字体？通过我们的快速入门指南快速上手。
+
+		[开始学习 →](/zh-cn/docs/getting-started/overview/)
+	</Card>
+</CardGrid>
+</ContainerSection>

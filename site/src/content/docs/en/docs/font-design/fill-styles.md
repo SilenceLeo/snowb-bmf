@@ -50,7 +50,7 @@ Fill your characters with a custom image or texture to create truly unique and e
 
 **Key Features:**
 
-- **Easy Image Upload**: Drag and drop any standard image file to use it as a texture. A 96×96px thumbnail will show you a preview.
+- **Easy Image Upload**: Drag and drop any standard image file to use it as a texture. A thumbnail will show you a preview.
 - **Scale Control**: Enlarge or shrink the pattern to get the perfect texture density, with precise adjustments as small as 0.01.
 - **Repetition Modes**: Control how the texture tiles within your characters:
   - **`repeat`**: Tiles the pattern seamlessly in all directions.

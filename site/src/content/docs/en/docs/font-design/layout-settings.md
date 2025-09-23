@@ -16,7 +16,6 @@ The layout configuration determines the spatial organization of glyphs within th
 ## Padding
 
 **Default**: 1 pixel
-**Range**: 0+ pixels
 
 Padding adds a transparent border around each glyph in the texture atlas. This is crucial for preventing visual artifacts, especially when fonts are scaled or filtered.
 
@@ -41,7 +40,6 @@ Padding = 2: Extra buffer for high-quality rendering.
 ## Spacing
 
 **Default**: 1 pixel
-**Range**: 0+ pixels
 
 Spacing defines the gap between the bounding boxes of adjacent glyphs in the texture atlas. It helps optimize the packing algorithm.
 
@@ -64,7 +62,6 @@ Padding and Spacing work together to separate glyphs:
 ## Pages
 
 **Default**: 1 page
-**Range**: 1+ pages
 
 Determines the number of texture atlas images generated. If all glyphs don't fit on a single texture, they are automatically distributed across multiple pages.
 

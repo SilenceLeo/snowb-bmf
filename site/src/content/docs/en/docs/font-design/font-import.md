@@ -58,8 +58,6 @@ The Sharp feature intelligently adjusts the vector paths of each glyph to align 
 - **Path Optimization**: Adjusts control points to create cleaner curves and lines.
 - **Clarity Enhancement**: Reduces anti-aliasing artifacts, resulting in crisper text at small font sizes.
 
-The formula is: `snapped_coordinate = original * (1 - strength) + strength * round(original)`
-
 ### Recommended Settings
 
 - **0%**: No snapping. The original, unaltered glyph shape.
