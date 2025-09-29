@@ -1,6 +1,48 @@
 ---
 title: 位图字体工作流指南
 description: 掌握使用 SnowB BMF 创建高质量、游戏可用的位图字体的分步工作流。学习如何高效地配置、设计和导出字体。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "位图字体工作流指南"
+  "description": "掌握使用 SnowB BMF 创建高质量、游戏可用的位图字体的分步工作流。学习如何高效地配置、设计和导出字体。"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "基于浏览器的位图字体生成器"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "keywords": ["位图字体工作流", "字体创建流程", "SnowB BMF 指南", "游戏字体开发", "纹理图集创建", "字体导出教程"]
+  "articleSection": "Documentation"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "游戏开发者, UI 设计师, 字体艺术家"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何使用 SnowB BMF 创建位图字体"
+    "description": "从设置到导出创建专业位图字体的完整工作流程"
+    "totalTime": "PT15M"
+    "step":
+      - "@type": "HowToStep"
+        "name": "加载字体"
+        "text": "点击\"添加字体文件\"并选择您的字体文件（.ttf、.otf、.woff）"
+      - "@type": "HowToStep"
+        "name": "配置字体基础"
+        "text": "设置字体大小、行高和锐化设置以获得最佳渲染效果"
+      - "@type": "HowToStep"
+        "name": "优化纹理布局"
+        "text": "配置内边距、间距、自动打包和纹理尺寸"
+      - "@type": "HowToStep"
+        "name": "自定义视觉样式"
+        "text": "应用填充颜色、描边和阴影效果，并进行实时预览"
+      - "@type": "HowToStep"
+        "name": "导出"
+        "text": "选择格式（.txt 或 .xml）并下载字体描述文件和纹理图集"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "inLanguage": "zh-CN"
 ---
 
 本指南概述了在 SnowB BMF 中创建专业位图字体的完整工作流程，从初始设置到最终导出。请遵循以下步骤，为您的项目生成优化的高质量资源。

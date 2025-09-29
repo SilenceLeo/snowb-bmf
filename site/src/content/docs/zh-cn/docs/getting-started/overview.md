@@ -1,6 +1,35 @@
 ---
 title: "SnowB BMF：一款实用的在线位图字体生成器"
 description: "一款免费、易于使用的在线工具，用于为游戏、应用和网页开发创建、自定义和导出位图字体。无需安装。"
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "SnowB BMF：一款实用的在线位图字体生成器"
+  "description": "SnowB BMF 完整概述和入门指南，一款为游戏开发者、应用创作者和设计师提供的免费网页版位图字体生成器。"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "基于浏览器的游戏和应用位图字体生成器"
+    "applicationCategory": "DesignApplication"
+    "operatingSystem": "Web Browser"
+    "url": "https://snowb.org"
+  "articleSection": "Getting Started"
+  "keywords": ["位图字体生成器", "字体创建工具", "游戏开发字体", "纹理图集", "网页字体工具", "Unity字体", "Godot字体", "字体设计教程"]
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["游戏开发者", "应用开发者", "嵌入式系统开发者", "网页开发者", "设计师"]
+  "teaches": ["位图字体创建", "字体定制", "纹理图集生成", "字体导出格式", "字体样式技术"]
+  "learningResourceType": "概述指南"
+  "educationalLevel": "初级到中级"
+  "inLanguage": "zh-CN"
+  "isPartOf":
+    "@type": "TechArticle"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org/docs/"
 ---
 
 **SnowB BMF** 是一款实用的、基于网页的位图字体创建工具。它专为游戏开发者、应用创作者和设计师设计，满足他们快速、可靠地生成字体纹理图集的需求。

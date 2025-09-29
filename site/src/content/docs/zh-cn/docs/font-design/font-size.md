@@ -1,6 +1,42 @@
 ---
 title: 字体大小
 description: 了解如何设置位图字体的字体大小，及其对字形质量、纹理图集尺寸和性能的关键影响。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "在 SnowB BMF 位图字体生成器中配置字体大小"
+  "description": "学习如何为位图字体设置字体大小，并了解其对字形质量、纹理大小和 SnowB BMF 性能的影响。"
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "字体大小配置"
+    "description": "定义位图字体生成中字形像素渲染分辨率的字体大小设置"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何在 SnowB BMF 中配置字体大小"
+    "description": "设置字体大小以获得最佳位图字体质量和性能的分步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "访问字体配置"
+        "text": "在 SnowB BMF 中打开字体配置面板"
+      - "@type": "HowToStep"
+        "name": "设置字体大小"
+        "text": "以像素为单位配置字体大小（默认：72px，范围：1px 及以上）"
+      - "@type": "HowToStep"
+        "name": "考虑质量与性能"
+        "text": "平衡字形质量与纹理图集大小和内存使用"
+  "keywords": ["位图字体", "字体大小", "字体配置", "字形质量", "纹理图集", "字体设计", "SnowB BMF", "游戏开发"]
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "inLanguage": "zh-CN"
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["游戏开发者", "字体设计师", "UI开发者"]
 ---
 
 字体大小是位图字体项目中的一个关键设置。它以像素为单位定义了字形的渲染分辨率，并直接影响视觉质量、纹理图集尺寸和内存使用。

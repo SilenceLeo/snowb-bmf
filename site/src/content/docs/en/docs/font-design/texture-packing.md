@@ -1,6 +1,39 @@
 ---
 title: Texture Packing Optimization
 description: Learn how to efficiently pack glyphs into a texture atlas using advanced bin packing algorithms for optimal font rendering and memory usage.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Texture Packing Optimization in SnowB BMF"
+  "description": "Learn how to efficiently pack glyphs into a texture atlas using advanced bin packing algorithms for optimal font rendering and memory usage."
+  "keywords": ["texture packing", "texture atlas", "bin packing", "glyph optimization", "bitmap font", "font rendering", "memory optimization", "GPU performance", "guillotine algorithm"]
+  "about":
+    "@type": "Thing"
+    "name": "Texture Atlas Generation"
+    "description": "The process of efficiently arranging font glyphs into a single texture for optimal rendering performance"
+  "mainEntity":
+    "@type": "SoftwareFeature"
+    "name": "SnowB BMF Texture Packing"
+    "description": "Advanced texture packing system with auto and fixed size modes for bitmap font generation"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Game Developers"
+    "name": "Game developers and font designers using bitmap fonts"
+  "learningResourceType": "Technical Documentation"
+  "educationalLevel": "Intermediate"
+  "teaches": ["Texture atlas optimization", "Bin packing algorithms", "GPU performance optimization", "Memory usage optimization"]
 ---
 
 Texture packing is a critical step in font asset creation, where glyphs are efficiently arranged into a single image file known as a texture atlas. SnowB BMF leverages advanced bin packing algorithms to automate this process, ensuring your font glyphs are organized compactly to save memory and improve rendering performance.

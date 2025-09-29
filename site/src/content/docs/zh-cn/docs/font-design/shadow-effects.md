@@ -1,6 +1,57 @@
 ---
 title: 阴影效果
 description: 学习如何为位图字体创建和自定义专业的投影效果。通过调整偏移、模糊和颜色，优化字体外观，增强文本的视觉吸引力。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "位图字体设计中的阴影效果"
+  "description": "使用 SnowB BMF 为位图字体创建和自定义专业投影和文本效果的全面指南。学习阴影参数、样式和最佳实践。"
+  "keywords": ["阴影效果", "投影", "位图字体", "字体设计", "文本效果", "SnowB BMF", "字体样式", "视觉效果"]
+  "about":
+    "@type": "Thing"
+    "name": "阴影效果"
+    "description": "通过阴影为位图字体增加深度和层次的视觉效果"
+  "mentions":
+    - "@type": "SoftwareApplication"
+      "name": "SnowB BMF"
+      "description": "基于浏览器的位图字体生成器"
+      "url": "https://snowb.org"
+    - "@type": "Thing"
+      "name": "投影"
+      "description": "用于提高文本可读性的经典阴影效果"
+    - "@type": "Thing"
+      "name": "光晕效果"
+      "description": "文本周围的柔和发光光环效果"
+    - "@type": "Thing"
+      "name": "长阴影"
+      "description": "戏剧性的投射阴影效果"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "字体设计师、游戏开发者、UI/UX 设计师"
+  "genre": "技术文档"
+  "inLanguage": "zh-CN"
+  "isAccessibleForFree": true
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何为位图字体创建阴影效果"
+    "description": "创建专业阴影效果的逐步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "启用阴影效果"
+        "text": "使用阴影面板开关切换阴影的开启或关闭"
+      - "@type": "HowToStep"
+        "name": "调整偏移参数"
+        "text": "设置水平和垂直偏移值来定位阴影"
+      - "@type": "HowToStep"
+        "name": "配置模糊半径"
+        "text": "调整模糊半径来控制阴影的柔和度和扩散"
+      - "@type": "HowToStep"
+        "name": "选择阴影颜色"
+        "text": "使用颜色选择器选择阴影颜色和不透明度"
 ---
 
 阴影效果为您的位图字体增添深度和视觉层次，使其更加突出。SnowB BMF 提供强大的阴影控件，可以创建从微妙的投影到引人注目的视觉效果，从而增强可读性和美感。

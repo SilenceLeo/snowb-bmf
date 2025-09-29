@@ -1,6 +1,35 @@
 ---
 title: "SnowB BMF: A Practical Online Bitmap Font Generator"
 description: "A free, easy-to-use online tool for creating, customizing, and exporting bitmap fonts for games, apps, and web development. No installation required."
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "SnowB BMF: A Practical Online Bitmap Font Generator"
+  "description": "Complete overview and getting started guide for SnowB BMF, a free web-based bitmap font generator for game developers, app creators, and designers."
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "Browser-based bitmap font generator for games and applications"
+    "applicationCategory": "DesignApplication"
+    "operatingSystem": "Web Browser"
+    "url": "https://snowb.org"
+  "articleSection": "Getting Started"
+  "keywords": ["bitmap font generator", "font creation tool", "game development fonts", "texture atlas", "web-based font tool", "Unity fonts", "Godot fonts", "font design tutorial"]
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["Game Developers", "App Developers", "Embedded System Developers", "Web Developers", "Designers"]
+  "teaches": ["bitmap font creation", "font customization", "texture atlas generation", "font export formats", "font styling techniques"]
+  "learningResourceType": "Overview Guide"
+  "educationalLevel": "Beginner to Intermediate"
+  "inLanguage": "en-US"
+  "isPartOf":
+    "@type": "TechArticle"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org/docs/"
 ---
 
 **SnowB BMF** is a practical, web-based tool for creating bitmap fonts. It's designed for game developers, app creators, and designers who need a fast and reliable way to generate font texture atlases.

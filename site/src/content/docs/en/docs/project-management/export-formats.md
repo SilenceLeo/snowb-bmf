@@ -1,6 +1,46 @@
 ---
 title: Exporting Bitmap Fonts
 description: Learn how to export bitmap fonts as PNG files with Text, XML, or Binary descriptors for game engines like Unity, Unreal, and Godot.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Exporting Bitmap Fonts from SnowB BMF"
+  "description": "Learn how to export bitmap fonts as PNG files with Text, XML, or Binary descriptors for game engines like Unity, Unreal, and Godot."
+  "keywords": ["bitmap font export", "font formats", "game development", "Unity", "Unreal", "Godot", "BMFont", "texture atlas", "fnt format", "XML format", "binary format"]
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "mainEntity":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "about":
+    "@type": "Thing"
+    "name": "Bitmap Font Export Formats"
+    "description": "Technical documentation covering supported export formats for bitmap fonts including Text, XML, and Binary formats based on AngelCode BMFont specification"
+  "mentions":
+    - "@type": "FileFormat"
+      "name": "BMFont Text Format"
+      "fileFormat": ".fnt"
+      "description": "Human-readable text format for bitmap font descriptors"
+    - "@type": "FileFormat"
+      "name": "BMFont XML Format"
+      "fileFormat": ".xml"
+      "description": "Structured XML format for bitmap font descriptors"
+    - "@type": "FileFormat"
+      "name": "BMFont Binary Format"
+      "fileFormat": ".fnt"
+      "description": "Compact binary format for performance-critical applications"
+    - "@type": "ImageObject"
+      "name": "PNG Texture Atlas"
+      "fileFormat": ".png"
+      "description": "Bitmap font texture containing all character glyphs"
 ---
 
 SnowB BMF exports your bitmap font as a texture atlas (a `.png` image) and a descriptor file that tells your application how to use it. The descriptor contains all the necessary data, such as glyph positions, metrics, and kerning pairs.

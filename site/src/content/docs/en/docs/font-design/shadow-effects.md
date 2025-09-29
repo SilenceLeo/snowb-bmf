@@ -1,6 +1,57 @@
 ---
 title: Shadow Effects
 description: Learn how to create and customize professional drop shadows and text effects for your bitmap fonts. Optimize font appearance with adjustable offset, blur, and color.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Shadow Effects in Bitmap Font Design"
+  "description": "Comprehensive guide to creating and customizing professional drop shadows and text effects for bitmap fonts using SnowB BMF. Learn shadow parameters, styles, and best practices."
+  "keywords": ["shadow effects", "drop shadow", "bitmap font", "font design", "text effects", "SnowB BMF", "font styling", "visual effects"]
+  "about":
+    "@type": "Thing"
+    "name": "Shadow Effects"
+    "description": "Visual effects that add depth and hierarchy to bitmap fonts through shadows"
+  "mentions":
+    - "@type": "SoftwareApplication"
+      "name": "SnowB BMF"
+      "description": "Browser-based bitmap font generator"
+      "url": "https://snowb.org"
+    - "@type": "Thing"
+      "name": "Drop Shadow"
+      "description": "Classic shadow effect for improving text readability"
+    - "@type": "Thing"
+      "name": "Glow Effect"
+      "description": "Soft glowing aura effect around text"
+    - "@type": "Thing"
+      "name": "Long Shadow"
+      "description": "Dramatic cast shadow effect"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Font Designers, Game Developers, UI/UX Designers"
+  "genre": "Technical Documentation"
+  "inLanguage": "en-US"
+  "isAccessibleForFree": true
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "How to Create Shadow Effects for Bitmap Fonts"
+    "description": "Step-by-step guide to creating professional shadow effects"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Enable Shadow Effects"
+        "text": "Toggle shadows on or off with the Shadow panel switch"
+      - "@type": "HowToStep"
+        "name": "Adjust Offset Parameters"
+        "text": "Set horizontal and vertical offset values to position the shadow"
+      - "@type": "HowToStep"
+        "name": "Configure Blur Radius"
+        "text": "Adjust blur radius to control shadow softness and diffusion"
+      - "@type": "HowToStep"
+        "name": "Select Shadow Color"
+        "text": "Choose shadow color and opacity using the color picker"
 ---
 
 Shadow effects add depth and visual hierarchy to your bitmap fonts, making them stand out. SnowB BMF offers powerful shadow controls to create everything from subtle drop shadows to dramatic visual effects, enhancing readability and aesthetic appeal.

@@ -1,6 +1,42 @@
 ---
 title: 管理位图字体项目
 description: 学习如何创建、打开、保存和管理您的位图字体项目。高效处理多个项目并了解支持的文件格式。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "管理位图字体项目 - SnowB BMF 文档"
+  "description": "SnowB BMF 项目管理完整指南：创建、打开、保存和管理位图字体项目，支持 .sbf 和 .ltr 文件格式。"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+  "author":
+    "@type": "Organization"
+    "name": "SnowB BMF Team"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "articleSection": "Documentation"
+  "keywords": ["项目管理", "位图字体", "文件操作", "保存项目", "打开项目", ".sbf 格式", ".ltr 格式", "SnowB BMF"]
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何管理位图字体项目"
+    "description": "在 SnowB BMF 中创建、打开、保存和管理位图字体项目的分步说明"
+    "step":
+      - "@type": "HowToStep"
+        "name": "创建新项目"
+        "text": "点击主菜单中的新建按钮或双击项目选项卡栏的空白区域"
+      - "@type": "HowToStep"
+        "name": "打开现有项目"
+        "text": "点击打开按钮以浏览并选择 .sbf 或 .ltr 项目文件"
+      - "@type": "HowToStep"
+        "name": "保存项目"
+        "text": "点击保存项目按钮或按 Cmd/Ctrl+S 保存为 .sbf 文件"
+      - "@type": "HowToStep"
+        "name": "管理多个项目"
+        "text": "使用选项卡在项目之间切换，双击选项卡名称进行重命名"
 ---
 
 ## 创建新项目

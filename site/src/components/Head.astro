@@ -1,0 +1,14 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro'
+
+const starlightRoute = Astro.locals.starlightRoute
+const entry = starlightRoute?.entry
+
+const schema = entry?.data.schema
+---
+
+<Default {...Astro.props} />
+
+{schema && (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(schema, null, 0)}></script>
+)}

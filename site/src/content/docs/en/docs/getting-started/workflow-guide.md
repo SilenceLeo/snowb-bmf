@@ -1,6 +1,48 @@
 ---
 title: Bitmap Font Workflow Guide
 description: Master the step-by-step workflow for creating high-quality, game-ready bitmap fonts with SnowB BMF. Learn to configure, style, and export fonts efficiently.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Bitmap Font Workflow Guide"
+  "description": "Master the step-by-step workflow for creating high-quality, game-ready bitmap fonts with SnowB BMF. Learn to configure, style, and export fonts efficiently."
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "Browser-based bitmap font generator"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "keywords": ["bitmap font workflow", "font creation process", "SnowB BMF guide", "game font development", "texture atlas creation", "font export tutorial"]
+  "articleSection": "Documentation"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Game Developers, UI Designers, Font Artists"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "How to Create Bitmap Fonts with SnowB BMF"
+    "description": "Complete workflow for creating professional bitmap fonts from setup to export"
+    "totalTime": "PT15M"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Load Font"
+        "text": "Click ADD FONT FILE and select your font file (.ttf, .otf, .woff)"
+      - "@type": "HowToStep"
+        "name": "Configure Font Basics"
+        "text": "Set font size, line height, and sharpness settings for optimal rendering"
+      - "@type": "HowToStep"
+        "name": "Optimize Texture Layout"
+        "text": "Configure padding, spacing, auto pack, and texture dimensions"
+      - "@type": "HowToStep"
+        "name": "Customize Visual Style"
+        "text": "Apply fill colors, strokes, and shadow effects with real-time preview"
+      - "@type": "HowToStep"
+        "name": "Export"
+        "text": "Choose format (.txt or .xml) and download font descriptor and texture atlas"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "inLanguage": "en-US"
 ---
 
 This guide outlines the complete workflow for creating professional bitmap fonts in SnowB BMF, from initial setup to final export. Follow these steps to produce optimized, high-quality assets for your project.

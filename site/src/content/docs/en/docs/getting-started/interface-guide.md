@@ -1,6 +1,47 @@
 ---
 title: Interface Guide
 description: Complete guide to the SnowB BMF user interface.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "name": "SnowB BMF Interface Guide"
+  "headline": "Complete Guide to the SnowB BMF User Interface"
+  "description": "Comprehensive documentation covering all interface elements and functions of SnowB BMF, including the three-panel layout, font configuration options, preview area, and style settings."
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "Browser-based bitmap font generator for game development"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "articleSection": "User Interface Documentation"
+  "keywords": ["SnowB BMF interface", "bitmap font generator UI", "font configuration", "texture atlas preview", "style settings", "user interface guide", "software documentation"]
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["Developers", "Game Developers", "Font Designers", "Digital Artists"]
+  "educationalLevel": "Beginner to Intermediate"
+  "learningResourceType": "User Guide"
+  "inLanguage": "en-US"
+  "image": "https://user-images.githubusercontent.com/4632034/89119353-85c0f680-d4e0-11ea-88ae-978dfc01d5fc.png"
+  "mainEntity":
+    "@type": "UserInterface"
+    "name": "SnowB BMF Main Interface"
+    "description": "Three-panel interface layout for bitmap font generation"
+  "teaches":
+    - "How to navigate the SnowB BMF interface"
+    - "Understanding the three-panel layout"
+    - "Font configuration options"
+    - "Preview area functionality"
+    - "Style and effects configuration"
+  "hasPart":
+    - "@type": "Article"
+      "name": "Left Panel - Font Configuration"
+      "description": "Core font settings and layout options"
+    - "@type": "Article"
+      "name": "Center Panel - Preview Area"
+      "description": "Real-time texture atlas display and controls"
+    - "@type": "Article"
+      "name": "Right Panel - Style Configuration"
+      "description": "Visual styling options for font glyphs"
 ---
 
 SnowB BMF features a clean, intuitive interface divided into three main panels: Font Configuration (left), Preview Area (center), and Style Configuration (right). This guide covers all interface elements and their functions.

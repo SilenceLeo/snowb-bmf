@@ -1,6 +1,39 @@
 ---
 title: 纹理打包优化
 description: 学习如何使用先进的装箱算法将字形高效地打包到纹理图集中，以实现最佳的字体渲染和内存使用。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "SnowB BMF 中的纹理打包优化"
+  "description": "学习如何使用先进的装箱算法将字形高效地打包到纹理图集中，以实现最佳的字体渲染和内存使用。"
+  "keywords": ["纹理打包", "纹理图集", "装箱算法", "字形优化", "位图字体", "字体渲染", "内存优化", "GPU性能", "断头台算法"]
+  "about":
+    "@type": "Thing"
+    "name": "纹理图集生成"
+    "description": "将字体字形高效排列到单个纹理中以实现最佳渲染性能的过程"
+  "mainEntity":
+    "@type": "SoftwareFeature"
+    "name": "SnowB BMF 纹理打包"
+    "description": "具有自动和固定尺寸模式的先进纹理打包系统，用于位图字体生成"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "游戏开发者"
+    "name": "使用位图字体的游戏开发者和字体设计师"
+  "learningResourceType": "技术文档"
+  "educationalLevel": "中级"
+  "teaches": ["纹理图集优化", "装箱算法", "GPU性能优化", "内存使用优化"]
 ---
 
 纹理打包是字体资源创建中的关键步骤，它将字形高效地排列到单个图像文件（称为纹理图集）中。SnowB BMF 利用先进的装箱算法来自动化此过程，确保您的字体字形紧凑排列，以节省内存并提高渲染性能。

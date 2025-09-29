@@ -1,6 +1,50 @@
 ---
 title: 字体导入
-description: SnowB BMF 字体导入综合指南。了解支持的格式（TTF、OTF、WOFF）、字体回退系统、矢量渲染以及用于实现像素级完美效果的“锐化”功能。
+description: SnowB BMF 字体导入综合指南。了解支持的格式（TTF、OTF、WOFF）、字体回退系统、矢量渲染以及用于实现像素级完美效果的"锐化"功能。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "SnowB BMF 字体导入指南 - 完整文档"
+  "description": "SnowB BMF 字体导入综合指南。了解支持的格式（TTF、OTF、WOFF）、字体回退系统、矢量渲染以及用于实现像素级完美效果的锐化功能。"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "基于浏览器的位图字体生成器"
+    "url": "https://snowb.org"
+  "keywords": ["字体导入", "TTF", "OTF", "WOFF", "矢量渲染", "字体回退", "锐化功能", "位图字体", "SnowB BMF", "字体设计", "opentype.js"]
+  "articleSection": "文档"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "开发者和字体设计师"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何在 SnowB BMF 中导入字体"
+    "description": "在 SnowB BMF 位图字体生成器中导入字体的分步指南"
+    "supply":
+      - "@type": "HowToSupply"
+        "name": "字体文件（TTF、OTF 或 WOFF 格式）"
+    "tool":
+      - "@type": "HowToTool"
+        "name": "SnowB BMF 字体生成器"
+        "url": "https://snowb.org"
+    "step":
+      - "@type": "HowToStep"
+        "name": "选择字体格式"
+        "text": "从支持的格式中选择：TTF（推荐）、OTF 或 WOFF"
+      - "@type": "HowToStep"
+        "name": "导入主字体"
+        "text": "使用\"添加字体文件\"按钮导入您的主字体以进行矢量渲染"
+      - "@type": "HowToStep"
+        "name": "设置字体回退"
+        "text": "导入额外的字体以创建回退链，确保完整的字符覆盖"
+      - "@type": "HowToStep"
+        "name": "配置锐化功能"
+        "text": "调整锐化设置（推荐 80%）以获得像素级的清晰度"
+  "inLanguage": "zh-CN"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org"
 ---
 
 导入自定义字体是创建高质量位图字体的核心功能。SnowB BMF 提供了强大的加载外部字体文件的选项，让您能够精确控制字形的渲染。该应用程序提供两种渲染模式，根据您加载字体的方式，它们各有优势。

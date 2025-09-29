@@ -1,6 +1,46 @@
 ---
 title: 导出位图字体
 description: 学习如何将位图字体导出为 PNG 文件，并附带文本（Text）、XML 或二进制（Binary）描述文件，以便在 Unity、Unreal 和 Godot 等游戏引擎中使用。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "从 SnowB BMF 导出位图字体"
+  "description": "学习如何将位图字体导出为 PNG 文件，并附带文本、XML 或二进制描述文件，以便在 Unity、Unreal 和 Godot 等游戏引擎中使用。"
+  "keywords": ["位图字体导出", "字体格式", "游戏开发", "Unity", "Unreal", "Godot", "BMFont", "纹理图集", "fnt格式", "XML格式", "二进制格式"]
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "mainEntity":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "about":
+    "@type": "Thing"
+    "name": "位图字体导出格式"
+    "description": "涵盖基于 AngelCode BMFont 规范的位图字体支持导出格式的技术文档，包括文本、XML 和二进制格式"
+  "mentions":
+    - "@type": "FileFormat"
+      "name": "BMFont 文本格式"
+      "fileFormat": ".fnt"
+      "description": "位图字体描述符的人类可读文本格式"
+    - "@type": "FileFormat"
+      "name": "BMFont XML 格式"
+      "fileFormat": ".xml"
+      "description": "位图字体描述符的结构化 XML 格式"
+    - "@type": "FileFormat"
+      "name": "BMFont 二进制格式"
+      "fileFormat": ".fnt"
+      "description": "用于性能关键应用程序的紧凑二进制格式"
+    - "@type": "ImageObject"
+      "name": "PNG 纹理图集"
+      "fileFormat": ".png"
+      "description": "包含所有字符字形的位图字体纹理"
 ---
 
 SnowB BMF 会将您的位图字体导出为一个纹理图集（`.png` 图像）和一个描述文件，用于告知您的应用程序如何使用它。描述文件包含了所有必要的数据，如字形位置、度量信息和字偶距配对。

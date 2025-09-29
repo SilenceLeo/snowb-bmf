@@ -98,9 +98,8 @@ The application uses MobX 6 with a single workspace store pattern:
 ### File Format Support
 
 **Import formats:**
-- `.ltr` - Littera project files (legacy Flash tool)
 - `.sbf` - SnowBamboo project files (Protocol Buffer format)
-- Font files via drag-and-drop
+- `.ltr` - Littera project files (legacy Flash tool)
 
 **Export formats:**
 - Text-based bitmap font descriptors

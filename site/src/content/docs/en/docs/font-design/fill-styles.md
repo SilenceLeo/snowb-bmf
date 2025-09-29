@@ -1,6 +1,39 @@
 ---
 title: "Font Fill Styles: Solid Colors, Gradients, and Patterns"
 description: "Learn how to apply solid colors, gradients, and unique image patterns to your bitmap fonts, creating eye-catching visual effects for any project."
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Font Fill Styles: Solid Colors, Gradients, and Patterns"
+  "description": "Learn how to apply solid colors, gradients, and unique image patterns to your bitmap fonts, creating eye-catching visual effects for any project."
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+  "articleSection": "Font Design"
+  "keywords": ["font fill styles", "bitmap font", "solid colors", "gradients", "image patterns", "font design", "SnowB BMF", "typography", "visual effects"]
+  "inLanguage": "en-US"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/docs/font-design/fill-styles"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "teaches":
+    - "How to apply solid colors to bitmap fonts"
+    - "Creating linear and radial gradients for font characters"
+    - "Using image patterns and textures in font design"
+    - "Customizing gradient color stops and angles"
+    - "Controlling image pattern repetition modes"
 ---
 
 Fill styles define the inner appearance of your font characters. SnowB BMF offers three powerful options—solid colors, gradients, and image patterns—each providing a distinct visual flair for your bitmap fonts.

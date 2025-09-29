@@ -1,6 +1,37 @@
 ---
 title: Font Stroke and Outline Styles
 description: A comprehensive guide to applying and customizing font strokes (outlines). Learn to use width, color, position, and line styles to create professional and readable text.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Font Stroke and Outline Styles"
+  "description": "A comprehensive guide to applying and customizing font strokes (outlines). Learn to use width, color, position, and line styles to create professional and readable text."
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["Game Developers", "Font Designers", "UI/UX Designers"]
+  "keywords": ["font stroke", "outline styles", "bitmap font design", "text styling", "font effects", "typography", "SnowB BMF"]
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "url": "https://snowb.org/docs/font-design/stroke-styles"
+  "articleSection": "Font Design"
+  "genre": "Technical Documentation"
+  "educationalLevel": "Intermediate"
+  "learningResourceType": "Tutorial"
+  "teaches": ["Font stroke application", "Outline customization", "Text readability enhancement", "Visual styling techniques"]
+  "creator":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "license": "https://github.com/SilenceLeo/snowb-bmf/blob/master/LICENSE"
 ---
 
 A stroke (or outline) is a powerful tool for enhancing font characters. It adds definition, improves readability against busy backgrounds, and allows for a wide range of visual styles.

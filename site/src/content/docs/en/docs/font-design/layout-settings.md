@@ -1,6 +1,42 @@
 ---
 title: Layout Settings
 description: Configure bitmap font layout with spacing, padding, and alignment options for optimal texture atlas generation.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Layout Settings for Bitmap Font Design"
+  "description": "Configure bitmap font layout with spacing, padding, and alignment options for optimal texture atlas generation in SnowB BMF."
+  "keywords": ["bitmap font layout", "texture atlas", "font padding", "glyph spacing", "font design", "texture packing", "game development", "font configuration"]
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "Layout Settings"
+    "description": "Configuration options for arranging glyphs in bitmap font texture atlases"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "Configure Bitmap Font Layout Settings"
+    "description": "Step-by-step guide to configuring padding, spacing, and page settings for optimal bitmap font generation"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Configure Padding"
+        "text": "Set appropriate padding values (1-4 pixels) to prevent glyph bleeding and improve scaling quality"
+      - "@type": "HowToStep"
+        "name": "Adjust Spacing"
+        "text": "Define spacing between glyphs (1-2 pixels) for efficient texture atlas packing"
+      - "@type": "HowToStep"
+        "name": "Manage Pages"
+        "text": "Allow automatic page distribution for large character sets or texture size constraints"
+  "author":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "inLanguage": "en"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Game Developers, Font Designers, Technical Artists"
 ---
 
 Layout Settings control how individual glyphs are arranged within the texture atlas when generating bitmap fonts. These parameters directly affect the final output quality, file size, and runtime performance of your bitmap font.

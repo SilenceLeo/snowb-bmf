@@ -1,6 +1,42 @@
 ---
 title: 在位图字体中使用图片字形
 description: 将自定义图片、图标和符号作为字形添加到您的位图字体中。学习如何为游戏和应用开发导入、管理和优化图片字形。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "在位图字体中使用图片字形"
+  "description": "将自定义图片、图标和符号作为字形添加到您的位图字体中。学习如何为游戏和应用开发导入、管理和优化图片字形。"
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "图片字形"
+    "description": "位图字体创建的自定义图像集成功能"
+  "applicationCategory": "字体设计"
+  "keywords": ["图片字形", "位图字体", "字体设计", "图标", "符号", "纹理图集", "游戏开发", "SnowB BMF", "字形映射", "字符分配"]
+  "audience":
+    "@type": "Audience"
+    "audienceType": "开发者"
+    "geographicArea": "全球"
+  "educationalLevel": "中级"
+  "proficiencyRequired": "基础字体设计知识"
+  "teaches": ["如何向位图字体添加图片字形", "图片字形的字符映射", "图片字形优化", "纹理图集集成"]
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "向位图字体添加图片字形"
+    "description": "将自定义图片作为字形集成到位图字体中的分步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "导入图片"
+        "text": "选择或拖放图片文件到图片区域"
+      - "@type": "HowToStep"
+        "name": "分配字符"
+        "text": "将每个图片映射到一个字符以便在字体中使用"
+      - "@type": "HowToStep"
+        "name": "管理字形"
+        "text": "启用/禁用图片并组织您的图片字形集合"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
 ---
 
 图片字形允许您将自定义图片（如 **图标、符号或标志**）直接添加到您的位图字体中。这对于需要标准字体中没有的独特视觉元素的游戏和应用程序来说非常理想。

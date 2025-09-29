@@ -1,6 +1,42 @@
 ---
 title: Configuring Font Size
 description: Learn how to set the font size for your bitmap font and understand its impact on glyph quality, texture size, and performance.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Configuring Font Size in SnowB BMF - Bitmap Font Generator"
+  "description": "Learn how to set the font size for your bitmap font and understand its impact on glyph quality, texture size, and performance in SnowB BMF."
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "Font Size Configuration"
+    "description": "Font size setting that defines the rendering resolution of glyphs in pixels for bitmap font generation"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "How to Configure Font Size in SnowB BMF"
+    "description": "Step-by-step guide to setting font size for optimal bitmap font quality and performance"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Access Font Configuration"
+        "text": "Open the Font Configuration panel in SnowB BMF"
+      - "@type": "HowToStep"
+        "name": "Set Font Size"
+        "text": "Configure font size in pixels (default: 72px, range: 1px and up)"
+      - "@type": "HowToStep"
+        "name": "Consider Quality vs Performance"
+        "text": "Balance glyph quality with texture atlas size and memory usage"
+  "keywords": ["bitmap font", "font size", "font configuration", "glyph quality", "texture atlas", "font design", "SnowB BMF", "game development"]
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "inLanguage": "en"
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["game developers", "font designers", "UI developers"]
 ---
 
 Font size is a critical setting in your bitmap font project. It defines the rendering resolution of your glyphs in pixels and directly influences visual quality, texture atlas dimensions, and memory usage.

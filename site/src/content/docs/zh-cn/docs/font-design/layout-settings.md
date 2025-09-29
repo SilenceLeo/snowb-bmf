@@ -1,6 +1,42 @@
 ---
 title: 布局设置
 description: 配置位图字体的布局，包括间距、内边距和对齐选项，以生成最佳的纹理图集。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "位图字体设计的布局设置"
+  "description": "在 SnowB BMF 中配置位图字体布局，包括间距、内边距和对齐选项，以实现最佳的纹理图集生成。"
+  "keywords": ["位图字体布局", "纹理图集", "字体内边距", "字形间距", "字体设计", "纹理打包", "游戏开发", "字体配置"]
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "布局设置"
+    "description": "在位图字体纹理图集中排列字形的配置选项"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "配置位图字体布局设置"
+    "description": "配置内边距、间距和页面设置以实现最佳位图字体生成的逐步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "配置内边距"
+        "text": "设置适当的内边距值（1-4像素）以防止字形溢出并提高缩放质量"
+      - "@type": "HowToStep"
+        "name": "调整间距"
+        "text": "定义字形之间的间距（1-2像素）以实现高效的纹理图集打包"
+      - "@type": "HowToStep"
+        "name": "管理页面"
+        "text": "为大型字符集或纹理大小限制允许自动页面分布"
+  "author":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "inLanguage": "zh-CN"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "游戏开发者、字体设计师、技术美术"
 ---
 
 布局设置控制在生成位图字体时，单个字形在纹理图集中的排列方式。这些参数直接影响位图字体的最终输出质量、文件大小和运行时性能。

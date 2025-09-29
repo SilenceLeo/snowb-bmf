@@ -1,6 +1,42 @@
 ---
 title: Managing Bitmap Font Projects
 description: Learn how to create, open, save, and manage your bitmap font projects. Efficiently handle multiple projects and understand the supported file formats.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Managing Bitmap Font Projects - SnowB BMF Documentation"
+  "description": "Complete guide to project management in SnowB BMF: creating, opening, saving, and managing bitmap font projects with support for .sbf and .ltr file formats."
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+  "author":
+    "@type": "Organization"
+    "name": "SnowB BMF Team"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "articleSection": "Documentation"
+  "keywords": ["project management", "bitmap font", "file operations", "save project", "open project", ".sbf format", ".ltr format", "SnowB BMF"]
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "How to Manage Bitmap Font Projects"
+    "description": "Step-by-step instructions for creating, opening, saving, and managing bitmap font projects in SnowB BMF"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Create New Project"
+        "text": "Click the New button in the main menu or double-click the empty area in the project tab bar"
+      - "@type": "HowToStep"
+        "name": "Open Existing Project"
+        "text": "Click the Open button to browse and select .sbf or .ltr project files"
+      - "@type": "HowToStep"
+        "name": "Save Project"
+        "text": "Click Save Project button or press Cmd/Ctrl+S to save as .sbf file"
+      - "@type": "HowToStep"
+        "name": "Manage Multiple Projects"
+        "text": "Switch between projects using tabs and rename by double-clicking tab names"
 ---
 
 ## Create a New Project

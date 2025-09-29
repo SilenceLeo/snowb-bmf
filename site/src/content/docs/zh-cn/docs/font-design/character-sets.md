@@ -1,6 +1,41 @@
 ---
 title: 字符集
 description: 配置位图字体中需要包含哪些字符。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "字符集 - 配置位图字体中的字符"
+  "description": "SnowB BMF 位图字体生成器中配置字符集的完整指南。学习如何添加、管理和优化游戏字体的 Unicode 字符。"
+  "keywords": ["字符集", "位图字体", "Unicode", "字形", "字体设计", "纹理图集", "游戏开发", "SnowB BMF"]
+  "articleSection": "字体设计"
+  "inLanguage": "zh-CN"
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "字符集配置"
+    "description": "管理位图字体中包含哪些字符的功能"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Developers"
+    "name": "游戏开发者和字体设计师"
+  "teaches": ["Unicode 字符管理", "字体优化", "字形配置", "国际化文本支持"]
+  "mentions":
+    - "@type": "SoftwareFeature"
+      "name": "Unicode 支持"
+      "description": "全面支持国际字符的 Unicode 支持"
+    - "@type": "SoftwareFeature"
+      "name": "自动去重"
+      "description": "自动移除重复字符"
+    - "@type": "SoftwareFeature"
+      "name": "实时预览"
+      "description": "字符集更改时实时更新预览"
+  "mainEntity":
+    "@type": "DefinedTerm"
+    "name": "字符集"
+    "description": "将被渲染为字体纹理图集中位图字形的字符集合"
 ---
 
 字符集定义了位图字体中包含哪些字符（字形）。您可以通过添加或删除字符来管理字符集，SnowB BMF 完全支持 Unicode，并会自动处理重复字符，确保高效的字形生成。

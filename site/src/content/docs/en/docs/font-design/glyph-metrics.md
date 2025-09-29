@@ -1,6 +1,34 @@
 ---
 title: Adjusting Glyph Metrics
 description: Optimize character spacing and positioning in your bitmap font by adjusting global and individual glyph metrics like xAdvance, xOffset, and yOffset.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Adjusting Glyph Metrics in SnowB BMF"
+  "description": "Optimize character spacing and positioning in your bitmap font by adjusting global and individual glyph metrics like xAdvance, xOffset, and yOffset."
+  "about":
+    "@type": "Thing"
+    "name": "Glyph Metrics"
+    "description": "Character spacing and positioning parameters in bitmap fonts"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Font Designers, Game Developers, Typography Professionals"
+  "keywords": ["glyph metrics", "bitmap font", "character spacing", "xAdvance", "xOffset", "yOffset", "font design", "typography", "SnowB BMF"]
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "mainEntity":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "inLanguage": "en"
+  "articleSection": "Font Design"
 ---
 
 In SnowB BMF, you can fine-tune the metrics of your font's glyphs at both a global and individual level. This allows for precise control over character spacing and positioning.

@@ -16,14 +16,19 @@
     "KERNINGS",
     "littera",
     "Littera",
+    "NGUI",
+    "Pixi",
     "precached",
     "precaching",
     "scalings",
+    "seti",
+    "snowb",
     "snowbamboo",
     "VITE",
     "vmax",
     "vmin",
-    "xadvance"
+    "xadvance",
+    "العربية"
   ],
   "ignorePaths": [
     "node_modules",

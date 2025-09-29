@@ -1,6 +1,41 @@
 ---
 title: Kerning Pairs
 description: Optimize your font's character spacing by configuring kerning pairs for a professional and polished text layout.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Kerning Pairs - SnowB BMF Font Design Documentation"
+  "description": "Learn how to optimize your bitmap font's character spacing by configuring kerning pairs for professional and polished text layout in SnowB BMF."
+  "keywords": ["kerning pairs", "font design", "character spacing", "typography", "bitmap font", "SnowB BMF", "font kerning", "text layout"]
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "Kerning Pairs Configuration"
+    "description": "Precise control over character spacing in bitmap fonts"
+    "featureOf":
+      "@type": "SoftwareApplication"
+      "name": "SnowB BMF"
+      "url": "https://snowb.org"
+  "teaches":
+    - "How to activate kerning preview mode in SnowB BMF"
+    - "How to define and adjust kerning pairs"
+    - "Best practices for professional kerning"
+    - "Understanding positive and negative kerning values"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Font designers, game developers, UI designers"
+  "proficiencyLevel": "Beginner to Intermediate"
+  "author":
+    "@type": "Person"
+    "name": "SnowB BMF Team"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "isPartOf":
+    "@type": "TechArticle"
+    "name": "SnowB BMF Font Design Documentation"
+    "url": "https://snowb.org/docs/font-design/"
 ---
 
 Kerning is a fundamental technique in typography that involves adjusting the space between specific pairs of characters to create a more visually appealing and readable text. Proper kerning makes your font look professional and balanced.

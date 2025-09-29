@@ -1,6 +1,103 @@
 ---
 title: 常见问题
 description: 查找有关 SnowB BMF（免费的网页位图字体生成器）的常见问题解答。了解支持的格式、性能等信息。
+schema:
+  "@context": "https://schema.org"
+  "@type": "FAQPage"
+  "name": "SnowB BMF - 常见问题"
+  "description": "SnowB BMF 免费网页位图字体生成器的详细常见问题解答。获取有关功能、兼容性、性能和故障排除的答案。"
+  "url": "https://snowb.org/zh-cn/docs/faq/"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "mainEntity":
+    - "@type": "Question"
+      "name": "SnowB BMF 是什么？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "SnowB BMF 是一款免费的、基于网页的位图字体生成器。它允许您直接在浏览器中为游戏、网页和其他应用程序创建、编辑和导出自定义位图字体。"
+    - "@type": "Question"
+      "name": "SnowB BMF 是免费的吗？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "是的，SnowB BMF 完全免费使用。所有功能无需注册或安装即可使用。"
+    - "@type": "Question"
+      "name": "支持哪些浏览器？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "SnowB BMF 可在支持 Canvas API 的现代浏览器上运行，包括最新版本的 Chrome、Firefox、Safari 和 Edge。为获得最佳体验，我们建议使用最新的浏览器。"
+    - "@type": "Question"
+      "name": "如何保存我的项目？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "要保存您的项目，请单击\"保存\"按钮下载一个 .sbf 项目文件。SnowB BMF 不会自动保存您的工作，因此请务必经常保存。"
+    - "@type": "Question"
+      "name": "刷新页面后我的工作丢失了。如何防止这种情况发生？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "该应用程序不会在您的浏览器中存储数据，因此刷新或关闭选项卡后工作会丢失。请务必将您的项目保存为 .sbf 文件以防止数据丢失。"
+    - "@type": "Question"
+      "name": "我可以同时处理多个项目吗？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "您可以在多个浏览器选项卡中打开不同的项目。每个选项卡都保持其独立的状态。只需确保将每个项目保存到其各自的 .sbf 文件中。"
+    - "@type": "Question"
+      "name": "我可以导出哪些格式的字体？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "SnowB BMF 支持三种格式：文本格式 (.fnt, .txt) 人类可读且被广泛支持；XML 格式 (.xml, .fnt) 结构化格式，非常适合网页应用程序；二进制格式 (.fnt) 最紧凑、性能最高的格式。"
+    - "@type": "Question"
+      "name": "哪种导出格式最适合我的游戏引擎？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "对于 Unity/Unreal/Cocos2d-x，使用文本格式 (.fnt)。对于自定义引擎，任何格式都可以，但二进制格式 (.fnt) 提供最佳性能。"
+    - "@type": "Question"
+      "name": "导出的字体与 Unity 兼容吗？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "是的，.fnt 文件可与 TextMeshPro 和 NGUI 配合使用。为了获得清晰、像素完美的渲染效果，请在 Unity 中将纹理的过滤模式设置为\"Point\"（或\"Nearest\"）。"
+    - "@type": "Question"
+      "name": "为什么我的字体看起来很模糊？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "模糊通常是由纹理过滤引起的。要解决此问题，请在您的游戏引擎或应用程序中将纹理过滤模式设置为\"Point\"或\"Nearest\"。此外，请确保您的文本在整数位置渲染且未进行缩放。"
+    - "@type": "Question"
+      "name": "如何修复不正确的字符间距？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "不正确的间距可能是由于字偶距问题或不正确的字体度量引起的。在导出之前，请在 SnowB BMF 中检查您的字偶距对和基线设置。"
+    - "@type": "Question"
+      "name": "如何创建像素完美的字体？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "要获得清晰、像素完美的外观：1) 使用专为像素艺术设计的字体，2) 将字体大小设置为与您的目标分辨率完全匹配，3) 禁用抗锯齿和字体平滑，4) 确保字符与像素网格对齐。"
+    - "@type": "Question"
+      "name": "为什么应用程序运行缓慢或卡顿？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "处理非常大的字符集或复杂的字体时可能会出现性能问题。要提高性能：减少字符集只包含您需要的字形，增加纹理尺寸以降低打包算法的复杂性，关闭其他浏览器选项卡以释放内存。"
+    - "@type": "Question"
+      "name": "我收到了\"内存不足\"的错误。我该怎么办？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "这在生成非常大的字体图集时会发生。请尝试减小纹理尺寸，将您的字符集拆分为多个较小的字体文件，或使用二进制导出格式，它更节省内存。"
+    - "@type": "Question"
+      "name": "我可以导入自己的字体吗？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "是的，您可以上传 .ttf、.otf 和 .woff 字体文件。但是，SnowB BMF 无法直接访问您系统上安装的字体。"
+    - "@type": "Question"
+      "name": "如何使用自定义图像作为字符？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "1) 导入带透明度的 PNG 图像，2) 为每个图像分配一个 Unicode 值，3) 根据需要调整每个图像字形的位置和缩放，4) 导出字体。图像字形将包含在图集中。"
+    - "@type": "Question"
+      "name": "导入旧版项目文件会发生什么？"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "SnowB BMF 会自动转换旧版项目文件。只需打开文件，检查导入的设置以确保它们是正确的，然后将项目另存为新的 .sbf 文件。"
 ---
 
 ## 综合

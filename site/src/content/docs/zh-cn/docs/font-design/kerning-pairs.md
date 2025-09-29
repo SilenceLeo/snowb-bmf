@@ -1,6 +1,41 @@
 ---
 title: 字偶距调整
 description: 通过配置字偶距，优化字体字符间距，打造专业且精致的文本布局。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "字偶距调整 - SnowB BMF 字体设计文档"
+  "description": "学习如何在 SnowB BMF 中通过配置字偶距来优化位图字体的字符间距，打造专业且精致的文本布局。"
+  "keywords": ["字偶距", "字体设计", "字符间距", "排版学", "位图字体", "SnowB BMF", "字体字偶距", "文本布局"]
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "字偶距配置"
+    "description": "位图字体中字符间距的精确控制"
+    "featureOf":
+      "@type": "SoftwareApplication"
+      "name": "SnowB BMF"
+      "url": "https://snowb.org"
+  "teaches":
+    - "如何在 SnowB BMF 中激活字偶距预览模式"
+    - "如何定义和调整字偶距对"
+    - "专业字偶距调整的最佳实践"
+    - "理解正负字偶距值的含义"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "字体设计师、游戏开发者、UI设计师"
+  "proficiencyLevel": "初级到中级"
+  "author":
+    "@type": "Person"
+    "name": "SnowB BMF Team"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "isPartOf":
+    "@type": "TechArticle"
+    "name": "SnowB BMF 字体设计文档"
+    "url": "https://snowb.org/zh-cn/docs/font-design/"
 ---
 
 字偶距（Kerning）是排版学中的一项基本技术，它通过调整特定字符对之间的间距，创造出视觉上更具吸引力且更易于阅读的文本。恰当的字偶距能让您的字体看起来既专业又均衡。

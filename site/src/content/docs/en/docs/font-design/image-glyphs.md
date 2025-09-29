@@ -1,6 +1,42 @@
 ---
 title: Using Image Glyphs in Your Bitmap Font
 description: Add custom images, icons, and symbols as glyphs in your bitmap font. Learn how to import, manage, and optimize image glyphs for game and app development.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Using Image Glyphs in Your Bitmap Font"
+  "description": "Add custom images, icons, and symbols as glyphs in your bitmap font. Learn how to import, manage, and optimize image glyphs for game and app development."
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "Image Glyphs"
+    "description": "Custom image integration feature for bitmap font creation"
+  "applicationCategory": "Font Design"
+  "keywords": ["image glyphs", "bitmap font", "font design", "icons", "symbols", "texture atlas", "game development", "SnowB BMF", "glyph mapping", "character assignment"]
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Developers"
+    "geographicArea": "Global"
+  "educationalLevel": "Intermediate"
+  "proficiencyRequired": "Basic font design knowledge"
+  "teaches": ["How to add image glyphs to bitmap fonts", "Character mapping for image glyphs", "Image glyph optimization", "Texture atlas integration"]
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "Add Image Glyphs to Bitmap Font"
+    "description": "Step-by-step guide to integrate custom images as glyphs in bitmap fonts"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Import Images"
+        "text": "Select or drag-and-drop image files into the image area"
+      - "@type": "HowToStep"
+        "name": "Assign Characters"
+        "text": "Map each image to a character for easy use in your font"
+      - "@type": "HowToStep"
+        "name": "Manage Glyphs"
+        "text": "Enable/disable images and organize your image glyph collection"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
 ---
 
 Image glyphs allow you to add custom images like **icons, symbols, or logos** directly into your bitmap font. This is perfect for games and applications that require unique visual elements not found in standard fonts.

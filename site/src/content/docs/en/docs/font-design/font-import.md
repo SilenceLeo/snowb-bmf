@@ -1,6 +1,50 @@
 ---
 title: Font Import
 description: A comprehensive guide to importing fonts in SnowB BMF. Learn about supported formats (TTF, OTF, WOFF), the font fallback system, vector rendering, and the Sharp feature for pixel-perfect results.
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Font Import Guide for SnowB BMF - Complete Documentation"
+  "description": "A comprehensive guide to importing fonts in SnowB BMF. Learn about supported formats (TTF, OTF, WOFF), the font fallback system, vector rendering, and the Sharp feature for pixel-perfect results."
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "Browser-based bitmap font generator"
+    "url": "https://snowb.org"
+  "keywords": ["font import", "TTF", "OTF", "WOFF", "vector rendering", "font fallback", "Sharp feature", "bitmap font", "SnowB BMF", "font design", "opentype.js"]
+  "articleSection": "Documentation"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Developers and Font Designers"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "How to Import Fonts in SnowB BMF"
+    "description": "Step-by-step guide for importing fonts into SnowB BMF bitmap font generator"
+    "supply":
+      - "@type": "HowToSupply"
+        "name": "Font files (TTF, OTF, or WOFF format)"
+    "tool":
+      - "@type": "HowToTool"
+        "name": "SnowB BMF Font Generator"
+        "url": "https://snowb.org"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Choose font format"
+        "text": "Select from supported formats: TTF (recommended), OTF, or WOFF"
+      - "@type": "HowToStep"
+        "name": "Import primary font"
+        "text": "Use the 'Add Font File' button to import your primary font for vector rendering"
+      - "@type": "HowToStep"
+        "name": "Set up font fallback"
+        "text": "Import additional fonts to create a fallback chain for complete character coverage"
+      - "@type": "HowToStep"
+        "name": "Configure Sharp feature"
+        "text": "Adjust the Sharp setting (recommended 80%) for pixel-perfect clarity"
+  "inLanguage": "en"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
 ---
 
 Importing custom fonts is a core feature for creating high-quality bitmap fonts. SnowB BMF provides powerful options for loading external font files, giving you precise control over glyph rendering. The application offers two rendering modes, with distinct advantages depending on how you load your fonts.

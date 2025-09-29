@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 import starlightThemeBlack from 'starlight-theme-black'
+import sitemap from '@astrojs/sitemap'
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,6 +21,15 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'en',
+        locales: {
+          en: 'en',
+          'zh-cn': 'zh-CN',
+        },
+      },
+    }),
     starlight({
       title: 'SnowB BMF',
       defaultLocale: 'en',
@@ -62,7 +72,7 @@ export default defineConfig({
       locales: {
         en: {
           label: 'English',
-          lang: 'en', // lang 是 root 语言必须的
+          lang: 'en',
         },
         'zh-cn': {
           label: '简体中文',
@@ -78,6 +88,7 @@ export default defineConfig({
       ],
       components: {
         Hero: './src/components/Hero.astro',
+        Head: './src/components/Head.astro',
       },
       sidebar: [
         {

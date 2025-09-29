@@ -1,6 +1,43 @@
 ---
 title: 控制字体锐度和抗锯齿
 description: 掌握位图字体的边缘渲染。调整锐度以控制抗锯齿效果，从完美平滑 (0%) 到清晰锐利的像素级 (100%)。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "控制字体锐度和抗锯齿"
+  "description": "掌握位图字体的边缘渲染。调整锐度以控制抗锯齿效果，从完美平滑 (0%) 到清晰锐利的像素级 (100%)。"
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "锐度功能"
+    "description": "位图字体生成的抗锯齿和边缘渲染控制"
+    "featureList":
+      - "0-100% 锐度控制"
+      - "0% 锐度时完全抗锯齿"
+      - "100% 锐度时像素完美渲染"
+      - "实时视觉反馈"
+      - "针对复古和现代字体风格优化"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+    "applicationCategory": "DesignApplication"
+  "keywords": ["位图字体", "抗锯齿", "字体锐度", "像素艺术", "矢量渲染", "字体设计", "游戏开发"]
+  "articleSection": "Font Design"
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["游戏开发者", "字体设计师", "UI/UX 设计师"]
+  "educationalLevel": "中级"
+  "learningResourceType": "技术文档"
+  "teaches": ["字体抗锯齿控制", "位图字体边缘渲染", "锐度功能使用"]
+  "inLanguage": "zh-CN"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
 ---
 
 **锐度** 设置让您可以精确控制字体字形的抗锯齿和边缘渲染。它允许您定义字体的视觉风格，无论您需要柔和、平滑的边缘还是硬朗、像素完美的线条。

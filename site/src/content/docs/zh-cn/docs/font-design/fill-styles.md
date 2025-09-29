@@ -1,6 +1,39 @@
 ---
 title: "字体填充样式：纯色、渐变与图案"
 description: "学习如何为您的位图字体应用纯色、渐变和独特的图像图案，为任何项目创造引人注目的视觉效果。"
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "字体填充样式：纯色、渐变与图案"
+  "description": "学习如何为您的位图字体应用纯色、渐变和独特的图像图案，为任何项目创造引人注目的视觉效果。"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+  "articleSection": "Font Design"
+  "keywords": ["字体填充样式", "位图字体", "纯色", "渐变", "图像图案", "字体设计", "SnowB BMF", "排版", "视觉效果"]
+  "inLanguage": "zh-CN"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/zh-cn/docs/font-design/fill-styles"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "teaches":
+    - "如何为位图字体应用纯色"
+    - "为字体字符创建线性和径向渐变"
+    - "在字体设计中使用图像图案和纹理"
+    - "自定义渐变色标和角度"
+    - "控制图像图案重复模式"
 ---
 
 填充样式定义了字体字符的内部外观。SnowB BMF 提供三种强大的选项——纯色、渐变和图像图案——每种都能为您的位图字体提供独特的视觉风格。

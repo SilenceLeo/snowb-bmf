@@ -1,6 +1,34 @@
 ---
 title: 调整字形度量
 description: 通过调整全局和单个字形的度量（如 xAdvance、xOffset 和 yOffset），优化位图字体中的字符间距和位置。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "在 SnowB BMF 中调整字形度量"
+  "description": "通过调整全局和单个字形的度量（如 xAdvance、xOffset 和 yOffset），优化位图字体中的字符间距和位置。"
+  "about":
+    "@type": "Thing"
+    "name": "字形度量"
+    "description": "位图字体中的字符间距和定位参数"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "字体设计师, 游戏开发者, 排版专业人员"
+  "keywords": ["字形度量", "位图字体", "字符间距", "xAdvance", "xOffset", "yOffset", "字体设计", "排版", "SnowB BMF"]
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "mainEntity":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "publisher":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "inLanguage": "zh-CN"
+  "articleSection": "Font Design"
 ---
 
 在 SnowB BMF 中，您可以在全局和单个字形两个层面上微调字体度量。这使您可以精确控制字符的间距和定位。

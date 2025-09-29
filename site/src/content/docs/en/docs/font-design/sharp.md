@@ -1,6 +1,43 @@
 ---
 title: Controlling Font Sharpness and Anti-Aliasing
 description: Master the edge rendering of your bitmap fonts. Adjust sharpness to control anti-aliasing, from perfectly smooth (0%) to crisp and pixel-perfect (100%).
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "headline": "Controlling Font Sharpness and Anti-Aliasing"
+  "description": "Master the edge rendering of your bitmap fonts. Adjust sharpness to control anti-aliasing, from perfectly smooth (0%) to crisp and pixel-perfect (100%)."
+  "about":
+    "@type": "SoftwareFeature"
+    "name": "Sharp Feature"
+    "description": "Anti-aliasing and edge rendering control for bitmap font generation"
+    "featureList":
+      - "0-100% sharpness control"
+      - "Full anti-aliasing at 0% sharpness"
+      - "Pixel-perfect rendering at 100% sharpness"
+      - "Real-time visual feedback"
+      - "Optimized for retro and modern font styles"
+  "isPartOf":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+    "applicationCategory": "DesignApplication"
+  "keywords": ["bitmap font", "anti-aliasing", "font sharpness", "pixel art", "vector rendering", "font design", "game development"]
+  "articleSection": "Font Design"
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["Game Developers", "Font Designers", "UI/UX Designers"]
+  "educationalLevel": "Intermediate"
+  "learningResourceType": "Technical Documentation"
+  "teaches": ["Font anti-aliasing control", "Bitmap font edge rendering", "Sharp feature usage"]
+  "inLanguage": "en-US"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
 ---
 
 The **Sharpness** setting gives you precise control over the anti-aliasing and edge rendering of your font glyphs. It allows you to define the visual style of your font, whether you need soft, smooth edges or hard, pixel-perfect lines.

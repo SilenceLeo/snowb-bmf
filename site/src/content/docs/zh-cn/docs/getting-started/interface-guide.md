@@ -1,6 +1,47 @@
 ---
 title: 界面指南
 description: SnowB BMF 用户界面的完整指南，帮助您快速上手位图字体制作。
+schema:
+  "@context": "https://schema.org"
+  "@type": "TechArticle"
+  "name": "SnowB BMF 界面指南"
+  "headline": "SnowB BMF 用户界面完整指南"
+  "description": "全面介绍 SnowB BMF 的所有界面元素和功能，包括三栏式布局、字体配置选项、预览区域和样式设置。"
+  "about":
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "description": "基于浏览器的游戏开发位图字体生成器"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "articleSection": "用户界面文档"
+  "keywords": ["SnowB BMF 界面", "位图字体生成器界面", "字体配置", "纹理图集预览", "样式设置", "用户界面指南", "软件文档"]
+  "audience":
+    "@type": "Audience"
+    "audienceType": ["开发者", "游戏开发者", "字体设计师", "数字艺术家"]
+  "educationalLevel": "初级到中级"
+  "learningResourceType": "用户指南"
+  "inLanguage": "zh-CN"
+  "image": "https://user-images.githubusercontent.com/4632034/89119353-85c0f680-d4e0-11ea-88ae-978dfc01d5fc.png"
+  "mainEntity":
+    "@type": "UserInterface"
+    "name": "SnowB BMF 主界面"
+    "description": "用于位图字体生成的三栏式界面布局"
+  "teaches":
+    - "如何使用 SnowB BMF 界面"
+    - "理解三栏式布局"
+    - "字体配置选项"
+    - "预览区域功能"
+    - "样式和效果配置"
+  "hasPart":
+    - "@type": "Article"
+      "name": "左侧面板 - 字体配置"
+      "description": "核心字体设置和布局选项"
+    - "@type": "Article"
+      "name": "中间面板 - 预览区域"
+      "description": "实时纹理图集显示和控制"
+    - "@type": "Article"
+      "name": "右侧面板 - 样式配置"
+      "description": "字体字形的视觉样式选项"
 ---
 
 SnowB BMF 拥有一个简洁直观的界面，分为三个主要面板：字体配置（左侧）、预览区域（中间）和样式配置（右侧）。本指南将详细介绍所有界面元素及其功能，助您高效创建位图字体。
