@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://snowb.org/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/faq/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/faq/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/faq/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/character-sets/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/character-sets/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/character-sets/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/fill-styles/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/fill-styles/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/fill-styles/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/font-import/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/font-import/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/font-import/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/font-size/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/font-size/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/font-size/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/glyph-metrics/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/glyph-metrics/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/glyph-metrics/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/image-glyphs/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/image-glyphs/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/image-glyphs/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/kerning-pairs/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/kerning-pairs/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/kerning-pairs/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/layout-settings/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/layout-settings/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/layout-settings/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/shadow-effects/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/shadow-effects/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/shadow-effects/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/sharp/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/sharp/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/sharp/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/stroke-styles/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/stroke-styles/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/stroke-styles/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/font-design/texture-packing/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/texture-packing/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/texture-packing/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/getting-started/interface-guide/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/interface-guide/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/interface-guide/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/getting-started/overview/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/overview/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/overview/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/getting-started/workflow-guide/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/workflow-guide/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/workflow-guide/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/project-management/export-formats/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/export-formats/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/export-formats/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/project-management/project-operations/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/project-operations/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/project-operations/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/faq/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/faq/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/faq/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/character-sets/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/character-sets/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/character-sets/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/fill-styles/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/fill-styles/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/fill-styles/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/font-import/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/font-import/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/font-import/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/font-size/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/font-size/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/font-size/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/glyph-metrics/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/glyph-metrics/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/glyph-metrics/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/image-glyphs/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/image-glyphs/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/image-glyphs/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/kerning-pairs/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/kerning-pairs/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/kerning-pairs/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/layout-settings/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/layout-settings/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/layout-settings/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/shadow-effects/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/shadow-effects/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/shadow-effects/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/sharp/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/sharp/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/sharp/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/stroke-styles/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/stroke-styles/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/stroke-styles/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/texture-packing/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/texture-packing/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/texture-packing/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/getting-started/interface-guide/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/interface-guide/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/interface-guide/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/getting-started/overview/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/overview/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/overview/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/getting-started/workflow-guide/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/workflow-guide/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/workflow-guide/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/project-management/export-formats/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/export-formats/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/export-formats/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/project-management/project-operations/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/project-operations/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/project-operations/"/>
+  </url>
+</urlset>
