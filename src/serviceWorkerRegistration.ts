@@ -67,7 +67,7 @@ async function checkForUpdates(registration: ServiceWorkerRegistration) {
     }
 
     // Fetch the service worker script with cache busting
-    const swUrl = `${import.meta.env.BASE_URL}/service-worker.js`
+    const swUrl = new URL('service-worker.js', window.location.href).href
     const response = await fetch(swUrl, {
       cache: 'no-store',
       headers: {
@@ -116,10 +116,9 @@ function setupPeriodicUpdateCheck(registration: ServiceWorkerRegistration) {
 export function register(config?: Config) {
   if (import.meta.env.PROD && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(
-      import.meta.env.BASE_URL || '/',
-      window.location.href,
-    )
+    const baseUrl = import.meta.env.BASE_URL || '/'
+    const publicUrl = new URL(baseUrl, window.location.href)
+
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
@@ -128,7 +127,8 @@ export function register(config?: Config) {
     }
 
     window.addEventListener('load', () => {
-      const swUrl = `${import.meta.env.BASE_URL}/service-worker.js`
+      // Ensure proper path resolution for service worker
+      const swUrl = new URL('service-worker.js', window.location.href).href
 
       if (isLocalhost) {
         // This is running on localhost. Let's check if a service worker still exists or not.
