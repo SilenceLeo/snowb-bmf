@@ -1,26 +1,73 @@
 {
-  "short_name": "SnowB Bitmap Font",
-  "name": "Snow Bamboo BitmapFont",
-  "description": "Snow Bamboo BitmapFont Editor Online.",
+  "short_name": "SnowB BMF",
+  "name": "SnowBamboo Bitmap Font Generator",
+  "description": "Free online bitmap font generator. Create bitmap fonts from TrueType fonts for games and applications. Supports TTF, OTF input and BMFont, XML export formats.",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "128x128 64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/x-icon",
+      "purpose": "any"
     },
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
-  "display": "fullscreen",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
   "theme_color": "#1e1e1e",
-  "background_color": "#1e1e1e"
+  "background_color": "#1e1e1e",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["graphics", "productivity", "developer", "utilities"],
+  "iarc_rating_id": "",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "New Project",
+      "short_name": "New",
+      "description": "Create a new bitmap font project",
+      "url": "/?action=new",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "GitHub Repository",
+      "short_name": "GitHub",
+      "description": "View source code on GitHub",
+      "url": "https://github.com/SilenceLeo/snowb-bmf",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "SnowBamboo Bitmap Font Generator Interface"
+    }
+  ]
 }

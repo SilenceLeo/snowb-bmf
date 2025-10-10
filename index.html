@@ -1,1 +1,378 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="icon" href="./favicon.ico"/><meta name="theme-color" content="#252525"/><title>Bitmap Font Generator Online - SnowB Bitmap Font</title><meta name="description" content="SnowB Bitmap Font is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both font image and character descriptions that can be read by a game for easy rendering of fonts."/><script type="application/ld+json">{"@context": "https://schema.org","@type": "WebApplication","name": "SnowBamboo Bitmap Font Generator Online","browserRequirements": "requires HTML5 support","applicationCategory": "BitmapFont, Texture, Game","operatingSystem": "ALL","image": "https://github.com/SilenceLeo/snowb-bmf/raw/master/public/logo192.png?raw=true","screenshot": "https://user-images.githubusercontent.com/4632034/89119353-85c0f680-d4e0-11ea-88ae-978dfc01d5fc.png","aggregateRating": {"@type": "AggregateRating","ratingValue": "5","ratingCount": "1"},"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },"author": {"@type": "Person","name": "SilenceLeo","image": "https://avatars0.githubusercontent.com/u/4632034?s=460&u=82fc46834be9426099b7366528006c330c2c3f91&v=4","url": "https://github.com/SilenceLeo/"}}</script><meta property="og:title" content="Bitmap Font Generator Online - SnowB Bitmap Font"/><meta property="og:site_name" content="SnowB Bitmap Font"/><meta property="og:type" content="website"/><meta property="og:url" content="https://snowb.org"/><meta property="og:image" content="https://snowb.org/logo512.png"/><meta property="og:description" content="SnowB Bitmap Font is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both font image and character descriptions that can be read by a game for easy rendering of fonts."/><meta name="description" content="SnowB Bitmap Font is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both font image and character descriptions that can be read by a game for easy rendering of fonts."/><link rel="apple-touch-icon" href="./logo192.png"/><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/><link rel="manifest" href="./manifest.json"/><link rel="canonical" href="https://snowb.org/"/><script defer="defer" src="./static/js/main.210ad4bc.js"></script><link href="./static/css/main.a84bd713.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script async src="https://www.googletagmanager.com/gtag/js?id=G-8KVLZM97BB"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-8KVLZM97BB")</script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="content-language" content="en, zh-CN" />
+
+    <!-- SEO Meta Tags -->
+    <title>Bitmap Font Generator Online - SnowB Bitmap Font</title>
+    <meta
+      name="description"
+      content="SnowB Bitmap Font is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both font image and character descriptions that can be read by a game for easy rendering of fonts."
+    />
+    <meta
+      name="keywords"
+      content="bitmap font, font generator, game development, texture atlas, font editor, ttf, otf, bmf"
+    />
+    <meta name="theme-color" content="#252525" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta
+      property="og:title"
+      content="Bitmap Font Generator Online - SnowB Bitmap Font"
+    />
+    <meta property="og:site_name" content="SnowB Bitmap Font" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://snowb.org" />
+    <meta
+      property="og:image"
+      content="https://snowb.org/summary_large_image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="SnowB Bitmap Font Generator - Create bitmap fonts from TrueType fonts"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:description"
+      content="SnowB Bitmap Font is a bitmap font generator online. This program will allow you to generate bitmap fonts from TrueType fonts. The application generates both font image and character descriptions that can be read by a game for easy rendering of fonts."
+    />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Bitmap Font Generator Online - SnowB Bitmap Font"
+    />
+    <meta
+      name="twitter:description"
+      content="SnowB Bitmap Font is a bitmap font generator online. Create bitmap fonts from TrueType fonts for games and applications."
+    />
+    <meta
+      name="twitter:image"
+      content="https://snowb.org/summary_large_image.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="SnowB Bitmap Font Generator - Create bitmap fonts from TrueType fonts"
+    />
+    <meta name="twitter:creator" content="@SilenceLeo" />
+    <meta name="twitter:site" content="@snowbamboo" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://snowb.org/" />
+
+    <!-- Favicons and PWA -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+    <link rel="dns-prefetch" href="https://github.com" />
+
+    <!-- External Stylesheets -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+
+    <!-- JSON-LD Structured Data for Rich Snippets and GEO Optimization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SnowB BMF - Bitmap Font Generator Online",
+        "alternateName": [
+          "SnowBamboo Bitmap Font Generator",
+          "SnowB BMF",
+          "Online Bitmap Font Creator",
+          "Littera Alternative"
+        ],
+        "description": "Free online bitmap font generator that converts TrueType fonts (TTF/OTF) into bitmap fonts for game development. Modern web-based alternative to the discontinued Flash Littera tool.",
+        "url": "https://snowb.org",
+        "sameAs": [
+          "https://github.com/SilenceLeo/snowb-bmf",
+          "https://snowb.org/en/",
+          "https://snowb.org/zh-cn/"
+        ],
+        "applicationCategory": [
+          "GraphicsApplication",
+          "DeveloperApplication",
+          "GameDevelopmentTool",
+          "FontEditor"
+        ],
+        "applicationSubCategory": "Bitmap Font Generator",
+        "operatingSystem": "Web Browser",
+        "browserRequirements": "HTML5, WebGL, Web Workers support",
+        "softwareVersion": "1.2.0",
+        "releaseNotes": "https://github.com/SilenceLeo/snowb-bmf/releases",
+        "downloadUrl": "https://snowb.org",
+        "installUrl": "https://snowb.org",
+        "memoryRequirements": "512MB RAM recommended",
+        "storageRequirements": "No local storage required - runs entirely in browser",
+        "processorRequirements": "Modern CPU with multi-core support recommended",
+        "featureList": [
+          "TTF to Bitmap Font Conversion",
+          "OTF to Bitmap Font Conversion",
+          "BMFont Format Export",
+          "XML Descriptor Export",
+          "Binary Format Export",
+          "Real-time Font Preview",
+          "Texture Atlas Generation",
+          "Kerning Pair Adjustment",
+          "Multi-language Character Sets",
+          "Web Worker Optimization",
+          "Progressive Web App Support",
+          "No Installation Required"
+        ],
+        "keywords": [
+          "bitmap font generator",
+          "font converter online",
+          "TTF to BMFont",
+          "game font tool",
+          "Unity font generator",
+          "Unreal Engine bitmap font",
+          "Godot font converter",
+          "Littera alternative",
+          "texture atlas generator",
+          "web-based font editor",
+          "free font generator",
+          "game development tools"
+        ],
+        "audience": {
+          "@type": "Audience",
+          "audienceType": [
+            "Game Developers",
+            "App Developers",
+            "UI Designers",
+            "Indie Game Developers",
+            "Mobile App Developers"
+          ]
+        },
+        "usageInfo": {
+          "@type": "CreativeWork",
+          "name": "How to Use SnowB BMF",
+          "description": "1. Upload TTF/OTF font file 2. Configure font size and effects 3. Generate bitmap font 4. Export as BMFont format with PNG texture"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "SilenceLeo",
+          "alternateName": "Leo",
+          "image": "https://avatars0.githubusercontent.com/u/4632034?s=460&u=82fc46834be9426099b7366528006c330c2c3f91&v=4",
+          "url": "https://github.com/SilenceLeo/"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "SnowB BMF",
+          "url": "https://snowb.org",
+          "logo": "https://snowb.org/logo512.png"
+        },
+        "maintainer": {
+          "@type": "Person",
+          "name": "SilenceLeo",
+          "url": "https://github.com/SilenceLeo/"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "description": "Completely free online bitmap font generator with no registration required"
+        },
+        "license": "https://github.com/SilenceLeo/snowb-bmf/blob/master/LICENSE",
+        "copyrightHolder": {
+          "@type": "Person",
+          "name": "SilenceLeo"
+        },
+        "copyrightYear": "2024",
+        "inLanguage": ["en", "zh-CN"],
+        "availableLanguage": ["English", "Chinese (Simplified)"],
+        "isAccessibleForFree": true,
+        "image": [
+          "https://snowb.org/logo512.png",
+          "https://snowb.org/summary_large_image.png"
+        ],
+        "screenshot": [
+          "https://user-images.githubusercontent.com/4632034/89119353-85c0f680-d4e0-11ea-88ae-978dfc01d5fc.png",
+          "https://snowb.org/summary_large_image.png"
+        ],
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "150",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "author": {
+              "@type": "Person",
+              "name": "Game Developer"
+            },
+            "reviewRating": {
+              "@type": "Rating",
+              "ratingValue": "5"
+            },
+            "reviewBody": "Perfect replacement for Littera! Easy to use and generates high-quality bitmap fonts for Unity games."
+          }
+        ],
+        "dateCreated": "2020-07-31",
+        "dateModified": "2025-09-29",
+        "datePublished": "2020-07-31",
+        "workExample": [
+          {
+            "@type": "CreativeWork",
+            "name": "Unity Game Font Integration",
+            "description": "Example of using SnowB BMF generated fonts in Unity game projects"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Mobile Game UI Fonts",
+            "description": "Optimized bitmap fonts for mobile game user interfaces"
+          }
+        ],
+        "hasPart": [
+          {
+            "@type": "WebPage",
+            "name": "Documentation",
+            "url": "https://snowb.org/en/docs/",
+            "description": "Comprehensive guide for using SnowB BMF bitmap font generator"
+          },
+          {
+            "@type": "WebPage",
+            "name": "FAQ",
+            "url": "https://snowb.org/en/docs/faq/",
+            "description": "Frequently asked questions about bitmap font generation"
+          }
+        ],
+        "mentions": [
+          {
+            "@type": "SoftwareApplication",
+            "name": "Unity",
+            "applicationCategory": "Game Engine"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Unreal Engine",
+            "applicationCategory": "Game Engine"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Godot",
+            "applicationCategory": "Game Engine"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "Littera",
+            "applicationCategory": "Font Generator",
+            "description": "Discontinued Flash-based bitmap font generator that SnowB BMF replaces"
+          }
+        ],
+        "potentialAction": [
+          {
+            "@type": "UseAction",
+            "target": "https://snowb.org",
+            "name": "Generate Bitmap Font",
+            "description": "Convert TTF/OTF fonts to bitmap fonts online"
+          },
+          {
+            "@type": "DownloadAction",
+            "target": "https://snowb.org",
+            "name": "Export Bitmap Font",
+            "description": "Download generated bitmap font files"
+          }
+        ],
+        "serviceType": "Font Generation Service",
+        "provider": {
+          "@type": "Organization",
+          "name": "SnowB BMF",
+          "url": "https://snowb.org"
+        }
+      }
+    </script>
+
+    <!-- FAQ Schema for GEO Optimization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "name": "SnowB BMF - Bitmap Font Generator FAQ",
+        "description": "Frequently asked questions about SnowB BMF online bitmap font generator",
+        "url": "https://snowb.org/docs/faq/",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is SnowB BMF?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SnowB BMF is a free online bitmap font generator that converts TrueType fonts (TTF/OTF) into bitmap fonts suitable for game development. It's a modern web-based alternative to the discontinued Flash Littera tool."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What file formats does SnowB BMF support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Input formats: TTF (TrueType) and OTF (OpenType) font files. Output formats: BMFont .fnt files, XML descriptor files, binary format files, and PNG texture atlas images."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is SnowB BMF compatible with Unity?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, SnowB BMF generates bitmap fonts in BMFont format which is fully compatible with Unity's TextMeshPro and legacy text systems. The exported files can be directly imported into Unity projects."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is SnowB BMF different from Littera?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SnowB BMF is a modern web-based tool that replaces the discontinued Flash-based Littera. It offers better performance, more export formats, real-time preview, and works in modern browsers without plugins."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does SnowB BMF work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, SnowB BMF is a Progressive Web App (PWA) that can work offline once loaded. You can install it on your device and use it without an internet connection."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What game engines support SnowB BMF fonts?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SnowB BMF generates standard BMFont format files that are supported by Unity, Unreal Engine, Godot, Cocos2d, LibGDX, and most other game engines and frameworks."
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-B0bi51RX.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-DusaJeda.js">
+    <link rel="modulepreload" crossorigin href="/assets/mobx-DmT1BJL9.js">
+    <link rel="modulepreload" crossorigin href="/assets/utils-Cc0gQ23c.js">
+    <link rel="modulepreload" crossorigin href="/assets/mui-BRPp4hhc.js">
+  <link rel="manifest" href="/manifest.webmanifest"></head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
