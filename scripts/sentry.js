@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import SentryCli from '@sentry/cli'
-import path from 'path'
 import fs from 'fs'
-import getGitRelease from './getGitRelease.js'
+import path from 'path'
 
+import getGitRelease from './getGitRelease.js'
 
 async function createReleaseAndUpload() {
   try {
@@ -33,14 +33,13 @@ async function createReleaseAndUpload() {
     try {
       // Create release version
       console.log(`Creating Sentry release: ${release}`)
-      await cli.releases.new(release)
+      await cli.releases.new(release, { projects: ['snowb'] })
 
       // Upload source maps (Vite build assets are in assets directory)
       console.log('Uploading source maps...')
       await cli.releases.uploadSourceMaps(release, {
         include: ['build/assets'],
         urlPrefix: '~/assets/',
-        rewrite: false,
         stripCommonPrefix: true,
       })
 
