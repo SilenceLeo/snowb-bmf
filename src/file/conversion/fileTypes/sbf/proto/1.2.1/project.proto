@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+message Metric {
+  sint32 xAdvance = 1;
+
+  sint32 xOffset = 2;
+
+  sint32 yOffset = 3;
+}
+
+message GradientColor {
+  int32 id = 1;
+
+  float offset = 2;
+
+  string color = 3;
+}
+
+message Gradient {
+  int32 type = 1;
+
+  float angle = 2;
+
+  repeated GradientColor palette = 3;
+}
+
+message PatternTexture {
+  bytes buffer = 1;
+
+  double scale = 2;
+
+  string repetition = 3;
+}
+
+message Fill {
+  int32 type = 1;
+
+  string color = 2;
+
+  Gradient gradient = 3;
+
+  PatternTexture patternTexture = 4;
+
+  int32 width = 5;
+
+  string lineCap = 6;
+
+  string lineJoin = 7;
+
+  int32 strokeType = 8;
+}
+
+message FontResource {
+  bytes font = 1;
+}
+
+message Font {
+  repeated FontResource fonts = 1;
+
+  int32 size = 2;
+
+  float lineHeight = 3;
+
+  int32 sharp = 4;
+}
+
+message GlyphFont {
+  string letter = 1;
+
+  Metric adjustMetric = 2;
+
+  map<string, int32> kerning = 3;
+
+  int32 page = 4;
+}
+
+message GlyphImage {
+  string letter = 1;
+
+  Metric adjustMetric = 2;
+
+  bytes buffer = 3;
+
+  string fileName = 4;
+
+  string fileType = 5;
+
+  bool selected = 6;
+
+  map<string, int32> kerning = 7;
+
+  int32 page = 8;
+}
+
+message Layout {
+  int32 padding = 1;
+
+  int32 spacing = 2;
+
+  int32 width = 3;
+
+  int32 height = 4;
+
+  bool auto = 5;
+
+  bool fixedSize = 6;
+
+  int32 page = 7;
+}
+
+message Shadow {
+  string color = 1;
+
+  int32 blur = 2;
+
+  sint32 offsetX = 3;
+
+  sint32 offsetY = 4;
+}
+
+message Style {
+  Font font = 1;
+
+  Fill fill = 2;
+
+  bool useStroke = 3;
+
+  Fill stroke = 4;
+
+  bool useShadow = 5;
+
+  Shadow shadow = 6;
+
+  string bgColor = 7;
+}
+
+message Ui {
+  string previewText = 1;
+}
+
+message Project {
+  int64 id = 1;
+
+  string name = 2;
+
+  string text = 3;
+
+  map<string, GlyphFont> glyphs = 4;
+
+  repeated GlyphImage glyphImages = 5;
+
+  Style style = 6;
+
+  Layout layout = 7;
+
+  Metric globalAdjustMetric = 8;
+
+  Ui ui = 9;
+}

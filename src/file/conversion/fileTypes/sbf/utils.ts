@@ -4,7 +4,7 @@ import { CheckFunction } from '../type'
 
 // SBF file prefix constants
 const PREFIX_STR = 'SnowBambooBMF'
-const VERSION_BYTES = [1, 2, 0]
+const VERSION_BYTES = [1, 2, 1]
 
 /**
  * Creates the SBF file prefix with version bytes

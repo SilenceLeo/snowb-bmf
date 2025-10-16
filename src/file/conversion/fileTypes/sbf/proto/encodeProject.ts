@@ -1,7 +1,7 @@
 import { Project } from 'src/store'
 import deepMapToObject from 'src/utils/deepMapToObject'
 
-import { IProject, Project as ProjectProto } from './1.2.0/project'
+import { IProject, Project as ProjectProto } from './1.2.1/project'
 
 function convertBuffersToUint8Array(project: Project): void {
   // font

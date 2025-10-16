@@ -1,6 +1,6 @@
 import { Project } from 'src/store'
 
-import { IProject } from './1.1.2/project'
+import { IProject } from './1.2.1/project'
 
 function convertKerning(kerning: Record<string, number>): Map<string, number> {
   const map = new Map()
