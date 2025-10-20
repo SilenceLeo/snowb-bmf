@@ -4,7 +4,6 @@ import { SnackbarProvider } from 'notistack'
 import createStore, { StoreContext } from 'src/store'
 
 import DynamicTitle from './components/DynamicTitle'
-import GoogleAnalytics from './components/GoogleAnalytics'
 import Wrap from './layout/Wrap'
 import theme from './theme'
 
@@ -21,7 +20,6 @@ function App(): React.JSX.Element {
             }}
           >
             <DynamicTitle />
-            <GoogleAnalytics />
             <Wrap />
           </SnackbarProvider>
         </ThemeProvider>
