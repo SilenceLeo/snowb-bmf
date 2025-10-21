@@ -96,7 +96,7 @@
     "protobufjs-cli": "^1.1.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.37.0",
-    "vite": "^7.0.4",
+    "vite": "^7.1.11",
     "vite-plugin-pwa": "^1.0.3",
     "vitest": "^3.2.4"
   },
