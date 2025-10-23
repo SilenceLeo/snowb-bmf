@@ -16,40 +16,10 @@ const exts = ['xml', 'fnt']
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
 const getContent: FontToContent = (bmfont) => {
-  const { version, metadata, info, common, pages, chars, kernings } = bmfont
+  const { info, common, pages, chars, kernings } = bmfont
 
   const parser = new DOMParser()
   const xmlDOM = document.implementation.createDocument('', 'font', null)
-
-  // Add version attribute to root font element
-  if (version) {
-    xmlDOM.documentElement.setAttribute('version', version.toString())
-  }
-
-  // Add comprehensive metadata as XML comments
-  if (metadata) {
-    const metadataComment = new Comment(`
-  =========================================================================
-  AngelCode Bitmap Font Generator configuration file
-  =========================================================================
-  Generator: ${metadata.generatorName} v${metadata.generatorVersion}
-  Website: ${metadata.generatorUrl}
-  Generated: ${metadata.generatedAt}
-  BMFont Format Version: ${metadata.formatVersion}
-  
-  Font Information:
-    Family: ${metadata.fontFamily}
-    Size: ${metadata.fontSize}px
-    Padding: ${metadata.padding}px
-    Spacing: ${metadata.spacing}px
-  
-  Statistics:
-    Characters: ${metadata.characterCount}
-    Kerning Pairs: ${metadata.kerningPairCount}
-  =========================================================================
-  `)
-    xmlDOM.documentElement.appendChild(metadataComment)
-  }
 
   const infoDoc = parser.parseFromString(formatStr(TEMP_INFO, info), 'text/xml')
   xmlDOM.documentElement.appendChild(infoDoc.childNodes[0])
