@@ -1,4 +1,5 @@
 import { action, computed, makeObservable, observable, runInAction } from 'mobx'
+import { deleteProject } from 'src/utils/persistence'
 
 import Project from './project'
 
@@ -56,6 +57,11 @@ class Workspace {
     }
     this.activeId = list[0].id
     this.projectList.delete(id)
+
+    // Delete from IndexedDB to prevent accumulation
+    deleteProject(id).catch((error) => {
+      console.error(`Failed to delete project ${id} from database:`, error)
+    })
   }
 
   addProject(p: Partial<Project> = {}): number {

@@ -90,6 +90,7 @@ export async function saveWorkspace(workspace: Workspace): Promise<void> {
 
 /**
  * Load workspace data from IndexedDB
+ * Loads ALL projects from database to prevent data loss from multi-window scenarios
  * @returns The loaded workspace data or null if no data exists
  */
 export async function loadWorkspace(): Promise<{
@@ -103,21 +104,18 @@ export async function loadWorkspace(): Promise<{
       return null
     }
 
-    // Load workspace metadata
-    const meta = await db.workspaceMeta.get('current')
-    if (!meta) {
-      console.log('[Persistence] No saved workspace found')
+    // Load all projects from database (not just meta.projectIds)
+    // This prevents data loss when multiple windows have different projects
+    const projectDataList = await db.projects.toArray()
+
+    if (projectDataList.length === 0) {
+      console.log('[Persistence] No saved projects found')
       return null
     }
-
-    // Load all projects
-    const projectDataList = await db.projects.bulkGet(meta.projectIds)
 
     // Decode projects
     const projects: Partial<Project>[] = []
     for (const projectData of projectDataList) {
-      if (!projectData) continue
-
       try {
         // Decode protobuf to Project object
         const project = conversion(projectData.data.buffer)
@@ -136,17 +134,44 @@ export async function loadWorkspace(): Promise<{
       return null
     }
 
+    // Load workspace metadata for activeId
+    const meta = await db.workspaceMeta.get('current')
+    let activeId = meta?.activeId ?? projects[0].id ?? Date.now()
+
+    // Check if activeId exists in loaded projects
+    const activeProjectExists = projects.some((p) => p.id === activeId)
+    if (!activeProjectExists) {
+      // Fallback to first project if activeId doesn't exist
+      activeId = projects[0].id ?? Date.now()
+      console.warn(
+        `[Persistence] Active project ${meta?.activeId} not found, fallback to project ${activeId}`,
+      )
+    }
+
     console.log(
       `[Persistence] Loaded workspace with ${projects.length} project(s)`,
     )
 
     return {
-      activeId: meta.activeId,
+      activeId,
       projects,
     }
   } catch (error) {
     console.error('[Persistence] Failed to load workspace:', error)
     return null
+  }
+}
+
+/**
+ * Delete a single project from IndexedDB
+ * @param projectId - The ID of the project to delete
+ */
+export async function deleteProject(projectId: number): Promise<void> {
+  try {
+    await db.projects.delete(projectId)
+    console.log(`[Persistence] Deleted project ${projectId}`)
+  } catch (error) {
+    console.error(`[Persistence] Failed to delete project ${projectId}:`, error)
   }
 }
 
