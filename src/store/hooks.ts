@@ -13,7 +13,13 @@ import {
 } from '.'
 
 export default function useStores(): Store {
-  return useContext(StoreContext)
+  const store = useContext(StoreContext)
+  if (!store) {
+    throw new Error(
+      'Store not initialized. Make sure App component has loaded.',
+    )
+  }
+  return store
 }
 
 export function useWorkspace(): Workspace {
