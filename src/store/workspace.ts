@@ -7,7 +7,7 @@ class Workspace {
 
   projectList: Map<number, Project> = new Map()
 
-  constructor() {
+  constructor(createDefault = true) {
     makeObservable(this, {
       activeId: observable,
       projectList: observable.shallow,
@@ -19,11 +19,13 @@ class Workspace {
       setProjectName: action.bound,
     })
 
-    runInAction(() => {
-      this.activeId = Date.now()
-      const project = new Project({ id: this.activeId })
-      this.projectList.set(project.id, project)
-    })
+    if (createDefault) {
+      runInAction(() => {
+        this.activeId = Date.now()
+        const project = new Project({ id: this.activeId })
+        this.projectList.set(project.id, project)
+      })
+    }
   }
 
   get currentProject(): Project {
