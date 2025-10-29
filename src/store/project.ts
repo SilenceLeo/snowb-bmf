@@ -561,6 +561,12 @@ class Project {
         continue
       }
 
+      // Fill background color if specified (non-transparent)
+      if (this.style.bgColor) {
+        ctx.fillStyle = this.style.bgColor
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      }
+
       // Get glyphs for this page
       const pageGlyphs = this.glyphList.filter(
         (glyph) => glyph.page === pageIndex,
@@ -827,7 +833,9 @@ class Project {
     // Optimization: separate style listening to reduce unnecessary checks
     deepObserve(this.style, (change, path, _root) => {
       // Background color changes don't require regenerating glyphs
+      // but do need to regenerate pack canvases with new background
       if (isName(change, 'bgColor')) {
+        this.throttlePack()
         return
       }
 

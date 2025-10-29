@@ -18,7 +18,7 @@ class Style {
 
   readonly shadow: Shadow
 
-  bgColor = 'rgba(0,0,0,0)'
+  bgColor: string
 
   constructor(style: Partial<Style> = {}) {
     makeObservable(this, {
@@ -39,6 +39,7 @@ class Style {
     this.shadow = new Shadow(style.shadow)
     this.useShadow = !!style.useShadow
     this.useStroke = !!style.useStroke
+    this.bgColor = style.bgColor || 'rgba(0,0,0,0)'
   }
 
   setUseStroke(useStroke: boolean): void {
