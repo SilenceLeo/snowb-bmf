@@ -17,7 +17,7 @@ schema:
   "keywords": ["font stroke", "outline styles", "bitmap font design", "text styling", "font effects", "typography", "SnowB BMF"]
   "mainEntityOfPage":
     "@type": "WebPage"
-    "url": "https://snowb.org/docs/font-design/stroke-styles"
+    "url": "https://snowb.org/en/docs/font-design/stroke-styles"
   "articleSection": "Font Design"
   "genre": "Technical Documentation"
   "educationalLevel": "Intermediate"

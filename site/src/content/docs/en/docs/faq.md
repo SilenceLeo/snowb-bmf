@@ -6,7 +6,7 @@ schema:
   "@type": "FAQPage"
   "name": "SnowB BMF - Frequently Asked Questions"
   "description": "Comprehensive FAQ for SnowB BMF, the free web-based bitmap font generator. Get answers about features, compatibility, performance, and troubleshooting."
-  "url": "https://snowb.org/docs/faq/"
+  "url": "https://snowb.org/en/docs/faq/"
   "about":
     "@type": "SoftwareApplication"
     "name": "SnowB BMF"

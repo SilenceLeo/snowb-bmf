@@ -1,10 +1,10 @@
 ---
-title: 'SnowB BMF: 免费开源的位图字体生成器'
-description: '使用 SnowB BMF 创建专业的、游戏级的位图字体，这是一款终极的基于浏览器的生成器。通过实时预览、高级样式和强大的纹理打包功能，设计出令人惊叹的文本效果。非常适合使用 Unity、Unreal、Godot、Pixi 或 Phaser 的开发者。'
+title: 'SnowB BMF: 游戏开发免费在线位图字体生成器'
+description: '使用 SnowB BMF 在线创建专业位图字体。无需下载，无需编程技能。生成像素字体，TTF 转位图转换，为 Unity、Godot、Unreal 生成游戏就绪字体。Windows、macOS、Linux 跨平台桌面应用程序。'
 template: splash
 hero:
   title: SnowB BMF
-  tagline: '为现代游戏开发量身打造的专业位图字体生成器。在浏览器中即可创建、设计和导出游戏级字体。'
+  tagline: '游戏开发专业位图字体生成器。无需编码即可创建像素完美的字体——在任何浏览器中即时运行。'
   image:
     file: ~/assets/interface-overview.png
   actions:
@@ -25,7 +25,7 @@ schema:
   "url": "https://snowb.org"
   "downloadUrl": "https://snowb.org"
   "softwareVersion": "1.2.0"
-  "keywords": ["位图字体", "字体生成器", "游戏开发", "Unity", "Unreal", "Godot", "Pixi", "Phaser", "纹理图集", "字体设计"]
+  "keywords": ["位图字体生成器", "免费在线位图字体生成器", "像素字体编辑器", "无需编程技能", "TTF转位图转换器", "WOFF字体转换", "游戏引擎位图字体", "Unity Godot Unreal字体", "游戏字体生成器", "跨平台桌面应用", "基于浏览器的字体工具", "拖放字体创建器", "AngelCode BMFont格式", "纹理图集生成器", "像素艺术字体制作器", "网页字体生成器", "免费开源字体工具", "DirectX OpenGL字体工具", "独立游戏开发者工具", "专业字体创建", "游戏UI字体"]
   "screenshot": "https://user-images.githubusercontent.com/4632034/89119353-85c0f680-d4e0-11ea-88ae-978dfc01d5fc.png"
   "image": "https://snowb.org/summary_large_image.png"
   "inLanguage": "zh-CN"
@@ -34,12 +34,18 @@ schema:
     "price": "0"
     "priceCurrency": "USD"
   "featureList":
-    - "基于浏览器的位图字体生成器"
-    - "实时视觉反馈"
-    - "高级样式选项，包括渐变、阴影和描边"
-    - "多种导出格式（文本、XML、JSON）"
-    - "注重隐私的本地处理"
-    - "开源且免费使用"
+    - "专业的基于浏览器的位图字体生成器 - 无需安装"
+    - "实时视觉反馈，实时画布预览和即时更新"
+    - "高级样式：线性/径向渐变、阴影、自定义描边"
+    - "游戏引擎集成：Unity、Unreal、Godot、Cocos2d、Phaser、PixiJS"
+    - "高级打包算法（Guillotine）优化纹理内存 30-50%"
+    - "多种导出格式：BMFont Text/XML、PNG 纹理图集"
+    - "旧版格式支持：导入 .sbf、.ltr 字体项目文件"
+    - "专业级效果和自定义选项"
+    - "100% 注重隐私的本地处理 - 无云上传或账户要求"
+    - "开源（MIT 许可证）且永久免费"
+    - "PWA 支持离线使用和本地安装"
+    - "高效的 Protocol Buffers 序列化，项目文件更紧凑"
   "creator":
     "@type": "Person"
     "name": "SilenceLeo"
@@ -56,23 +62,23 @@ import { ContainerSection } from 'starlight-theme-black/components'
 
 <ContainerSection>
 <CardGrid >
-	<Card title="基于浏览器 & 免安装" icon="laptop">
-		无需下载、无需安装、无需注册。直接在您的 Chrome 或 Edge 浏览器中启动专业级字体创建工具。
+	<Card title="零设置 - 立即可用" icon="laptop">
+		**免费在线位图字体生成器**，无需下载或安装。在任何浏览器中即时运行，带有**拖放界面**和实时预览。渐进式 Web 应用（PWA）支持**离线字体创建**和本地安装，提供原生应用体验。
 	</Card>
-	<Card title="直观易用的界面" icon="pen">
-		凭借可视化驱动的界面和实时预览，字体设计变得毫不费力。拖放功能使其对初学者和专家都很容易上手。
+	<Card title="专业视觉效果" icon="star">
+		使用**高级渐变**、多层阴影、可自定义描边和发光效果创建令人惊叹的字体。每次更改都会即时预览。**无需编程技能** - 所有效果通过直观的控件进行视觉应用。
 	</Card>
-	<Card title="实时视觉反馈" icon="magnifier">
-		即时查看您的调整结果。对颜色、阴影或描边的每一次更改都会立即反映出来，确保真正的所见即所得编辑体验。
+	<Card title="游戏引擎兼容" icon="rocket">
+		生成与所有主要游戏引擎兼容的 **AngelCode BMFont 格式**：Unity、Godot、Unreal Engine、Cocos2d、Phaser.js、PixiJS、Defold 和 GameMaker。优化的纹理图集适用于 DirectX、OpenGL 和 WebGL 渲染器。
 	</Card>
-	<Card title="隐私与版权保护" icon="approve-check-circle">
-		100% 本地处理。您的专有字体和项目数据永远不会离开您的机器，保证了隐私和版权保护。
+	<Card title="像素艺术专家" icon="puzzle">
+		专业的**像素字体编辑器**，用于创作地道的复古字体。创建清晰的 8 位和 16 位字体，具有像素级精度。智能打包在保持锐利像素的同时减少 30-50% 的纹理内存。
 	</Card>
-	<Card title="赋能独立开发者和艺术家" icon="star">
-		获取曾经为大型工作室专有的专业位图字体创建工具。现在，个人创作者可以轻松制作高质量的资产。
+	<Card title="将任何内容转换为字体" icon="document">
+		导入 **TTF/OTF/WOFF 字体**进行位图转换，或加载现有的 .ltr 项目。将自定义图像转换为字体字符，用于游戏图标和 UI 元素。
 	</Card>
-	<Card title="完全免费和开源" icon="open-book">
-		避免昂贵的软件许可证。SnowB BMF 是免费使用的，其透明的开源代码促进了社区驱动的开发和信任。
+	<Card title="智能内存优化" icon="setting">
+		采用 Guillotine 算法的高级**纹理图集打包**。自动空白修剪和二次幂大小调整。Web Workers 并行处理数千个字形而不会冻结。减少 30-50% 的纹理内存。
 	</Card>
 </CardGrid>
 

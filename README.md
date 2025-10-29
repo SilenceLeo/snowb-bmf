@@ -5,74 +5,82 @@
 </p>
 
 <h1 align="center">SnowBamboo BMF</h1>
-<p align="center">Modern Web-Based Bitmap Font Generator</p>
+<p align="center">Professional Web-Based Bitmap Font Generator</p>
 
 <p align="center">
-  <a href="https://snowb.org/">🌐 Web App</a> •
-  <a href="https://snowb.org/en/docs/">📚 Documentation</a> •
-  <a href="README_ZH.md">简体中文</a> •
-  <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#development">Development</a>
+  <a href="https://snowb.org/">Web App</a> •
+  <a href="https://snowb.org/en/docs/">Documentation</a> •
+  <a href="README_ZH.md">简体中文</a>
 </p>
 
 ---
 
 ## Overview
 
-SnowBamboo BMF is a modern, web-based bitmap font generator built with cutting-edge web technologies. It provides a comprehensive solution for creating, editing, and exporting bitmap fonts for games, applications, and digital media projects.
+SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export professional bitmap fonts directly in your browser—no installation, no registration, no cloud uploads.
 
-**🎯 [Try it now at snowb.org](https://snowb.org/)**
+**[Try it now at snowb.org](https://snowb.org/)**
 
 [![SnowBamboo Bitmap Font Generator Preview](https://github.com/SilenceLeo/snowb-bmf/assets/4632034/182efea8-6254-4bb7-80a1-1d4c3be1e928)](https://snowb.org/)
 
-## Features
+### Key Advantages
 
-### 🎨 **Advanced Font Editing**
-- Real-time font preview and editing
-- Multiple glyph generation modes
-- Advanced typography controls (kerning, spacing, baseline)
-- Support for gradients, shadows, and effects
-- Interactive canvas-based editing
+- **Zero Setup** - Start creating in seconds with no installation required
+- **True Cross-Platform** - Works identically on Windows, Mac, Linux, ChromeOS
+- **Privacy-First** - 100% local processing, no tracking, no cloud uploads
+- **Production-Ready** - Advanced packing algorithms reduce texture memory by 30-50%
+- **Full Compatibility** - Native support for Unity, Unreal, Godot, Cocos2d, Phaser, PixiJS
+- **Legacy Support** - Import from Littera migrate existing projects seamlessly
 
-### 🔄 **File Format Support**
-- **Import**: `.sbf` (SnowBamboo native format), `.ltr` (Littera legacy files)
-- **Font Resources**: TTF/OTF/WOFF fonts for glyph generation
-- **Export**: Text-based descriptors, XML formats, PNG texture atlases
-- Seamless migration from legacy tools
+## Core Features
 
-### ⚡ **Performance & Modern Architecture**
-- Built with React 19 and TypeScript 5.8+
-- Vite 7 for lightning-fast development
-- Web Workers for heavy computation
-- Progressive Web App (PWA) capabilities
-- Real-time state management with MobX 6
+### Font Editing & Design
 
-### 🛠 **Developer Experience**
-- Modern build tooling and linting
-- Comprehensive test suite with Vitest
-- Protocol Buffers for efficient file serialization
-- Sentry integration for monitoring
-- Hot reloading and instant feedback
+- **Real-time Preview** - Visual feedback as you edit
+- **Advanced Typography** - Kerning pairs, letter spacing, baseline adjustment
+- **Professional Effects** - Gradients (linear/radial), multi-layer shadows, custom strokes
+- **Custom Glyphs** - Import images for icons and special characters
+- **Flexible Input** - Unicode blocks, custom sets
+- **Interactive Canvas** - Precise control via mouse and keyboard
+
+### File Format Support
+
+**Import** - `.sbf`, `.ltr`, `TTF/OTF/WOFF`
+
+**Export** - [AngelCode format](https://www.angelcode.com/products/bmfont/doc/file_format.html) BMFont Text/XML, `.fnt` binary, PNG atlases
+
+### Game Engine Integration
+
+Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine (Slate/UMG), Godot, [Cocos2d/Creator](https://docs.cocos.com/creator/3.8/manual/en/asset/font.html), [Phaser 3](https://docs.phaser.io/phaser/concepts/gameobjects/bitmap-text)/PixiJS, and custom engines via standard BMFont format.
+
+### Performance & Architecture
+
+- **Optimized Rendering** - React 19 with Canvas API and Web Workers for heavy computation
+- **Smart Packing** - MaxRects, Guillotine, and Shelf algorithms via worker pool
+- **Progressive Web App** - Works offline with automatic updates
+- **Type-Safe** - Full TypeScript with strict mode, reactive MobX state management
 
 ## Tech Stack
 
-- **Frontend**: React 19, TypeScript 5.8+, Material-UI v7
-- **Build Tool**: Vite 7 with optimized bundling
-- **State Management**: MobX 6 with strict mode
-- **Styling**: Emotion CSS-in-JS, Material-UI theming
-- **Testing**: Vitest, React Testing Library
-- **Graphics**: Canvas API, Web Workers for packing algorithms
-- **Serialization**: Protocol Buffers (.sbf format)
-- **PWA**: Workbox for service worker and caching
-- **Monitoring**: Sentry for error tracking and performance
+| Category | Technology |
+|----------|-----------|
+| **Framework** | React 19, TypeScript 5.8+ |
+| **Build Tool** | Vite 7 with optimized bundling |
+| **State Management** | MobX 6 (strict mode) |
+| **UI Components** | Material-UI v7, Emotion CSS-in-JS |
+| **Testing** | Vitest, React Testing Library |
+| **Graphics** | Canvas API, Web Workers |
+| **Serialization** | Protocol Buffers (.sbf format) |
+| **PWA** | Workbox service worker |
+| **Monitoring** | Sentry (error tracking & performance) |
 
 ## Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ and Yarn package manager
 
-### Installation
+### Installation & Development
 
 ```bash
 # Clone the repository
@@ -88,7 +96,7 @@ yarn start
 
 The application will be available at `http://localhost:3000`
 
-### Building for Production
+### Production Build
 
 ```bash
 # Build the application
@@ -98,67 +106,41 @@ yarn build
 yarn preview
 ```
 
-## Development
+## Development Guide
 
-### Development Commands
+### Essential Commands
 
 ```bash
 # Development
-yarn start                    # Start Vite dev server
+yarn start                    # Start Vite dev server (port 3000)
+yarn test                     # Run Vitest tests
 
 # Code Quality
 yarn lint                     # Run ESLint
-yarn lint:fix                 # Fix linting issues automatically
-yarn format                   # Format code with Prettier
+yarn lint:fix                 # Auto-fix linting issues
+yarn lint:check               # Check with zero warnings
+yarn format                   # Format with Prettier
 
 # Build & Deploy
-yarn build:all                # Complete build pipeline
+yarn build                    # Build production bundle
+yarn build:all                # Complete build pipeline (app + docs + sitemap)
+yarn preview                  # Preview production build locally
 yarn deploy                   # Deploy to GitHub Pages
 
 # Utilities
 yarn pb                       # Generate Protocol Buffer definitions
+yarn find-unused              # Find unused files
+yarn find-unused:cleanup      # Remove unused files
 ```
 
-### Project Structure
+### Key Development Patterns
 
-```
-src/
-├── app/
-│   ├── components/           # Reusable UI components
-│   ├── hooks/               # Custom React hooks
-│   ├── layout/              # Main layout components
-│   └── theme/               # Material-UI theme configuration
-├── file/
-│   ├── conversion/          # File format conversion logic
-│   └── export/              # Export functionality
-├── store/
-│   ├── base/                # MobX store models
-│   └── index.ts             # Store configuration
-├── utils/                   # Utility functions and helpers
-└── workers/                 # Web Workers for heavy computation
-```
-
-### Architecture Highlights
-
-- **State Management**: Single workspace store pattern with MobX 6
-- **File Formats**: Versioned Protocol Buffer schemas with migration support
-- **Canvas Operations**: Optimized font rendering and texture atlas generation
-- **Performance**: Web Workers for rectangle packing algorithms
-- **Type Safety**: Strict TypeScript configuration with comprehensive typing
-
-## File Format Support
-
-### Import Formats
-- **`.sbf`** - SnowBamboo native format (Protocol Buffer-based)
-- **`.ltr`** - Legacy Littera project files (automatic conversion)
-
-### Font Resources
-- **TTF/OTF/WOFF** - Font files for glyph generation (uploaded via interface)
-
-### Export Formats
-- **Text Descriptors** - Human-readable font definitions
-- **XML Descriptors** - Structured XML format for frameworks
-- **PNG Atlases** - Optimized texture atlases with various packing algorithms
+See [CLAUDE.md](./CLAUDE.md) for detailed development patterns including:
+- State management with MobX 6
+- Protocol Buffer schema versioning
+- Canvas operations and utilities
+- Performance optimization strategies
+- Code quality standards (linting, formatting, testing)
 
 ## License
 

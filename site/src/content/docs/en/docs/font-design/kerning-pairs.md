@@ -35,7 +35,7 @@ schema:
   "isPartOf":
     "@type": "TechArticle"
     "name": "SnowB BMF Font Design Documentation"
-    "url": "https://snowb.org/docs/font-design/"
+    "url": "https://snowb.org/en/docs/font-design/"
 ---
 
 Kerning is a fundamental technique in typography that involves adjusting the space between specific pairs of characters to create a more visually appealing and readable text. Proper kerning makes your font look professional and balanced.

@@ -6,9 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **NEVER use `git add` or `git commit` commands under any circumstances.** All git operations for staging and committing should be handled manually by the developer.
 
+**NEVER create additional documentation files after completing tasks.** Do not generate task summaries, case studies, examples, or any other documentation unless explicitly requested by the user. Focus only on the requested code changes.
+
 ## Project Overview
 
-SnowBamboo BMF is a web-based bitmap font generator that replaces the deprecated Flash-based Littera tool. It's built as a React application that allows users to create, edit, and export bitmap fonts for use in games and applications.
+SnowBamboo BMF is a professional web-based bitmap font generator built as a modern React application. It allows users to create, edit, and export high-quality bitmap fonts for use in games and applications.
 
 ## Development Commands
 

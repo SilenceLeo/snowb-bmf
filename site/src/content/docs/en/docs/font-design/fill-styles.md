@@ -19,7 +19,7 @@ schema:
     "url": "https://snowb.org"
   "mainEntityOfPage":
     "@type": "WebPage"
-    "@id": "https://snowb.org/docs/font-design/fill-styles"
+    "@id": "https://snowb.org/en/docs/font-design/fill-styles"
   "author":
     "@type": "Person"
     "name": "SilenceLeo"
