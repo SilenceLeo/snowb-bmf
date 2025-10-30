@@ -1,3 +1,6 @@
 # Protocol Buffer generated files - exclude from GitHub language stats
 src/file/conversion/fileTypes/sbf/proto/**/project.js linguist-generated
 src/file/conversion/fileTypes/sbf/proto/**/project.d.ts linguist-generated
+
+# Site directory - exclude from GitHub language stats
+site/** linguist-generated
