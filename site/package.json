@@ -16,7 +16,7 @@
     "@fontsource/geist-mono": "^5.2.7",
     "@fontsource/geist-sans": "^5.2.5",
     "@tailwindcss/vite": "^4.1.13",
-    "astro": "^5.14.3",
+    "astro": "^5.15.6",
     "sharp": "^0.34.2",
     "starlight-theme-black": "^0.6.0",
     "tailwindcss": "^4.1.13"
