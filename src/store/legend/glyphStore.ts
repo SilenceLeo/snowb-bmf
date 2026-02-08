@@ -9,7 +9,7 @@
  * 2. Observable objects with direct property access via get()/set()
  * 3. Memo/For components for fine-grained DOM updates
  */
-import { batch, observable, observe } from '@legendapp/state'
+import { batch, observable, observe, opaqueObject } from '@legendapp/state'
 
 import { DEBUG_CONFIG, PERFORMANCE_THRESHOLDS } from './config'
 import type {
@@ -348,14 +348,14 @@ export function setRenderingState(isRendering: boolean): void {
  * Set source canvas
  */
 export function setSourceCanvas(canvas: HTMLCanvasElement | null): void {
-  glyphStore$.packing.sourceCanvas.set(canvas)
+  glyphStore$.packing.sourceCanvas.set(canvas ? opaqueObject(canvas) : null)
 }
 
 /**
  * Set pack canvases
  */
 export function setPackCanvases(canvases: HTMLCanvasElement[]): void {
-  glyphStore$.packing.packCanvases.set(canvases)
+  glyphStore$.packing.packCanvases.set(opaqueObject(canvases))
 }
 
 // ============================================================================
