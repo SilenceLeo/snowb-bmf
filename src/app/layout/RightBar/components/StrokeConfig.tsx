@@ -4,24 +4,43 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Input from '@mui/material/Input'
 import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
 import FormFill from 'src/app/layout/common/FormFill'
-import { useStyle } from 'src/store/hooks'
+import {
+  addStrokeGradientColor,
+  setStrokeColor,
+  setStrokeFillType,
+  setStrokeGradientAngle,
+  setStrokeGradientType,
+  setStrokeLineCap,
+  setStrokeLineJoin,
+  setStrokePatternImage,
+  setStrokePatternRepetition,
+  setStrokePatternScale,
+  setStrokeType,
+  setStrokeWidth,
+  setUseStroke,
+  updateStrokeGradientPalette,
+  useStroke,
+  useStrokeEnabled,
+} from 'src/store/legend'
 
 import ConfigSection from '../../../components/ConfigSection'
 
 const StrokeConfig: FunctionComponent = () => {
-  const { stroke, useStroke, setUseStroke } = useStyle()
+  const stroke = useStroke()
+  const useStrokeValue = useStrokeEnabled()
+
   const {
-    setWidth,
+    width,
     lineJoin,
-    setLineJoin,
     lineCap,
-    setLineCap,
     strokeType,
-    setStrokeType,
+    type,
+    color,
+    gradient,
+    patternTexture,
   } = stroke
 
   return (
@@ -46,7 +65,7 @@ const StrokeConfig: FunctionComponent = () => {
           Off
           <Switch
             size='small'
-            checked={useStroke}
+            checked={useStrokeValue}
             onChange={(e) => setUseStroke(e.target.checked)}
           />
           On
@@ -55,7 +74,7 @@ const StrokeConfig: FunctionComponent = () => {
     >
       <Box
         sx={
-          useStroke
+          useStrokeValue
             ? {}
             : {
                 opacity: 0.3,
@@ -66,11 +85,11 @@ const StrokeConfig: FunctionComponent = () => {
         <Box sx={{ px: 2, my: 4 }}>
           <GridInput before='Width:' after='px'>
             <Input
-              value={stroke?.width || 0}
+              value={width ?? 0}
               fullWidth
               type='number'
               slotProps={{ input: { min: 0 } }}
-              onChange={(e) => setWidth(Number(e.target.value))}
+              onChange={(e) => setStrokeWidth(Number(e.target.value))}
             />
           </GridInput>
         </Box>
@@ -104,19 +123,19 @@ const StrokeConfig: FunctionComponent = () => {
           <GridInput before='Line Cap:' component='div' childrenWidth={8}>
             <ButtonGroup size='small' color='primary'>
               <Button
-                onClick={() => setLineCap('butt')}
+                onClick={() => setStrokeLineCap('butt')}
                 variant={lineCap === 'butt' ? 'contained' : 'outlined'}
               >
                 Butt
               </Button>
               <Button
-                onClick={() => setLineCap('round')}
+                onClick={() => setStrokeLineCap('round')}
                 variant={lineCap === 'round' ? 'contained' : 'outlined'}
               >
                 Round
               </Button>
               <Button
-                onClick={() => setLineCap('square')}
+                onClick={() => setStrokeLineCap('square')}
                 variant={lineCap === 'square' ? 'contained' : 'outlined'}
               >
                 Square
@@ -129,19 +148,19 @@ const StrokeConfig: FunctionComponent = () => {
           <GridInput before='Line Join:' component='div' childrenWidth={8}>
             <ButtonGroup size='small' color='primary'>
               <Button
-                onClick={() => setLineJoin('miter')}
+                onClick={() => setStrokeLineJoin('miter')}
                 variant={lineJoin === 'miter' ? 'contained' : 'outlined'}
               >
                 Miter
               </Button>
               <Button
-                onClick={() => setLineJoin('round')}
+                onClick={() => setStrokeLineJoin('round')}
                 variant={lineJoin === 'round' ? 'contained' : 'outlined'}
               >
                 Round
               </Button>
               <Button
-                onClick={() => setLineJoin('bevel')}
+                onClick={() => setStrokeLineJoin('bevel')}
                 variant={lineJoin === 'bevel' ? 'contained' : 'outlined'}
               >
                 Bevel
@@ -149,10 +168,24 @@ const StrokeConfig: FunctionComponent = () => {
             </ButtonGroup>
           </GridInput>
         </Box>
-        <FormFill config={stroke} />
+        <FormFill
+          type={type}
+          color={color}
+          gradient={gradient}
+          patternTexture={patternTexture}
+          onTypeChange={setStrokeFillType}
+          onColorChange={setStrokeColor}
+          onGradientTypeChange={setStrokeGradientType}
+          onGradientAngleChange={setStrokeGradientAngle}
+          onGradientColorAdd={addStrokeGradientColor}
+          onGradientPaletteUpdate={updateStrokeGradientPalette}
+          onPatternImageChange={setStrokePatternImage}
+          onPatternRepetitionChange={setStrokePatternRepetition}
+          onPatternScaleChange={setStrokePatternScale}
+        />
       </Box>
     </ConfigSection>
   )
 }
 
-export default observer(StrokeConfig)
+export default StrokeConfig

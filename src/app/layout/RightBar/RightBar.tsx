@@ -5,7 +5,7 @@ import ShadowConfig from '@/app/layout/RightBar/components/ShadowConfig'
 import StrokeConfig from '@/app/layout/RightBar/components/StrokeConfig'
 import { FunctionComponent } from 'react'
 
-const RightBar: FunctionComponent<unknown> = () => {
+const RightBar: FunctionComponent = () => {
   return (
     <Sidebar title='Style Config' width='300px'>
       <FillConfig />

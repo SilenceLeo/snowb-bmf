@@ -1,4 +1,4 @@
-import { Project } from 'src/store'
+import type { Project } from 'src/types/project'
 
 import { encodeProject } from './proto/index'
 import { createPrefix } from './utils'

@@ -1,0 +1,412 @@
+/**
+ * Legend State Serialization Module
+ *
+ * Converts Legend State store data to Protocol Buffer compatible format.
+ * Legend State .get() returns plain JS objects, so no deep conversion needed.
+ */
+import type {
+  IFill,
+  IFont,
+  IGlyphFont,
+  IGlyphImage,
+  ILayout,
+  IMetric,
+  IProject,
+  IShadow,
+  IStyle,
+  IUi,
+} from 'src/file/conversion/fileTypes/sbf/proto/1.2.1/project'
+
+import { glyphStore$ } from '../glyphStore'
+import { projectStore$ } from '../projectStore'
+import { layoutStore$ } from '../stores/layoutStore'
+import {
+  type FillData,
+  type FontData,
+  type FontResource,
+  type GradientPaletteItem,
+  type MetricData,
+  type PatternTextureData,
+  type ShadowData,
+  type StrokeData,
+  styleStore$,
+} from '../stores/styleStore'
+import { uiStore$ } from '../stores/uiStore'
+import type { FontGlyphData, ImageGlyphData } from '../types'
+
+// ============================================================================
+// Type Definitions
+// ============================================================================
+
+/**
+ * Serializable project data (Protocol Buffer compatible)
+ */
+export interface SerializableProject extends IProject {
+  id: number
+  name: string
+  text: string
+  glyphs: Record<string, IGlyphFont>
+  glyphImages: IGlyphImage[]
+  style: IStyle
+  layout: ILayout
+  globalAdjustMetric: IMetric
+  ui: IUi
+}
+
+// ============================================================================
+// Metric Serialization
+// ============================================================================
+
+/**
+ * Convert MetricData to plain object for serialization
+ */
+function serializeMetric(metric: MetricData | null | undefined): IMetric {
+  if (!metric) {
+    return { xAdvance: 0, xOffset: 0, yOffset: 0 }
+  }
+
+  return {
+    xAdvance: metric.xAdvance ?? 0,
+    xOffset: metric.xOffset ?? 0,
+    yOffset: metric.yOffset ?? 0,
+  }
+}
+
+// ============================================================================
+// Kerning Serialization
+// ============================================================================
+
+/**
+ * Convert kerning Map to plain object
+ */
+function serializeKerning(
+  kerning: Record<string, number> | null | undefined,
+): Record<string, number> {
+  if (!kerning) {
+    return {}
+  }
+
+  return kerning
+}
+
+// ============================================================================
+// Font Glyph Serialization
+// ============================================================================
+
+/**
+ * Serialize a single font glyph
+ */
+function serializeFontGlyph(glyph: FontGlyphData): IGlyphFont {
+  return {
+    letter: glyph.letter,
+    adjustMetric: serializeMetric(glyph.adjustMetric),
+    kerning: serializeKerning(glyph.kerning),
+    page: glyph.page,
+  }
+}
+
+/**
+ * Serialize all font glyphs
+ */
+function serializeGlyphs(
+  glyphs: Record<string, FontGlyphData>,
+): Record<string, IGlyphFont> {
+  const result: Record<string, IGlyphFont> = {}
+
+  Object.entries(glyphs).forEach(([letter, glyph]) => {
+    result[letter] = serializeFontGlyph(glyph)
+  })
+
+  return result
+}
+
+// ============================================================================
+// Image Glyph Serialization
+// ============================================================================
+
+/**
+ * Serialize a single image glyph
+ */
+function serializeImageGlyph(imageGlyph: ImageGlyphData): IGlyphImage {
+  return {
+    letter: imageGlyph.letter,
+    adjustMetric: serializeMetric(imageGlyph.adjustMetric),
+    buffer: imageGlyph.buffer
+      ? new Uint8Array(imageGlyph.buffer)
+      : new Uint8Array(0),
+    fileName: imageGlyph.fileName ?? '',
+    fileType: imageGlyph.fileType ?? '',
+    selected: imageGlyph.selected,
+    kerning: serializeKerning(imageGlyph.kerning),
+    page: imageGlyph.page,
+  }
+}
+
+/**
+ * Serialize all image glyphs
+ */
+function serializeImageGlyphs(imageGlyphs: ImageGlyphData[]): IGlyphImage[] {
+  return imageGlyphs.map(serializeImageGlyph)
+}
+
+// ============================================================================
+// Style Serialization
+// ============================================================================
+
+/**
+ * Serialize gradient palette
+ */
+function serializeGradientPalette(
+  palette: GradientPaletteItem[],
+): Array<{ id: number; offset: number; color: string }> {
+  return palette.map((item) => ({
+    id: item.id,
+    offset: item.offset,
+    color: item.color,
+  }))
+}
+
+/**
+ * Serialize pattern texture
+ */
+function serializePatternTexture(texture: PatternTextureData): {
+  buffer: Uint8Array
+  scale: number
+  repetition: string
+} {
+  return {
+    buffer: texture.buffer ? new Uint8Array(texture.buffer) : new Uint8Array(0),
+    scale: texture.scale,
+    repetition: texture.repetition,
+  }
+}
+
+/**
+ * Serialize fill data
+ */
+function serializeFill(fill: FillData): IFill {
+  return {
+    type: fill.type,
+    color: fill.color,
+    gradient: {
+      type: fill.gradient.type,
+      angle: fill.gradient.angle,
+      palette: serializeGradientPalette(fill.gradient.palette),
+    },
+    patternTexture: serializePatternTexture(fill.patternTexture),
+  }
+}
+
+/**
+ * Serialize stroke data (extends fill with stroke-specific properties)
+ */
+function serializeStroke(stroke: StrokeData): IFill {
+  return {
+    ...serializeFill(stroke),
+    width: stroke.width,
+    lineCap: stroke.lineCap,
+    lineJoin: stroke.lineJoin,
+    strokeType: stroke.strokeType,
+  }
+}
+
+/**
+ * Serialize shadow data
+ */
+function serializeShadow(shadow: ShadowData): IShadow {
+  return {
+    color: shadow.color,
+    blur: shadow.blur,
+    offsetX: shadow.offsetX,
+    offsetY: shadow.offsetY,
+  }
+}
+
+/**
+ * Serialize font resources
+ */
+function serializeFontResources(
+  fonts: FontResource[],
+): Array<{ font: Uint8Array }> {
+  return fonts.map((fontResource) => ({
+    font: fontResource.font
+      ? new Uint8Array(fontResource.font)
+      : new Uint8Array(0),
+  }))
+}
+
+/**
+ * Serialize font data
+ */
+function serializeFont(font: FontData): IFont {
+  return {
+    fonts: serializeFontResources(font.fonts),
+    size: font.size,
+    lineHeight: font.lineHeight,
+    sharp: font.sharp,
+  }
+}
+
+/**
+ * Serialize complete style data
+ */
+function serializeStyle(): IStyle {
+  const style = styleStore$.style.get()
+
+  return {
+    font: serializeFont(style.font),
+    fill: serializeFill(style.fill),
+    useStroke: style.useStroke,
+    stroke: serializeStroke(style.stroke),
+    useShadow: style.useShadow,
+    shadow: serializeShadow(style.shadow),
+    bgColor: style.bgColor,
+  }
+}
+
+// ============================================================================
+// Layout Serialization
+// ============================================================================
+
+/**
+ * Serialize layout data
+ */
+function serializeLayout(): ILayout {
+  const layout = layoutStore$.layout.get()
+
+  return {
+    padding: layout.padding,
+    spacing: layout.spacing,
+    width: layout.width,
+    height: layout.height,
+    auto: layout.auto,
+    fixedSize: layout.fixedSize,
+    page: layout.page,
+  }
+}
+
+// ============================================================================
+// UI Serialization
+// ============================================================================
+
+/**
+ * Serialize UI data (only persistent fields)
+ */
+function serializeUi(): IUi {
+  const ui = uiStore$.ui.get()
+
+  return {
+    previewText: ui.previewText,
+  }
+}
+
+// ============================================================================
+// Project Serialization
+// ============================================================================
+
+/**
+ * Serialize the current project state from Legend State stores
+ *
+ * This is the main entry point for serialization.
+ * Gathers data from all Legend State stores and converts to Protocol Buffer format.
+ */
+export function serializeProject(): SerializableProject {
+  const current = projectStore$.current.get()
+  const glyphs = glyphStore$.glyphs.get()
+  const imageGlyphs = glyphStore$.imageGlyphs.get()
+  const globalAdjustMetric = styleStore$.globalAdjustMetric.get()
+
+  return {
+    id: current.id,
+    name: current.name,
+    text: current.text,
+    glyphs: serializeGlyphs(glyphs),
+    glyphImages: serializeImageGlyphs(imageGlyphs),
+    style: serializeStyle(),
+    layout: serializeLayout(),
+    globalAdjustMetric: serializeMetric(globalAdjustMetric),
+    ui: serializeUi(),
+  }
+}
+
+/**
+ * Serialize a specific project by ID (for multi-project support)
+ *
+ * @param projectId - The ID of the project to serialize
+ * @returns Serialized project data or null if project not found
+ */
+export function serializeProjectById(
+  projectId: number,
+): SerializableProject | null {
+  const current = projectStore$.current.get()
+
+  // Currently only support active project
+  // Full multi-project support will be added with workspace store integration
+  if (current.id !== projectId) {
+    console.warn(
+      `[Persistence] Project ${projectId} not found (current: ${current.id})`,
+    )
+    return null
+  }
+
+  return serializeProject()
+}
+
+/**
+ * Get project metadata for workspace serialization
+ */
+export function getProjectMeta(): { id: number; name: string } {
+  const current = projectStore$.current.get()
+  return {
+    id: current.id,
+    name: current.name,
+  }
+}
+
+// ============================================================================
+// Validation
+// ============================================================================
+
+/**
+ * Validate serialized project data
+ */
+export function validateSerializedProject(
+  project: SerializableProject,
+): boolean {
+  if (!project) {
+    return false
+  }
+
+  // Check required fields
+  if (typeof project.id !== 'number' || project.id <= 0) {
+    console.error('[Serialize] Invalid project ID')
+    return false
+  }
+
+  if (typeof project.name !== 'string') {
+    console.error('[Serialize] Invalid project name')
+    return false
+  }
+
+  if (typeof project.text !== 'string') {
+    console.error('[Serialize] Invalid project text')
+    return false
+  }
+
+  // Check style
+  if (!project.style?.font || !project.style?.fill) {
+    console.error('[Serialize] Invalid style data')
+    return false
+  }
+
+  // Check layout
+  if (
+    typeof project.layout?.width !== 'number' ||
+    typeof project.layout?.height !== 'number'
+  ) {
+    console.error('[Serialize] Invalid layout data')
+    return false
+  }
+
+  return true
+}

@@ -8,7 +8,7 @@ import FixedSize from './FixedSize'
 import PackHeight from './PackHeight'
 import PackWidth from './PackWidth'
 
-const PackConfig: FunctionComponent<unknown> = () => {
+const PackConfig: FunctionComponent = () => {
   return (
     <ConfigSection title='Texture Packing'>
       <Box sx={{ px: 2, my: 4 }}>

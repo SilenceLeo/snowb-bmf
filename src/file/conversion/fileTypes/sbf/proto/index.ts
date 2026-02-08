@@ -17,7 +17,9 @@ import * as v1002001Project from './1.2.1/project'
 import v1002001UpdateToNext from './1.2.1/updateToNext'
 
 export interface ProtoVersion {
-  Project: any
+  // Each version's Project class has a decode method for protobuf deserialization
+  Project: { decode: (reader: Uint8Array) => any }
+  // Migrates a project from this version to the next version
   updateToNext: (project: any) => any
 }
 

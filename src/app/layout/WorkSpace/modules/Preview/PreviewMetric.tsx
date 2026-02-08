@@ -1,20 +1,58 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import FormAdjustMetric from 'src/app/layout/common/FormAdjustMetric'
-import { useProject } from 'src/store/hooks'
+import {
+  findImageGlyphIndex,
+  setGlyphAdjustMetric,
+  setImageGlyphAdjustMetric,
+  useGlyphForLetter,
+  useSelectLetter,
+} from 'src/store/legend'
 
-const PreviewMetric: FunctionComponent<unknown> = () => {
-  const project = useProject()
-  const { glyphList, ui } = project
-  const glyph = glyphList.find((gl) => gl.letter === ui.selectLetter)
+const PreviewMetric: FunctionComponent = () => {
+  const { selectLetter } = useSelectLetter()
+  const glyph = useGlyphForLetter(selectLetter)
+
   if (!glyph) {
     return null
   }
-  const { adjustMetric, letter } = glyph
-  const { xAdvance, xOffset, yOffset, setXAdvance, setXOffset, setYOffset } =
-    adjustMetric
+
+  const { adjustMetric, letter, type } = glyph
+
+  // Create setter functions based on glyph type
+  const handleSetXAdvance = (value: number): void => {
+    if (type === 'image') {
+      const index = findImageGlyphIndex(letter)
+      if (index >= 0) {
+        setImageGlyphAdjustMetric(index, { xAdvance: value })
+      }
+    } else {
+      setGlyphAdjustMetric(letter, { xAdvance: value })
+    }
+  }
+
+  const handleSetXOffset = (value: number): void => {
+    if (type === 'image') {
+      const index = findImageGlyphIndex(letter)
+      if (index >= 0) {
+        setImageGlyphAdjustMetric(index, { xOffset: value })
+      }
+    } else {
+      setGlyphAdjustMetric(letter, { xOffset: value })
+    }
+  }
+
+  const handleSetYOffset = (value: number): void => {
+    if (type === 'image') {
+      const index = findImageGlyphIndex(letter)
+      if (index >= 0) {
+        setImageGlyphAdjustMetric(index, { yOffset: value })
+      }
+    } else {
+      setGlyphAdjustMetric(letter, { yOffset: value })
+    }
+  }
 
   return (
     <>
@@ -22,15 +60,15 @@ const PreviewMetric: FunctionComponent<unknown> = () => {
         <Typography>{`"${letter}" Adjustment`}</Typography>
       </Box>
       <FormAdjustMetric
-        xAdvance={xAdvance}
-        xOffset={xOffset}
-        yOffset={yOffset}
-        setXAdvance={setXAdvance}
-        setXOffset={setXOffset}
-        setYOffset={setYOffset}
+        xAdvance={adjustMetric.xAdvance}
+        xOffset={adjustMetric.xOffset}
+        yOffset={adjustMetric.yOffset}
+        setXAdvance={handleSetXAdvance}
+        setXOffset={handleSetXOffset}
+        setYOffset={handleSetYOffset}
       />
     </>
   )
 }
 
-export default observer(PreviewMetric)
+export default PreviewMetric

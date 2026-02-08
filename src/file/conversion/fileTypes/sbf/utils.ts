@@ -1,10 +1,17 @@
 import getVersionNumber from 'src/utils/getVersionNumber'
 
 import { CheckFunction } from '../type'
+import { CURRENT_VERSION } from './proto'
 
 // SBF file prefix constants
 const PREFIX_STR = 'SnowBambooBMF'
-const VERSION_BYTES = [1, 2, 1]
+
+// Derive VERSION_BYTES from CURRENT_VERSION (e.g., 1002001 -> [1, 2, 1])
+const VERSION_BYTES = [
+  Math.floor(CURRENT_VERSION / 1000000),
+  Math.floor((CURRENT_VERSION % 1000000) / 1000),
+  CURRENT_VERSION % 1000,
+]
 
 /**
  * Creates the SBF file prefix with version bytes

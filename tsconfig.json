@@ -21,7 +21,6 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Additional options for project compatibility */
-    "experimentalDecorators": true,
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -34,7 +33,8 @@
       "@/components/*": ["src/components/*"],
       "@/store/*": ["src/store/*"],
       "@/utils/*": ["src/utils/*"],
-      "@/types/*": ["types/*"]
+      "@/types/*": ["types/*"],
+      "src/*": ["src/*"]
     },
 
     "typeRoots": [

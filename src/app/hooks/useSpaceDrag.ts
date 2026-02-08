@@ -1,9 +1,10 @@
 import {
-  useState,
+  DependencyList,
+  useCallback,
   useEffect,
   useMemo,
-  useCallback,
-  DependencyList,
+  useRef,
+  useState,
 } from 'react'
 
 interface OffsetInfo {
@@ -15,15 +16,12 @@ interface WheelCallback {
   (offsetInfo: OffsetInfo): void
 }
 
-const point = {
-  x: 0,
-  y: 0,
-}
-
 function useSpaceDrag<T extends HTMLElement>(
   onMove: WheelCallback,
   deps: DependencyList = [],
 ): [0 | 1 | 2, (e: React.MouseEvent<T, MouseEvent>) => void] {
+  const pointRef = useRef({ x: 0, y: 0 })
+
   const [moveState, setMoveState] = useState({
     ks: false,
     ms: false,
@@ -39,14 +37,9 @@ function useSpaceDrag<T extends HTMLElement>(
 
   const handleKeyEvent = useCallback(
     (e: KeyboardEvent) => {
-      const state = e.keyCode === 32 && e.type === 'keydown'
-      if (moveState.ks === state) return
-      setMoveState((s) => {
-        return {
-          ...s,
-          ks: e.keyCode === 32 && e.type === 'keydown',
-        }
-      })
+      const isSpaceDown = e.code === 'Space' && e.type === 'keydown'
+      if (moveState.ks === isSpaceDown) return
+      setMoveState((s) => ({ ...s, ks: isSpaceDown }))
     },
     [moveState.ks],
   )
@@ -54,20 +47,15 @@ function useSpaceDrag<T extends HTMLElement>(
   const handleMouseDown = (e: React.MouseEvent<T, MouseEvent>) => {
     if (!moveState.ks) return
     const { clientX, clientY } = e
-    point.x = clientX
-    point.y = clientY
-    setMoveState((s) => {
-      return {
-        ...s,
-        ms: true,
-      }
-    })
+    pointRef.current.x = clientX
+    pointRef.current.y = clientY
+    setMoveState((s) => ({ ...s, ms: true }))
   }
 
   const handleMove = useCallback(
     (e: MouseEvent) => {
       const { clientX, clientY } = e
-      const { x, y } = point
+      const { x, y } = pointRef.current
 
       if (clientX - x === 0 && clientY - y === 0) return
 
@@ -76,19 +64,14 @@ function useSpaceDrag<T extends HTMLElement>(
         offsetY: clientY - y,
       })
 
-      point.x = clientX
-      point.y = clientY
+      pointRef.current.x = clientX
+      pointRef.current.y = clientY
     },
     [moveCallback],
   )
 
   const handleEnd = useCallback(() => {
-    setMoveState((s) => {
-      return {
-        ...s,
-        ms: false,
-      }
-    })
+    setMoveState((s) => ({ ...s, ms: false }))
   }, [])
 
   useEffect(() => {

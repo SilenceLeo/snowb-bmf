@@ -1,14 +1,6 @@
 import { Font } from 'opentype.js'
 
-interface Baselines {
-  middle: number
-  hanging: number
-  top: number
-  alphabetic: number
-  ideographic: number
-  bottom: number
-  lineHeight: number
-}
+import type { Baselines } from './types'
 
 export default function getFontBaselinesFromMetrics(
   font: Font,

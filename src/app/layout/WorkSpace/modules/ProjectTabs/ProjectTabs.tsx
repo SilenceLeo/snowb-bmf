@@ -1,22 +1,21 @@
 import Tabs from '@mui/material/Tabs'
 import { useTheme } from '@mui/material/styles'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
-import { useWorkspace } from 'src/store/hooks'
+import {
+  addProject,
+  removeProject,
+  selectProject,
+  setWorkspaceProjectName,
+  useActiveProjectId,
+  useProjectList,
+} from 'src/store/legend'
 
 import ProjectTab from './ProjectTab'
 
-const ProjectTabs: FunctionComponent<unknown> = () => {
+const ProjectTabs: FunctionComponent = () => {
   const { palette, shadows } = useTheme()
-  const workSpace = useWorkspace()
-  const {
-    addProject,
-    selectProject,
-    removeProject,
-    setProjectName,
-    namedList,
-    activeId,
-  } = workSpace
+  const namedList = useProjectList()
+  const activeId = useActiveProjectId()
 
   const handleChange = (_e: unknown, value: number): void => {
     selectProject(value)
@@ -33,6 +32,10 @@ const ProjectTabs: FunctionComponent<unknown> = () => {
 
   const handleDoubleClick = (): void => {
     addProject()
+  }
+
+  const handleRename = (name: string, id: number): void => {
+    setWorkspaceProjectName(id, name)
   }
 
   return (
@@ -64,7 +67,7 @@ const ProjectTabs: FunctionComponent<unknown> = () => {
             name={item.name}
             value={item.id}
             key={item.id}
-            onRename={setProjectName}
+            onRename={handleRename}
             onRemove={handleRemove}
           />
         )
@@ -73,4 +76,4 @@ const ProjectTabs: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(ProjectTabs)
+export default ProjectTabs

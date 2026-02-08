@@ -7,7 +7,7 @@ import Glyphs from './components/Glyphs'
 import LayoutConfig from './components/LayoutConfig'
 import PackConfig from './components/PackConfig'
 
-const LeftBar: FunctionComponent<unknown> = () => {
+const LeftBar: FunctionComponent = () => {
   return (
     <Sidebar title='Font Config' width='256px'>
       <Glyphs />

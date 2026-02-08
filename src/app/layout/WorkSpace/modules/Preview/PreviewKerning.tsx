@@ -1,62 +1,74 @@
+import { useSelector } from '@legendapp/state/react'
 import Box from '@mui/material/Box'
 import Input from '@mui/material/Input'
 import Typography from '@mui/material/Typography'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { GlyphFont, GlyphImage } from 'src/store'
-import { useProject } from 'src/store/hooks'
+import {
+  getOpentype,
+  setKerning,
+  useFontSize,
+  useGlyphForLetter,
+  useSelectLetter,
+} from 'src/store/legend'
+import { glyphStore$ } from 'src/store/legend/glyphStore'
 
-const GlobalMetric: FunctionComponent<unknown> = () => {
-  const {
-    glyphList,
-    ui,
-    style: {
-      font: { opentype, size },
-    },
-  } = useProject()
+const PreviewKerning: FunctionComponent = () => {
+  const { selectLetter, selectNextLetter } = useSelectLetter()
+  const glyph = useGlyphForLetter(selectLetter)
+  const fontSize = useFontSize()
   const [offset, setOffset] = useState(0)
-  const [glyph, setGlyph] = useState<GlyphFont | GlyphImage | undefined>()
 
-  useEffect(() => {
-    setGlyph(glyphList.find((gl) => gl.letter === ui.selectLetter))
-  }, [glyphList, ui.selectLetter])
+  // Reactively get kerning value from store via useSelector
+  const currentKerning = useSelector(() => {
+    if (!glyph || !selectNextLetter) return 0
+    const glyphData = glyphStore$.glyphs[glyph.letter].get()
+    if (!glyphData?.kerning) return 0
+    return (glyphData.kerning as Record<string, number>)[selectNextLetter] ?? 0
+  })
 
+  // Calculate the opentype kerning offset between the two letters
   useEffect(() => {
-    if (glyph && ui.selectNextLetter && opentype) {
-      const fontScale = (1 / opentype.unitsPerEm) * size
-      setOffset(
-        Math.round(
-          opentype.getKerningValue(
-            opentype.charToGlyphIndex(glyph.letter),
-            opentype.charToGlyphIndex(ui.selectNextLetter),
-          ) * fontScale,
-        ),
-      )
+    if (glyph && selectNextLetter) {
+      const opentype = getOpentype()
+      if (opentype) {
+        const fontScale = (1 / opentype.unitsPerEm) * fontSize
+        const kerningValue = opentype.getKerningValue(
+          opentype.charToGlyphIndex(glyph.letter),
+          opentype.charToGlyphIndex(selectNextLetter),
+        )
+        setOffset(Math.round(kerningValue * fontScale))
+      } else {
+        setOffset(0)
+      }
+    } else {
+      setOffset(0)
     }
-  }, [glyph, opentype, size, ui.selectNextLetter])
+  }, [glyph, selectNextLetter, fontSize])
 
+  // Handle kerning value change
   const handleChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
-  ) => {
+  ): void => {
     if (glyph) {
-      glyph.steKerning(ui.selectNextLetter, Number(e.target.value) - offset)
+      const newKerningValue = Number(e.target.value) - offset
+      setKerning(glyph.letter, selectNextLetter, newKerningValue)
     }
   }
 
-  if (!glyph || !ui.selectNextLetter) {
+  if (!glyph || !selectNextLetter) {
     return null
   }
 
   return (
     <>
       <Box paddingX={2} marginY={4}>
-        <Typography>{`"${glyph.letter}" - "${ui.selectNextLetter}" Kerning`}</Typography>
+        <Typography>{`"${glyph.letter}" - "${selectNextLetter}" Kerning`}</Typography>
       </Box>
       <Box paddingX={2} marginY={4}>
         <GridInput before='Amount:' after='px'>
           <Input
-            value={(glyph.kerning.get(ui.selectNextLetter) || 0) + offset}
+            value={currentKerning + offset}
             fullWidth
             type='number'
             onChange={handleChange}
@@ -67,4 +79,4 @@ const GlobalMetric: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(GlobalMetric)
+export default PreviewKerning

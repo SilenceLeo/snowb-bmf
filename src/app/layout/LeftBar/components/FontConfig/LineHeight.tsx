@@ -1,16 +1,18 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
-import { useFont } from 'src/store/hooks'
+import { setLineHeight, useFontLineHeight, useFontSize } from 'src/store/legend'
 
-const LineHeight: FunctionComponent<unknown> = () => {
-  const { size, lineHeight, setLineHeight } = useFont()
+const LineHeight: FunctionComponent = () => {
+  const size = useFontSize()
+  const lineHeight = useFontLineHeight()
 
   const handleInput = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ): void => {
-    setLineHeight(Number(event.target.value) / size)
+    if (size > 0) {
+      setLineHeight(Number(event.target.value) / size)
+    }
   }
 
   return (
@@ -26,4 +28,4 @@ const LineHeight: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(LineHeight)
+export default LineHeight

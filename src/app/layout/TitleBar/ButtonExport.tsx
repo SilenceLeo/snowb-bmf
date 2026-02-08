@@ -9,7 +9,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
-import { observer } from 'mobx-react-lite'
 import React, {
   FunctionComponent,
   useCallback,
@@ -18,7 +17,12 @@ import React, {
 } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
 import { configList, exportFile } from 'src/file/export'
-import { useProject } from 'src/store/hooks'
+import {
+  getExportProjectData,
+  setShowPreview,
+  useMainFontFamily,
+  useProjectName,
+} from 'src/store/legend'
 
 interface ButtonExportProps {
   sx?: SxProps<Theme>
@@ -28,20 +32,21 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   props: ButtonExportProps,
 ) => {
   const { sx } = props
-  const project = useProject()
-  const { setShowPreview } = project.ui
+  const projectName = useProjectName()
+  const mainFontFamily = useMainFontFamily()
+
   const [open, setOpen] = useState(false)
   const [list] = useState(configList)
   const [val, setVal] = useState(0)
-  const [fontName, setFontName] = useState(project.style.font.mainFamily)
-  const [fileName, setFileName] = useState(project.name)
+  const [fontName, setFontName] = useState(mainFontFamily)
+  const [fileName, setFileName] = useState(projectName)
 
   const handleOpen = useCallback(() => {
-    setFontName(project.style.font.mainFamily)
-    setFileName(project.name)
+    setFontName(mainFontFamily)
+    setFileName(projectName)
     setShowPreview(false)
     setOpen(true)
-  }, [project.name, project.style.font.mainFamily, setShowPreview])
+  }, [projectName, mainFontFamily])
 
   const handleClose = () => {
     setOpen(false)
@@ -56,13 +61,14 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   }
 
   const handleChange = (e: SelectChangeEvent<number>) => {
-    setVal(e.target.value)
+    setVal(e.target.value as number)
   }
 
   const handleSave = useCallback(() => {
-    exportFile(project, list[val], fontName, fileName)
+    const projectData = getExportProjectData()
+    exportFile(projectData, list[val], fontName, fileName)
     handleClose()
-  }, [fileName, fontName, list, project, val])
+  }, [fileName, fontName, list, val])
 
   useEffect(() => {
     hotkeys.unbind('ctrl+shift+s,command+shift+s')
@@ -86,7 +92,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
                 fullWidth
                 type='text'
                 value={fontName}
-                placeholder={project.style.font.mainFamily}
+                placeholder={mainFontFamily}
                 onChange={handleChangeFontName}
               />
             </GridInput>
@@ -97,7 +103,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
                 fullWidth
                 type='text'
                 value={fileName}
-                placeholder={project.name}
+                placeholder={projectName}
                 onChange={handleChangeFileName}
               />
             </GridInput>
@@ -112,7 +118,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
               >
                 {list.map((item, idx) => (
                   <MenuItem value={idx} key={item.id}>
-                    {`${fileName || project.name}.${
+                    {`${fileName || projectName}.${
                       item.ext
                     } (BMFont ${item.type.toUpperCase()})`}
                   </MenuItem>
@@ -131,4 +137,4 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   )
 }
 
-export default observer(ButtonExport)
+export default ButtonExport

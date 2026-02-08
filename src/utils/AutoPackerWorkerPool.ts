@@ -1,5 +1,10 @@
 import AutoPackerWorker from 'src/workers/AutoPacker.worker?worker'
 
+/** Worker extended with debugging metadata */
+interface PoolWorker extends Worker {
+  _poolId?: string
+}
+
 class AutoPackerWorkerPool {
   private workers: Worker[] = []
   private availableWorkers: Worker[] = []
@@ -16,14 +21,14 @@ class AutoPackerWorkerPool {
       // Try to get CPU core count
       const cpuCores = navigator.hardwareConcurrency || 0
       if (cpuCores > 0) {
-        // Use CPU core count, but don't exceed reasonable range
-        return Math.min(Math.max(cpuCores, 4), 32)
+        // Use CPU core count, capped at 8 to align with PackingEngine maxConcurrentWorkers
+        return Math.min(Math.max(cpuCores, 4), 8)
       }
     } catch (error) {
       console.warn('Failed to detect CPU cores:', error)
     }
-    // If unable to get CPU count, use default value 16
-    return 16
+    // If unable to get CPU count, use default value 8
+    return 8
   }
 
   constructor() {
@@ -32,9 +37,9 @@ class AutoPackerWorkerPool {
 
     // Expose worker pool status and reset in console for debugging
     if (typeof window !== 'undefined') {
-      ;(window as any).getWorkerPoolStatus = () => this.getStatus()
-      ;(window as any).resetWorkerPool = () => this.reset()
-      ;(window as any).autoPackerWorkerPool = this
+      window.getWorkerPoolStatus = () => this.getStatus()
+      window.resetWorkerPool = () => this.reset()
+      window.autoPackerWorkerPool = this
     }
   }
 
@@ -68,7 +73,7 @@ class AutoPackerWorkerPool {
     for (let i = 0; i < this.maxWorkers; i++) {
       const worker = new AutoPackerWorker()
       // Add ID to worker for debugging
-      ;(worker as any)._poolId = `pool-${i}`
+      ;(worker as PoolWorker)._poolId = `pool-${i}`
       this.workers.push(worker)
       this.availableWorkers.push(worker)
     }
@@ -93,7 +98,7 @@ class AutoPackerWorkerPool {
     } else if (this.workers.length < this.maxPoolSize) {
       // Dynamically expand pool, create new worker asynchronously
       const worker = await this.createWorkerAsync()
-      ;(worker as any)._poolId = `pool-expansion-${this.workers.length}`
+      ;(worker as PoolWorker)._poolId = `pool-expansion-${this.workers.length}`
 
       // Add to pool for management
       this.workers.push(worker)
@@ -102,7 +107,7 @@ class AutoPackerWorkerPool {
     } else {
       // Pool has reached maximum capacity, create temporary worker
       const worker = await this.createWorkerAsync()
-      ;(worker as any)._poolId = `temp-${Date.now()}`
+      ;(worker as PoolWorker)._poolId = `temp-${Date.now()}`
       return worker
     }
   }
@@ -121,24 +126,18 @@ class AutoPackerWorkerPool {
   }
 
   /**
-   * Synchronous method for backward compatibility
+   * Remove worker from pool entirely (e.g., after termination due to timeout)
+   * Unlike returnWorker, this does not return the worker to the available pool
    */
-  getWorker(): Worker {
-    // If not initialized, create one first
-    if (!this.isInitialized) {
-      return new AutoPackerWorker()
+  removeWorker(worker: Worker): void {
+    this.busyWorkers.delete(worker)
+    const idx = this.workers.indexOf(worker)
+    if (idx !== -1) {
+      this.workers.splice(idx, 1)
     }
-
-    if (this.availableWorkers.length > 0) {
-      // Use worker from pool
-      const worker = this.availableWorkers.shift()!
-      this.busyWorkers.add(worker)
-      return worker
-    } else {
-      // When no worker is available, return a placeholder worker being created
-      const worker = new AutoPackerWorker()
-      ;(worker as any)._poolId = `sync-fallback-${Date.now()}`
-      return worker
+    const availIdx = this.availableWorkers.indexOf(worker)
+    if (availIdx !== -1) {
+      this.availableWorkers.splice(availIdx, 1)
     }
   }
 
@@ -146,10 +145,7 @@ class AutoPackerWorkerPool {
    * Return worker to pool
    * Caller should call this method after completing the task
    */
-  returnWorker(
-    worker: Worker,
-    eventListener?: (event: MessageEvent) => void,
-  ): void {
+  returnWorker(worker: Worker): void {
     if (!this.isInitialized) return
 
     // Check if worker is actually in busy set to avoid duplicate returns
@@ -162,11 +158,6 @@ class AutoPackerWorkerPool {
 
     // Check if it's a worker from the pool
     if (this.workers.includes(worker)) {
-      // Clean event listeners - remove if listener provided
-      if (eventListener) {
-        worker.removeEventListener('message', eventListener as EventListener)
-      }
-
       // Clean all possible event listeners
       if (worker.onmessage) worker.onmessage = null
       if (worker.onerror) worker.onerror = null
@@ -195,7 +186,7 @@ class AutoPackerWorkerPool {
       availableWorkers: this.availableWorkers.length,
       busyWorkers: this.busyWorkers.size,
       busyWorkersList: Array.from(this.busyWorkers).map((w) => ({
-        id: (w as any)._poolId || 'unknown',
+        id: (w as PoolWorker)._poolId || 'unknown',
       })),
     }
   }
@@ -205,7 +196,7 @@ class AutoPackerWorkerPool {
    * Useful for cancelling all ongoing operations
    */
   reset(): void {
-    console.log('🔄 Resetting worker pool...')
+    console.log('[WorkerPool] Resetting...')
 
     // Terminate all workers
     this.workers.forEach((worker) => {

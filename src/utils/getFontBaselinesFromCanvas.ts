@@ -1,18 +1,9 @@
 import createCanvasFontString from './createCanvasFontString'
+import type { Baselines } from './types'
 
 interface StyleConfig {
   fontFamily: string
   fontSize: number
-}
-
-interface Baselines {
-  middle: number
-  hanging: number
-  top: number
-  alphabetic: number
-  ideographic: number
-  bottom: number
-  lineHeight: number
 }
 
 let canvas: HTMLCanvasElement

@@ -1,40 +1,40 @@
-import { Project } from 'src/store'
-import deepMapToObject from 'src/utils/deepMapToObject'
+import type { Project } from 'src/types/project'
+import { ensureUint8Array } from 'src/utils/bufferUtils'
 
 import { IProject, Project as ProjectProto } from './1.2.1/project'
 
 function convertBuffersToUint8Array(project: Project): void {
   // font
   if (project.style?.font?.fonts?.length) {
-    project.style.font.fonts.forEach((fontResource) => {
-      if (fontResource.font && !(fontResource.font instanceof Uint8Array)) {
-        fontResource.font = new Uint8Array(fontResource.font) as any
-      }
-    })
+    project.style.font.fonts.forEach(
+      (fontResource: { font?: ArrayBuffer | Uint8Array }) => {
+        if (fontResource.font) {
+          // Protobuf requires Uint8Array; Project stores ArrayBuffer for runtime use
+          fontResource.font = ensureUint8Array(fontResource.font) as any
+        }
+      },
+    )
   }
 
   project.glyphImages?.forEach((glyphImage) => {
-    if (glyphImage.buffer && !(glyphImage.buffer instanceof Uint8Array)) {
-      glyphImage.buffer = new Uint8Array(glyphImage.buffer) as any
+    if (glyphImage.buffer) {
+      // Protobuf requires Uint8Array; Project stores ArrayBuffer for runtime use
+      glyphImage.buffer = ensureUint8Array(glyphImage.buffer) as any
     }
   })
 
   // fill
-  if (
-    project.style?.fill?.patternTexture?.buffer &&
-    !(project.style.fill.patternTexture.buffer instanceof Uint8Array)
-  ) {
-    project.style.fill.patternTexture.buffer = new Uint8Array(
+  if (project.style?.fill?.patternTexture?.buffer) {
+    // Protobuf requires Uint8Array; Project stores ArrayBuffer for runtime use
+    project.style.fill.patternTexture.buffer = ensureUint8Array(
       project.style.fill.patternTexture.buffer,
     ) as any
   }
 
   // stroke
-  if (
-    project.style?.stroke?.patternTexture?.buffer &&
-    !(project.style.stroke.patternTexture.buffer instanceof Uint8Array)
-  ) {
-    project.style.stroke.patternTexture.buffer = new Uint8Array(
+  if (project.style?.stroke?.patternTexture?.buffer) {
+    // Protobuf requires Uint8Array; Project stores ArrayBuffer for runtime use
+    project.style.stroke.patternTexture.buffer = ensureUint8Array(
       project.style.stroke.patternTexture.buffer,
     ) as any
   }
@@ -48,7 +48,7 @@ export default function encodeProject(project: Project): Uint8Array {
   try {
     convertBuffersToUint8Array(project)
 
-    const projectObject = deepMapToObject(project) as unknown as IProject
+    const projectObject = project as unknown as IProject
     const message = ProjectProto.create(projectObject)
 
     return ProjectProto.encode(message).finish()

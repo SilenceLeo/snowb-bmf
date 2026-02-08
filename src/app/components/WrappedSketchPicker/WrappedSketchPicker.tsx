@@ -1,7 +1,6 @@
 import Popper, { PopperPlacementType } from '@mui/material/Popper'
 import { useTheme } from '@mui/material/styles'
 import type { Theme } from '@mui/material/styles'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import { ColorResult, SketchPicker } from 'react-color'
 
@@ -61,7 +60,6 @@ const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
         },
       }}
     >
-      {/* @ts-ignore */}
       <SketchPicker
         color={color}
         styles={pickerStyle}
@@ -78,4 +76,4 @@ const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
   )
 }
 
-export default observer(WrappedSketchPicker)
+export default WrappedSketchPicker

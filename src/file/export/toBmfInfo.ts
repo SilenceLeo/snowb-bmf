@@ -1,6 +1,5 @@
-import { Project } from 'src/store'
-
 import packageInfo from '../../../package.json'
+import getPageFileName from './getPageFileName'
 import {
   BMFont,
   BMFontChars,
@@ -9,11 +8,12 @@ import {
   BMFontKernings,
   BMFontMetadata,
   BMFontPage,
+  ExportProjectData,
 } from './type'
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
 export default function toBmfInfo(
-  project: Project,
+  projectData: ExportProjectData,
   fontFamily = '',
   outputFileName?: string,
 ): BMFont {
@@ -24,7 +24,7 @@ export default function toBmfInfo(
     globalAdjustMetric,
     glyphList,
     ui: { width, height },
-  } = project
+  } = projectData
   const { opentype, size } = style.font
   let fontScale = 1
   if (opentype) {
@@ -90,8 +90,8 @@ export default function toBmfInfo(
   const common: BMFontCommon = {
     lineHeight: Math.round(style.font.size * style.font.lineHeight),
     base: calculateBase(),
-    scaleW: width,
-    scaleH: height,
+    scaleW: layout.packWidth ?? width,
+    scaleH: layout.packHeight ?? height,
     pages: layout.page,
     packed: 0,
     alphaChnl: 0, // Alpha channel contains glyph data
@@ -103,25 +103,10 @@ export default function toBmfInfo(
   const finalFileName = outputFileName || name
   const pages: BMFontPage[] = Array.from(
     { length: layout.page },
-    (_, index) => {
-      if (layout.page === 1) {
-        return {
-          id: index,
-          file: `${finalFileName}.png`,
-        }
-      } else {
-        // For multi-page, use zero-padded numbering to ensure consistent filename lengths
-        // Calculate the number of digits needed for the highest page number
-        const maxPageIndex = layout.page - 1
-        const digits = maxPageIndex.toString().length
-        const paddedIndex = index.toString().padStart(digits, '0')
-
-        return {
-          id: index,
-          file: `${finalFileName}_${paddedIndex}.png`,
-        }
-      }
-    },
+    (_, index) => ({
+      id: index,
+      file: getPageFileName(finalFileName, index, layout.page),
+    }),
   )
 
   const chars: BMFontChars = {
@@ -136,7 +121,7 @@ export default function toBmfInfo(
 
   glyphList.forEach((glyph) => {
     const isUnEmpty = !!(glyph.width && glyph.height)
-    const info = {
+    const charInfo = {
       letter: glyph.letter,
       id: glyph.letter.codePointAt(0) || 0,
       x: glyph.x,
@@ -161,7 +146,7 @@ export default function toBmfInfo(
       chnl: 15,
     }
 
-    chars.list.push(info)
+    chars.list.push(charInfo)
   })
 
   // High-performance kerning processing with caching and optimizations
@@ -199,7 +184,7 @@ export default function toBmfInfo(
           first.index,
           second.index,
         )
-        const manualKerning = first.glyph.kerning.get(second.glyph.letter) || 0
+        const manualKerning = first.glyph.kerning[second.glyph.letter] || 0
 
         // Early termination for zero kerning
         if (opentypeKerning === 0 && manualKerning === 0) continue
@@ -213,14 +198,13 @@ export default function toBmfInfo(
       }
     }
   } else {
-    // Process manual kerning settings (already optimal for this case)
+    // Process manual kerning settings
     glyphList.forEach((glyph) => {
-      glyph.kerning.forEach((amount, letter) => {
+      Object.entries(glyph.kerning).forEach(([letter, amount]) => {
         if (amount) {
           const firstId = glyph.letter.codePointAt(0) || 0
           const secondId = letter.codePointAt(0) || 0
-          const key = `${firstId}-${secondId}`
-          kerningMap.set(key, amount)
+          kerningMap.set(`${firstId}-${secondId}`, amount)
         }
       })
     })

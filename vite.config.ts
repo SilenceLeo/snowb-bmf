@@ -65,15 +65,15 @@ export default defineConfig(({}) => ({
     outDir: 'build',
     sourcemap: true,
     // Build target
-    target: 'es2015',
+    target: 'es2020',
     // Code splitting optimization
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          mobx: ['mobx', 'mobx-react-lite', 'mobx-utils'],
+          legendstate: ['@legendapp/state', '@legendapp/state/react'],
           mui: ['@mui/material', '@mui/icons-material'],
-          utils: ['color', 'clsx', 'file-saver', 'jszip'],
+          utils: ['color', 'file-saver', 'jszip'],
         },
       },
     },
@@ -110,7 +110,6 @@ export default defineConfig(({}) => ({
   esbuild: {
     // Support TypeScript decorators
     target: 'es2020',
-    jsx: 'automatic',
   },
   
   // Optimize dependency pre-bundling
@@ -118,13 +117,12 @@ export default defineConfig(({}) => ({
     include: [
       'react',
       'react-dom',
-      'mobx',
-      'mobx-react-lite',
+      '@legendapp/state',
+      '@legendapp/state/react',
       '@emotion/react',
       '@emotion/styled',
       '@mui/material',
       'color',
-      'clsx',
     ],
     exclude: [
       // Exclude packages that may cause issues

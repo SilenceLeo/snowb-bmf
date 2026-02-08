@@ -1,12 +1,11 @@
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
-import { useProject } from 'src/store/hooks'
+import { useImageGlyphs } from 'src/store/legend'
 
 import ImageGlyph from './ImageGlyph'
 
-const ImageGlyphList: FunctionComponent<unknown> = () => {
-  const { glyphImages } = useProject()
+const ImageGlyphList: FunctionComponent = () => {
+  const imageGlyphs = useImageGlyphs()
 
   return (
     <Box
@@ -17,11 +16,11 @@ const ImageGlyphList: FunctionComponent<unknown> = () => {
         gap: 8,
       }}
     >
-      {glyphImages.map((glyph) => {
-        return <ImageGlyph glyph={glyph} key={glyph.src} />
-      })}
+      {imageGlyphs.map((glyph, index) => (
+        <ImageGlyph index={index} key={glyph.uid} />
+      ))}
     </Box>
   )
 }
 
-export default observer(ImageGlyphList)
+export default ImageGlyphList

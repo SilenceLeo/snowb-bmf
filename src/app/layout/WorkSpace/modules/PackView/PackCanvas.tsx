@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
-import { observer } from 'mobx-react-lite'
 import {
   FunctionComponent,
   useCallback,
@@ -10,22 +9,32 @@ import {
 } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
-import { useProject } from 'src/store/hooks'
+import {
+  setTransform,
+  useBgColor,
+  useIsPacking,
+  useLayout,
+  usePackCanvases,
+  useUi,
+  useUiTransform,
+} from 'src/store/legend'
 
-const PackCanvas: FunctionComponent<unknown> = () => {
+const PackCanvas: FunctionComponent = () => {
   const { bgPixel } = useTheme()
 
-  const {
-    isPacking,
-    ui,
-    layout: { packWidth, packHeight, page: pageCount },
-    style: { bgColor },
-    packCanvases,
-  } = useProject()
-  const { width: gridWidth, height: gridHeight, scale, offsetX, offsetY } = ui
+  const isPacking = useIsPacking()
+  const { scale, offsetX, offsetY } = useUiTransform()
+  const { width: gridWidth, height: gridHeight } = useUi()
+  const { packWidth, packHeight, page: pageCount } = useLayout()
+  const bgColor = useBgColor()
+  const packCanvases = usePackCanvases()
   const canvasRefs = useRef<HTMLCanvasElement[]>([])
   const domRef = useRef<HTMLDivElement>(null)
   const [refsReady, setRefsReady] = useState(false)
+
+  // Use refs to avoid stale closures in drag/wheel callbacks
+  const transformRef = useRef({ scale, offsetX, offsetY })
+  transformRef.current = { scale, offsetX, offsetY }
 
   // Check if all required canvas refs are available
   const checkRefsReady = useCallback(() => {
@@ -58,32 +67,29 @@ const PackCanvas: FunctionComponent<unknown> = () => {
   const cols = Math.ceil(Math.sqrt(pageCount))
   const spacing = 20
 
-  const [dragState, handleMouseDown] = useSpaceDrag(
-    (offsetInfo) => {
-      const { offsetX: ix, offsetY: iy } = offsetInfo
-      const { scale: os, offsetX: ox, offsetY: oy, setTransform } = ui
-      setTransform({
-        offsetX: ox + ix / os,
-        offsetY: oy + iy / os,
-      })
-    },
-    [ui],
-  )
+  const [dragState, handleMouseDown] = useSpaceDrag((offsetInfo) => {
+    const { scale: s, offsetX: ox, offsetY: oy } = transformRef.current
+    const { offsetX: ix, offsetY: iy } = offsetInfo
+    setTransform({
+      offsetX: ox + ix / s,
+      offsetY: oy + iy / s,
+    })
+  }, [])
 
   useWheel(
     domRef,
     (info) => {
-      const { offsetX: ox, offsetY: oy, scale: os, setTransform } = ui
-      const s = Math.max(0.1, Math.min(10, os + info.deltaScale))
-      const x = ox + info.deltaX / s
-      const y = oy + info.deltaY / s
+      const { scale: cs, offsetX: cox, offsetY: coy } = transformRef.current
+      const s = Math.max(0.1, Math.min(10, cs + info.deltaScale))
+      const x = cox + info.deltaX / s
+      const y = coy + info.deltaY / s
       setTransform({
         offsetX: x,
         offsetY: y,
         scale: s,
       })
     },
-    [ui],
+    [],
   )
 
   useEffect(() => {
@@ -198,4 +204,4 @@ const PackCanvas: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(PackCanvas)
+export default PackCanvas

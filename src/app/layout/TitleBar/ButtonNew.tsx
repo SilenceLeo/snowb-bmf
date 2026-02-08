@@ -1,9 +1,8 @@
 import Button from '@mui/material/Button'
 import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent, useCallback, useEffect } from 'react'
-import { useWorkspace } from 'src/store/hooks'
+import { addProject } from 'src/store/legend'
 
 interface ButtonNewProps {
   sx?: SxProps<Theme>
@@ -14,17 +13,11 @@ const ButtonNew: FunctionComponent<ButtonNewProps> = (
 ) => {
   const { sx } = props
 
-  const workSpace = useWorkspace()
-  const { addProject } = workSpace
-
-  const handleNewProject = useCallback(
-    (e: { preventDefault(): void }) => {
-      e.preventDefault()
-      addProject()
-      return false
-    },
-    [addProject],
-  )
+  const handleNewProject = useCallback((e: { preventDefault(): void }) => {
+    e.preventDefault()
+    addProject()
+    return false
+  }, [])
 
   useEffect(() => {
     hotkeys.unbind('alt+n,control+n')
@@ -41,4 +34,4 @@ const ButtonNew: FunctionComponent<ButtonNewProps> = (
   )
 }
 
-export default observer(ButtonNew)
+export default ButtonNew

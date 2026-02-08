@@ -1,25 +1,26 @@
 import Slider from '@mui/material/Slider'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
-import { useFont } from 'src/store/hooks'
+import { setSharp, useFontResources, useFontSharp } from 'src/store/legend'
 
-const FontSharp: FunctionComponent<unknown> = () => {
-  const { sharp, setSharp, mainFont } = useFont()
+const FontSharp: FunctionComponent = () => {
+  const sharp = useFontSharp()
+  const fonts = useFontResources()
+  const hasFont = fonts.length > 0
 
   const handleInput = (_event: Event, value: number | number[]): void => {
-    setSharp(value as unknown as number)
+    setSharp(value as number)
   }
 
   return (
     <GridInput
-      sx={!mainFont ? { opacity: 0.5 } : {}}
+      sx={!hasFont ? { opacity: 0.5 } : {}}
       before='Sharp:'
       after={`${sharp}%`}
     >
-      <Slider value={sharp} onChange={handleInput} disabled={!mainFont} />
+      <Slider value={sharp} onChange={handleInput} disabled={!hasFont} />
     </GridInput>
   )
 }
 
-export default observer(FontSharp)
+export default FontSharp

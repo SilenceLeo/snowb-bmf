@@ -1,4 +1,8 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import {
+  ThemeOptions,
+  createTheme,
+  responsiveFontSizes,
+} from '@mui/material/styles'
 
 import components from './components'
 
@@ -11,7 +15,7 @@ declare module '@mui/material/styles' {
   }
 }
 
-const theme = createTheme({
+const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: { main: '#444' },
@@ -47,6 +51,8 @@ const theme = createTheme({
   },
   shape: { borderRadius: 0 },
   components,
-} as any)
+}
+
+const theme = createTheme(themeOptions)
 
 export default responsiveFontSizes(theme)

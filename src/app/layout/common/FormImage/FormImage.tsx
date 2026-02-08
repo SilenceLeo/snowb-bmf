@@ -2,25 +2,42 @@ import Box from '@mui/material/Box'
 import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { PatternTexture, Repetition } from 'src/store'
+import {
+  type PatternTextureData,
+  Repetition,
+  setPatternImage,
+  setPatternRepetition,
+  setPatternScale,
+} from 'src/store/legend'
 
 import FileSelector from './FileSelector'
 
 interface FormImageProps {
-  patternTexture: PatternTexture
+  patternTexture: PatternTextureData
   scale: number
   src: string
+  // Optional action overrides (for stroke mode)
+  onImageChange?: (buffer: ArrayBuffer) => void
+  onRepetitionChange?: (repetition: Repetition) => void
+  onScaleChange?: (scale: number) => void
 }
 
-const FormImage: FunctionComponent<FormImageProps> = (
-  props: FormImageProps,
-) => {
-  const { patternTexture } = props
-  const { src, scale, repetition, setRepetition, setScale, setImage } =
-    patternTexture
+const FormImage: FunctionComponent<FormImageProps> = ({
+  patternTexture,
+  scale,
+  src,
+  onImageChange,
+  onRepetitionChange,
+  onScaleChange,
+}) => {
+  const { repetition } = patternTexture
+
+  // Use provided callbacks or default to fill actions
+  const handleImageChange = onImageChange || setPatternImage
+  const handleRepetitionChange = onRepetitionChange || setPatternRepetition
+  const handleScaleChange = onScaleChange || setPatternScale
 
   return (
     <>
@@ -28,14 +45,14 @@ const FormImage: FunctionComponent<FormImageProps> = (
         <GridInput
           component='div'
           before='Scale:'
-          after={<FileSelector src={src} onChange={setImage} />}
+          after={<FileSelector src={src} onChange={handleImageChange} />}
         >
           <Input
             value={scale}
             fullWidth
             type='number'
-            inputProps={{ min: 0.01, step: 0.1 }}
-            onChange={(e) => setScale(Number(e.target.value))}
+            slotProps={{ input: { min: 0.01, step: 0.1 } }}
+            onChange={(e) => handleScaleChange(Number(e.target.value))}
           />
         </GridInput>
       </Box>
@@ -43,7 +60,9 @@ const FormImage: FunctionComponent<FormImageProps> = (
         <GridInput before='Repeat:' after={repetition}>
           <Select
             value={repetition}
-            onChange={(e) => setRepetition(e.target.value as Repetition)}
+            onChange={(e) =>
+              handleRepetitionChange(e.target.value as Repetition)
+            }
             displayEmpty
             fullWidth
             variant='standard'
@@ -59,4 +78,4 @@ const FormImage: FunctionComponent<FormImageProps> = (
   )
 }
 
-export default observer(FormImage)
+export default FormImage

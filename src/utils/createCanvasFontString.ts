@@ -1,4 +1,5 @@
-import is from './is'
+const isNum = (n: unknown): n is number =>
+  typeof n === 'number' && !Number.isNaN(n)
 
 /**
  * Font style configuration interface
@@ -75,7 +76,7 @@ const CSS_UNITS = [
  */
 function normalizeFontSize(fontSize: string | number | undefined): string {
   // If it's a number, convert to px units
-  if (is.num(fontSize)) {
+  if (isNum(fontSize)) {
     return fontSize <= 0 ? `${DEFAULT_CONFIG.fontSize}px` : `${fontSize}px`
   }
 
@@ -126,7 +127,7 @@ function normalizeLineHeight(
     return null
   }
 
-  if (is.num(lineHeight)) {
+  if (isNum(lineHeight)) {
     return lineHeight > 0 ? String(lineHeight) : null
   }
 

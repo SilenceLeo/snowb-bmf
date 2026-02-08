@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import ConfigSection from 'src/app/components/ConfigSection'
 
@@ -8,7 +7,7 @@ import FontSharp from './FontSharp'
 import FontSize from './FontSize'
 import LineHeight from './LineHeight'
 
-const FontConfig: FunctionComponent<unknown> = () => {
+const FontConfig: FunctionComponent = () => {
   return (
     <ConfigSection title='Font'>
       <Box sx={{ px: 2, my: 4 }}>
@@ -27,4 +26,4 @@ const FontConfig: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(FontConfig)
+export default FontConfig

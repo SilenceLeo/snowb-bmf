@@ -1,22 +1,22 @@
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { Project } from 'src/store'
 
+import getPageFileName from './getPageFileName'
 import toBmfInfo from './toBmfInfo'
-import { ConfigItem } from './type'
+import { ConfigItem, ExportProjectData } from './type'
 
 export default function exportFile(
-  project: Project,
+  projectData: ExportProjectData,
   config: ConfigItem,
   fontName: string,
   fileName: string,
 ): void {
   const zip = new JSZip()
-  const { packCanvases, layout } = project
-  const saveFileName = fileName || project.name
+  const { packCanvases, layout, name } = projectData
+  const saveFileName = fileName || name
 
   // Generate BMFont info with correct file names from the start
-  const bmfont = toBmfInfo(project, fontName, saveFileName)
+  const bmfont = toBmfInfo(projectData, fontName, saveFileName)
   const content = config.getContent(bmfont)
 
   // Add the font descriptor file to zip
@@ -39,11 +39,10 @@ export default function exportFile(
     const pagePromise = new Promise<void>((resolve) => {
       sourceCanvas!.toBlob((blob) => {
         if (blob) {
-          const fileName =
-            layout.page > 1
-              ? `${saveFileName}_${pageIndex}.png`
-              : `${saveFileName}.png`
-          zip.file(fileName, blob)
+          const pageName = getPageFileName(saveFileName, pageIndex, layout.page)
+          zip.file(pageName, blob)
+        } else {
+          console.warn(`[Export] Failed to create blob for page ${pageIndex}`)
         }
         resolve()
       })
@@ -53,9 +52,10 @@ export default function exportFile(
   }
 
   // Wait for all pages to be processed, then generate the zip
-  Promise.all(pagePromises).then(() => {
-    zip
-      .generateAsync({ type: 'blob' })
-      .then((content) => saveAs(content, `${saveFileName}.zip`))
-  })
+  Promise.all(pagePromises)
+    .then(() => zip.generateAsync({ type: 'blob' }))
+    .then((content) => saveAs(content, `${saveFileName}.zip`))
+    .catch((error) => {
+      console.error('[Export] Failed to generate font file:', error)
+    })
 }

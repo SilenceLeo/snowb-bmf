@@ -7,15 +7,14 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import * as Sentry from '@sentry/react'
-import { observer } from 'mobx-react-lite'
 import { useSnackbar } from 'notistack'
 import React, { FunctionComponent, useState } from 'react'
-import { useFont } from 'src/store/hooks'
+import { addFont, removeFont, useFontResources } from 'src/store/legend'
 import readFile from 'src/utils/readFile'
 
-const FontFamily: FunctionComponent<unknown> = () => {
+const FontFamily: FunctionComponent = () => {
   const [loading, setLoading] = useState(false)
-  const { fonts, addFont, removeFont } = useFont()
+  const fonts = useFontResources()
   const { enqueueSnackbar } = useSnackbar()
 
   const handleUploadFile = (
@@ -33,22 +32,28 @@ const FontFamily: FunctionComponent<unknown> = () => {
 
     setLoading(true)
 
-    readFile(file).then((arrBuf) => {
-      if (!(arrBuf instanceof ArrayBuffer)) {
-        setLoading(false)
-        return
-      }
-
-      event.target.value = ''
-
-      addFont(arrBuf)
-        .then(() => setLoading(false))
-        .catch((e) => {
+    readFile(file)
+      .then((arrBuf) => {
+        if (!(arrBuf instanceof ArrayBuffer)) {
           setLoading(false)
-          enqueueSnackbar(e.message, { variant: 'error' })
-          Sentry.captureException(e)
-        })
-    })
+          return
+        }
+
+        event.target.value = ''
+
+        addFont(arrBuf)
+          .then(() => setLoading(false))
+          .catch((e) => {
+            setLoading(false)
+            enqueueSnackbar(e.message, { variant: 'error' })
+            Sentry.captureException(e)
+          })
+      })
+      .catch((e) => {
+        setLoading(false)
+        Sentry.captureException(e)
+        enqueueSnackbar((e as Error).message, { variant: 'error' })
+      })
   }
 
   return (
@@ -101,4 +106,4 @@ const FontFamily: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(FontFamily)
+export default FontFamily

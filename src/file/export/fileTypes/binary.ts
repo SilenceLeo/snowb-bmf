@@ -1,4 +1,10 @@
-import { FontToContent, Output } from '../type'
+import type {
+  BMFontChar,
+  BMFontKerning,
+  BMFontPage,
+  FontToContent,
+  Output,
+} from '../type'
 
 const type = 'BINARY'
 
@@ -56,7 +62,12 @@ class BMFontBinaryWriter {
   }
 }
 
-function calculateBufferSize(bmfont: any): number {
+function calculateBufferSize(bmfont: {
+  info: { face?: string }
+  pages: BMFontPage[]
+  chars: { list: BMFontChar[] }
+  kernings: { count: number; list: BMFontKerning[] }
+}): number {
   const { info, pages, chars, kernings } = bmfont
 
   let size = 4 // File header (BMF + version)
@@ -74,7 +85,7 @@ function calculateBufferSize(bmfont: any): number {
   if (pages.length > 0) {
     const maxFileNameLength = Math.max(
       ...pages.map(
-        (page: any) => new TextEncoder().encode(page.file || '').length,
+        (page: BMFontPage) => new TextEncoder().encode(page.file || '').length,
       ),
     )
     // Each page uses maxFileNameLength + 1 (null terminator)
@@ -168,7 +179,7 @@ const getContent: FontToContent = (bmfont) => {
   if (pages.length > 0) {
     maxFileNameLength = Math.max(
       ...pages.map(
-        (page: any) => new TextEncoder().encode(page.file || '').length,
+        (page: BMFontPage) => new TextEncoder().encode(page.file || '').length,
       ),
     )
     pagesBlockSize = pages.length * (maxFileNameLength + 1)
@@ -176,7 +187,7 @@ const getContent: FontToContent = (bmfont) => {
 
   writer.writeBlockHeader(3, pagesBlockSize)
 
-  pages.forEach((page: any) => {
+  pages.forEach((page: BMFontPage) => {
     const fileName = page.file || ''
     const fileNameBytes = new TextEncoder().encode(fileName)
 
@@ -198,7 +209,7 @@ const getContent: FontToContent = (bmfont) => {
   const charsBlockSize = chars.list.length * 20 // 20 bytes per character
   writer.writeBlockHeader(4, charsBlockSize)
 
-  chars.list.forEach((char: any) => {
+  chars.list.forEach((char: BMFontChar) => {
     writer.writeUint32(char.id || 0) // character ID (4 bytes in version 3)
     writer.writeUint16(char.x || 0) // x position
     writer.writeUint16(char.y || 0) // y position
@@ -216,7 +227,7 @@ const getContent: FontToContent = (bmfont) => {
     const kerningBlockSize = kernings.list.length * 10 // 10 bytes per kerning pair
     writer.writeBlockHeader(5, kerningBlockSize)
 
-    kernings.list.forEach((kerning: any) => {
+    kernings.list.forEach((kerning: BMFontKerning) => {
       writer.writeUint32(kerning.first || 0) // first character ID (4 bytes in version 3)
       writer.writeUint32(kerning.second || 0) // second character ID (4 bytes in version 3)
       writer.writeInt16(kerning.amount || 0) // kerning amount

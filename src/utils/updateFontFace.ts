@@ -1,7 +1,7 @@
 let fontTargeCache: HTMLStyleElement
 let loadDiv: HTMLDivElement
 
-export default function updateFontFace(
+export default async function updateFontFace(
   name: string,
   url: string,
 ): Promise<void> {
@@ -29,5 +29,12 @@ export default function updateFontFace(
     fontTargeCache.appendChild(cssNode)
   }
   loadDiv.style.fontFamily = name
-  return new Promise((resolve) => setTimeout(resolve, 200))
+
+  // Use FontFace API to detect when font is loaded
+  try {
+    await document.fonts.load(`12px "${name}"`)
+  } catch {
+    // Fallback: if fonts.load fails, wait briefly for the CSS @font-face to apply
+    await new Promise((resolve) => setTimeout(resolve, 200))
+  }
 }

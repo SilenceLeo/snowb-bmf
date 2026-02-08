@@ -1,4 +1,4 @@
-import { DependencyList, RefObject, useCallback, useEffect } from 'react'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
 
 interface DeltaInfo {
   deltaScale: number
@@ -13,34 +13,33 @@ interface WheelCallback {
 function useWheel(
   ref: RefObject<HTMLElement | null>,
   onWheel: WheelCallback,
-  deps: DependencyList = [],
+  _deps: unknown[] = [],
 ): void {
-  const callback = useCallback(onWheel, [onWheel, deps])
-  const handleWheel = useCallback(
-    (e: WheelEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      const { ctrlKey, altKey, deltaX, deltaY } = e
-      if (ctrlKey) {
-        let d = -0.01
-        if (Math.abs(deltaY) > 50) d *= 0.1
-        callback({ deltaScale: deltaY * d, deltaX: 0, deltaY: 0 })
-      } else {
-        let x = -deltaX
-        let y = -deltaY
-        if (deltaX === 0 && altKey && Math.abs(deltaY) > 50) {
-          x = -deltaY
-          y = 0
-        }
-        callback({
-          deltaX: x,
-          deltaY: y,
-          deltaScale: 0,
-        })
+  const callbackRef = useRef(onWheel)
+  callbackRef.current = onWheel
+
+  const handleWheel = useCallback((e: WheelEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const { ctrlKey, altKey, deltaX, deltaY } = e
+    if (ctrlKey) {
+      let d = -0.01
+      if (Math.abs(deltaY) > 50) d *= 0.1
+      callbackRef.current({ deltaScale: deltaY * d, deltaX: 0, deltaY: 0 })
+    } else {
+      let x = -deltaX
+      let y = -deltaY
+      if (deltaX === 0 && altKey && Math.abs(deltaY) > 50) {
+        x = -deltaY
+        y = 0
       }
-    },
-    [callback],
-  )
+      callbackRef.current({
+        deltaX: x,
+        deltaY: y,
+        deltaScale: 0,
+      })
+    }
+  }, [])
 
   useEffect(() => {
     if (!ref.current) return undefined

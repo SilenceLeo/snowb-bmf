@@ -1,7 +1,5 @@
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
-import { observer } from 'mobx-react-lite'
-import { IChange, deepObserve } from 'mobx-utils'
 import {
   FunctionComponent,
   useCallback,
@@ -11,54 +9,96 @@ import {
 } from 'react'
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
-import { GlyphFont, GlyphImage } from 'src/store/base'
-import { useProject } from 'src/store/hooks'
+import {
+  clearSelection,
+  getGlyphForLetter,
+  setPreviewTransform,
+  useAllGlyphs,
+  useFontLineHeight,
+  useFontSize,
+  useGlobalAdjustMetric,
+  useImageGlyphs,
+  useIsPacking,
+  usePackCanvases,
+  usePadding,
+  usePreviewText,
+  usePreviewTransform,
+  useStyle,
+} from 'src/store/legend'
+import type { FontGlyphData, ImageGlyphData } from 'src/store/legend'
 
 import LetterList from './LetterList'
 
-const PreviewCanvas: FunctionComponent<unknown> = () => {
+// TODO: Consider extracting usePreviewData (data calculation logic) and
+// usePreviewDraw (canvas drawing logic) hooks to reduce component size.
+// Currently deferred due to tight coupling between canvas ref, multiple
+// store subscriptions, and interdependent useEffect chains.
+const PreviewCanvas: FunctionComponent = () => {
   const { bgPixel } = useTheme()
-  const project = useProject()
+
+  // Use Legend State hooks
+  const fontSize = useFontSize()
+  const lineHeight = useFontLineHeight()
+  const styleData = useStyle()
+  const { font } = styleData
+  const { middle, hanging, top, alphabetic, ideographic, bottom } = font
+  const padding = usePadding()
+  const isPacking = useIsPacking()
+  const globalAdjustMetric = useGlobalAdjustMetric()
+  const packCanvases = usePackCanvases()
   const {
-    ui,
-    style: {
-      font: {
-        size,
-        lineHeight,
-        middle,
-        hanging,
-        top,
-        alphabetic,
-        ideographic,
-        bottom,
-        minBaseLine,
-        maxBaseLine,
-      },
-    },
-    layout: { padding },
-    isPacking,
-    globalAdjustMetric,
-    packCanvases,
-  } = project
-  const { previewScale, previewOffsetX, previewOffsetY } = ui
+    scale: previewScale,
+    offsetX: previewOffsetX,
+    offsetY: previewOffsetY,
+  } = usePreviewTransform()
+  const previewText = usePreviewText()
+
+  // Subscribe to glyph changes for reactivity
+  const allGlyphs = useAllGlyphs()
+  const imageGlyphs = useImageGlyphs()
+
+  // Calculate min/max baselines
+  const minBaseLine = Math.min(
+    middle,
+    hanging,
+    top,
+    alphabetic,
+    ideographic,
+    bottom,
+  )
+  const maxBaseLine = Math.max(
+    middle,
+    hanging,
+    top,
+    alphabetic,
+    ideographic,
+    bottom,
+  )
+
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
   const domRef = useRef<HTMLDivElement>(null)
-  const [dragState, handleMouseDown] = useSpaceDrag(
-    (offsetInfo) => {
-      const { offsetX: ix, offsetY: iy } = offsetInfo
-      const {
-        previewScale: os,
-        previewOffsetX: ox,
-        previewOffsetY: oy,
-        setPreviewTransform,
-      } = ui
-      setPreviewTransform({
-        previewOffsetX: ox + ix / os,
-        previewOffsetY: oy + iy / os,
-      })
-    },
-    [ui],
-  )
+
+  // Use ref to avoid stale closures in drag/wheel callbacks
+  const previewTransformRef = useRef({
+    previewScale,
+    previewOffsetX,
+    previewOffsetY,
+  })
+  previewTransformRef.current = { previewScale, previewOffsetX, previewOffsetY }
+
+  const [dragState, handleMouseDown] = useSpaceDrag((offsetInfo) => {
+    const {
+      previewScale: s,
+      previewOffsetX: ox,
+      previewOffsetY: oy,
+    } = previewTransformRef.current
+    const { offsetX: ix, offsetY: iy } = offsetInfo
+    setPreviewTransform({
+      previewOffsetX: ox + ix / s,
+      previewOffsetY: oy + iy / s,
+    })
+  }, [])
+
   const [data, setData] = useState<{
     lines: number
     list: {
@@ -68,7 +108,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       height: number
       letter: string
       next: string
-      glyph: GlyphImage | GlyphFont
+      glyph: FontGlyphData | ImageGlyphData
     }[]
     xOffset: number
     yOffset: number
@@ -85,7 +125,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       return
     }
 
-    const lh = size * lineHeight
+    const lh = fontSize * lineHeight
     const fontHeight = maxBaseLine - minBaseLine
     const list: {
       x: number
@@ -94,9 +134,9 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       height: number
       letter: string
       next: string
-      glyph: GlyphImage | GlyphFont
+      glyph: FontGlyphData | ImageGlyphData
     }[] = []
-    const lines = ui.previewText.split(/\r\n|\r|\n/)
+    const lines = previewText.split(/\r\n|\r|\n/)
     let minX = 0
     let minY = 0
     let maxX = 0
@@ -106,7 +146,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       let x = 0
       const arr = Array.from(str)
       arr.forEach((letter, idx) => {
-        const glyph = project.getGlyph(letter)
+        const glyph = getGlyphForLetter(letter)
         if (!glyph) {
           return
         }
@@ -141,8 +181,9 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
 
         x += xadvance
 
-        if (glyph.kerning.get(next)) {
-          x += glyph.kerning.get(next) as number
+        const kerningValue = (glyph.kerning as Record<string, number>)[next]
+        if (kerningValue) {
+          x += kerningValue
         }
 
         minX = Math.min(obj.x, minX)
@@ -161,14 +202,17 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       width: maxX - minX,
       height: Math.max(maxY - minY, lines.length * lh - minY) + 2,
     })
+    // getGlyphForLetter is intentionally omitted from deps — it reads directly
+    // from Legend State observables via .get() on each call, so it always returns
+    // the latest data. Glyph reactivity is triggered by allGlyphs/imageGlyphs
+    // subscriptions in the useEffect that calls initData below.
   }, [
     canvas,
-    size,
+    fontSize,
     lineHeight,
     maxBaseLine,
     minBaseLine,
-    ui.previewText,
-    project,
+    previewText,
     padding,
     globalAdjustMetric.xOffset,
     globalAdjustMetric.yOffset,
@@ -179,23 +223,23 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     domRef,
     (info) => {
       const {
-        previewOffsetX: ox,
-        previewOffsetY: oy,
-        previewScale: os,
-        setPreviewTransform,
-      } = ui
-      const s = os + info.deltaScale
-      const x = ox + info.deltaX / s
-      const y = oy + info.deltaY / s
+        previewScale: cs,
+        previewOffsetX: cx,
+        previewOffsetY: cy,
+      } = previewTransformRef.current
+      const s = cs + info.deltaScale
+      const x = cx + info.deltaX / s
+      const y = cy + info.deltaY / s
       setPreviewTransform({
         previewOffsetX: x,
         previewOffsetY: y,
         previewScale: s,
       })
     },
-    [ui],
+    [],
   )
 
+  // Draw canvas when data changes
   useEffect(() => {
     if (!canvas || isPacking || !data) {
       return
@@ -205,20 +249,24 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
       return
     }
 
-    const lh = size * lineHeight
-    const drawYOffset = Math.max((lh - size) / 2, 0)
+    const lh = fontSize * lineHeight
+    const drawYOffset = Math.max((lh - fontSize) / 2, 0)
 
     canvas.width = data.width
     canvas.height = data.height
 
     data.list.forEach((item) => {
-      if (item.glyph instanceof GlyphImage && item.glyph.source) {
-        ctx.drawImage(
-          item.glyph.source,
-          item.x - data.xOffset,
-          item.y - data.yOffset + drawYOffset,
-        )
-      } else if (item.glyph instanceof GlyphFont) {
+      // Use type field instead of instanceof check
+      if (item.glyph.type === 'image') {
+        const imageGlyph = item.glyph as ImageGlyphData
+        if (imageGlyph.source) {
+          ctx.drawImage(
+            imageGlyph.source,
+            item.x - data.xOffset,
+            item.y - data.yOffset + drawYOffset,
+          )
+        }
+      } else if (item.glyph.type === 'text') {
         // Unified coordinate processing: always use packed page coordinates
         const glyphPage = item.glyph.page || 0
         const sourceCanvas = packCanvases?.[glyphPage]
@@ -239,7 +287,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
             )
           } catch (error) {
             console.warn(
-              `⚠️ Failed to draw glyph ${item.glyph.letter} from page ${glyphPage}:`,
+              `[Preview] Failed to draw glyph ${item.glyph.letter} from page ${glyphPage}:`,
               error,
             )
           }
@@ -288,20 +336,19 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
     minBaseLine,
     packCanvases,
     padding,
-    size,
+    fontSize,
     top,
   ])
 
+  // Initialize data when glyphs change
+  // Legend State hooks provide automatic reactivity for allGlyphs and imageGlyphs
   useEffect(() => {
     initData()
-    const observer = (_change: IChange) => initData()
-    const glyphsDisposer = deepObserve(project.glyphs, observer)
-    const imagesDisposer = deepObserve(project.glyphImages, observer)
-    return () => {
-      glyphsDisposer()
-      imagesDisposer()
-    }
-  }, [initData, project.glyphImages, project.glyphs])
+  }, [initData, allGlyphs, imageGlyphs])
+
+  const handleClearSelection = () => {
+    clearSelection()
+  }
 
   return (
     <Box
@@ -318,7 +365,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
           dragState === 2 ? 'grabbing' : dragState === 1 ? 'grab' : 'default',
       }}
       onMouseDown={handleMouseDown}
-      onClick={() => ui.setSelectLetter('', '')}
+      onClick={handleClearSelection}
     >
       <Box
         sx={{
@@ -342,7 +389,7 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
         {data ? (
           <LetterList
             data={data}
-            drawYOffset={Math.max((size * lineHeight - size) / 2, 0)}
+            drawYOffset={Math.max((fontSize * lineHeight - fontSize) / 2, 0)}
           />
         ) : null}
       </Box>
@@ -350,4 +397,4 @@ const PreviewCanvas: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(PreviewCanvas)
+export default PreviewCanvas

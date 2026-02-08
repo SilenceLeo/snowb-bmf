@@ -2,38 +2,50 @@ import Box from '@mui/material/Box'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GradientPicker from 'src/app/components/GradientPicker'
 import GridInput from 'src/app/components/GridInput'
 import WrappedSketchPicker from 'src/app/components/WrappedSketchPicker'
-import { Gradient, GradientType } from 'src/store'
+import {
+  type GradientData,
+  type GradientPaletteItem,
+  GradientType,
+  addGradientColor,
+  setGradientAngle,
+  setGradientType,
+  updateGradientPalette,
+} from 'src/store/legend'
 
 import FormAngle from '../FormAngle'
 
 interface FormGradientProps {
-  gradient: Gradient
+  gradient: GradientData
+  // Optional action overrides (for stroke mode)
+  onTypeChange?: (type: number) => void
+  onAngleChange?: (angle: number) => void
+  onColorAdd?: (offset: number, color: string) => void
+  onPaletteUpdate?: (palette: GradientPaletteItem[]) => void
 }
 
-const FormGradient: FunctionComponent<FormGradientProps> = (
-  props: FormGradientProps,
-) => {
-  const {
-    gradient: {
-      type,
-      angle,
-      palette,
-      addColor,
-      updatePalette,
-      setAngle,
-      setType,
-    },
-  } = props
+const FormGradient: FunctionComponent<FormGradientProps> = ({
+  gradient,
+  onTypeChange,
+  onAngleChange,
+  onColorAdd,
+  onPaletteUpdate,
+}) => {
+  const { type, angle, palette } = gradient
+
+  // Use provided callbacks or default to fill actions
+  const handleTypeChange = onTypeChange || setGradientType
+  const handleAngleChange = onAngleChange || setGradientAngle
+  const handleColorAdd = onColorAdd || addGradientColor
+  const handlePaletteUpdate = onPaletteUpdate || updateGradientPalette
 
   return (
     <>
       <Box paddingX={2} marginY={4}>
-        <FormAngle angle={angle} onChange={setAngle} />
+        <FormAngle angle={angle} onChange={handleAngleChange} />
       </Box>
 
       <Box paddingX={2} marginY={4}>
@@ -42,7 +54,7 @@ const FormGradient: FunctionComponent<FormGradientProps> = (
             row
             name='type'
             value={type}
-            onChange={(e) => setType(Number(e.target.value))}
+            onChange={(e) => handleTypeChange(Number(e.target.value))}
             style={{ flexWrap: 'nowrap' }}
           >
             <FormControlLabel
@@ -61,8 +73,10 @@ const FormGradient: FunctionComponent<FormGradientProps> = (
       <Box paddingX={2} marginY={4}>
         <GradientPicker
           palette={palette}
-          onAdd={(e) => addColor(e.offset, e.color)}
-          onUpdate={updatePalette}
+          onAdd={(e) => handleColorAdd(e.offset, e.color)}
+          onUpdate={(newPalette: GradientPaletteItem[]) =>
+            handlePaletteUpdate(newPalette)
+          }
         >
           <WrappedSketchPicker />
         </GradientPicker>
@@ -71,4 +85,4 @@ const FormGradient: FunctionComponent<FormGradientProps> = (
   )
 }
 
-export default observer(FormGradient)
+export default FormGradient

@@ -51,8 +51,13 @@ ctx.addEventListener(
     if (data.length > 1) {
       const list = packing(data as Rectangle[])
       ctx.postMessage(list)
+    } else if (data.length === 1) {
+      const rect = data[0] as Rectangle
+      rect.x = 0
+      rect.y = 0
+      ctx.postMessage([rect])
     } else {
-      ctx.postMessage(data || [])
+      ctx.postMessage([])
     }
   },
   false,

@@ -12,6 +12,8 @@ const check: CheckFunction = (litteraStr) => {
     } catch {
       return false
     }
+  } else if (typeof litteraStr === 'object' && litteraStr !== null) {
+    litteraData = litteraStr
   }
 
   if (typeof litteraData !== 'object') {

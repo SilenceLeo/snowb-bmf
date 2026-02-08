@@ -7,19 +7,20 @@ import Paper from '@mui/material/Paper'
 import Popper from '@mui/material/Popper'
 import Slider from '@mui/material/Slider'
 import Switch from '@mui/material/Switch'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent, useRef, useState } from 'react'
-import { useProjectUi } from 'src/store/hooks'
+import {
+  setPreviewTransform,
+  setShowPreview,
+  setTransform,
+  usePreviewTransform,
+  useShowPreview,
+  useUiTransform,
+} from 'src/store/legend'
 
-const ControllerBar: FunctionComponent<unknown> = () => {
-  const {
-    scale,
-    setTransform,
-    previewScale,
-    setPreviewTransform,
-    showPreview,
-    setShowPreview,
-  } = useProjectUi()
+const ControllerBar: FunctionComponent = () => {
+  const showPreview = useShowPreview()
+  const { scale } = useUiTransform()
+  const { scale: previewScale } = usePreviewTransform()
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
   const [list] = useState([0.25, 0.5, 0.75, 1, 1.25, 1.5, 5, 10])
@@ -104,4 +105,4 @@ const ControllerBar: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(ControllerBar)
+export default ControllerBar

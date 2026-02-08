@@ -6,7 +6,7 @@ export default function readFile(
     return file.arrayBuffer()
   }
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader()
 
     if (isText) {
@@ -17,6 +17,10 @@ export default function readFile(
 
     reader.onload = (e) => {
       resolve(e?.target?.result || null)
+    }
+
+    reader.onerror = () => {
+      reject(new Error(`Failed to read file: ${file.name}`))
     }
   })
 }

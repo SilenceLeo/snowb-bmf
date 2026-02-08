@@ -6,7 +6,7 @@ interface GradientColor {
 }
 
 interface Gradient {
-  type: 0 | 1
+  type: number
   palette: GradientColor[]
   angle: number
 }
@@ -24,8 +24,18 @@ interface Config {
   patternTexture: PatternTexture
 }
 
-const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-const matrix = svg.createSVGMatrix()
+let svg: SVGSVGElement | null = null
+let matrix: DOMMatrix | null = null
+
+function getSvgMatrix(): DOMMatrix {
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+  }
+  if (!matrix) {
+    matrix = svg.createSVGMatrix()
+  }
+  return matrix
+}
 
 export default function getCanvasStyle(
   ctx: CanvasRenderingContext2D,
@@ -77,6 +87,9 @@ export default function getCanvasStyle(
     return 'rgba(0,0,0,0)'
   }
   // TODO: Add trim translate and rotate.
-  pattern.setTransform(matrix.scale(scale).translate(x, y))
+  const m = getSvgMatrix()
+  if (m) {
+    pattern.setTransform(m.scale(scale).translate(x, y))
+  }
   return pattern
 }

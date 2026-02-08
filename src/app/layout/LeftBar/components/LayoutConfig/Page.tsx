@@ -1,11 +1,10 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import { setPage, usePageCount } from 'src/store/legend'
 
-const Page: FunctionComponent<unknown> = () => {
-  const { page, setPage } = useLayout()
+const Page: FunctionComponent = () => {
+  const page = usePageCount()
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPage(Number(event.target.value))
@@ -24,4 +23,4 @@ const Page: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(Page)
+export default Page

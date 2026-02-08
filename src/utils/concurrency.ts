@@ -4,8 +4,10 @@
 export class Semaphore {
   private queue: (() => void)[] = []
   private currentCount: number
+  private readonly maxCount: number
 
   constructor(maxCount: number) {
+    this.maxCount = maxCount
     this.currentCount = maxCount
   }
 
@@ -32,8 +34,8 @@ export class Semaphore {
     if (next) {
       // Has waiting tasks, execute directly
       next()
-    } else {
-      // No waiting tasks, increase available count
+    } else if (this.currentCount < this.maxCount) {
+      // No waiting tasks, increase available count (guard against over-release)
       this.currentCount++
     }
   }

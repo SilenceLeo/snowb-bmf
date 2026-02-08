@@ -6,7 +6,7 @@ import PreviewKerning from './PreviewKerning'
 import PreviewMetric from './PreviewMetric'
 import PreviewText from './PreviewText'
 
-const Preview: FunctionComponent<unknown> = () => {
+const Preview: FunctionComponent = () => {
   return (
     <>
       <PreviewCanvas />

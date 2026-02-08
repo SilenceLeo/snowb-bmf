@@ -6,7 +6,7 @@ import React, { FunctionComponent, ReactNode } from 'react'
 interface SidebarProps {
   title: string
   width: string
-  children: ReactNode[]
+  children: ReactNode
 }
 
 const Sidebar: FunctionComponent<SidebarProps> = ({
@@ -14,6 +14,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   width,
   children,
 }) => {
+  const childArray = React.Children.toArray(children)
+
   return (
     <Box
       sx={{
@@ -28,10 +30,10 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
         <Typography variant='subtitle2'>{title}</Typography>
       </Box>
       <Box flex={1} height={0} overflow='hidden auto'>
-        {children.map((child, index) => (
+        {childArray.map((child, index) => (
           <React.Fragment key={index}>
             {child}
-            {index < children.length - 1 && <Divider />}
+            {index < childArray.length - 1 && <Divider />}
           </React.Fragment>
         ))}
       </Box>
