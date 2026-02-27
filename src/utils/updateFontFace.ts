@@ -1,22 +1,24 @@
-let fontTargeCache: HTMLStyleElement
+let fontTargetCache: HTMLStyleElement
 let loadDiv: HTMLDivElement
 
 export default async function updateFontFace(
   name: string,
   url: string,
 ): Promise<void> {
+  const safeName = name.replace(/"/g, '\\"')
+  const safeUrl = encodeURI(url)
   const cssNode = document.createTextNode(`
     @font-face {
-        font-family: "${name}";
-        src: url("${url}") format('truetype');
+        font-family: "${safeName}";
+        src: url("${safeUrl}") format('truetype');
     }`)
 
-  if (!fontTargeCache) {
+  if (!fontTargetCache) {
     const textNode = document.createTextNode(`A`)
-    fontTargeCache = document.createElement('style')
+    fontTargetCache = document.createElement('style')
     loadDiv = document.createElement('div')
-    document.head.appendChild(fontTargeCache)
-    fontTargeCache.appendChild(cssNode)
+    document.head.appendChild(fontTargetCache)
+    fontTargetCache.appendChild(cssNode)
     loadDiv.appendChild(textNode)
     loadDiv.style.position = 'absolute'
     loadDiv.style.left = '-1000px'
@@ -26,7 +28,9 @@ export default async function updateFontFace(
     loadDiv.style.pointerEvents = 'none'
     document.body.appendChild(loadDiv)
   } else {
-    fontTargeCache.appendChild(cssNode)
+    // Clear previous @font-face rules to avoid accumulation
+    fontTargetCache.textContent = ''
+    fontTargetCache.appendChild(cssNode)
   }
   loadDiv.style.fontFamily = name
 

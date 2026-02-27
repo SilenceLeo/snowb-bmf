@@ -6,6 +6,9 @@ interface PoolWorker extends Worker {
 }
 
 class AutoPackerWorkerPool {
+  /** Delay before re-initializing workers after reset (ms) */
+  private static readonly REINIT_DELAY_MS = 100
+
   private workers: Worker[] = []
   private availableWorkers: Worker[] = []
   private busyWorkers: Set<Worker> = new Set()
@@ -35,11 +38,13 @@ class AutoPackerWorkerPool {
     // Delayed initialization to avoid blocking startup
     this.delayedInitialize()
 
-    // Expose worker pool status and reset in console for debugging
+    // Expose worker pool instance on window (used by PackingEngine at runtime)
     if (typeof window !== 'undefined') {
-      window.getWorkerPoolStatus = () => this.getStatus()
-      window.resetWorkerPool = () => this.reset()
       window.autoPackerWorkerPool = this
+      if (import.meta.env.DEV) {
+        window.getWorkerPoolStatus = () => this.getStatus()
+        window.resetWorkerPool = () => this.reset()
+      }
     }
   }
 
@@ -59,7 +64,7 @@ class AutoPackerWorkerPool {
       // Fallback to short delay
       setTimeout(() => {
         this.preInitializeWorkers()
-      }, 100)
+      }, AutoPackerWorkerPool.REINIT_DELAY_MS)
     }
   }
 
@@ -113,16 +118,11 @@ class AutoPackerWorkerPool {
   }
 
   /**
-   * Create worker asynchronously to avoid blocking UI
+   * Create a new worker. Worker constructor is synchronous; wrapping in
+   * setTimeout(0) provided no real async benefit, so we return directly.
    */
-  private async createWorkerAsync(): Promise<Worker> {
-    return new Promise((resolve) => {
-      // Use setTimeout to defer worker creation to next event loop
-      setTimeout(() => {
-        const worker = new AutoPackerWorker()
-        resolve(worker)
-      }, 0)
-    })
+  private createWorkerAsync(): Promise<Worker> {
+    return Promise.resolve(new AutoPackerWorker())
   }
 
   /**
@@ -158,9 +158,8 @@ class AutoPackerWorkerPool {
 
     // Check if it's a worker from the pool
     if (this.workers.includes(worker)) {
-      // Clean all possible event listeners
-      if (worker.onmessage) worker.onmessage = null
-      if (worker.onerror) worker.onerror = null
+      // Event listeners are cleaned up by PackingEngine's task.cleanup()
+      // via removeEventListener with the actual handler references
 
       // Check if already in available pool to avoid duplicate addition
       if (!this.availableWorkers.includes(worker)) {
@@ -227,7 +226,7 @@ class AutoPackerWorkerPool {
     // Re-initialize after a short delay
     setTimeout(() => {
       this.preInitializeWorkers()
-    }, 100)
+    }, AutoPackerWorkerPool.REINIT_DELAY_MS)
   }
 
   /**

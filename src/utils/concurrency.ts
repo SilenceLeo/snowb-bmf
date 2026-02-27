@@ -53,4 +53,29 @@ export class Semaphore {
   get waiting(): number {
     return this.queue.length
   }
+
+  /**
+   * Reset semaphore to initial state.
+   * Resolves all pending acquire() Promises to prevent memory leaks.
+   * Callers waiting on acquire() will proceed and should check cancellation state.
+   */
+  reset(): void {
+    const pending = this.queue
+    this.queue = []
+    this.currentCount = this.maxCount
+    // Resolve (not reject) — callers proceed then check abort signal
+    pending.forEach((resolve) => resolve())
+  }
+}
+
+/**
+ * Check if an error is a cancellation/abort error.
+ * Unifies detection across PackingEngine and packing actions.
+ */
+export function isCancelError(error: unknown): boolean {
+  if (error instanceof DOMException && error.name === 'AbortError') return true
+  if (error instanceof Error) {
+    return error.message === 'Packing cancelled'
+  }
+  return false
 }

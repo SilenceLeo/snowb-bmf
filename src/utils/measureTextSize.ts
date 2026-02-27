@@ -12,6 +12,7 @@ export interface LetterSize {
   trimOffsetLeft: number
 }
 
+// Module-level canvas singleton for reuse across calls. Not released during app lifetime.
 let canvas: HTMLCanvasElement
 const CANVAS_SIZE = 256
 

@@ -10,7 +10,7 @@
  * - Handle font resources with opentype.js parsing
  * - Initialize pattern texture images
  */
-import { batch } from '@legendapp/state'
+import { batch, opaqueObject } from '@legendapp/state'
 import type { Font as OpenType } from 'opentype.js'
 import { parse } from 'opentype.js'
 import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.2.1/project'
@@ -37,9 +37,28 @@ import {
   type StrokeData,
   type StyleData,
   initializeStyleStore,
+  updateBaselines,
 } from '../stores/styleStore'
-import { initializeUiStore } from '../stores/uiStore'
+import { DEFAULT_PREVIEW_TEXT, initializeUiStore } from '../stores/uiStore'
 import type { FontGlyphData, ImageGlyphData } from '../types'
+
+// ============================================================================
+// Buffer Utilities
+// ============================================================================
+
+/**
+ * Normalize a buffer to ArrayBuffer.
+ * Handles both Uint8Array (from raw protobuf) and ArrayBuffer (from toOriginBuffer conversion).
+ */
+function normalizeToArrayBuffer(
+  input: Uint8Array | ArrayBuffer,
+): ArrayBuffer {
+  if (input instanceof ArrayBuffer) return input
+  return input.buffer.slice(
+    input.byteOffset,
+    input.byteOffset + input.byteLength,
+  ) as ArrayBuffer
+}
 
 // ============================================================================
 // Type Definitions
@@ -164,7 +183,7 @@ function deserializeGlyphs(
 function deserializeImageGlyph(data: {
   letter?: string
   adjustMetric?: { xAdvance?: number; xOffset?: number; yOffset?: number }
-  buffer?: Uint8Array
+  buffer?: Uint8Array | ArrayBuffer
   fileName?: string
   fileType?: string
   selected?: boolean
@@ -172,10 +191,7 @@ function deserializeImageGlyph(data: {
   page?: number
 }): ImageGlyphData {
   const buffer = data.buffer
-    ? (data.buffer.buffer.slice(
-        data.buffer.byteOffset,
-        data.buffer.byteOffset + data.buffer.byteLength,
-      ) as ArrayBuffer)
+    ? normalizeToArrayBuffer(data.buffer)
     : undefined
 
   return {
@@ -199,7 +215,7 @@ function deserializeImageGlyph(data: {
     adjustMetric: deserializeMetric(data.adjustMetric),
     fileName: data.fileName ?? '',
     fileType: data.fileType ?? '',
-    buffer,
+    buffer: buffer ? opaqueObject(buffer) : undefined,
     src: buffer ? URL.createObjectURL(new Blob([buffer])) : '',
   }
 }
@@ -212,7 +228,7 @@ function deserializeImageGlyphs(
     | Array<{
         letter?: string
         adjustMetric?: { xAdvance?: number; xOffset?: number; yOffset?: number }
-        buffer?: Uint8Array
+        buffer?: Uint8Array | ArrayBuffer
         fileName?: string
         fileType?: string
         selected?: boolean
@@ -259,20 +275,16 @@ function deserializeGradientPalette(
  */
 function deserializePatternTexture(
   data:
-    | { buffer?: Uint8Array; scale?: number; repetition?: string }
+    | { buffer?: Uint8Array | ArrayBuffer; scale?: number; repetition?: string }
     | null
     | undefined,
 ): PatternTextureData {
   const buffer = data?.buffer
-    ? (data.buffer.buffer.slice(
-        data.buffer.byteOffset,
-        data.buffer.byteOffset + data.buffer.byteLength,
-      ) as ArrayBuffer)
+    ? normalizeToArrayBuffer(data.buffer)
     : new ArrayBuffer(0)
 
   return {
     buffer,
-    image: null,
     src: '',
     repetition:
       (data?.repetition as PatternTextureData['repetition']) ?? 'repeat',
@@ -294,7 +306,7 @@ function deserializeFill(
           palette?: Array<{ id?: number; offset?: number; color?: string }>
         }
         patternTexture?: {
-          buffer?: Uint8Array
+          buffer?: Uint8Array | ArrayBuffer
           scale?: number
           repetition?: string
         }
@@ -328,7 +340,7 @@ function deserializeStroke(
           palette?: Array<{ id?: number; offset?: number; color?: string }>
         }
         patternTexture?: {
-          buffer?: Uint8Array
+          buffer?: Uint8Array | ArrayBuffer
           scale?: number
           repetition?: string
         }
@@ -371,7 +383,7 @@ function deserializeShadow(
  * Deserialize font resources
  */
 async function deserializeFontResources(
-  data: Array<{ font?: Uint8Array }> | null | undefined,
+  data: Array<{ font?: Uint8Array | ArrayBuffer }> | null | undefined,
 ): Promise<FontResource[]> {
   if (!data || data.length === 0) {
     return []
@@ -383,10 +395,7 @@ async function deserializeFontResources(
     }
 
     try {
-      const buffer = fontData.font.buffer.slice(
-        fontData.font.byteOffset,
-        fontData.font.byteOffset + fontData.font.byteLength,
-      ) as ArrayBuffer
+      const buffer = normalizeToArrayBuffer(fontData.font)
 
       const opentype: OpenType = parse(buffer, { lowMemory: true })
       const { names } = opentype
@@ -403,10 +412,10 @@ async function deserializeFontResources(
       await updateFontFace(family, url)
 
       return {
-        font: buffer,
+        font: opaqueObject(buffer),
         family,
-        opentype,
-      }
+        opentype: opaqueObject(opentype),
+      } as FontResource
     } catch (error) {
       console.error('[Deserialize] Failed to parse font:', error)
       return null
@@ -423,7 +432,7 @@ async function deserializeFontResources(
 async function deserializeFont(
   data:
     | {
-        fonts?: Array<{ font?: Uint8Array }>
+        fonts?: Array<{ font?: Uint8Array | ArrayBuffer }>
         size?: number
         lineHeight?: number
         sharp?: number
@@ -454,7 +463,7 @@ async function deserializeStyle(
   data:
     | {
         font?: {
-          fonts?: Array<{ font?: Uint8Array }>
+          fonts?: Array<{ font?: Uint8Array | ArrayBuffer }>
           size?: number
           lineHeight?: number
           sharp?: number
@@ -581,7 +590,15 @@ export async function deserializeProject(data: DecodedProject): Promise<void> {
 
       // Set UI store
       initializeUiStore({
-        previewText: data.ui?.previewText ?? 'Hello World!\nHello Snow Bamboo!',
+        previewText: data.ui?.previewText ?? DEFAULT_PREVIEW_TEXT,
+      })
+
+      // Revoke old image glyph Object URLs before replacing (I9)
+      const existingImageGlyphs = glyphStore$.imageGlyphs.get()
+      existingImageGlyphs.forEach((img) => {
+        if (img.src) {
+          URL.revokeObjectURL(img.src)
+        }
       })
 
       // Set glyph store
@@ -589,7 +606,11 @@ export async function deserializeProject(data: DecodedProject): Promise<void> {
       glyphStore$.imageGlyphs.set(imageGlyphs)
     })
 
-    console.log(`[Deserialize] Project loaded: ${data.name}`)
+    // Always update baselines — for CSS fonts, this uses Canvas measureText API;
+    // for OpenType fonts, this uses font metrics. Matches MobX Font constructor behavior.
+    updateBaselines()
+
+    console.log(`[Deserialize] Project loaded: ${data.name ?? 'Unnamed'}`)
   } catch (error) {
     console.error('[Deserialize] Failed to deserialize project:', error)
     throw error
@@ -620,7 +641,7 @@ export async function initializeImageGlyphSources(): Promise<void> {
         const trimInfo = getTrimImageInfo(img)
 
         batch(() => {
-          glyphStore$.imageGlyphs[index].source.set(trimInfo.canvas)
+          glyphStore$.imageGlyphs[index].source.set(opaqueObject(trimInfo.canvas))
           glyphStore$.imageGlyphs[index].fontWidth.set(img.naturalWidth)
           glyphStore$.imageGlyphs[index].fontHeight.set(img.naturalHeight)
           glyphStore$.imageGlyphs[index].width.set(trimInfo.width)

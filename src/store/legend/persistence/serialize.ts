@@ -73,23 +73,6 @@ function serializeMetric(metric: MetricData | null | undefined): IMetric {
 }
 
 // ============================================================================
-// Kerning Serialization
-// ============================================================================
-
-/**
- * Convert kerning Map to plain object
- */
-function serializeKerning(
-  kerning: Record<string, number> | null | undefined,
-): Record<string, number> {
-  if (!kerning) {
-    return {}
-  }
-
-  return kerning
-}
-
-// ============================================================================
 // Font Glyph Serialization
 // ============================================================================
 
@@ -100,7 +83,7 @@ function serializeFontGlyph(glyph: FontGlyphData): IGlyphFont {
   return {
     letter: glyph.letter,
     adjustMetric: serializeMetric(glyph.adjustMetric),
-    kerning: serializeKerning(glyph.kerning),
+    kerning: glyph.kerning ?? {},
     page: glyph.page,
   }
 }
@@ -137,7 +120,7 @@ function serializeImageGlyph(imageGlyph: ImageGlyphData): IGlyphImage {
     fileName: imageGlyph.fileName ?? '',
     fileType: imageGlyph.fileType ?? '',
     selected: imageGlyph.selected,
-    kerning: serializeKerning(imageGlyph.kerning),
+    kerning: imageGlyph.kerning ?? {},
     page: imageGlyph.page,
   }
 }
@@ -198,7 +181,9 @@ function serializeFill(fill: FillData): IFill {
 }
 
 /**
- * Serialize stroke data (extends fill with stroke-specific properties)
+ * Serialize stroke data (extends fill with stroke-specific properties).
+ * Returns IFill because the protobuf schema stores stroke as Fill message
+ * with additional fields (width, lineCap, lineJoin, strokeType).
  */
 function serializeStroke(stroke: StrokeData): IFill {
   return {
@@ -340,8 +325,11 @@ export function serializeProjectById(
 ): SerializableProject | null {
   const current = projectStore$.current.get()
 
-  // Currently only support active project
-  // Full multi-project support will be added with workspace store integration
+  // TODO: Support serializing non-active projects by storing per-project
+  // snapshots in workspaceStore. Currently all style/layout/glyph state is
+  // global, so only the active project can be serialized. To support
+  // multi-project serialization, each project's state would need to be
+  // saved/restored when switching projects (project swapping).
   if (current.id !== projectId) {
     console.warn(
       `[Persistence] Project ${projectId} not found (current: ${current.id})`,

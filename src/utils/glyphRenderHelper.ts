@@ -11,7 +11,7 @@ import ctxDoPath from './ctxDoPath'
 import getCanvasStyle from './getCanvasStyle'
 import measureTextSize, { LetterSize } from './measureTextSize'
 import pathDoSharp from './pathDoSharp'
-import trimTransparentPixels from './trimTransparentPixels'
+import { trimTransparentPixelsFromRegion } from './trimTransparentPixels'
 
 export interface GlyphItem extends LetterSize {
   canvasX: number
@@ -32,7 +32,6 @@ export type FontConfig = FontRenderConfig
 
 const CANVAS_2D_OPTIONS: CanvasRenderingContext2DSettings = {
   willReadFrequently: true,
-  desynchronized: true,
   alpha: true,
   colorSpace: 'srgb',
 }
@@ -213,12 +212,12 @@ function renderOpentypeGlyph(
 
   ctx.translate(translateX, translateY)
   ctxDoPath(ctx, path.commands)
-  ctx.fillStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, fill)
+  ctx.fillStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, fill, fill.patternImage)
 
   const hasStroke = !!(stroke && lineWidth)
 
   if (hasStroke) {
-    ctx.strokeStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, stroke)
+    ctx.strokeStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, stroke, stroke.patternImage)
     ctx.lineWidth = path.strokeWidth =
       stroke.strokeType === 1 ? stroke.width : lineWidth
   }
@@ -228,8 +227,8 @@ function renderOpentypeGlyph(
     ctx.save()
     ctx.clip()
     ctx.clearRect(
-      startX - padding,
-      startY - padding,
+      -translateX + startX - padding,
+      -translateY + startY - padding,
       itemWidth + padding * 2,
       itemHeight + padding * 2,
     )
@@ -304,6 +303,7 @@ function renderFallbackGlyph(
       font.size,
       font.size,
       stroke,
+      stroke.patternImage,
     )
     ctx.lineWidth = lineWidth
     ctx.strokeText(letter, drawX, drawY)
@@ -312,7 +312,7 @@ function renderFallbackGlyph(
     ctx.globalCompositeOperation = 'source-over'
   }
 
-  ctx.fillStyle = getCanvasStyle(ctx, styleX, drawY, font.size, font.size, fill)
+  ctx.fillStyle = getCanvasStyle(ctx, styleX, drawY, font.size, font.size, fill, fill.patternImage)
   ctx.fillText(letter, drawX, drawY)
 
   if (hasStroke && stroke.strokeType === 1) {
@@ -323,6 +323,7 @@ function renderFallbackGlyph(
       font.size,
       font.size,
       stroke,
+      stroke.patternImage,
     )
     ctx.lineWidth = stroke.width
     ctx.strokeText(letter, drawX, drawY)
@@ -345,6 +346,7 @@ function renderFallbackGlyph(
       font.size,
       font.size,
       stroke,
+      stroke.patternImage,
     )
     strokeCtx.lineWidth = lineWidth
     strokeCtx.fillText(letter, drawX, drawY)
@@ -394,30 +396,59 @@ export function trimGlyphs(
 ): void {
   const { columnNum, itemWidth, itemHeight, padding, addX, addY } = layout
   const end = endIndex ?? text.length
+  if (startIndex >= end) return
+
+  const cellWidth = itemWidth + padding * 2
+  const cellHeight = itemHeight + padding * 2
+
+  // Calculate bounding region for all cells in [startIndex, end)
+  const startRow = Math.floor(startIndex / columnNum)
+  const endRow = Math.floor((end - 1) / columnNum)
+  const startCol = startIndex % columnNum
+  const endCol = (end - 1) % columnNum
+
+  // For single row, use exact column range; for multi-row, full width
+  const regionMinCol = startRow === endRow ? startCol : 0
+  const regionMaxCol = startRow === endRow ? endCol : columnNum - 1
+
+  const regionX = regionMinCol * cellWidth
+  const regionY = startRow * cellHeight
+  const regionW = (regionMaxCol - regionMinCol + 1) * cellWidth
+  const regionH = (endRow - startRow + 1) * cellHeight
+
+  // Single getImageData for the entire region
+  const imageData = ctx.getImageData(regionX, regionY, regionW, regionH)
+  const { data } = imageData
+  const fullWidth = regionW
 
   for (let i = startIndex; i < end; i++) {
-    const startX = (i % columnNum) * (itemWidth + padding * 2)
-    const startY = Math.floor(i / columnNum) * (itemHeight + padding * 2)
+    const cellX = (i % columnNum) * cellWidth
+    const cellY = Math.floor(i / columnNum) * cellHeight
     const letter = text[i]
     const letterSize = map.get(letter)
     if (!letterSize) continue
     const { width, height } = letterSize
     if (width === 0 || height === 0) continue
 
-    const imgData = ctx.getImageData(
-      startX,
-      startY,
-      itemWidth + padding * 2,
-      itemHeight + padding * 2,
+    // Cell position relative to the ImageData region
+    const localX = cellX - regionX
+    const localY = cellY - regionY
+
+    const styleTrimInfo = trimTransparentPixelsFromRegion(
+      data,
+      fullWidth,
+      localX,
+      localY,
+      cellWidth,
+      cellHeight,
     )
-    const styleTrimInfo = trimTransparentPixels(imgData)
 
     letterSize.width = styleTrimInfo.width
     letterSize.height = styleTrimInfo.height
     letterSize.trimOffsetLeft += addX + styleTrimInfo.trimOffsetLeft + padding
     letterSize.trimOffsetTop += addY + styleTrimInfo.trimOffsetTop + padding
-    letterSize.canvasX = startX - styleTrimInfo.trimOffsetLeft
-    letterSize.canvasY = startY - styleTrimInfo.trimOffsetTop
+    letterSize.canvasX = cellX - styleTrimInfo.trimOffsetLeft
+    letterSize.canvasY = cellY - styleTrimInfo.trimOffsetTop
   }
 }
 

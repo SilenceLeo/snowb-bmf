@@ -6,6 +6,7 @@ interface StyleConfig {
   fontSize: number
 }
 
+// Module-level canvas singleton for reuse across calls. Not released during app lifetime.
 let canvas: HTMLCanvasElement
 
 const DEFAULT_TEST_TEXT = 'Ag'
@@ -35,58 +36,49 @@ export default function getFontBaselinesFromCanvas(
   ctx.font = font
   ctx.textAlign = 'left'
 
-  const measurements = {
-    middle: ctx.measureText(testText),
-    hanging: ctx.measureText(testText),
-    top: ctx.measureText(testText),
-    alphabetic: ctx.measureText(testText),
-    ideographic: ctx.measureText(testText),
-    bottom: ctx.measureText(testText),
-  }
-
   ctx.textBaseline = 'middle'
-  measurements.middle = ctx.measureText(testText)
+  const middleMeasure = ctx.measureText(testText)
 
   ctx.textBaseline = 'hanging'
-  measurements.hanging = ctx.measureText(testText)
+  const hangingMeasure = ctx.measureText(testText)
 
   ctx.textBaseline = 'top'
-  measurements.top = ctx.measureText(testText)
+  const topMeasure = ctx.measureText(testText)
 
   ctx.textBaseline = 'alphabetic'
-  measurements.alphabetic = ctx.measureText(testText)
+  const alphabeticMeasure = ctx.measureText(testText)
 
   ctx.textBaseline = 'ideographic'
-  measurements.ideographic = ctx.measureText(testText)
+  const ideographicMeasure = ctx.measureText(testText)
 
   ctx.textBaseline = 'bottom'
-  measurements.bottom = ctx.measureText(testText)
+  const bottomMeasure = ctx.measureText(testText)
 
   const baselines = {
     middle: 0,
     hanging:
-      measurements.hanging.actualBoundingBoxAscent -
-      measurements.middle.actualBoundingBoxAscent,
+      hangingMeasure.actualBoundingBoxAscent -
+      middleMeasure.actualBoundingBoxAscent,
     top:
-      measurements.top.actualBoundingBoxAscent -
-      measurements.middle.actualBoundingBoxAscent,
+      topMeasure.actualBoundingBoxAscent -
+      middleMeasure.actualBoundingBoxAscent,
     alphabetic:
-      measurements.middle.actualBoundingBoxDescent -
-      measurements.alphabetic.actualBoundingBoxDescent,
+      middleMeasure.actualBoundingBoxDescent -
+      alphabeticMeasure.actualBoundingBoxDescent,
     ideographic:
-      measurements.middle.actualBoundingBoxDescent -
-      measurements.ideographic.actualBoundingBoxDescent,
+      middleMeasure.actualBoundingBoxDescent -
+      ideographicMeasure.actualBoundingBoxDescent,
     bottom:
-      measurements.middle.actualBoundingBoxDescent -
-      measurements.bottom.actualBoundingBoxDescent,
+      middleMeasure.actualBoundingBoxDescent -
+      bottomMeasure.actualBoundingBoxDescent,
     lineHeight: 1,
   }
 
   const totalHeight = Math.max(
-    measurements.middle.actualBoundingBoxAscent +
-      measurements.middle.actualBoundingBoxDescent,
-    measurements.alphabetic.actualBoundingBoxAscent +
-      measurements.alphabetic.actualBoundingBoxDescent,
+    middleMeasure.actualBoundingBoxAscent +
+      middleMeasure.actualBoundingBoxDescent,
+    alphabeticMeasure.actualBoundingBoxAscent +
+      alphabeticMeasure.actualBoundingBoxDescent,
   )
 
   baselines.lineHeight = Math.max(1, totalHeight / styleConfig.fontSize)

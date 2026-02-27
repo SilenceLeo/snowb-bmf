@@ -5,7 +5,7 @@
  */
 import { GuillotineBinPack } from 'rectangle-packer'
 import { autoPackerWorkerPool } from 'src/utils/AutoPackerWorkerPool'
-import { Semaphore } from 'src/utils/concurrency'
+import { Semaphore, isCancelError } from 'src/utils/concurrency'
 
 // ============================================================================
 // Type Definitions
@@ -45,13 +45,13 @@ interface PackingTask {
   startTime: number
   worker: Worker
   cleanup: () => void
+  reject?: (reason: Error) => void
 }
 
 export type PackingProgressCallback = (completed: number, total: number) => void
 
 export interface PackingEngineConfig {
   maxConcurrentWorkers?: number
-  workerTimeout?: number
   enableSentry?: boolean
 }
 
@@ -91,7 +91,6 @@ export class PackingEngine {
       maxConcurrentWorkers:
         config.maxConcurrentWorkers ??
         Math.min(navigator.hardwareConcurrency || 4, 8),
-      workerTimeout: config.workerTimeout ?? 30000,
       enableSentry: config.enableSentry ?? true,
     }
 
@@ -116,6 +115,7 @@ export class PackingEngine {
     const signal = this.abortController.signal
 
     this.currentPackingId = `pack-${Date.now()}`
+    const localPackingId = this.currentPackingId
     this._isPacking = true
 
     this.stats = {
@@ -172,8 +172,10 @@ export class PackingEngine {
       this.handleError(error as Error, 'startPacking')
       throw error
     } finally {
-      this._isPacking = false
-      this.currentPackingId = null
+      if (this.currentPackingId === localPackingId) {
+        this._isPacking = false
+        this.currentPackingId = null
+      }
     }
   }
 
@@ -186,7 +188,7 @@ export class PackingEngine {
     }
 
     console.log(
-      `🛑 Canceling packing task: ${this.currentPackingId || 'active'}`,
+      `[Packing] Canceling packing task: ${this.currentPackingId || 'active'}`,
     )
 
     if (this.abortController) {
@@ -194,25 +196,13 @@ export class PackingEngine {
       this.abortController = null
     }
 
+    const cancelError = new Error('Packing cancelled')
+
     this.packingTasks.forEach((task) => {
       try {
-        task.worker.postMessage({ type: 'CANCEL' })
-        if (task.worker.terminate) {
-          task.worker.terminate()
-        }
-        task.cleanup()
+        task.reject?.(cancelError)
       } catch (error) {
-        console.error(`Failed to cleanup task ${task.id}:`, error)
-      }
-    })
-
-    this.activeWorkers.forEach((worker) => {
-      try {
-        if (worker.terminate) {
-          worker.terminate()
-        }
-      } catch (error) {
-        console.error('Failed to terminate worker:', error)
+        console.error(`Failed to reject task ${task.id}:`, error)
       }
     })
 
@@ -221,12 +211,9 @@ export class PackingEngine {
     this.currentPackingId = null
     this._isPacking = false
 
-    if (typeof window !== 'undefined' && window.autoPackerWorkerPool) {
-      const pool = window.autoPackerWorkerPool
-      if (pool.reset) {
-        pool.reset()
-      }
-    }
+    // reset() handles worker termination and semaphore reset atomically
+    autoPackerWorkerPool.reset()
+    this.workerSemaphore.reset()
   }
 
   /**
@@ -262,6 +249,7 @@ export class PackingEngine {
           pageGroups[pageIndex],
           options,
           packingId,
+          signal,
         ).then((result) => {
           completedPages++
           onProgress?.(completedPages, pageGroups.length)
@@ -363,6 +351,7 @@ export class PackingEngine {
     pageGlyphs: TextRectangle[],
     options: PackingOptions,
     packingId: string,
+    signal?: AbortSignal,
   ): Promise<PackingResult> {
     if (pageGlyphs.length === 0) {
       return {
@@ -373,12 +362,36 @@ export class PackingEngine {
       }
     }
 
+    // Filter zero-size glyphs before sending to worker
+    const filteredGlyphs = pageGlyphs.filter(
+      ({ width, height }) => !!(width && height),
+    )
+
+    // B4: If all glyphs were filtered out, return empty result
+    if (filteredGlyphs.length === 0) {
+      return {
+        pageIndex,
+        rectangles: [],
+        width: 0,
+        height: 0,
+      }
+    }
+
     await this.workerSemaphore.acquire()
+
+    // B2: Check cancellation after acquiring semaphore
+    if (this.currentPackingId !== packingId || signal?.aborted) {
+      this.workerSemaphore.release()
+      return {
+        pageIndex,
+        rectangles: [],
+        width: 0,
+        height: 0,
+      }
+    }
 
     let worker: Worker | null = null
     const taskId = `${packingId}-page-${pageIndex}`
-
-    let timeoutId: ReturnType<typeof setTimeout> | null = null
 
     try {
       worker = await autoPackerWorkerPool.getWorkerAsync()
@@ -386,6 +399,12 @@ export class PackingEngine {
       const workPromise = new Promise<PackingResult>((resolve, reject) => {
         const messageHandler = (event: MessageEvent) => {
           if (this.currentPackingId !== packingId) {
+            return
+          }
+
+          // B3: Handle error responses from worker
+          if (event.data && event.data.error) {
+            reject(new Error(`Worker packing error: ${event.data.error}`))
             return
           }
 
@@ -398,11 +417,12 @@ export class PackingEngine {
             maxHeight = Math.max(maxHeight, rect.y + rect.height)
           })
 
+          // B4: Guard against negative dimensions when data is empty
           resolve({
             pageIndex,
             rectangles: data,
-            width: maxWidth - options.spacing,
-            height: maxHeight - options.spacing,
+            width: maxWidth > 0 ? maxWidth - options.spacing : 0,
+            height: maxHeight > 0 ? maxHeight - options.spacing : 0,
           })
         }
 
@@ -410,6 +430,7 @@ export class PackingEngine {
           reject(new Error(`Worker error: ${error.message}`))
         }
 
+        // I3: Store handler references for proper removeEventListener
         worker!.addEventListener('message', messageHandler)
         worker!.addEventListener('error', errorHandler)
 
@@ -418,6 +439,7 @@ export class PackingEngine {
           pageIndex,
           startTime: Date.now(),
           worker: worker!,
+          reject,
           cleanup: () => {
             worker!.removeEventListener('message', messageHandler)
             worker!.removeEventListener('error', errorHandler)
@@ -430,26 +452,10 @@ export class PackingEngine {
         this.packingTasks.set(taskId, task)
         this.activeWorkers.add(worker!)
 
-        worker!.postMessage(
-          pageGlyphs.filter(({ width, height }) => !!(width && height)),
-        )
+        worker!.postMessage(filteredGlyphs)
       })
 
-      // Race work against timeout to prevent hanging on unresponsive workers
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        timeoutId = setTimeout(
-          () =>
-            reject(
-              new Error(`Worker timeout after ${this.config.workerTimeout}ms`),
-            ),
-          this.config.workerTimeout,
-        )
-      })
-
-      const result = await Promise.race([workPromise, timeoutPromise])
-
-      // Work completed successfully, clear the timeout
-      if (timeoutId !== null) clearTimeout(timeoutId)
+      const result = await workPromise
 
       const task = this.packingTasks.get(taskId)
       if (task) {
@@ -459,26 +465,11 @@ export class PackingEngine {
 
       return result
     } catch (error) {
-      // Clear timeout on any error path
-      if (timeoutId !== null) clearTimeout(timeoutId)
-
       const task = this.packingTasks.get(taskId)
       if (task) {
-        const isTimeout =
-          error instanceof Error && error.message.includes('Worker timeout')
-
-        if (isTimeout) {
-          // On timeout, terminate the worker and remove from pool
-          // Do not return terminated worker to the pool
-          try {
-            task.worker.terminate()
-          } catch {
-            // Ignore termination errors
-          }
-          task.worker.removeEventListener('message', () => {})
-          task.worker.removeEventListener('error', () => {})
+        if (isCancelError(error)) {
+          // Cancellation - worker was already terminated by cancelPacking, just release semaphore
           this.activeWorkers.delete(task.worker)
-          autoPackerWorkerPool.removeWorker(task.worker)
           this.workerSemaphore.release()
         } else {
           task.cleanup()
@@ -498,7 +489,7 @@ export class PackingEngine {
    * Error handling
    */
   private handleError(error: Error, context: string): void {
-    if (error.message === 'Packing cancelled') {
+    if (isCancelError(error)) {
       return
     }
 
