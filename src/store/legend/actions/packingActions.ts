@@ -378,7 +378,7 @@ function generatePageCanvases(
         // Use glyph directly — it's already the correct ImageGlyphData
         // from getGlyphList → getGlyphForLetter → findImageGlyph
         const source = (glyph as ImageGlyphData).source
-        if (source) {
+        if (source && glyph.width > 0 && glyph.height > 0) {
           ctx.drawImage(
             source as HTMLCanvasElement,
             glyph.x + padding,

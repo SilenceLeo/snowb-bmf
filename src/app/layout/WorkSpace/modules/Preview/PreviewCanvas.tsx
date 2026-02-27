@@ -256,7 +256,7 @@ const PreviewCanvas: FunctionComponent = () => {
       // Use type field instead of instanceof check
       if (item.glyph.type === 'image') {
         const imageGlyph = item.glyph as ImageGlyphData
-        if (imageGlyph.source) {
+        if (imageGlyph.source && imageGlyph.width > 0 && imageGlyph.height > 0) {
           ctx.drawImage(
             imageGlyph.source,
             item.x - data.xOffset,

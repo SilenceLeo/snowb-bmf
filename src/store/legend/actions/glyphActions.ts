@@ -210,7 +210,10 @@ async function initializeImageGlyphOffStore(
       imageGlyph.height = trimInfo.height
       imageGlyph.trimOffsetLeft = trimInfo.trimOffsetLeft
       imageGlyph.trimOffsetTop = trimInfo.trimOffsetTop
-      imageGlyph.source = opaqueObject(trimInfo.canvas)
+      imageGlyph.source =
+        trimInfo.width > 0 && trimInfo.height > 0
+          ? opaqueObject(trimInfo.canvas)
+          : null
       imageGlyph.src = src
 
       resolve()

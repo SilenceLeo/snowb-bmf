@@ -639,9 +639,12 @@ export async function initializeImageGlyphSources(): Promise<void> {
       img.onload = () => {
         // Apply trim to match glyphActions.initializeImageGlyph behavior
         const trimInfo = getTrimImageInfo(img)
+        const hasContent = trimInfo.width > 0 && trimInfo.height > 0
 
         batch(() => {
-          glyphStore$.imageGlyphs[index].source.set(opaqueObject(trimInfo.canvas))
+          glyphStore$.imageGlyphs[index].source.set(
+            hasContent ? opaqueObject(trimInfo.canvas) : null,
+          )
           glyphStore$.imageGlyphs[index].fontWidth.set(img.naturalWidth)
           glyphStore$.imageGlyphs[index].fontHeight.set(img.naturalHeight)
           glyphStore$.imageGlyphs[index].width.set(trimInfo.width)
