@@ -13,7 +13,7 @@
 import { batch, opaqueObject } from '@legendapp/state'
 import type { Font as OpenType } from 'opentype.js'
 import { parse } from 'opentype.js'
-import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.2.1/project'
+import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.2.2/project'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 import updateFontFace from 'src/utils/updateFontFace'
 
@@ -575,6 +575,7 @@ export async function deserializeProject(data: DecodedProject): Promise<void> {
       initializeStyleStore({
         style,
         globalAdjustMetric,
+        xFractional: data.extensions?.xFractional ?? 0,
       })
 
       // Set layout store

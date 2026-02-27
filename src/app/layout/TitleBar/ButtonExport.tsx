@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Switch from '@mui/material/Switch'
 import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react'
@@ -34,6 +35,10 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   const [val, setVal] = useState(0)
   const [fontName, setFontName] = useState(mainFontFamily)
   const [fileName, setFileName] = useState(projectName)
+  const [pixelFormat, setPixelFormat] = useState('GRAY8')
+  const [blur, setBlur] = useState(false)
+  const [includeTextures, setIncludeTextures] = useState(false)
+  const [extended, setExtended] = useState(false)
 
   const handleOpen = useCallback(() => {
     setFontName(mainFontFamily)
@@ -58,15 +63,27 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
     setVal(e.target.value as number)
   }
 
+  const handleChangePixelFormat = (e: SelectChangeEvent<string>) => {
+    setPixelFormat(e.target.value)
+  }
+
   const handleSave = useCallback(() => {
     const projectData = getExportProjectData()
-    exportFile(projectData, configList[val], fontName, fileName).catch(
+    const config = configList[val]
+    const options =
+      config.supportsPixelFormat ||
+      config.supportsBlur ||
+      config.supportsTextures ||
+      config.supportsExtended
+        ? { pixelFormat, blur, includeTextures, extended }
+        : undefined
+    exportFile(projectData, config, fontName, fileName, options).catch(
       (error) => {
         console.error('[Export] Failed:', error)
       },
     )
     handleClose()
-  }, [fileName, fontName, val])
+  }, [blur, fileName, fontName, extended, includeTextures, pixelFormat, val])
 
   useEffect(() => {
     hotkeys('ctrl+shift+s,command+shift+s', handleOpen)
@@ -123,6 +140,108 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
               </Select>
             </GridInput>
           </Box>
+          {configList[val]?.supportsPixelFormat ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput before='Pixel Format:' childrenWidth={6}>
+                <Select
+                  displayEmpty
+                  value={pixelFormat}
+                  onChange={handleChangePixelFormat}
+                  fullWidth
+                >
+                  <MenuItem value='GRAY8'>8-bit Grayscale</MenuItem>
+                  <MenuItem value='RGB'>RGB</MenuItem>
+                  <MenuItem value='RGBA'>RGBA</MenuItem>
+                  <MenuItem value='ARGB'>ARGB</MenuItem>
+                  <MenuItem value='BGR'>BGR</MenuItem>
+                  <MenuItem value='ABGR'>ABGR</MenuItem>
+                  <MenuItem value='BGRA'>BGRA</MenuItem>
+                  <MenuItem value='RGB565'>RGB565</MenuItem>
+                </Select>
+              </GridInput>
+            </Box>
+          ) : null}
+          {configList[val]?.supportsBlur ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput
+                before='Reconstruction Filter:'
+                component='div'
+                childrenWidth={6}
+              >
+                <Box
+                  component='label'
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                  }}
+                >
+                  Off
+                  <Switch
+                    size='small'
+                    checked={blur}
+                    onChange={(e) => setBlur(e.target.checked)}
+                  />
+                  On
+                </Box>
+              </GridInput>
+            </Box>
+          ) : null}
+          {configList[val]?.supportsTextures ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput
+                before='Include Textures:'
+                component='div'
+                childrenWidth={6}
+              >
+                <Box
+                  component='label'
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                  }}
+                >
+                  Off
+                  <Switch
+                    size='small'
+                    checked={includeTextures}
+                    onChange={(e) => setIncludeTextures(e.target.checked)}
+                  />
+                  On
+                </Box>
+              </GridInput>
+            </Box>
+          ) : null}
+          {configList[val]?.supportsExtended ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput
+                before='Extended Data Fields:'
+                component='div'
+                childrenWidth={6}
+              >
+                <Box
+                  component='label'
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                  }}
+                >
+                  Off
+                  <Switch
+                    size='small'
+                    checked={extended}
+                    onChange={(e) => setExtended(e.target.checked)}
+                  />
+                  On
+                </Box>
+              </GridInput>
+            </Box>
+          ) : null}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleSave} color='inherit'>

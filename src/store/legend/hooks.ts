@@ -455,6 +455,10 @@ export function usePackFailed(): boolean {
   return useSelector(() => uiStore$.ui.packFailed.get())
 }
 
+export function useXFractional(): number {
+  return useSelector(() => styleStore$.xFractional.get())
+}
+
 export function useUiTransform(): {
   scale: number
   offsetX: number

@@ -23,8 +23,11 @@ export default function toBmfInfo(
     layout,
     globalAdjustMetric,
     glyphList,
+    xFractional,
     ui: { width, height },
   } = projectData
+  const fractionalBits = Math.max(0, Math.min(7, Math.round(xFractional || 0)))
+  const fractionalScale = 1 << fractionalBits
   const { opentype, size } = style.font
   let fontScale = 1
   if (opentype) {
@@ -95,6 +98,7 @@ export default function toBmfInfo(
     scaleH: layout.packHeight ?? height,
     pages: layout.page,
     packed: 0,
+    xFpBits: fractionalBits,
     alphaChnl: 0, // Alpha channel contains glyph data
     redChnl: 4, // Red channel set to one (full color)
     greenChnl: 4, // Green channel set to one (full color)
@@ -139,10 +143,12 @@ export default function toBmfInfo(
         glyph.adjustMetric.yOffset -
         (isUnEmpty ? glyph.trimOffsetTop : 0) -
         (isUnEmpty ? layout.padding : 0),
-      xadvance:
-        Math.ceil(glyph.fontWidth) +
-        globalAdjustMetric.xAdvance +
-        glyph.adjustMetric.xAdvance,
+      xadvance: Math.ceil(
+        (glyph.fontWidth +
+          globalAdjustMetric.xAdvance +
+          glyph.adjustMetric.xAdvance) *
+          fractionalScale,
+      ),
       page: glyph.page || 0,
       chnl: 15,
     }
@@ -158,7 +164,10 @@ export default function toBmfInfo(
     Object.entries(glyph.kerning).forEach(([letter, amount]) => {
       if (amount) {
         const secondId = letter.codePointAt(0) || 0
-        kerningMap.set(`${firstId}-${secondId}`, amount)
+        kerningMap.set(
+          `${firstId}-${secondId}`,
+          Math.round(amount * fractionalScale),
+        )
       }
     })
   })
@@ -192,7 +201,7 @@ export default function toBmfInfo(
         const leftId = glyphIndexToId.get(leftIdx)
         const rightId = glyphIndexToId.get(rightIdx)
         if (leftId !== undefined && rightId !== undefined) {
-          const amount = Math.round(value * fontScale)
+          const amount = Math.round(value * fontScale * fractionalScale)
           if (amount) {
             const mapKey = `${leftId}-${rightId}`
             // Manual kerning takes priority (already set in Step 1),
@@ -242,7 +251,7 @@ export default function toBmfInfo(
             second.index,
           )
           if (gposKerning === 0) continue
-          const amount = Math.round(gposKerning * fontScale)
+          const amount = Math.round(gposKerning * fontScale * fractionalScale)
           if (amount) {
             const key = `${first.id}-${second.id}`
             const existing = kerningMap.get(key)

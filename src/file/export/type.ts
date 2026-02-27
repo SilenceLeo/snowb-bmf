@@ -28,6 +28,7 @@ export interface BMFontCommon {
   scaleH: number
   pages: number
   packed: number
+  xFpBits?: number
   alphaChnl?: number // BMFont v3+ alpha channel info
   redChnl?: number // BMFont v3+ red channel info
   greenChnl?: number // BMFont v3+ green channel info
@@ -99,12 +100,48 @@ export type OutputExt = string
 
 export type OutputExts = OutputExt[]
 
-export type FontToContent = (fontInfo: BMFont) => string | Uint8Array
+export interface ExportOptions {
+  pixelFormat?: string
+  blur?: boolean
+  includeTextures?: boolean
+  extended?: boolean
+}
+
+export type FontToContent = (
+  fontInfo: BMFont,
+  options?: ExportOptions,
+) => string | Uint8Array
+
+export interface ExportFile {
+  name: string
+  content: string | Uint8Array
+}
+
+export interface ExportContext {
+  project: ExportProjectData
+  bmfont: BMFont
+  fontName: string
+  fileName: string
+  options?: ExportOptions
+}
+
+export interface ExportFilesResult {
+  files: ExportFile[]
+  includePng?: boolean
+}
+
+export type FontToFiles = (context: ExportContext) => ExportFilesResult
 
 export interface Output {
   type: OutputType
   exts: OutputExts
-  getContent: FontToContent
+  getContent?: FontToContent
+  getFiles?: FontToFiles
+  includePng?: boolean
+  supportsPixelFormat?: boolean
+  supportsBlur?: boolean
+  supportsTextures?: boolean
+  supportsExtended?: boolean
 }
 
 export interface ConfigItem extends Omit<Output, 'exts'> {
@@ -143,6 +180,7 @@ export interface ExportProjectData {
   layout: LayoutData
   globalAdjustMetric: MetricData
   glyphList: ExportGlyphData[]
+  xFractional: number
   ui: {
     width: number
     height: number

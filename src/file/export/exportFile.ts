@@ -3,13 +3,14 @@ import JSZip from 'jszip'
 
 import getPageFileName from './getPageFileName'
 import toBmfInfo from './toBmfInfo'
-import { ConfigItem, ExportProjectData } from './type'
+import { ConfigItem, ExportOptions, ExportProjectData } from './type'
 
 export default async function exportFile(
   projectData: ExportProjectData,
   config: ConfigItem,
   fontName: string,
   fileName: string,
+  options?: ExportOptions,
 ): Promise<void> {
   const zip = new JSZip()
   const { packCanvases, layout, name } = projectData
@@ -17,27 +18,55 @@ export default async function exportFile(
 
   // Generate BMFont info with correct file names from the start
   const bmfont = toBmfInfo(projectData, fontName, saveFileName)
-  const content = config.getContent(bmfont)
 
-  // Add the font descriptor file to zip
-  zip.file(`${saveFileName}.${config.ext}`, content)
+  let includePng = false
 
-  // Create texture files for each page
+  if (config.getFiles) {
+    const filesResult = config.getFiles({
+      project: projectData,
+      bmfont,
+      fontName,
+      fileName: saveFileName,
+      options,
+    })
+
+    filesResult.files.forEach((file) => {
+      zip.file(file.name, file.content)
+    })
+
+    includePng = filesResult.includePng === true
+  } else if (config.getContent) {
+    const content = config.getContent(bmfont, options)
+    includePng = config.includePng !== false
+
+    // Add the font descriptor file to zip
+    zip.file(`${saveFileName}.${config.ext}`, content)
+  }
+
+  // Add PNG pages if needed, then generate the zip
+  if (includePng) {
+    await addPngPages(zip, packCanvases, layout, saveFileName)
+  }
+  const zipBlob = await zip.generateAsync({ type: 'blob' })
+  saveAs(zipBlob, `${saveFileName}.zip`)
+}
+
+function addPngPages(
+  zip: JSZip,
+  packCanvases: HTMLCanvasElement[] | null,
+  layout: ExportProjectData['layout'],
+  saveFileName: string,
+): Promise<void> {
+  if (!packCanvases) return Promise.resolve()
+
   const pagePromises: Promise<void>[] = []
 
   for (let pageIndex = 0; pageIndex < layout.page; pageIndex++) {
-    let sourceCanvas: HTMLCanvasElement | null = null
-
-    // Use the appropriate source canvas
-    if (packCanvases && packCanvases[pageIndex]) {
-      // Use the rendered page canvas (works for both single and multi-page)
-      sourceCanvas = packCanvases[pageIndex]
-    }
-
+    const sourceCanvas = packCanvases[pageIndex]
     if (!sourceCanvas) continue
 
     const pagePromise = new Promise<void>((resolve, reject) => {
-      sourceCanvas!.toBlob((blob) => {
+      sourceCanvas.toBlob((blob) => {
         if (blob) {
           const pageName = getPageFileName(saveFileName, pageIndex, layout.page)
           zip.file(pageName, blob)
@@ -55,8 +84,7 @@ export default async function exportFile(
     pagePromises.push(pagePromise)
   }
 
-  // Wait for all pages to be processed, then generate the zip
-  await Promise.all(pagePromises)
-  const zipBlob = await zip.generateAsync({ type: 'blob' })
-  saveAs(zipBlob, `${saveFileName}.zip`)
+  return pagePromises.length
+    ? Promise.all(pagePromises).then(() => {})
+    : Promise.resolve()
 }

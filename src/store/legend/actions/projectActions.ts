@@ -425,6 +425,7 @@ export function getExportProjectData(): ExportProjectData {
     layout,
     globalAdjustMetric,
     glyphList,
+    xFractional: styleStore$.xFractional.get(),
     ui: {
       width: ui.width,
       height: ui.height,

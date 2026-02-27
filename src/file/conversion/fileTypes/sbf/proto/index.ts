@@ -15,6 +15,8 @@ import * as v1002000Project from './1.2.0/project'
 import v1002000UpdateToNext from './1.2.0/updateToNext'
 import * as v1002001Project from './1.2.1/project'
 import v1002001UpdateToNext from './1.2.1/updateToNext'
+import * as v1002002Project from './1.2.2/project'
+import v1002002UpdateToNext from './1.2.2/updateToNext'
 
 export interface ProtoVersion {
   // Each version's Project class has a decode method for protobuf deserialization
@@ -32,6 +34,7 @@ export interface AllProto {
   1001002: ProtoVersion
   1002000: ProtoVersion
   1002001: ProtoVersion
+  1002002: ProtoVersion
 }
 
 export const allProto: AllProto = {
@@ -67,14 +70,18 @@ export const allProto: AllProto = {
     Project: v1002001Project.Project,
     updateToNext: v1002001UpdateToNext,
   },
+  1002002: {
+    Project: v1002002Project.Project,
+    updateToNext: v1002002UpdateToNext,
+  },
 }
 
 // Current version (latest)
-export const CURRENT_VERSION = 1002001
+export const CURRENT_VERSION = 1002002
 
 // Export utilities
 export { default as encodeProject } from './encodeProject'
 export { default as toOriginBuffer } from './toOriginBuffer'
 export { default as updateOldProject } from './updateOldProject'
-export * from './1.2.1/project'
-export { default } from './1.2.1/project'
+export * from './1.2.2/project'
+export { default } from './1.2.2/project'

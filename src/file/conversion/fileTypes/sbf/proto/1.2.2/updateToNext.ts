@@ -1,0 +1,7 @@
+import { IProject } from './project'
+
+// No-op: v1.2.2 is the current version. This function exists to maintain
+// the migration chain pattern.
+export default function updateToNext(project: IProject): IProject {
+  return project
+}

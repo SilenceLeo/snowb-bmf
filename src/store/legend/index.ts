@@ -95,6 +95,8 @@ export {
   setGlobalXAdvance,
   setGlobalXOffset,
   setGlobalYOffset,
+  // Fractional precision
+  setXFractional,
   // Store management
   initializeStyleStore,
   resetStyleStore,
@@ -326,6 +328,7 @@ export {
   useShowPreview,
   useSelectLetter,
   usePackFailed,
+  useXFractional,
   useUiTransform,
   usePreviewTransform,
   // Workspace hooks

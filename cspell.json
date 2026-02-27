@@ -33,6 +33,10 @@
     "vmin",
     "xadvance",
     "REINIT",
+    "ARGB",
+    "ABGR",
+    "BGRA",
+    "origo",
     "العربية"
   ],
   "ignorePaths": [

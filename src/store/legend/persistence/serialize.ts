@@ -15,7 +15,7 @@ import type {
   IShadow,
   IStyle,
   IUi,
-} from 'src/file/conversion/fileTypes/sbf/proto/1.2.1/project'
+} from 'src/file/conversion/fileTypes/sbf/proto/1.2.2/project'
 
 import { glyphStore$ } from '../glyphStore'
 import { projectStore$ } from '../projectStore'
@@ -51,6 +51,9 @@ export interface SerializableProject extends IProject {
   layout: ILayout
   globalAdjustMetric: IMetric
   ui: IUi
+  extensions: {
+    xFractional: number
+  }
 }
 
 // ============================================================================
@@ -311,6 +314,9 @@ export function serializeProject(): SerializableProject {
     layout: serializeLayout(),
     globalAdjustMetric: serializeMetric(globalAdjustMetric),
     ui: serializeUi(),
+    extensions: {
+      xFractional: styleStore$.xFractional.get(),
+    },
   }
 }
 

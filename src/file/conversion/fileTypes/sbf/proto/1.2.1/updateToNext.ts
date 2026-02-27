@@ -1,7 +1,6 @@
+import { IProject as IProjectNext } from '../1.2.2/project'
 import { IProject } from './project'
 
-// No-op: v1.2.1 is the current version. This function exists to maintain
-// the migration chain pattern.
-export default function updateToNext(project: IProject): IProject {
-  return project
+export default function updateToNext(project: IProject): IProjectNext {
+  return project as unknown as IProjectNext
 }

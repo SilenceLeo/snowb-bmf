@@ -29,5 +29,8 @@ export interface Project {
   style: StyleData
   layout: LayoutData
   globalAdjustMetric?: MetricData
+  extensions?: {
+    xFractional?: number
+  }
   ui?: { previewText?: string }
 }

@@ -82,6 +82,7 @@ export interface StyleData {
 export interface StyleStoreState {
   style: StyleData
   globalAdjustMetric: MetricData
+  xFractional: number
 }
 
 // ============================================================================
@@ -183,6 +184,7 @@ function createDefaultStyle(): StyleData {
 export const styleStore$ = observable<StyleStoreState>({
   style: createDefaultStyle(),
   globalAdjustMetric: createDefaultMetric(),
+  xFractional: 0,
 })
 
 // Track whether lineHeight has been manually set by the user.
@@ -515,6 +517,18 @@ export function setGlobalYOffset(yOffset: number): void {
 }
 
 // ============================================================================
+// Fractional Precision Actions
+// ============================================================================
+
+/**
+ * Set xFractional bits for BMFont export (0-7)
+ */
+export function setXFractional(value: number): void {
+  const intValue = Math.round(value)
+  styleStore$.xFractional.set(Math.max(0, Math.min(7, intValue)))
+}
+
+// ============================================================================
 // Store Initialization / Reset
 // ============================================================================
 
@@ -579,6 +593,10 @@ export function initializeStyleStore(data: Partial<StyleStoreState>): void {
         ...data.globalAdjustMetric,
       })
     }
+
+    if (data.xFractional !== undefined) {
+      styleStore$.xFractional.set(data.xFractional)
+    }
   })
 
   // Load pattern texture image if buffer exists
@@ -604,6 +622,7 @@ export function resetStyleStore(): void {
   batch(() => {
     styleStore$.style.set(createDefaultStyle())
     styleStore$.globalAdjustMetric.set(createDefaultMetric())
+    styleStore$.xFractional.set(0)
   })
 }
 

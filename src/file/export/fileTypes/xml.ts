@@ -58,6 +58,7 @@ const getContent: FontToContent = (bmfont: BMFont) => {
     scaleH: common.scaleH,
     pages: common.pages,
     packed: common.packed,
+    xFpBits: common.xFpBits || undefined,
     alphaChnl: common.alphaChnl,
     redChnl: common.redChnl,
     greenChnl: common.greenChnl,

@@ -52,7 +52,11 @@ const getContent: FontToContent = (bmfont) => {
     charset: info.charset || generateCharset(),
   })
 
-  str += formatStr(TEMP_COMMON, common)
+  let commonLine = formatStr(TEMP_COMMON, common).trimEnd()
+  if (common.xFpBits) {
+    commonLine += ` xFpBits=${common.xFpBits}`
+  }
+  str += `${commonLine}\n`
 
   pages.forEach((p) => {
     str += formatStr(TEMP_PAGE, p)
