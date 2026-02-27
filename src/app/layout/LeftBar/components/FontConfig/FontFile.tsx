@@ -11,12 +11,28 @@ import { useSnackbar } from 'notistack'
 import React, { FunctionComponent, useState } from 'react'
 import { addFont, removeFont, useFontResources } from 'src/store/legend'
 import readFile from 'src/utils/readFile'
+import {
+  extractTtfFromTtc,
+  isTtcFile,
+  parseTtcHeader,
+  TtcFontEntry,
+} from 'src/utils/ttcParser'
+
+import TtcFontSelectDialog from './TtcFontSelectDialog'
 
 // Component handles font family selection - file name is FontFile for historical reasons
 const FontFamily: FunctionComponent = () => {
   const [loading, setLoading] = useState(false)
+  const [ttcDialogOpen, setTtcDialogOpen] = useState(false)
+  const [ttcEntries, setTtcEntries] = useState<TtcFontEntry[]>([])
+  const [ttcBuffer, setTtcBuffer] = useState<ArrayBuffer | null>(null)
   const fonts = useFontResources()
   const { enqueueSnackbar } = useSnackbar()
+
+  const reportError = (e: unknown) => {
+    enqueueSnackbar((e as Error).message, { variant: 'error' })
+    Sentry.captureException(e)
+  }
 
   const handleUploadFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -26,8 +42,7 @@ const FontFamily: FunctionComponent = () => {
     }
 
     const file = event.target.files[0]
-    const ext = file.name.match(/\.([A-Z0-9]+)$/i)
-    if (!ext) {
+    if (!file.name.match(/\.([A-Z0-9]+)$/i)) {
       return
     }
 
@@ -42,18 +57,56 @@ const FontFamily: FunctionComponent = () => {
 
       event.target.value = ''
 
-      try {
+      if (isTtcFile(arrBuf)) {
+        const entries = parseTtcHeader(arrBuf)
+        if (entries.length === 1) {
+          // Single font in TTC — load directly, skip dialog
+          const ttf = extractTtfFromTtc(arrBuf, 0)
+          await addFont(ttf)
+        } else {
+          setTtcBuffer(arrBuf)
+          setTtcEntries(entries)
+          setTtcDialogOpen(true)
+        }
+      } else {
         await addFont(arrBuf)
-      } catch (e) {
-        enqueueSnackbar((e as Error).message, { variant: 'error' })
-        Sentry.captureException(e)
       }
     } catch (e) {
-      Sentry.captureException(e)
-      enqueueSnackbar((e as Error).message, { variant: 'error' })
+      reportError(e)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleTtcSelect = async (selectedIndices: number[]) => {
+    if (!ttcBuffer) return
+
+    setTtcDialogOpen(false)
+    setLoading(true)
+
+    for (const idx of selectedIndices) {
+      try {
+        const ttf = extractTtfFromTtc(ttcBuffer, idx)
+        await addFont(ttf)
+      } catch (e) {
+        const entry = ttcEntries.find((en) => en.index === idx)
+        const name = entry?.fullName ?? `Font #${idx}`
+        enqueueSnackbar(`Failed to load ${name}: ${(e as Error).message}`, {
+          variant: 'error',
+        })
+        Sentry.captureException(e)
+      }
+    }
+
+    setTtcBuffer(null)
+    setTtcEntries([])
+    setLoading(false)
+  }
+
+  const handleTtcDialogClose = () => {
+    setTtcDialogOpen(false)
+    setTtcBuffer(null)
+    setTtcEntries([])
   }
 
   return (
@@ -99,9 +152,15 @@ const FontFamily: FunctionComponent = () => {
           hidden
           type='file'
           onChange={handleUploadFile}
-          accept='.ttf,.otf,.woff'
+          accept='.ttf,.otf,.woff,.ttc'
         />
       </Button>
+      <TtcFontSelectDialog
+        open={ttcDialogOpen}
+        entries={ttcEntries}
+        onSelect={handleTtcSelect}
+        onClose={handleTtcDialogClose}
+      />
     </>
   )
 }

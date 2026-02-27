@@ -37,7 +37,10 @@
     "ABGR",
     "BGRA",
     "origo",
-    "العربية"
+    "العربية",
+    "ttcf",
+    "sfnt",
+    "Bahnschrift"
   ],
   "ignorePaths": [
     "node_modules",
