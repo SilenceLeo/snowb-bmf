@@ -31,7 +31,7 @@ const GridInput: FunctionComponent<GridInputProps> = (
       alignItems='center'
       {...other}
     >
-      <Grid size={4}>
+      <Grid size={5}>
         {typeof before === 'object' ? (
           before
         ) : (

@@ -28,7 +28,10 @@ class Ui {
 
   packFailed = false
 
-  constructor(ui: Partial<Ui> = {}) {
+  xFractional = 0
+
+  constructor(ui: Partial<Ui> | null = {}) {
+    const safeUi = ui ?? {}
     makeObservable(this, {
       scale: observable,
       offsetX: observable,
@@ -43,6 +46,7 @@ class Ui {
       previewOffsetX: observable,
       previewOffsetY: observable,
       packFailed: observable,
+      xFractional: observable,
       setTransform: action.bound,
       setSize: action.bound,
       setPreviewText: action.bound,
@@ -50,10 +54,12 @@ class Ui {
       setPreviewTransform: action.bound,
       setSelectLetter: action.bound,
       setPackFailed: action.bound,
+      setXFractional: action.bound,
     })
-    if (ui.previewText) {
-      this.previewText = ui.previewText
+    if (safeUi.previewText) {
+      this.previewText = safeUi.previewText
     }
+    this.xFractional = use.num(safeUi.xFractional, this.xFractional)
   }
 
   reOffset() {
@@ -105,6 +111,11 @@ class Ui {
 
   setPackFailed(packFailed: boolean): void {
     this.packFailed = packFailed
+  }
+
+  setXFractional(value: number): void {
+    const intValue = Math.round(use.num(value, this.xFractional))
+    this.xFractional = Math.max(0, Math.min(7, intValue))
   }
 }
 

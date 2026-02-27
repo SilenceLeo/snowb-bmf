@@ -24,10 +24,12 @@ const getContent: FontToContent = (bmfont) => {
   const infoDoc = parser.parseFromString(formatStr(TEMP_INFO, info), 'text/xml')
   xmlDOM.documentElement.appendChild(infoDoc.childNodes[0])
 
-  const commonDoc = parser.parseFromString(
-    formatStr(TEMP_COMMON, common),
-    'text/xml',
-  )
+  let commonStr = formatStr(TEMP_COMMON, common).replace(' />', '')
+  if (common.xFpBits) {
+    commonStr += ` xFpBits="${common.xFpBits}"`
+  }
+  commonStr += ' />'
+  const commonDoc = parser.parseFromString(commonStr, 'text/xml')
   xmlDOM.documentElement.appendChild(commonDoc.childNodes[0])
 
   const pagesDoc = parser.parseFromString(

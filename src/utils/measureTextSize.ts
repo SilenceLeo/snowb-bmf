@@ -66,7 +66,7 @@ export default function measureTextSize(
   const trimOffsetTop = Math.ceil(ascent)
   const width = trimOffsetLeft + Math.ceil(right)
   const height = Math.ceil(descent) + Math.ceil(ascent)
-  const fontWidth = Math.ceil(textWidth)
+  const fontWidth = textWidth
   const fontHeight = height
 
   return {

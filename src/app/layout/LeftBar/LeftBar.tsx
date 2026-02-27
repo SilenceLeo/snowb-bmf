@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'react'
 import Sidebar from 'src/app/components/Sidebar'
 
+import Experimental from './components/Experimental'
 import FontConfig from './components/FontConfig'
 import GlobalMetric from './components/GlobalMetric'
 import Glyphs from './components/Glyphs'
@@ -15,6 +16,7 @@ const LeftBar: FunctionComponent<unknown> = () => {
       <LayoutConfig />
       <PackConfig />
       <GlobalMetric />
+      <Experimental />
     </Sidebar>
   )
 }

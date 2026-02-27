@@ -136,6 +136,8 @@ message Style {
 
 message Ui {
   string previewText = 1;
+
+  int32 xFractional = 2;
 }
 
 message Project {
@@ -157,3 +159,4 @@ message Project {
 
   Ui ui = 9;
 }
+

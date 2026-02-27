@@ -23,8 +23,10 @@ export default function toBmfInfo(
     layout,
     globalAdjustMetric,
     glyphList,
-    ui: { width, height },
+    ui: { width, height, xFractional },
   } = project
+  const fractionalBits = Math.max(0, Math.min(7, Math.round(xFractional || 0)))
+  const fractionalScale = 1 << fractionalBits
   const { opentype, size } = style.font
   let fontScale = 1
   if (opentype) {
@@ -94,6 +96,7 @@ export default function toBmfInfo(
     scaleH: height,
     pages: layout.page,
     packed: 0,
+    xFpBits: fractionalBits,
     alphaChnl: 0, // Alpha channel contains glyph data
     redChnl: 4, // Red channel set to one (full color)
     greenChnl: 4, // Green channel set to one (full color)
@@ -153,10 +156,12 @@ export default function toBmfInfo(
         glyph.adjustMetric.yOffset -
         (isUnEmpty ? glyph.trimOffsetTop : 0) -
         (isUnEmpty ? layout.padding : 0),
-      xadvance:
-        Math.ceil(glyph.fontWidth) +
-        globalAdjustMetric.xAdvance +
-        glyph.adjustMetric.xAdvance,
+      xadvance: Math.ceil(
+        (glyph.fontWidth +
+          globalAdjustMetric.xAdvance +
+          glyph.adjustMetric.xAdvance) *
+          fractionalScale,
+      ),
       page: glyph.page || 0,
       chnl: 15,
     }
@@ -204,7 +209,9 @@ export default function toBmfInfo(
         // Early termination for zero kerning
         if (opentypeKerning === 0 && manualKerning === 0) continue
 
-        const amount = Math.round(opentypeKerning * fontScale + manualKerning)
+        const amount = Math.round(
+          (opentypeKerning * fontScale + manualKerning) * fractionalScale,
+        )
 
         if (amount) {
           const key = `${first.id}-${second.id}`
@@ -220,7 +227,7 @@ export default function toBmfInfo(
           const firstId = glyph.letter.codePointAt(0) || 0
           const secondId = letter.codePointAt(0) || 0
           const key = `${firstId}-${secondId}`
-          kerningMap.set(key, amount)
+          kerningMap.set(key, Math.round(amount * fractionalScale))
         }
       })
     })

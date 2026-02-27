@@ -1558,6 +1558,9 @@ export class Style implements IStyle {
 export interface IUi {
   /** Ui previewText */
   previewText?: string | null
+
+  /** Ui xFractional */
+  xFractional?: number | null
 }
 
 /** Represents an Ui. */
@@ -1570,6 +1573,9 @@ export class Ui implements IUi {
 
   /** Ui previewText. */
   public previewText: string
+
+  /** Ui xFractional. */
+  public xFractional: number
 
   /**
    * Creates a new Ui instance using the specified properties.

@@ -152,7 +152,8 @@ const getContent: FontToContent = (bmfont) => {
 
   // Build bit field for common block (packed, encoded channels)
   let commonBitField = 0
-  if (common.packed) commonBitField |= 0x01
+  if (common.packed) commonBitField |= 0x80
+  if (common.xFpBits) commonBitField |= common.xFpBits & 0x07
   writer.writeUint8(commonBitField)
 
   writer.writeUint8(common.alphaChnl || 0) // alpha channel
