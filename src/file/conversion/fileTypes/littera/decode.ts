@@ -1,19 +1,21 @@
 import Color from 'color'
-import {
-  FillType,
-  Font,
+import type { LayoutData as Layout } from 'src/store/legend/stores/layoutStore'
+import type {
+  FontData as Font,
   FontResource,
-  FontStyleConfig,
-  GlyphFont,
-  Gradient,
-  GradientType,
-  Layout,
-  PatternTexture,
-  ShadowStyleConfig,
-  StrokeStyleConfig,
-  Style,
-} from 'src/store'
+  StyleData as Style,
+} from 'src/store/legend/stores/styleStore'
+import type { FontGlyphData as GlyphFont } from 'src/store/legend/types'
 import type { Project } from 'src/types/project'
+import {
+  type FillData as FontStyleConfig,
+  FillType,
+  type GradientData as Gradient,
+  GradientType,
+  type PatternTextureData as PatternTexture,
+  type ShadowData as ShadowStyleConfig,
+  type StrokeData as StrokeStyleConfig,
+} from 'src/types/style'
 import base64ToArrayBuffer from 'src/utils/base64ToArrayBuffer'
 
 import { DecodeProjectFunction } from '../type'
@@ -22,7 +24,15 @@ import { FillData, LitteraData, StrokeData } from './schema'
 
 function transformFill(litteraFill: FillData | StrokeData): FontStyleConfig {
   if (litteraFill.fillType === 'gradientFill') {
-    // solid color
+    // Empty gradient: fall back to solid fill with default color
+    if (litteraFill.gradientColors.length === 0) {
+      return {
+        type: FillType.SOLID,
+        color: '#000000',
+      } as FontStyleConfig
+    }
+
+    // Single color gradient: treat as solid color
     if (litteraFill.gradientColors.length < 2) {
       return {
         type: FillType.SOLID,
@@ -32,11 +42,18 @@ function transformFill(litteraFill: FillData | StrokeData): FontStyleConfig {
       } as FontStyleConfig
     }
 
-    const palette = litteraFill.gradientColors.map((color, idx) => ({
-      id: idx + 1,
-      color: Color(color).alpha(litteraFill.gradientAlphas[idx]).hex(),
-      offset: litteraFill.gradientRatios[idx] / 255,
-    }))
+    const gradientLen = Math.min(
+      litteraFill.gradientColors.length,
+      litteraFill.gradientAlphas.length,
+      litteraFill.gradientRatios.length,
+    )
+    const palette = litteraFill.gradientColors
+      .slice(0, gradientLen)
+      .map((color, idx) => ({
+        id: idx + 1,
+        color: Color(color).alpha(litteraFill.gradientAlphas[idx]).hex(),
+        offset: litteraFill.gradientRatios[idx] / 255,
+      }))
 
     return {
       type: FillType.GRADIENT,
@@ -59,20 +76,22 @@ function transformFill(litteraFill: FillData | StrokeData): FontStyleConfig {
   }
 
   return {
+    type: FillType.IMAGE,
     patternTexture,
   } as FontStyleConfig
 }
 
 const decode: DecodeProjectFunction = (litteraData) => {
-  if (!check(litteraData)) {
+  // Parse string once before check to avoid double JSON.parse
+  // (check() also parses internally for validation)
+  const parsed =
+    typeof litteraData === 'string' ? JSON.parse(litteraData) : litteraData
+
+  if (!check(parsed)) {
     throw new Error('unknown file')
   }
 
-  if (typeof litteraData === 'string') {
-    litteraData = JSON.parse(litteraData)
-  }
-
-  const data = litteraData as LitteraData
+  const data = parsed as LitteraData
   const project: Partial<Project> = {}
 
   project.text = data.glyphs.glyphs
@@ -128,7 +147,15 @@ const decode: DecodeProjectFunction = (litteraData) => {
   //#region style.shadow
   const shadow: Partial<ShadowStyleConfig> = {
     color: Color(data.shadow.color).alpha(data.shadow.alpha).hex(),
-    blur: data.shadow.quality + data.shadow.blurX - data.shadow.strength,
+    // Approximate mapping from Flash shadow properties to canvas shadowBlur.
+    // quality (1-3) and strength are Flash-specific; this heuristic may produce
+    // negative values which are clamped to 0 below.
+    blur: Math.max(
+      0,
+      data.shadow.quality +
+        (data.shadow.blurX + data.shadow.blurY) / 2 -
+        data.shadow.strength,
+    ),
     offsetX: Math.round(
       Math.cos((data.shadow.angle * Math.PI) / 180) * data.shadow.distance,
     ),

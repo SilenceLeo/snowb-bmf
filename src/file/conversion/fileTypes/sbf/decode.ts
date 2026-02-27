@@ -1,6 +1,6 @@
 import { DecodeProjectFunction } from '../type'
 import { allProto, toOriginBuffer, updateOldProject } from './proto/index'
-import { createPrefix, getVersion } from './utils'
+import { getVersion, PREFIX_BYTE_LENGTH } from './utils'
 
 const decode: DecodeProjectFunction = (buffer) => {
   if (!(buffer instanceof ArrayBuffer)) {
@@ -17,7 +17,7 @@ const decode: DecodeProjectFunction = (buffer) => {
     throw new Error(`Unsupported SBF version: ${version}`)
   }
 
-  const prefixLength = createPrefix().byteLength
+  const prefixLength = PREFIX_BYTE_LENGTH
   if (buffer.byteLength <= prefixLength) {
     throw new Error('File too small - missing payload data')
   }

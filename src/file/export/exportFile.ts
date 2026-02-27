@@ -5,12 +5,12 @@ import getPageFileName from './getPageFileName'
 import toBmfInfo from './toBmfInfo'
 import { ConfigItem, ExportProjectData } from './type'
 
-export default function exportFile(
+export default async function exportFile(
   projectData: ExportProjectData,
   config: ConfigItem,
   fontName: string,
   fileName: string,
-): void {
+): Promise<void> {
   const zip = new JSZip()
   const { packCanvases, layout, name } = projectData
   const saveFileName = fileName || name
@@ -36,15 +36,19 @@ export default function exportFile(
 
     if (!sourceCanvas) continue
 
-    const pagePromise = new Promise<void>((resolve) => {
+    const pagePromise = new Promise<void>((resolve, reject) => {
       sourceCanvas!.toBlob((blob) => {
         if (blob) {
           const pageName = getPageFileName(saveFileName, pageIndex, layout.page)
           zip.file(pageName, blob)
+          resolve()
         } else {
-          console.warn(`[Export] Failed to create blob for page ${pageIndex}`)
+          reject(
+            new Error(
+              `[Export] Failed to create blob for page ${pageIndex}`,
+            ),
+          )
         }
-        resolve()
       })
     })
 
@@ -52,10 +56,7 @@ export default function exportFile(
   }
 
   // Wait for all pages to be processed, then generate the zip
-  Promise.all(pagePromises)
-    .then(() => zip.generateAsync({ type: 'blob' }))
-    .then((content) => saveAs(content, `${saveFileName}.zip`))
-    .catch((error) => {
-      console.error('[Export] Failed to generate font file:', error)
-    })
+  await Promise.all(pagePromises)
+  const zipBlob = await zip.generateAsync({ type: 'blob' })
+  saveAs(zipBlob, `${saveFileName}.zip`)
 }

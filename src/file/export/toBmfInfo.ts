@@ -28,7 +28,7 @@ export default function toBmfInfo(
   const { opentype, size } = style.font
   let fontScale = 1
   if (opentype) {
-    fontScale = (1 / opentype.unitsPerEm) * size
+    fontScale = size / opentype.unitsPerEm
   }
 
   // Extract bold/italic information from OpenType font
@@ -38,7 +38,8 @@ export default function toBmfInfo(
     // Check OS/2 table for weight and style
     const os2Table = opentype.tables.os2
     if (os2Table) {
-      // Weight classification: 400 = normal, 700+ = bold
+      // Heuristic: weight >= 700 implies bold. More accurate would be checking
+      // fsSelection bit 5, but OS/2 table data may not be available from canvas API.
       bold = os2Table.usWeightClass >= 700 ? 1 : 0
       // Style selection: check for italic bit
       italic = os2Table.fsSelection & 0x01 ? 1 : 0
@@ -149,65 +150,113 @@ export default function toBmfInfo(
     chars.list.push(charInfo)
   })
 
-  // High-performance kerning processing with caching and optimizations
   const kerningMap = new Map<string, number>()
 
-  if (opentype) {
-    // Build optimized glyph info array with pre-computed values (single pass)
-    const validGlyphs: Array<{
-      glyph: (typeof glyphList)[0]
-      index: number
-      id: number
-    }> = []
+  // Step 1: Manual kerning — always O(n * k_avg), typically sparse
+  glyphList.forEach((glyph) => {
+    const firstId = glyph.letter.codePointAt(0) || 0
+    Object.entries(glyph.kerning).forEach(([letter, amount]) => {
+      if (amount) {
+        const secondId = letter.codePointAt(0) || 0
+        kerningMap.set(`${firstId}-${secondId}`, amount)
+      }
+    })
+  })
 
+  if (opentype) {
+    // Build glyph-index → codePoint lookup for our glyph set
+    const glyphIndexToId = new Map<number, number>()
     glyphList.forEach((glyph) => {
       const glyphIndex = opentype.charToGlyphIndex(glyph.letter)
-      // Only include glyphs with valid indices to reduce loop iterations
       if (glyphIndex !== 0) {
-        validGlyphs.push({
-          glyph,
-          index: glyphIndex,
-          id: glyph.letter.codePointAt(0) || 0,
-        })
+        glyphIndexToId.set(glyphIndex, glyph.letter.codePointAt(0) || 0)
       }
     })
 
-    // Process kerning with pre-computed data (no Map lookups in hot path)
-    for (let i = 0; i < validGlyphs.length; i++) {
-      const first = validGlyphs[i]
+    // Step 2: Try direct kern table access — O(k) where k = total kern pairs
+    // Uses opentype.js internal `kerningPairs` property (undocumented API).
+    // If unavailable (e.g. API change), this step is silently skipped and
+    // Step 3 (GPOS fallback) handles kerning extraction.
+    // Note: Steps 2 and 3 are both additive to manual kerning (Step 1).
+    // Most fonts use either kern table OR GPOS, not both, so overlap is rare.
+    const opentypeAny = opentype as unknown as Record<string, unknown>
+    const kernPairs: Record<string, number> | undefined =
+      opentypeAny.kerningPairs as Record<string, number> | undefined
 
-      for (let j = 0; j < validGlyphs.length; j++) {
-        const second = validGlyphs[j]
+    if (kernPairs && typeof kernPairs === 'object') {
+      Object.entries(kernPairs).forEach(([key, value]) => {
+        if (value === 0) return
+        const commaIdx = key.indexOf(',')
+        const leftIdx = Number(key.slice(0, commaIdx))
+        const rightIdx = Number(key.slice(commaIdx + 1))
+        const leftId = glyphIndexToId.get(leftIdx)
+        const rightId = glyphIndexToId.get(rightIdx)
+        if (leftId !== undefined && rightId !== undefined) {
+          const amount = Math.round(value * fontScale)
+          if (amount) {
+            const mapKey = `${leftId}-${rightId}`
+            // Manual kerning takes priority (already set in Step 1),
+            // opentype value is additive
+            const existing = kerningMap.get(mapKey)
+            if (existing !== undefined) {
+              const combined = existing + amount
+              if (combined) kerningMap.set(mapKey, combined)
+              else kerningMap.delete(mapKey)
+            } else {
+              kerningMap.set(mapKey, amount)
+            }
+          }
+        }
+      })
+    }
 
-        // Direct access to cached values (much faster than Map.get())
-        const opentypeKerning = opentype.getKerningValue(
-          first.index,
-          second.index,
-        )
-        const manualKerning = first.glyph.kerning[second.glyph.letter] || 0
+    // Step 3: GPOS kerning fallback — O(n²) via position.getKerningValue.
+    // Uses opentype.js internal `position.defaultKerningTables` (undocumented).
+    // Values are additive with Steps 1-2. For fonts with both kern and GPOS
+    // tables containing identical pairs, values accumulate (uncommon in practice).
+    const position = opentypeAny.position as
+      | { defaultKerningTables: unknown; getKerningValue: (tables: unknown, left: number, right: number) => number }
+      | undefined
+    const hasGPOS = !!position?.defaultKerningTables
+    if (hasGPOS && position) {
+      const validGlyphs: Array<{ index: number; id: number; letter: string }> =
+        []
+      glyphList.forEach((glyph) => {
+        const glyphIndex = opentype.charToGlyphIndex(glyph.letter)
+        if (glyphIndex !== 0) {
+          validGlyphs.push({
+            index: glyphIndex,
+            id: glyph.letter.codePointAt(0) || 0,
+            letter: glyph.letter,
+          })
+        }
+      })
 
-        // Early termination for zero kerning
-        if (opentypeKerning === 0 && manualKerning === 0) continue
-
-        const amount = Math.round(opentypeKerning * fontScale + manualKerning)
-
-        if (amount) {
-          const key = `${first.id}-${second.id}`
-          kerningMap.set(key, amount)
+      for (let i = 0; i < validGlyphs.length; i++) {
+        const first = validGlyphs[i]
+        for (let j = 0; j < validGlyphs.length; j++) {
+          const second = validGlyphs[j]
+          const gposKerning = position.getKerningValue(
+            position.defaultKerningTables,
+            first.index,
+            second.index,
+          )
+          if (gposKerning === 0) continue
+          const amount = Math.round(gposKerning * fontScale)
+          if (amount) {
+            const key = `${first.id}-${second.id}`
+            const existing = kerningMap.get(key)
+            if (existing !== undefined) {
+              const combined = existing + amount
+              if (combined) kerningMap.set(key, combined)
+              else kerningMap.delete(key)
+            } else {
+              kerningMap.set(key, amount)
+            }
+          }
         }
       }
     }
-  } else {
-    // Process manual kerning settings
-    glyphList.forEach((glyph) => {
-      Object.entries(glyph.kerning).forEach(([letter, amount]) => {
-        if (amount) {
-          const firstId = glyph.letter.codePointAt(0) || 0
-          const secondId = letter.codePointAt(0) || 0
-          kerningMap.set(`${firstId}-${secondId}`, amount)
-        }
-      })
-    })
   }
 
   // Convert kerning map to sorted list

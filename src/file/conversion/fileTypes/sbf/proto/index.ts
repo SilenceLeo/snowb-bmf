@@ -78,6 +78,3 @@ export { default as toOriginBuffer } from './toOriginBuffer'
 export { default as updateOldProject } from './updateOldProject'
 export * from './1.2.1/project'
 export { default } from './1.2.1/project'
-
-// Legacy export for backward compatibility
-export const oldProto = allProto

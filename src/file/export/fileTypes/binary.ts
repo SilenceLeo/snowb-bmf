@@ -62,19 +62,34 @@ class BMFontBinaryWriter {
   }
 }
 
-function calculateBufferSize(bmfont: {
-  info: { face?: string }
-  pages: BMFontPage[]
-  chars: { list: BMFontChar[] }
-  kernings: { count: number; list: BMFontKerning[] }
-}): number {
-  const { info, pages, chars, kernings } = bmfont
+/** Pre-encode page file names and compute the max length for BMFont spec compliance */
+function encodePageFileNames(pages: BMFontPage[]): {
+  encodedNames: Uint8Array[]
+  maxLength: number
+} {
+  const encoder = new TextEncoder()
+  const encodedNames = pages.map(
+    (page: BMFontPage) => encoder.encode(page.file || ''),
+  )
+  const maxLength =
+    encodedNames.length > 0
+      ? Math.max(...encodedNames.map((b) => b.length))
+      : 0
+  return { encodedNames, maxLength }
+}
 
+function calculateBufferSize(
+  fontNameBytes: Uint8Array,
+  pages: BMFontPage[],
+  pageMaxLength: number,
+  chars: { list: BMFontChar[] },
+  kernings: { count: number; list: BMFontKerning[] },
+): number {
   let size = 4 // File header (BMF + version)
 
   // Info block: block header (5) + fixed fields (14) + font name + null terminator
   // Fixed fields: fontSize(2) + bitField(1) + charSet(1) + stretchH(2) + aa(1) + padding(4) + spacing(2) + outline(1) = 14
-  size += 5 + 14 + new TextEncoder().encode(info.face || '').length + 1
+  size += 5 + 14 + fontNameBytes.length + 1
 
   // Common block: block header (5) + fixed fields (15)
   size += 5 + 15
@@ -83,13 +98,8 @@ function calculateBufferSize(bmfont: {
   // According to BMFont spec: each filename must have the same length
   size += 5
   if (pages.length > 0) {
-    const maxFileNameLength = Math.max(
-      ...pages.map(
-        (page: BMFontPage) => new TextEncoder().encode(page.file || '').length,
-      ),
-    )
-    // Each page uses maxFileNameLength + 1 (null terminator)
-    size += pages.length * (maxFileNameLength + 1)
+    // Each page uses pageMaxLength + 1 (null terminator)
+    size += pages.length * (pageMaxLength + 1)
   }
 
   // Chars block: block header (5) + char entries (20 bytes each)
@@ -106,17 +116,29 @@ function calculateBufferSize(bmfont: {
 const getContent: FontToContent = (bmfont) => {
   const { info, common, pages, chars, kernings } = bmfont
 
-  const bufferSize = calculateBufferSize(bmfont)
+  // Pre-encode strings once for reuse in size calculation and writing
+  const fontNameBytes = new TextEncoder().encode(info.face || '')
+  const { encodedNames: pageEncodedNames, maxLength: pageMaxLength } =
+    encodePageFileNames(pages)
+
+  const bufferSize = calculateBufferSize(
+    fontNameBytes,
+    pages,
+    pageMaxLength,
+    chars,
+    kernings,
+  )
   const writer = new BMFontBinaryWriter(bufferSize)
 
   // Write file header
   writer.writeHeader()
 
   // Write Info block (Type 1)
-  const fontNameBytes = new TextEncoder().encode(info.face || '')
   const infoBlockSize = 14 + fontNameBytes.length + 1 // fixed fields + font name + null terminator
   writer.writeBlockHeader(1, infoBlockSize)
 
+  // Note: Math.abs() drops the sign bit. Negative fontSize indicates SDF font
+  // in BMFont spec, but current implementation does not support SDF.
   writer.writeUint16(Math.abs(info.size) || 16) // fontSize
 
   // Build bit field (smooth, unicode, italic, bold, fixedHeight)
@@ -146,10 +168,9 @@ const getContent: FontToContent = (bmfont) => {
 
   writer.writeUint8(Number(info.outline) || 0) // outline
 
-  // Write font name manually (instead of using writeString)
-  const infoFontNameBytes = new TextEncoder().encode(info.face || '')
-  for (let i = 0; i < infoFontNameBytes.length; i++) {
-    writer.writeUint8(infoFontNameBytes[i])
+  // Write font name bytes (reusing pre-encoded fontNameBytes)
+  for (let i = 0; i < fontNameBytes.length; i++) {
+    writer.writeUint8(fontNameBytes[i])
   }
   writer.writeUint8(0) // null terminator
 
@@ -166,38 +187,26 @@ const getContent: FontToContent = (bmfont) => {
   if (common.packed) commonBitField |= 0x01
   writer.writeUint8(commonBitField)
 
-  writer.writeUint8(common.alphaChnl || 0) // alpha channel
-  writer.writeUint8(common.redChnl || 4) // red channel
-  writer.writeUint8(common.greenChnl || 2) // green channel
-  writer.writeUint8(common.blueChnl || 1) // blue channel
+  writer.writeUint8(common.alphaChnl ?? 0) // alpha channel
+  writer.writeUint8(common.redChnl ?? 0) // red channel
+  writer.writeUint8(common.greenChnl ?? 0) // green channel
+  writer.writeUint8(common.blueChnl ?? 0) // blue channel
 
   // Write Pages block (Type 3)
   // According to BMFont spec: each filename must have the same length
-  let pagesBlockSize = 0
-  let maxFileNameLength = 0
-
-  if (pages.length > 0) {
-    maxFileNameLength = Math.max(
-      ...pages.map(
-        (page: BMFontPage) => new TextEncoder().encode(page.file || '').length,
-      ),
-    )
-    pagesBlockSize = pages.length * (maxFileNameLength + 1)
-  }
+  const pagesBlockSize =
+    pages.length > 0 ? pages.length * (pageMaxLength + 1) : 0
 
   writer.writeBlockHeader(3, pagesBlockSize)
 
-  pages.forEach((page: BMFontPage) => {
-    const fileName = page.file || ''
-    const fileNameBytes = new TextEncoder().encode(fileName)
-
+  pageEncodedNames.forEach((fileNameBytes) => {
     // Write filename bytes
     for (let i = 0; i < fileNameBytes.length; i++) {
       writer.writeUint8(fileNameBytes[i])
     }
 
-    // Pad with null bytes to reach maxFileNameLength
-    for (let i = fileNameBytes.length; i < maxFileNameLength; i++) {
+    // Pad with null bytes to reach pageMaxLength
+    for (let i = fileNameBytes.length; i < pageMaxLength; i++) {
       writer.writeUint8(0)
     }
 
@@ -210,16 +219,16 @@ const getContent: FontToContent = (bmfont) => {
   writer.writeBlockHeader(4, charsBlockSize)
 
   chars.list.forEach((char: BMFontChar) => {
-    writer.writeUint32(char.id || 0) // character ID (4 bytes in version 3)
-    writer.writeUint16(char.x || 0) // x position
-    writer.writeUint16(char.y || 0) // y position
-    writer.writeUint16(char.width || 0) // width
-    writer.writeUint16(char.height || 0) // height
-    writer.writeInt16(char.xoffset || 0) // x offset
-    writer.writeInt16(char.yoffset || 0) // y offset
-    writer.writeInt16(char.xadvance || 0) // x advance
-    writer.writeUint8(char.page || 0) // page
-    writer.writeUint8(char.chnl || 15) // channel (15 = all channels)
+    writer.writeUint32(char.id ?? 0) // character ID (4 bytes in version 3)
+    writer.writeUint16(char.x ?? 0) // x position
+    writer.writeUint16(char.y ?? 0) // y position
+    writer.writeUint16(char.width ?? 0) // width
+    writer.writeUint16(char.height ?? 0) // height
+    writer.writeInt16(char.xoffset ?? 0) // x offset
+    writer.writeInt16(char.yoffset ?? 0) // y offset
+    writer.writeInt16(char.xadvance ?? 0) // x advance
+    writer.writeUint8(char.page ?? 0) // page
+    writer.writeUint8(char.chnl ?? 15) // channel (15 = all channels)
   })
 
   // Write Kerning Pairs block (Type 5) if we have kerning data
@@ -228,9 +237,9 @@ const getContent: FontToContent = (bmfont) => {
     writer.writeBlockHeader(5, kerningBlockSize)
 
     kernings.list.forEach((kerning: BMFontKerning) => {
-      writer.writeUint32(kerning.first || 0) // first character ID (4 bytes in version 3)
-      writer.writeUint32(kerning.second || 0) // second character ID (4 bytes in version 3)
-      writer.writeInt16(kerning.amount || 0) // kerning amount
+      writer.writeUint32(kerning.first ?? 0) // first character ID (4 bytes in version 3)
+      writer.writeUint32(kerning.second ?? 0) // second character ID (4 bytes in version 3)
+      writer.writeInt16(kerning.amount ?? 0) // kerning amount
     })
   }
 

@@ -1,4 +1,7 @@
 import type { IProject } from './1.2.1/project'
+// NOTE: Circular dependency with ./index.ts. This works due to JavaScript's
+// module initialization order but should ideally be refactored by extracting
+// CURRENT_VERSION and allProto to a separate constants file.
 import { CURRENT_VERSION, allProto } from './index'
 
 export default function updateOldProject(

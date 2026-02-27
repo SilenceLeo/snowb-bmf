@@ -3,6 +3,9 @@ import { IProject } from './project'
 
 export default function updateToNext(project: IProject): IProjectNext {
   function fixOffset(list: IGradientColor[]) {
+    // Single-color gradient needs no normalization
+    if (list.length <= 1) return
+
     const len = list.length - 1
     list.forEach((item, idx) => {
       item.offset = (1 / len) * idx

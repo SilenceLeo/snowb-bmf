@@ -5,6 +5,7 @@ import { CURRENT_VERSION } from './proto'
 
 // SBF file prefix constants
 const PREFIX_STR = 'SnowBambooBMF'
+export const PREFIX_BYTE_LENGTH = PREFIX_STR.length + 3 // prefix string + 3 version bytes
 
 // Derive VERSION_BYTES from CURRENT_VERSION (e.g., 1002001 -> [1, 2, 1])
 const VERSION_BYTES = [
@@ -21,13 +22,16 @@ export function createPrefix(): Uint8Array {
   return new Uint8Array([...prefixBytes, ...VERSION_BYTES])
 }
 
+// Cached prefix to avoid re-allocation on every getVersion() call
+const cachedPrefix = createPrefix()
+
 /**
  * Gets the version number from an SBF file buffer
  */
 export function getVersion(buffer: unknown): number {
   if (!(buffer instanceof ArrayBuffer)) return 0
 
-  const prefixBuffer = createPrefix()
+  const prefixBuffer = cachedPrefix
   if (buffer.byteLength < prefixBuffer.byteLength) return 0
 
   const u8 = new Uint8Array(buffer)

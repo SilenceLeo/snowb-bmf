@@ -16,6 +16,8 @@ function convertKerning(
 }
 
 export default function toOriginBuffer(protoProject: IProject): Project {
+  // NOTE: This cast creates an alias - mutations here also affect protoProject.
+  // Callers must not reuse protoProject after calling this function.
   const project = protoProject as unknown as Project
 
   // Convert font buffers

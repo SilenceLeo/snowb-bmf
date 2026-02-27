@@ -46,9 +46,10 @@ export default function encodeProject(project: Project): Uint8Array {
   }
 
   try {
-    convertBuffersToUint8Array(project)
+    const projectCopy = structuredClone(project)
+    convertBuffersToUint8Array(projectCopy)
 
-    const projectObject = project as unknown as IProject
+    const projectObject = projectCopy as unknown as IProject
     const message = ProjectProto.create(projectObject)
 
     return ProjectProto.encode(message).finish()
