@@ -12,6 +12,7 @@ import { registerRoute } from 'workbox-routing'
 import { StaleWhileRevalidate } from 'workbox-strategies'
 
 declare const self: ServiceWorkerGlobalScope
+declare const __APP_VERSION__: string
 
 // Take control of all clients immediately
 clientsClaim()
@@ -114,7 +115,7 @@ self.addEventListener('message', (event) => {
     if (replyPort) {
       // Send back current service worker version or timestamp
       replyPort.postMessage({
-        version: '1.1.0', // You can make this dynamic based on build
+        version: __APP_VERSION__,
         timestamp: Date.now(),
         success: true,
       })
@@ -122,44 +123,46 @@ self.addEventListener('message', (event) => {
   }
 })
 
-// Enhanced install event with better caching strategy
-self.addEventListener('install', (_event) => {
+// Skip waiting to activate the new SW immediately.
+// Users are notified via UpdateToast before page reload.
+self.addEventListener('install', (event) => {
   console.log('Service Worker: Installing new version')
-
-  // Skip waiting immediately if this is an update
-  if (self.registration?.waiting) {
-    console.log('Service Worker: Skipping waiting during install')
-    self.skipWaiting()
-  }
+  event.waitUntil(self.skipWaiting())
 })
 
-// Enhanced activate event with cleanup and immediate control
+// Enhanced activate event with cleanup
+// Note: clientsClaim() is already called at the top level via workbox-core,
+// so self.clients.claim() is not needed here.
 self.addEventListener('activate', (event) => {
   console.log('Service Worker: Activating new version')
 
+  const currentCachePrefix = 'workbox-precache-'
+
   event.waitUntil(
-    Promise.all([
-      // Clean up old caches
-      caches.keys().then((cacheNames) => {
+    // Clean up old caches that don't belong to the current service worker
+    caches
+      .keys()
+      .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            // Keep current workbox caches, remove old ones
+            // Keep current workbox precache and runtime caches
+            if (cacheName === 'images') {
+              return Promise.resolve()
+            }
             if (
-              cacheName.startsWith('workbox-') &&
-              !cacheName.includes('temp')
+              cacheName.startsWith(currentCachePrefix) ||
+              cacheName.startsWith('workbox-runtime')
             ) {
-              // You might want to implement more sophisticated cache cleanup logic
               console.log('Service Worker: Keeping cache:', cacheName)
               return Promise.resolve()
             }
-            return Promise.resolve()
+            // Delete old/unknown caches
+            console.log('Service Worker: Deleting old cache:', cacheName)
+            return caches.delete(cacheName)
           }),
         )
-      }),
-      // Take control of all clients immediately
-      self.clients.claim().then(() => {
-        console.log('Service Worker: Claimed all clients')
-
+      })
+      .then(() => {
         // Notify all clients that the service worker has been updated
         return self.clients.matchAll().then((clients) => {
           clients.forEach((client) => {
@@ -170,24 +173,12 @@ self.addEventListener('activate', (event) => {
           })
         })
       }),
-    ]),
   )
 })
 
 // Handle unhandled promise rejections
 self.addEventListener('unhandledrejection', (_event) => {
   console.error('Service Worker: Unhandled promise rejection:', _event.reason)
-})
-
-// Add performance logging for cache hits/misses
-self.addEventListener('fetch', (event) => {
-  // Only log for navigation requests in development
-  if (
-    event.request.mode === 'navigate' &&
-    self.location.hostname === 'localhost'
-  ) {
-    console.log('Service Worker: Navigation request for:', event.request.url)
-  }
 })
 
 console.log('Service Worker: Script loaded and ready')

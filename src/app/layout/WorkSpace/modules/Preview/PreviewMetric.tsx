@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FunctionComponent } from 'react'
+import { FunctionComponent, useMemo } from 'react'
 import FormAdjustMetric from 'src/app/layout/common/FormAdjustMetric'
+import type { MetricData } from 'src/types/style'
 import {
   findImageGlyphIndex,
   setGlyphAdjustMetric,
@@ -14,58 +15,41 @@ const PreviewMetric: FunctionComponent = () => {
   const { selectLetter } = useSelectLetter()
   const glyph = useGlyphForLetter(selectLetter)
 
-  if (!glyph) {
+  const setters = useMemo(() => {
+    if (!glyph) return null
+    const { letter, type } = glyph
+    const createSetter = (key: keyof MetricData) => (value: number) => {
+      if (type === 'image') {
+        const idx = findImageGlyphIndex(letter)
+        if (idx >= 0) setImageGlyphAdjustMetric(idx, { [key]: value })
+      } else {
+        setGlyphAdjustMetric(letter, { [key]: value })
+      }
+    }
+    return {
+      setXAdvance: createSetter('xAdvance'),
+      setXOffset: createSetter('xOffset'),
+      setYOffset: createSetter('yOffset'),
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally depend on letter/type only, not the full glyph object
+  }, [glyph?.letter, glyph?.type])
+
+  if (!glyph || !setters) {
     return null
-  }
-
-  const { adjustMetric, letter, type } = glyph
-
-  // Create setter functions based on glyph type
-  const handleSetXAdvance = (value: number): void => {
-    if (type === 'image') {
-      const index = findImageGlyphIndex(letter)
-      if (index >= 0) {
-        setImageGlyphAdjustMetric(index, { xAdvance: value })
-      }
-    } else {
-      setGlyphAdjustMetric(letter, { xAdvance: value })
-    }
-  }
-
-  const handleSetXOffset = (value: number): void => {
-    if (type === 'image') {
-      const index = findImageGlyphIndex(letter)
-      if (index >= 0) {
-        setImageGlyphAdjustMetric(index, { xOffset: value })
-      }
-    } else {
-      setGlyphAdjustMetric(letter, { xOffset: value })
-    }
-  }
-
-  const handleSetYOffset = (value: number): void => {
-    if (type === 'image') {
-      const index = findImageGlyphIndex(letter)
-      if (index >= 0) {
-        setImageGlyphAdjustMetric(index, { yOffset: value })
-      }
-    } else {
-      setGlyphAdjustMetric(letter, { yOffset: value })
-    }
   }
 
   return (
     <>
       <Box paddingX={2} marginY={4}>
-        <Typography>{`"${letter}" Adjustment`}</Typography>
+        <Typography>{`"${glyph.letter}" Adjustment`}</Typography>
       </Box>
       <FormAdjustMetric
-        xAdvance={adjustMetric.xAdvance}
-        xOffset={adjustMetric.xOffset}
-        yOffset={adjustMetric.yOffset}
-        setXAdvance={handleSetXAdvance}
-        setXOffset={handleSetXOffset}
-        setYOffset={handleSetYOffset}
+        xAdvance={glyph.adjustMetric.xAdvance}
+        xOffset={glyph.adjustMetric.xOffset}
+        yOffset={glyph.adjustMetric.yOffset}
+        setXAdvance={setters.setXAdvance}
+        setXOffset={setters.setXOffset}
+        setYOffset={setters.setYOffset}
       />
     </>
   )

@@ -13,21 +13,37 @@ import {
   clearSelection,
   getGlyphForLetter,
   setPreviewTransform,
-  useAllGlyphs,
   useFontLineHeight,
   useFontSize,
+  useGlyphDataVersion,
   useGlobalAdjustMetric,
-  useImageGlyphs,
   useIsPacking,
   usePackCanvases,
   usePadding,
   usePreviewText,
   usePreviewTransform,
-  useStyle,
+  useFontBaselines,
 } from 'src/store/legend'
 import type { FontGlyphData, ImageGlyphData } from 'src/store/legend'
 
 import LetterList from './LetterList'
+
+interface PreviewData {
+  lines: number
+  list: {
+    x: number
+    y: number
+    width: number
+    height: number
+    letter: string
+    next: string
+    glyph: FontGlyphData | ImageGlyphData
+  }[]
+  xOffset: number
+  yOffset: number
+  width: number
+  height: number
+}
 
 // TODO: Consider extracting usePreviewData (data calculation logic) and
 // usePreviewDraw (canvas drawing logic) hooks to reduce component size.
@@ -39,9 +55,7 @@ const PreviewCanvas: FunctionComponent = () => {
   // Use Legend State hooks
   const fontSize = useFontSize()
   const lineHeight = useFontLineHeight()
-  const styleData = useStyle()
-  const { font } = styleData
-  const { middle, hanging, top, alphabetic, ideographic, bottom } = font
+  const { middle, hanging, top, alphabetic, ideographic, bottom } = useFontBaselines()
   const padding = usePadding()
   const isPacking = useIsPacking()
   const globalAdjustMetric = useGlobalAdjustMetric()
@@ -53,9 +67,8 @@ const PreviewCanvas: FunctionComponent = () => {
   } = usePreviewTransform()
   const previewText = usePreviewText()
 
-  // Subscribe to glyph changes for reactivity
-  const allGlyphs = useAllGlyphs()
-  const imageGlyphs = useImageGlyphs()
+  // Subscribe to glyph data version for reactivity (excludes position-only changes)
+  const glyphDataVersion = useGlyphDataVersion()
 
   // Calculate min/max baselines
   const minBaseLine = Math.min(
@@ -97,24 +110,9 @@ const PreviewCanvas: FunctionComponent = () => {
       previewOffsetX: ox + ix / s,
       previewOffsetY: oy + iy / s,
     })
-  }, [])
+  })
 
-  const [data, setData] = useState<{
-    lines: number
-    list: {
-      x: number
-      y: number
-      width: number
-      height: number
-      letter: string
-      next: string
-      glyph: FontGlyphData | ImageGlyphData
-    }[]
-    xOffset: number
-    yOffset: number
-    width: number
-    height: number
-  } | null>(null)
+  const [data, setData] = useState<PreviewData | null>(null)
 
   const initData = useCallback(() => {
     if (!canvas) {
@@ -236,7 +234,6 @@ const PreviewCanvas: FunctionComponent = () => {
         previewScale: s,
       })
     },
-    [],
   )
 
   // Draw canvas when data changes
@@ -340,11 +337,11 @@ const PreviewCanvas: FunctionComponent = () => {
     top,
   ])
 
-  // Initialize data when glyphs change
-  // Legend State hooks provide automatic reactivity for allGlyphs and imageGlyphs
+  // Initialize data when glyphs change or packing completes
+  // packCanvases changes at the END of packing flow (after positions are updated)
   useEffect(() => {
     initData()
-  }, [initData, allGlyphs, imageGlyphs])
+  }, [initData, glyphDataVersion, packCanvases])
 
   const handleClearSelection = () => {
     clearSelection()

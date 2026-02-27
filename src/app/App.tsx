@@ -22,6 +22,8 @@ function App(): React.JSX.Element {
   useAutoSave()
 
   useEffect(() => {
+    let cancelled = false
+
     // Initialize Legend State
     initLegendState()
 
@@ -31,6 +33,8 @@ function App(): React.JSX.Element {
         // Try to restore from IndexedDB
         const loaded = await loadWorkspaceToLegendState()
 
+        if (cancelled) return
+
         if (!loaded) {
           // No saved data, initialize default project
           await initializeProject()
@@ -39,6 +43,7 @@ function App(): React.JSX.Element {
           setupAutoRunListeners()
         }
       } catch (error) {
+        if (cancelled) return
         console.error('[App] Failed to initialize store:', error)
         // Even if loading fails, create a new project
         try {
@@ -50,23 +55,25 @@ function App(): React.JSX.Element {
           )
         }
       } finally {
-        setIsLoading(false)
+        if (!cancelled) {
+          setIsLoading(false)
+        }
       }
     }
 
     init()
 
     return () => {
+      cancelled = true
       cleanupListeners()
     }
   }, [])
 
-  // Show loading indicator while initializing
-  if (isLoading) {
-    return (
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+  return (
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {isLoading ? (
           <div
             style={{
               display: 'flex',
@@ -79,24 +86,17 @@ function App(): React.JSX.Element {
           >
             Loading...
           </div>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    )
-  }
-
-  return (
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <SnackbarProvider
-          anchorOrigin={{
-            horizontal: 'center',
-            vertical: 'top',
-          }}
-        >
-          <DynamicTitle />
-          <Wrap />
-        </SnackbarProvider>
+        ) : (
+          <SnackbarProvider
+            anchorOrigin={{
+              horizontal: 'center',
+              vertical: 'top',
+            }}
+          >
+            <DynamicTitle />
+            <Wrap />
+          </SnackbarProvider>
+        )}
       </ThemeProvider>
     </StyledEngineProvider>
   )

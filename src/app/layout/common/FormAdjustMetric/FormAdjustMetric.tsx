@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import { ChangeEvent, FunctionComponent } from 'react'
 import Box from '@mui/material/Box'
 import Input from '@mui/material/Input'
 import GridInput from 'src/app/components/GridInput'
@@ -23,7 +23,7 @@ const FormAdjustMetric: FunctionComponent<FormAdjustMetricProps> = (
     props
 
   const getHandle =
-    (handleSet: SetHandle) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    (handleSet: SetHandle) => (e: ChangeEvent<HTMLInputElement>) =>
       handleSet(Number(e.target.value))
 
   return (

@@ -9,12 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
 import { configList, exportFile } from 'src/file/export'
 import {
@@ -36,7 +31,6 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   const mainFontFamily = useMainFontFamily()
 
   const [open, setOpen] = useState(false)
-  const [list] = useState(configList)
   const [val, setVal] = useState(0)
   const [fontName, setFontName] = useState(mainFontFamily)
   const [fileName, setFileName] = useState(projectName)
@@ -66,15 +60,18 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
 
   const handleSave = useCallback(() => {
     const projectData = getExportProjectData()
-    exportFile(projectData, list[val], fontName, fileName)
+    exportFile(projectData, configList[val], fontName, fileName).catch(
+      (error) => {
+        console.error('[Export] Failed:', error)
+      },
+    )
     handleClose()
-  }, [fileName, fontName, list, val])
+  }, [fileName, fontName, val])
 
   useEffect(() => {
-    hotkeys.unbind('ctrl+shift+s,command+shift+s')
     hotkeys('ctrl+shift+s,command+shift+s', handleOpen)
     return () => {
-      hotkeys.unbind('ctrl+shift+s,command+shift+s')
+      hotkeys.unbind('ctrl+shift+s,command+shift+s', handleOpen)
     }
   }, [handleOpen])
 
@@ -116,7 +113,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
                 onChange={handleChange}
                 fullWidth
               >
-                {list.map((item, idx) => (
+                {configList.map((item, idx) => (
                   <MenuItem value={idx} key={item.id}>
                     {`${fileName || projectName}.${
                       item.ext

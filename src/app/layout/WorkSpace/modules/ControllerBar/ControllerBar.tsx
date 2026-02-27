@@ -12,18 +12,20 @@ import {
   setPreviewTransform,
   setShowPreview,
   setTransform,
-  usePreviewTransform,
+  usePreviewScale,
+  useScale,
   useShowPreview,
-  useUiTransform,
 } from 'src/store/legend'
+
+const SCALE_PRESETS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 5, 10]
+const SLIDER_WIDTH = '200px'
 
 const ControllerBar: FunctionComponent = () => {
   const showPreview = useShowPreview()
-  const { scale } = useUiTransform()
-  const { scale: previewScale } = usePreviewTransform()
+  const scale = useScale()
+  const previewScale = usePreviewScale()
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLButtonElement>(null)
-  const [list] = useState([0.25, 0.5, 0.75, 1, 1.25, 1.5, 5, 10])
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen)
   }
@@ -77,7 +79,7 @@ const ControllerBar: FunctionComponent = () => {
       </Box>
       <Slider
         sx={{
-          width: '200px',
+          width: SLIDER_WIDTH,
         }}
         value={showPreview ? previewScale : scale}
         min={0.01}
@@ -92,7 +94,7 @@ const ControllerBar: FunctionComponent = () => {
         <Paper>
           <ClickAwayListener onClickAway={handleClose}>
             <MenuList>
-              {list.map((n) => (
+              {SCALE_PRESETS.map((n) => (
                 <MenuItem key={n} onClick={() => handleSelect(n)}>
                   {`${n * 100}%`}
                 </MenuItem>

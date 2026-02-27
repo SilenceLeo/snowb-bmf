@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { setPreviewText, usePreviewText } from 'src/store/legend'
 
-const Preview: FunctionComponent = () => {
+const PreviewText: FunctionComponent = () => {
   const previewText = usePreviewText()
   const [isIME, setIsIME] = useState(false)
   const [inputText, setInputText] = useState(previewText)
@@ -28,7 +28,6 @@ const Preview: FunctionComponent = () => {
 
   const handleCompositionEnd = (): void => {
     setIsIME(false)
-    setInputText(inputText)
     if (inputText !== previewText) {
       setPreviewText(inputText)
     }
@@ -59,4 +58,4 @@ const Preview: FunctionComponent = () => {
   )
 }
 
-export default Preview
+export default PreviewText

@@ -41,6 +41,11 @@ const updateState: UpdateState = {
   lastCheckTime: 0,
 }
 
+// Flag to track whether the user initiated a skipWaiting update.
+// Prevents unconditional page reloads on controllerchange events
+// that may be triggered by the browser or other mechanisms.
+let userInitiatedUpdate = false
+
 // Check for updates every 10 minutes (in production) or 30 seconds (in development)
 const UPDATE_CHECK_INTERVAL = isLocalhost ? 30 * 1000 : 10 * 60 * 1000
 
@@ -66,20 +71,10 @@ async function checkForUpdates(registration: ServiceWorkerRegistration) {
       return
     }
 
-    // Fetch the service worker script with cache busting
-    const swUrl = new URL('service-worker.js', window.location.href).href
-    const response = await fetch(swUrl, {
-      cache: 'no-store',
-      headers: {
-        cache: 'no-store',
-        'cache-control': 'no-cache',
-      },
-    })
-
-    if (response?.status === 200) {
-      console.log('Service Worker: Checking for updates...')
-      await registration.update()
-    }
+    // registration.update() already fetches the SW script and handles
+    // cache-busting internally, so a separate fetch check is unnecessary.
+    console.log('Service Worker: Checking for updates...')
+    await registration.update()
   } catch (error) {
     console.error('Service Worker: Update check failed:', error)
   }
@@ -95,22 +90,38 @@ function setupPeriodicUpdateCheck(registration: ServiceWorkerRegistration) {
     checkForUpdates(registration)
   }, UPDATE_CHECK_INTERVAL)
 
-  // Cleanup on page unload
-  window.addEventListener('beforeunload', () => {
-    clearInterval(intervalId)
-  })
+  const controller = new AbortController()
+  const { signal } = controller
 
   // Check for updates when page becomes visible again
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-      setTimeout(() => checkForUpdates(registration), 1000)
-    }
-  })
+  document.addEventListener(
+    'visibilitychange',
+    () => {
+      if (!document.hidden) {
+        setTimeout(() => checkForUpdates(registration), 1000)
+      }
+    },
+    { signal },
+  )
 
   // Check for updates when page regains focus
-  window.addEventListener('focus', () => {
-    setTimeout(() => checkForUpdates(registration), 1000)
-  })
+  window.addEventListener(
+    'focus',
+    () => {
+      setTimeout(() => checkForUpdates(registration), 1000)
+    },
+    { signal },
+  )
+
+  // Cleanup on page unload
+  window.addEventListener(
+    'beforeunload',
+    () => {
+      clearInterval(intervalId)
+      controller.abort()
+    },
+    { once: true },
+  )
 }
 
 export function register(config?: Config) {
@@ -204,10 +215,15 @@ function registerValidSW(swUrl: string, config?: Config) {
       // Set up periodic update checking
       setupPeriodicUpdateCheck(registration)
 
-      // Listen for controlled page changes
+      // Listen for controlled page changes — only reload if the user
+      // explicitly triggered a skipWaiting update to avoid unexpected reloads.
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        console.log('Service Worker: Controller changed, reloading page')
-        window.location.reload()
+        if (userInitiatedUpdate) {
+          console.log('Service Worker: Controller changed after user-initiated update, reloading page')
+          window.location.reload()
+        } else {
+          console.log('Service Worker: Controller changed (not user-initiated, skipping reload)')
+        }
       })
     })
     .catch((error) => {
@@ -277,6 +293,7 @@ export async function forceUpdate(): Promise<boolean> {
     }
 
     console.log('Service Worker: Forcing update...')
+    userInitiatedUpdate = true
 
     // Create a promise to track the skipWaiting completion
     const updatePromise = new Promise<boolean>((resolve) => {
@@ -303,10 +320,23 @@ export async function forceUpdate(): Promise<boolean> {
     if (result) {
       dispatchUpdateEvent('sw-update-applied')
 
-      // Give the service worker a moment to take control
+      let hasReloaded = false
+
+      // Listen for controllerchange to reload as soon as the new SW takes control
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hasReloaded) {
+          hasReloaded = true
+          window.location.reload()
+        }
+      })
+
+      // Fallback: if controllerchange doesn't fire within 500ms, reload anyway
       setTimeout(() => {
-        window.location.reload()
-      }, 100)
+        if (!hasReloaded) {
+          hasReloaded = true
+          window.location.reload()
+        }
+      }, 500)
     }
 
     return result

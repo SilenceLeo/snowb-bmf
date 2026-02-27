@@ -1,14 +1,16 @@
 import Tabs from '@mui/material/Tabs'
 import { useTheme } from '@mui/material/styles'
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useCallback, useState } from 'react'
 import {
-  addProject,
-  removeProject,
-  selectProject,
   setWorkspaceProjectName,
   useActiveProjectId,
   useProjectList,
 } from 'src/store/legend'
+import {
+  createNewLegendProject,
+  removeLegendProject,
+  switchLegendProject,
+} from 'src/utils/persistence'
 
 import ProjectTab from './ProjectTab'
 
@@ -16,27 +18,46 @@ const ProjectTabs: FunctionComponent = () => {
   const { palette, shadows } = useTheme()
   const namedList = useProjectList()
   const activeId = useActiveProjectId()
+  const [isSwitching, setIsSwitching] = useState(false)
 
-  const handleChange = (_e: unknown, value: number): void => {
-    selectProject(value)
-  }
-
-  const handleRemove = (
-    _e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    value?: number,
-  ): void => {
-    if (typeof value !== 'undefined') {
-      removeProject(value)
+  const handleChange = useCallback(async (_e: unknown, value: number) => {
+    setIsSwitching(true)
+    try {
+      await switchLegendProject(value)
+    } finally {
+      setIsSwitching(false)
     }
-  }
+  }, [])
 
-  const handleDoubleClick = (): void => {
-    addProject()
-  }
+  const handleRemove = useCallback(
+    async (
+      _e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+      value?: number,
+    ) => {
+      if (typeof value !== 'undefined') {
+        setIsSwitching(true)
+        try {
+          await removeLegendProject(value)
+        } finally {
+          setIsSwitching(false)
+        }
+      }
+    },
+    [],
+  )
 
-  const handleRename = (name: string, id: number): void => {
+  const handleDoubleClick = useCallback(async () => {
+    setIsSwitching(true)
+    try {
+      await createNewLegendProject()
+    } finally {
+      setIsSwitching(false)
+    }
+  }, [])
+
+  const handleRename = useCallback((name: string, id: number): void => {
     setWorkspaceProjectName(id, name)
-  }
+  }, [])
 
   return (
     <Tabs
@@ -47,6 +68,7 @@ const ProjectTabs: FunctionComponent = () => {
         background: palette.background.sidebar,
         position: 'relative',
         zIndex: 1,
+        ...(isSwitching && { pointerEvents: 'none', opacity: 0.6 }),
       }}
       value={activeId}
       onChange={handleChange}

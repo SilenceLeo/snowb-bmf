@@ -10,7 +10,7 @@ if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
     dsn: import.meta.env.VITE_SENTRY_DSN,
     release: import.meta.env.VITE_SENTRY_RELEASE || 'test',
     integrations: [browserTracingIntegration(), replayIntegration()],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.1,
     environment: import.meta.env.MODE,
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
@@ -71,9 +71,6 @@ createRoot(document.getElementById('root') as HTMLElement, {
   onRecoverableError: handleRecoverableError,
 }).render(<App />)
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://cra.link/PWA
 serviceWorkerRegistration.register({
   onUpdate(registration) {
     // Use the new enhanced forceUpdate function

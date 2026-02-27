@@ -1,6 +1,5 @@
 import Popper, { PopperPlacementType } from '@mui/material/Popper'
-import { useTheme } from '@mui/material/styles'
-import type { Theme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { FunctionComponent } from 'react'
 import { ColorResult, SketchPicker } from 'react-color'
 
@@ -11,6 +10,9 @@ export interface ChildrenProps {
   anchorEl: HTMLDivElement | null
   onChange(color: string): void
 }
+
+// High z-index to ensure picker appears above all other UI elements
+const PICKER_Z_INDEX = 999999
 
 const usePickerStyle = (theme: Theme) => {
   const { palette } = theme
@@ -46,7 +48,7 @@ const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
       open={!!open}
       anchorEl={anchorEl}
       placement={placement || 'bottom'}
-      style={{ zIndex: 999999 }}
+      style={{ zIndex: PICKER_Z_INDEX }}
       sx={{
         '& *': {
           color: `${palette.text.primary} !important`,

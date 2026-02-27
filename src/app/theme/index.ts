@@ -6,14 +6,7 @@ import {
 
 import components from './components'
 
-// Extend theme, add custom background colors
-declare module '@mui/material/styles' {
-  interface TypeBackground {
-    activityBar: string
-    titleBar: string
-    sidebar: string
-  }
-}
+// Type augmentation for TypeBackground is defined in types/theme/index.d.ts
 
 const themeOptions: ThemeOptions = {
   palette: {

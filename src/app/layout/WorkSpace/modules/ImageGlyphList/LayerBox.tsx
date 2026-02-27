@@ -22,6 +22,12 @@ import readFile from 'src/utils/readFile'
 
 import ImageGlyphList from './ImageGlyphList'
 
+const FULLSCREEN_Z_INDEX = 999999
+// Max height for the accordion in non-fullscreen mode (header + content area)
+const ACCORDION_MAX_HEIGHT = '305px'
+// Min height for the image glyph list content area
+const GLYPH_LIST_MIN_HEIGHT = '224px'
+
 const LayerBox: FunctionComponent = () => {
   const [isFullscreen, setFullscreen] = useState(false)
   const [open, setOpen] = useState(false)
@@ -47,9 +53,13 @@ const LayerBox: FunctionComponent = () => {
           }
         }),
       ),
-    ).then((fileList) => {
-      addImages(fileList.filter((f) => f) as ImageFileInfo[])
-    })
+    )
+      .then((fileList) => {
+        addImages(fileList.filter((f) => f) as ImageFileInfo[])
+      })
+      .catch((error) => {
+        console.error('Failed to load image files:', error)
+      })
   }
 
   const handleDrop = (e: React.DragEvent<HTMLElement>): void => {
@@ -110,7 +120,7 @@ const LayerBox: FunctionComponent = () => {
               position: 'fixed',
               left: 0,
               top: 0,
-              zIndex: 999999,
+              zIndex: FULLSCREEN_Z_INDEX,
               width: '100%',
               height: '100%',
             }
@@ -122,7 +132,7 @@ const LayerBox: FunctionComponent = () => {
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          maxHeight: '305px',
+          maxHeight: ACCORDION_MAX_HEIGHT,
           ...(isFullscreen
             ? {
                 maxHeight: 'none',
@@ -178,7 +188,7 @@ const LayerBox: FunctionComponent = () => {
             overflowY: 'auto',
           }}
         >
-          <Box sx={{ minHeight: '224px', height: '100%', width: '100%' }}>
+          <Box sx={{ minHeight: GLYPH_LIST_MIN_HEIGHT, height: '100%', width: '100%' }}>
             <ImageGlyphList />
           </Box>
         </AccordionDetails>

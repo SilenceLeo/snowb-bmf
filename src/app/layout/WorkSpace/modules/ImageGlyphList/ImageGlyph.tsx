@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react'
 import {
   removeImage,
   setImageGlyphLetter,
@@ -21,9 +21,11 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = ({ index }) => {
   const glyph = useImageGlyph(index)
   const [isIME, setIsIME] = useState(false)
   const [inputValue, setInputValue] = useState(glyph?.letter || '')
+  const inputValueRef = useRef(inputValue)
+  inputValueRef.current = inputValue
 
   // Update inputValue when glyph letter changes (e.g., on project load)
-  React.useEffect(() => {
+  useEffect(() => {
     if (glyph?.letter !== undefined) {
       setInputValue(glyph.letter)
     }
@@ -45,8 +47,9 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = ({ index }) => {
 
   const handleCompositionEnd = (): void => {
     setIsIME(false)
-    setInputValue((iv) => iv.slice(0, 1))
-    setImageGlyphLetter(index, inputValue.slice(0, 1))
+    const letter = inputValueRef.current.slice(0, 1)
+    setInputValue(letter)
+    setImageGlyphLetter(index, letter)
   }
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>): void => {

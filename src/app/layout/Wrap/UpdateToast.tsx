@@ -62,6 +62,8 @@ export default function UpdateToast() {
   }, [withLoading, handleError, clearError])
 
   const checkTimerRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+  const stateRef = React.useRef(state)
+  stateRef.current = state
 
   const handleCheckForUpdates = React.useCallback(async () => {
     clearError()
@@ -72,15 +74,16 @@ export default function UpdateToast() {
         ...prev,
         lastUpdateCheck: Date.now(),
       }))
+      clearTimeout(checkTimerRef.current)
       checkTimerRef.current = setTimeout(() => {
-        if (!state.isUpdateReady) {
+        if (!stateRef.current.isUpdateReady) {
           setState((prev) => ({ ...prev, isVisible: false }))
         }
       }, 2000)
     } else {
       handleError('Failed to check for updates')
     }
-  }, [withLoading, handleError, clearError, setState, state.isUpdateReady])
+  }, [withLoading, handleError, clearError, setState])
 
   React.useEffect(() => {
     const handleUpdateVersion = (event: Event & { detail?: any }) => {
@@ -174,6 +177,7 @@ export default function UpdateToast() {
   const getMessage = () => {
     if (updateError) return updateError.message
     if (state.isOfflineReady) return 'App is ready for offline use'
+    if (isUpdating && state.isUpdateReady) return 'Updating to new version...'
     if (state.isUpdateReady)
       return 'New version available, click update to experience now'
     if (isUpdating) return 'Checking for updates...'

@@ -28,6 +28,7 @@ const LetterList: FunctionComponent<LetterListProps> = (
   }
   return (
     <>
+      {/* Items lack unique IDs; letter+index is used since the same letter can appear multiple times */}
       {list.map((item, idx) => {
         const key = `${item.letter}${idx}`
         return (

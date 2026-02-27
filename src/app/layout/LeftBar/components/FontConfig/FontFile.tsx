@@ -12,14 +12,15 @@ import React, { FunctionComponent, useState } from 'react'
 import { addFont, removeFont, useFontResources } from 'src/store/legend'
 import readFile from 'src/utils/readFile'
 
+// Component handles font family selection - file name is FontFile for historical reasons
 const FontFamily: FunctionComponent = () => {
   const [loading, setLoading] = useState(false)
   const fonts = useFontResources()
   const { enqueueSnackbar } = useSnackbar()
 
-  const handleUploadFile = (
+  const handleUploadFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  ): Promise<void> => {
     if (!event || !event.target || !event.target.files?.[0]) {
       return
     }
@@ -32,28 +33,27 @@ const FontFamily: FunctionComponent = () => {
 
     setLoading(true)
 
-    readFile(file)
-      .then((arrBuf) => {
-        if (!(arrBuf instanceof ArrayBuffer)) {
-          setLoading(false)
-          return
-        }
-
-        event.target.value = ''
-
-        addFont(arrBuf)
-          .then(() => setLoading(false))
-          .catch((e) => {
-            setLoading(false)
-            enqueueSnackbar(e.message, { variant: 'error' })
-            Sentry.captureException(e)
-          })
-      })
-      .catch((e) => {
+    try {
+      const arrBuf = await readFile(file)
+      if (!(arrBuf instanceof ArrayBuffer)) {
         setLoading(false)
-        Sentry.captureException(e)
+        return
+      }
+
+      event.target.value = ''
+
+      try {
+        await addFont(arrBuf)
+      } catch (e) {
         enqueueSnackbar((e as Error).message, { variant: 'error' })
-      })
+        Sentry.captureException(e)
+      }
+    } catch (e) {
+      Sentry.captureException(e)
+      enqueueSnackbar((e as Error).message, { variant: 'error' })
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

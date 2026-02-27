@@ -2,10 +2,12 @@ import Button from '@mui/material/Button'
 import { SxProps, Theme } from '@mui/material/styles'
 import * as Sentry from '@sentry/react'
 import { useSnackbar } from 'notistack'
-import React, { FunctionComponent, useRef, useState } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import conversion from 'src/file/conversion'
-import { addProject } from 'src/store/legend'
+import type { DecodedProject } from 'src/store/legend/persistence'
 import readFile from 'src/utils/readFile'
+
+import { openLegendProject } from 'src/utils/persistence'
 
 interface ButtonOpenProps {
   sx?: SxProps<Theme>
@@ -17,8 +19,7 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
   const { sx } = props
   const { enqueueSnackbar } = useSnackbar()
 
-  const labelRef = useRef<HTMLLabelElement>(null)
-  const [inputKey, changeInputKey] = useState(Date.now())
+  const [inputKey, resetInputKey] = useState(Date.now())
 
   const handleLoad = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target?.files?.[0]) {
@@ -28,13 +29,13 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
     const isText = /\.ltr$/.test(file.name)
 
     readFile(file, isText)
-      .then((buffer) => {
+      .then(async (buffer) => {
         try {
-          const project = conversion(buffer)
+          const project = conversion(buffer) as DecodedProject
           if (!project.name) {
             project.name = file.name
           }
-          const result = addProject(project)
+          const result = await openLegendProject(project)
           if (result.status === 1) {
             enqueueSnackbar(
               'The project already exists and has been switched to the current tab.',
@@ -42,17 +43,15 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
             )
           }
         } catch (e) {
-          console.log(e)
           Sentry.captureException(e)
           enqueueSnackbar((e as Error).toString(), { variant: 'error' })
         }
-        changeInputKey(Date.now())
+        resetInputKey(Date.now())
       })
       .catch((e) => {
-        console.log(e)
         Sentry.captureException(e)
         enqueueSnackbar((e as Error).toString(), { variant: 'error' })
-        changeInputKey(Date.now())
+        resetInputKey(Date.now())
       })
   }
 
@@ -61,7 +60,6 @@ const ButtonOpen: FunctionComponent<ButtonOpenProps> = (
       sx={sx}
       title='Open Project (⌘ + O)'
       component='label'
-      ref={labelRef}
     >
       Open
       <input

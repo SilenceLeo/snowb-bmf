@@ -4,6 +4,7 @@ import {
   FunctionComponent,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from 'react'
@@ -13,9 +14,9 @@ import {
   setTransform,
   useBgColor,
   useIsPacking,
-  useLayout,
   usePackCanvases,
-  useUi,
+  usePackDimensions,
+  useUiDimensions,
   useUiTransform,
 } from 'src/store/legend'
 
@@ -24,8 +25,8 @@ const PackCanvas: FunctionComponent = () => {
 
   const isPacking = useIsPacking()
   const { scale, offsetX, offsetY } = useUiTransform()
-  const { width: gridWidth, height: gridHeight } = useUi()
-  const { packWidth, packHeight, page: pageCount } = useLayout()
+  const { width: gridWidth, height: gridHeight } = useUiDimensions()
+  const { packWidth, packHeight, page: pageCount } = usePackDimensions()
   const bgColor = useBgColor()
   const packCanvases = usePackCanvases()
   const canvasRefs = useRef<HTMLCanvasElement[]>([])
@@ -45,22 +46,17 @@ const PackCanvas: FunctionComponent = () => {
     return ready
   }, [pageCount])
 
-  // Pre-allocate canvas refs array when pageCount changes
-  useEffect(() => {
-    // Resize the refs array to match pageCount
+  // Ensure canvas refs array matches pageCount and check readiness after DOM updates.
+  // React guarantees callback refs fire before layout effects, so refs are available here.
+  useLayoutEffect(() => {
     if (canvasRefs.current.length !== pageCount) {
       const newRefs = new Array(pageCount)
-      // Copy existing refs that are still valid
       for (let i = 0; i < Math.min(canvasRefs.current.length, pageCount); i++) {
         newRefs[i] = canvasRefs.current[i]
       }
       canvasRefs.current = newRefs
     }
-
-    // Reset refs ready state when pageCount changes
-    setRefsReady(false)
-    // Check if refs are immediately ready (in case DOM elements already exist)
-    setTimeout(() => checkRefsReady(), 0)
+    checkRefsReady()
   }, [pageCount, checkRefsReady])
 
   // Calculate grid layout for canvas positioning
@@ -74,7 +70,7 @@ const PackCanvas: FunctionComponent = () => {
       offsetX: ox + ix / s,
       offsetY: oy + iy / s,
     })
-  }, [])
+  })
 
   useWheel(
     domRef,
@@ -89,7 +85,6 @@ const PackCanvas: FunctionComponent = () => {
         scale: s,
       })
     },
-    [],
   )
 
   useEffect(() => {
@@ -170,6 +165,7 @@ const PackCanvas: FunctionComponent = () => {
           transform: `scale(${scale}) translate(${offsetX}px,${offsetY}px)`,
         }}
       >
+        {/* Pages are identified by their index position; there is no unique page ID */}
         {Array.from({ length: pageCount }).map((_, pageIndex) => {
           const col = pageIndex % cols
           const row = Math.floor(pageIndex / cols)

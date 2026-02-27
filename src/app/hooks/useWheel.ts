@@ -10,10 +10,13 @@ interface WheelCallback {
   (deltaInfo: DeltaInfo): void
 }
 
+const WHEEL_SCALE_FACTOR = -0.01 // Sensitivity factor for wheel-to-zoom conversion
+const TRACKPAD_THRESHOLD = 50 // deltaY values above this indicate a mouse wheel (not trackpad)
+const TRACKPAD_DAMPING = 0.1 // Additional damping for mouse wheel to avoid excessive zoom
+
 function useWheel(
   ref: RefObject<HTMLElement | null>,
   onWheel: WheelCallback,
-  _deps: unknown[] = [],
 ): void {
   const callbackRef = useRef(onWheel)
   callbackRef.current = onWheel
@@ -23,13 +26,13 @@ function useWheel(
     e.stopPropagation()
     const { ctrlKey, altKey, deltaX, deltaY } = e
     if (ctrlKey) {
-      let d = -0.01
-      if (Math.abs(deltaY) > 50) d *= 0.1
+      let d = WHEEL_SCALE_FACTOR
+      if (Math.abs(deltaY) > TRACKPAD_THRESHOLD) d *= TRACKPAD_DAMPING
       callbackRef.current({ deltaScale: deltaY * d, deltaX: 0, deltaY: 0 })
     } else {
       let x = -deltaX
       let y = -deltaY
-      if (deltaX === 0 && altKey && Math.abs(deltaY) > 50) {
+      if (deltaX === 0 && altKey && Math.abs(deltaY) > TRACKPAD_THRESHOLD) {
         x = -deltaY
         y = 0
       }

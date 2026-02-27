@@ -28,6 +28,11 @@ import {
 
 import ConfigSection from '../../../components/ConfigSection'
 
+// 0: outer, 1: middle, 2: inner — matches strokePosition values in styleStore
+const STROKE_OUTER = 0
+const STROKE_MIDDLE = 1
+const STROKE_INNER = 2
+
 const StrokeConfig: FunctionComponent = () => {
   const stroke = useStroke()
   const useStrokeValue = useStrokeEnabled()
@@ -98,20 +103,22 @@ const StrokeConfig: FunctionComponent = () => {
           <GridInput before='Type:' component='div' childrenWidth={8}>
             <ButtonGroup size='small' color='primary'>
               <Button
-                onClick={() => setStrokeType(0)}
-                variant={strokeType === 0 ? 'contained' : 'outlined'}
+                onClick={() => setStrokeType(STROKE_OUTER)}
+                variant={strokeType === STROKE_OUTER ? 'contained' : 'outlined'}
               >
                 Outer
               </Button>
               <Button
-                onClick={() => setStrokeType(1)}
-                variant={strokeType === 1 ? 'contained' : 'outlined'}
+                onClick={() => setStrokeType(STROKE_MIDDLE)}
+                variant={
+                  strokeType === STROKE_MIDDLE ? 'contained' : 'outlined'
+                }
               >
                 Middle
               </Button>
               <Button
-                onClick={() => setStrokeType(2)}
-                variant={strokeType === 2 ? 'contained' : 'outlined'}
+                onClick={() => setStrokeType(STROKE_INNER)}
+                variant={strokeType === STROKE_INNER ? 'contained' : 'outlined'}
               >
                 Inner
               </Button>

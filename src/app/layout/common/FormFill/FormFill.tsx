@@ -91,8 +91,6 @@ const FormFill: FunctionComponent<FormFillProps> = ({
       {type === FillType.IMAGE ? (
         <FormImage
           patternTexture={patternTexture}
-          src={patternTexture.src}
-          scale={patternTexture.scale}
           onImageChange={onPatternImageChange}
           onRepetitionChange={onPatternRepetitionChange}
           onScaleChange={onPatternScaleChange}

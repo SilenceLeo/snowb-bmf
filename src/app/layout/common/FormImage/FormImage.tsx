@@ -16,8 +16,6 @@ import FileSelector from './FileSelector'
 
 interface FormImageProps {
   patternTexture: PatternTextureData
-  scale: number
-  src: string
   // Optional action overrides (for stroke mode)
   onImageChange?: (buffer: ArrayBuffer) => void
   onRepetitionChange?: (repetition: Repetition) => void
@@ -26,13 +24,11 @@ interface FormImageProps {
 
 const FormImage: FunctionComponent<FormImageProps> = ({
   patternTexture,
-  scale,
-  src,
   onImageChange,
   onRepetitionChange,
   onScaleChange,
 }) => {
-  const { repetition } = patternTexture
+  const { scale, src, repetition } = patternTexture
 
   // Use provided callbacks or default to fill actions
   const handleImageChange = onImageChange || setPatternImage

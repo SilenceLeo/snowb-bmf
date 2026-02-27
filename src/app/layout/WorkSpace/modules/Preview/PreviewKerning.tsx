@@ -1,4 +1,3 @@
-import { useSelector } from '@legendapp/state/react'
 import Box from '@mui/material/Box'
 import Input from '@mui/material/Input'
 import Typography from '@mui/material/Typography'
@@ -9,9 +8,9 @@ import {
   setKerning,
   useFontSize,
   useGlyphForLetter,
+  useGlyphKerning,
   useSelectLetter,
 } from 'src/store/legend'
-import { glyphStore$ } from 'src/store/legend/glyphStore'
 
 const PreviewKerning: FunctionComponent = () => {
   const { selectLetter, selectNextLetter } = useSelectLetter()
@@ -19,13 +18,7 @@ const PreviewKerning: FunctionComponent = () => {
   const fontSize = useFontSize()
   const [offset, setOffset] = useState(0)
 
-  // Reactively get kerning value from store via useSelector
-  const currentKerning = useSelector(() => {
-    if (!glyph || !selectNextLetter) return 0
-    const glyphData = glyphStore$.glyphs[glyph.letter].get()
-    if (!glyphData?.kerning) return 0
-    return (glyphData.kerning as Record<string, number>)[selectNextLetter] ?? 0
-  })
+  const currentKerning = useGlyphKerning(glyph?.letter, selectNextLetter)
 
   // Calculate the opentype kerning offset between the two letters
   useEffect(() => {

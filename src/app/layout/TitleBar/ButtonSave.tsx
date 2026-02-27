@@ -25,6 +25,7 @@ const ButtonSave: FunctionComponent<ButtonSaveProps> = (
       e.preventDefault()
       try {
         const project = serializeProject()
+        // Type assertion needed: serializeProject() returns observable-derived type, encode() expects plain Project interface
         const buffer = encode(project as unknown as Project)
         saveAs(new Blob([buffer as BlobPart]), `${project.name}.sbf`)
       } catch (e) {
@@ -36,10 +37,9 @@ const ButtonSave: FunctionComponent<ButtonSaveProps> = (
   )
 
   useEffect(() => {
-    hotkeys.unbind('ctrl+s')
-    hotkeys('ctrl+s', handleSaveProject)
+    hotkeys('ctrl+s,command+s', handleSaveProject)
     return () => {
-      hotkeys.unbind('ctrl+s')
+      hotkeys.unbind('ctrl+s,command+s', handleSaveProject)
     }
   }, [handleSaveProject])
 

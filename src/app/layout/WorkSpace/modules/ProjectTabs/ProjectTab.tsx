@@ -5,7 +5,6 @@ import { svgIconClasses } from '@mui/material/SvgIcon'
 import { useTheme } from '@mui/material/styles'
 import React, {
   type FunctionComponent,
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -91,25 +90,16 @@ const ProjectTab: FunctionComponent<ProjectTabProps> = (props) => {
 
   const prevEditorRef = useRef(false)
 
-  const stableOnRename = useCallback(
-    (name: string, val: number) => {
-      if (onRename) {
-        onRename(name, val)
-      }
-    },
-    [onRename],
-  )
-
   useEffect(() => {
     if (editor && editorRef.current) {
       editorRef.current.focus()
     }
     // Only call onRename when editor transitions from true to false
     if (prevEditorRef.current && !editor) {
-      stableOnRename(sName, value)
+      onRename?.(sName, value)
     }
     prevEditorRef.current = editor
-  }, [editor, stableOnRename, sName, value])
+  }, [editor, onRename, sName, value])
 
   useEffect(() => {
     setSName(name)
