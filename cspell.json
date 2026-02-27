@@ -8,6 +8,8 @@
     "computeds",
     "debouncer",
     "fallbackfont",
+    "gpos",
+    "GPOS",
     "hhea",
     "hocs",
     "kering",
@@ -25,10 +27,12 @@
     "seti",
     "snowb",
     "snowbamboo",
+    "trackpad",
     "VITE",
     "vmax",
     "vmin",
     "xadvance",
+    "REINIT",
     "العربية"
   ],
   "ignorePaths": [

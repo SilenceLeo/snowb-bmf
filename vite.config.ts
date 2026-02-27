@@ -63,7 +63,7 @@ export default defineConfig(({}) => ({
   // Build configuration
   build: {
     outDir: 'build',
-    sourcemap: true,
+    sourcemap: 'hidden',
     // Build target
     target: 'es2020',
     // Code splitting optimization
@@ -108,7 +108,6 @@ export default defineConfig(({}) => ({
   
   // esbuild configuration
   esbuild: {
-    // Support TypeScript decorators
     target: 'es2020',
   },
   
@@ -123,9 +122,6 @@ export default defineConfig(({}) => ({
       '@emotion/styled',
       '@mui/material',
       'color',
-    ],
-    exclude: [
-      // Exclude packages that may cause issues
     ],
   },
   

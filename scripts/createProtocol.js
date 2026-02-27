@@ -122,7 +122,7 @@ async function generateAllProtocolBuffers() {
     for (const result of generatedFiles) {
       // Version files
       const versionDir = path.dirname(result.jsFile)
-      await execAsync(`${prettierPath} --write ${versionDir}/*.{ts,js}`)
+      await execAsync(`${prettierPath} --write "${versionDir}"/*.{ts,js}`)
       
       // Fix $root caching issue after formatting
       const jsContent = await fs.readFile(result.jsFile, 'utf8')
@@ -133,6 +133,8 @@ async function generateAllProtocolBuffers() {
         const fixedContent = jsContent.replace(originalLine, replacementLine)
         await fs.writeFile(result.jsFile, fixedContent)
         console.log(`Fixed $root caching in ${path.basename(versionDir)}`)
+      } else {
+        console.warn('Warning: Expected $root pattern not found in generated file. protobufjs output format may have changed.')
       }
     }
 

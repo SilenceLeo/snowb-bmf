@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "format": "prettier --write src/**/*.{ts,js,tsx} types/**/*.ts",
-    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint src/",
     "lint:fix": "yarn lint --fix",
     "lint:check": "yarn lint --max-warnings 0",
     "pb": "node scripts/createProtocol.js",
