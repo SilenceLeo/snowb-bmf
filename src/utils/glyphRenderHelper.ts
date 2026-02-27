@@ -33,7 +33,6 @@ export type FontConfig = FontRenderConfig
 const CANVAS_2D_OPTIONS: CanvasRenderingContext2DSettings = {
   willReadFrequently: true,
   alpha: true,
-  colorSpace: 'srgb',
 }
 
 export function createCanvas2D(): {

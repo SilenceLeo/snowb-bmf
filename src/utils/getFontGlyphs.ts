@@ -46,8 +46,18 @@ export default function getFontGlyphs(text: string[], config: Config) {
 
   trimGlyphs(text, map, ctx, layout)
 
+  // Copy to a clean canvas without willReadFrequently
+  // to ensure Safari compatibility when used as drawImage source
+  const cleanCanvas = document.createElement('canvas')
+  cleanCanvas.width = canvas.width
+  cleanCanvas.height = canvas.height
+  const cleanCtx = cleanCanvas.getContext('2d')
+  if (cleanCtx) {
+    cleanCtx.drawImage(canvas, 0, 0)
+  }
+
   return {
-    canvas,
+    canvas: cleanCanvas,
     glyphs: map,
   }
 }

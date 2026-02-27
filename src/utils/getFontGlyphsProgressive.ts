@@ -90,7 +90,7 @@ export default async function getFontGlyphsProgressive(
       signal,
     })
 
-    return { canvas: result.canvas, glyphs: map }
+    return { canvas: copyToCleanCanvas(result.canvas), glyphs: map }
   }
 
   await processTrimmingBatched(text, map, ctx, layout, {
@@ -99,7 +99,22 @@ export default async function getFontGlyphsProgressive(
     signal,
   })
 
-  return { canvas, glyphs: map }
+  return { canvas: copyToCleanCanvas(canvas), glyphs: map }
+}
+
+/**
+ * Copy to a clean canvas without willReadFrequently
+ * to ensure Safari compatibility when used as drawImage source
+ */
+function copyToCleanCanvas(source: HTMLCanvasElement): HTMLCanvasElement {
+  const clean = document.createElement('canvas')
+  clean.width = source.width
+  clean.height = source.height
+  const ctx = clean.getContext('2d')
+  if (ctx) {
+    ctx.drawImage(source, 0, 0)
+  }
+  return clean
 }
 
 async function processTrimmingBatched(
