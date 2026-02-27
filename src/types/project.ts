@@ -18,7 +18,7 @@ export interface Project {
   glyphs: Record<string, FontGlyphData>
   glyphImages: Array<{
     letter: string
-    adjustMetric?: { xAdvance: number; xOffset: number; yOffset: number }
+    adjustMetric?: MetricData
     kerning?: Record<string, number>
     buffer?: Uint8Array | ArrayBuffer
     fileName?: string

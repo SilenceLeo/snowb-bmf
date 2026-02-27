@@ -8,7 +8,7 @@
  * - Shadow configuration
  * - Background color
  */
-import { batch, observable } from '@legendapp/state'
+import { batch, opaqueObject, observable } from '@legendapp/state'
 import type { Font as OpenType } from 'opentype.js'
 import { parse } from 'opentype.js'
 import {
@@ -26,7 +26,7 @@ import getFontBaselinesFromCanvas from 'src/utils/getFontBaselinesFromCanvas'
 import getFontBaselinesFromMetrics from 'src/utils/getFontBaselinesFromMetrics'
 import updateFontFace from 'src/utils/updateFontFace'
 
-import { createFillSetters } from './styleSetterFactory'
+import { createFillSetters, resetPatternImages } from './styleSetterFactory'
 
 // ============================================================================
 // Re-export shared types for backward compatibility
@@ -107,7 +107,6 @@ function createDefaultGradient(): GradientData {
 function createDefaultPatternTexture(): PatternTextureData {
   return {
     buffer: base64ToArrayBuffer(DEFAULT_IMAGE_BASE64),
-    image: null,
     src: '',
     repetition: 'repeat',
     scale: 1,
@@ -185,6 +184,10 @@ export const styleStore$ = observable<StyleStoreState>({
   style: createDefaultStyle(),
   globalAdjustMetric: createDefaultMetric(),
 })
+
+// Track whether lineHeight has been manually set by the user.
+// When false, updateBaselines() will auto-update lineHeight from font metrics.
+let lineHeightManuallySet = false
 
 // ============================================================================
 // Font Management
@@ -276,8 +279,8 @@ export function updateBaselines(): void {
   }
 
   batch(() => {
-    const currentLineHeight = styleStore$.style.font.lineHeight.get()
-    if (currentLineHeight === 1.25) {
+    // Only auto-update lineHeight if the user hasn't manually set it
+    if (!lineHeightManuallySet) {
       styleStore$.style.font.lineHeight.set(bls.lineHeight)
     }
     styleStore$.style.font.middle.set(bls.middle)
@@ -317,14 +320,18 @@ export async function addFont(fontBuffer: ArrayBuffer): Promise<void> {
   const url = URL.createObjectURL(new Blob([fontBuffer]))
   await updateFontFace(family, url)
 
+  // Re-check after async operation to prevent concurrent duplicates.
+  // Note: updateFontFace overwrites the single <style> element each time,
+  // so the stale @font-face rule is already replaced. Only the Object URL
+  // needs cleanup here.
   const currentFonts = styleStore$.style.font.fonts.get()
+  if (currentFonts.find((f) => f.family === family)) {
+    URL.revokeObjectURL(url)
+    throw new Error('Font already exists.')
+  }
   styleStore$.style.font.fonts.set([
     ...currentFonts,
-    {
-      font: fontBuffer,
-      family,
-      opentype,
-    },
+    { font: opaqueObject(fontBuffer), family, opentype: opaqueObject(opentype) },
   ])
 
   updateBaselines()
@@ -360,6 +367,7 @@ export function setFontSize(size: number): void {
  * Set line height
  */
 export function setLineHeight(lineHeight: number): void {
+  lineHeightManuallySet = true
   styleStore$.style.font.lineHeight.set(lineHeight)
 }
 
@@ -514,6 +522,10 @@ export function setGlobalYOffset(yOffset: number): void {
  * Initialize style store with data
  */
 export function initializeStyleStore(data: Partial<StyleStoreState>): void {
+  // Reset lineHeight manual flag; if saved data has a lineHeight value,
+  // treat it as a user-set value to preserve it across baseline updates
+  lineHeightManuallySet = data.style?.font?.lineHeight !== undefined
+
   batch(() => {
     if (data.style) {
       // Deep merge style data
@@ -585,6 +597,9 @@ export function resetStyleStore(): void {
   if (fillSrc) URL.revokeObjectURL(fillSrc)
   const strokeSrc = styleStore$.style.stroke.patternTexture.src.get()
   if (strokeSrc) URL.revokeObjectURL(strokeSrc)
+
+  lineHeightManuallySet = false
+  resetPatternImages()
 
   batch(() => {
     styleStore$.style.set(createDefaultStyle())

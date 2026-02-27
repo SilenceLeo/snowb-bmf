@@ -43,7 +43,6 @@ export type Repetition = 'repeat' | 'repeat-x' | 'repeat-y' | 'no-repeat'
 
 /** Pattern texture data for rendering (subset needed by canvas operations) */
 export interface PatternTextureRenderData {
-  image: HTMLImageElement | null
   repetition: Repetition | string
   scale: number
 }
@@ -90,6 +89,7 @@ export interface FillRenderConfig {
   color: string
   gradient: GradientRenderData
   patternTexture: PatternTextureRenderData
+  patternImage?: HTMLImageElement | null
 }
 
 // ============================================================================

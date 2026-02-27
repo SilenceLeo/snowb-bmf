@@ -17,6 +17,12 @@ export const DEFAULT_PROJECT_TEXT =
 // Store State
 // ============================================================================
 
+// Timer IDs are kept as module-level variables rather than in the observable
+// because they are opaque handles (not serializable state) and should not
+// trigger reactive updates when changed.
+let packTimerId = 0
+let packLastExecuteTime = 0
+
 /**
  * Project state
  */
@@ -26,12 +32,6 @@ export const projectStore$ = observable({
     id: 0,
     name: 'Unnamed',
     text: DEFAULT_PROJECT_TEXT,
-  },
-
-  // Timing state (for throttling)
-  timing: {
-    packStart: 0,
-    packTimer: 0,
   },
 
   // Initialization state
@@ -87,41 +87,40 @@ export function getProjectText(): string {
 // ============================================================================
 
 /**
- * Update pack timing
+ * Update pack last execution time
  */
-export function setPackStart(time: number): void {
-  projectStore$.timing.packStart.set(time)
+export function setPackLastExecuteTime(time: number): void {
+  packLastExecuteTime = time
 }
 
 /**
- * Get pack start time
+ * Get pack last execution time
  */
-export function getPackStart(): number {
-  return projectStore$.timing.packStart.get()
+export function getPackLastExecuteTime(): number {
+  return packLastExecuteTime
 }
 
 /**
  * Set pack timer ID
  */
 export function setPackTimer(timerId: number): void {
-  projectStore$.timing.packTimer.set(timerId)
+  packTimerId = timerId
 }
 
 /**
  * Get pack timer ID
  */
 export function getPackTimer(): number {
-  return projectStore$.timing.packTimer.get()
+  return packTimerId
 }
 
 /**
  * Clear pack timer
  */
 export function clearPackTimer(): void {
-  const timerId = projectStore$.timing.packTimer.get()
-  if (timerId) {
-    window.clearTimeout(timerId)
-    projectStore$.timing.packTimer.set(0)
+  if (packTimerId) {
+    window.clearTimeout(packTimerId)
+    packTimerId = 0
   }
 }
 
@@ -153,13 +152,12 @@ export function isInitializing(): boolean {
 export function resetProjectStore(): void {
   // Clear any pending pack timer before resetting
   clearPackTimer()
+  packLastExecuteTime = 0
 
   batch(() => {
     projectStore$.current.id.set(0)
     projectStore$.current.name.set('Unnamed')
     projectStore$.current.text.set(DEFAULT_PROJECT_TEXT)
-    projectStore$.timing.packStart.set(0)
-    projectStore$.timing.packTimer.set(0)
     projectStore$.initialization.isInitializing.set(false)
   })
 }

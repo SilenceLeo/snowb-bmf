@@ -65,8 +65,7 @@ export function getCurrentProject(): ProjectMeta | null {
  * Get named list of all projects (for UI display)
  */
 export function getNamedList(): ProjectMeta[] {
-  const projectList = workspaceStore$.workspace.projectList.get()
-  return Object.values(projectList)
+  return Object.values(workspaceStore$.workspace.projectList.get())
 }
 
 /**
@@ -88,7 +87,10 @@ export function hasProject(id: number): boolean {
 // ============================================================================
 
 /**
- * Select a project by ID
+ * Select a project by ID (metadata only — does NOT swap store data).
+ * @deprecated Use `switchLegendProject()` from `src/utils/persistence` instead.
+ * Direct use will skip saving the current project and deserializing the target.
+ * @internal Retained for use by `switchLegendProject` internals.
  */
 export function selectProject(id: number): void {
   if (hasProject(id)) {
@@ -112,7 +114,10 @@ export function addProject(project: Partial<ProjectMeta> = {}): {
     return { status: 1, id: project.id }
   }
 
-  // Generate unique name if not provided
+  // Generate unique name if not provided.
+  // Naming convention: first project is "Unnamed", subsequent ones are
+  // "Unnamed-1", "Unnamed-2", etc. The suffix is determined by finding
+  // the highest existing numeric suffix among "Unnamed" projects.
   let name = project.name || 'Unnamed'
   if (!project.name) {
     const namedList: number[] = []
@@ -139,7 +144,11 @@ export function addProject(project: Partial<ProjectMeta> = {}): {
 }
 
 /**
- * Remove a project by ID
+ * Remove a project by ID (metadata only — does NOT handle data switching).
+ * @deprecated Use `removeLegendProject()` from `src/utils/persistence` instead.
+ * Direct use will skip saving the current project and switching store data
+ * when removing the active project.
+ * @internal Retained for backward compatibility.
  */
 export function removeProject(id: number): void {
   const namedList = getNamedList().filter((item) => item.id !== id)

@@ -1,7 +1,7 @@
 import { useSelector } from '@legendapp/state/react'
 import { useRef } from 'react'
 
-import { glyphStore$ } from './glyphStore'
+import { getSourceCanvas, glyphStore$ } from './glyphStore'
 import { projectStore$ } from './projectStore'
 import { type LayoutData, layoutStore$ } from './stores/layoutStore'
 import {
@@ -62,7 +62,7 @@ function useSelectorShallow<T extends Record<string, unknown>>(
  */
 function useArrayShallow<T>(
   current: T[],
-  prevRef: React.RefObject<T[] | undefined>,
+  prevRef: React.MutableRefObject<T[] | undefined>,
 ): T[] {
   const prev = prevRef.current
   if (
@@ -121,15 +121,33 @@ export function useGlyphDimensions(letter: string): {
 }
 
 export function useGlyphLetters(): string[] {
-  return useSelector(() => Object.keys(glyphStore$.glyphs.get()))
+  const prevRef = useRef<string[] | undefined>(undefined)
+  const result = useSelector(() => Object.keys(glyphStore$.glyphs.get()))
+  return useArrayShallow(result, prevRef)
 }
 
 export function useGlyphCount(): number {
   return useSelector(() => Object.keys(glyphStore$.glyphs.get()).length)
 }
 
+export function useGlyphDataVersion(): number {
+  return useSelector(() => glyphStore$.glyphDataVersion.get())
+}
+
 export function useAllGlyphs(): Record<string, FontGlyphData> {
   return useSelector(() => glyphStore$.glyphs.get())
+}
+
+export function useGlyphKerning(
+  letter: string | undefined,
+  nextLetter: string | undefined,
+): number {
+  return useSelector(() => {
+    if (!letter || !nextLetter) return 0
+    const glyphData = glyphStore$.glyphs[letter]?.get()
+    if (!glyphData?.kerning) return 0
+    return glyphData.kerning[nextLetter] ?? 0
+  })
 }
 
 // Image Glyph Hooks
@@ -161,7 +179,10 @@ export function usePackCanvases(): HTMLCanvasElement[] {
 }
 
 export function useSourceCanvas(): HTMLCanvasElement | null {
-  return useSelector(() => glyphStore$.packing.sourceCanvas.get())
+  // Observe sourceCanvasVersion to trigger re-renders,
+  // then return the module-level canvas reference
+  useSelector(() => glyphStore$.packing.sourceCanvasVersion.get())
+  return getSourceCanvas()
 }
 
 // Project State Hooks
@@ -255,6 +276,24 @@ export function useStyle(): StyleData {
 
 export function useFont(): FontData {
   return useSelector(() => styleStore$.style.font.get())
+}
+
+export function useFontBaselines(): {
+  middle: number
+  hanging: number
+  top: number
+  alphabetic: number
+  ideographic: number
+  bottom: number
+} {
+  return useSelectorShallow(() => ({
+    middle: styleStore$.style.font.middle.get(),
+    hanging: styleStore$.style.font.hanging.get(),
+    top: styleStore$.style.font.top.get(),
+    alphabetic: styleStore$.style.font.alphabetic.get(),
+    ideographic: styleStore$.style.font.ideographic.get(),
+    bottom: styleStore$.style.font.bottom.get(),
+  }))
 }
 
 export function useFontSize(): number {
@@ -361,10 +400,37 @@ export function usePageCount(): number {
   return useSelector(() => layoutStore$.layout.page.get())
 }
 
+export function usePackDimensions(): {
+  packWidth: number
+  packHeight: number
+  page: number
+} {
+  return useSelectorShallow(() => ({
+    packWidth: layoutStore$.layout.packWidth.get(),
+    packHeight: layoutStore$.layout.packHeight.get(),
+    page: layoutStore$.layout.page.get(),
+  }))
+}
+
 // UI Hooks
 
 export function useUi(): UiData {
   return useSelector(() => uiStore$.ui.get())
+}
+
+export function useUiDimensions(): { width: number; height: number } {
+  return useSelectorShallow(() => ({
+    width: uiStore$.ui.width.get(),
+    height: uiStore$.ui.height.get(),
+  }))
+}
+
+export function useScale(): number {
+  return useSelector(() => uiStore$.ui.scale.get())
+}
+
+export function usePreviewScale(): number {
+  return useSelector(() => uiStore$.ui.previewScale.get())
 }
 
 export function usePreviewText(): string {
@@ -424,9 +490,11 @@ export function useActiveProjectId(): number {
 }
 
 export function useProjectList(): ProjectMeta[] {
-  return useSelector(() =>
+  const prevRef = useRef<ProjectMeta[] | undefined>(undefined)
+  const result = useSelector(() =>
     Object.values(workspaceStore$.workspace.projectList.get()),
   )
+  return useArrayShallow(result, prevRef)
 }
 
 export function useProjectCount(): number {

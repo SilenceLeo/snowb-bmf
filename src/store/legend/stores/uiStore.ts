@@ -47,6 +47,8 @@ export interface UiStoreState {
 // Default Values
 // ============================================================================
 
+export const DEFAULT_PREVIEW_TEXT = 'Hello World!\nHello Snow Bamboo!'
+
 function createDefaultUi(): UiData {
   return {
     scale: 1,
@@ -54,7 +56,7 @@ function createDefaultUi(): UiData {
     offsetY: 0,
     width: 512,
     height: 512,
-    previewText: 'Hello World!\nHello Snow Bamboo!',
+    previewText: DEFAULT_PREVIEW_TEXT,
     showPreview: false,
     previewScale: 1,
     previewOffsetX: 0,
@@ -80,6 +82,8 @@ export const uiStore$ = observable<UiStoreState>({
 /**
  * Constrain offset values within valid bounds
  */
+const MAX_SCALE = 100
+
 function constrainOffset(
   offsetX: number,
   offsetY: number,
@@ -90,7 +94,7 @@ function constrainOffset(
   return {
     offsetX: Math.min(Math.max(width / -2, offsetX), width / 2),
     offsetY: Math.min(Math.max(height / -2, offsetY), height / 2),
-    scale: Math.max(scale, 0.01),
+    scale: Math.min(Math.max(scale, 0.01), MAX_SCALE),
   }
 }
 
@@ -154,7 +158,7 @@ export function setSize(width: number, height: number): void {
  * Set scale only
  */
 export function setScale(scale: number): void {
-  uiStore$.ui.scale.set(Math.max(scale, 0.01))
+  uiStore$.ui.scale.set(Math.min(Math.max(scale, 0.01), MAX_SCALE))
 }
 
 /**
@@ -205,7 +209,7 @@ export function setPreviewTransform(trans: {
 }): void {
   batch(() => {
     if (trans.previewScale !== undefined) {
-      uiStore$.ui.previewScale.set(Math.max(trans.previewScale, 0.01))
+      uiStore$.ui.previewScale.set(Math.min(Math.max(trans.previewScale, 0.01), MAX_SCALE))
     }
     if (trans.previewOffsetX !== undefined) {
       uiStore$.ui.previewOffsetX.set(trans.previewOffsetX)
@@ -220,7 +224,7 @@ export function setPreviewTransform(trans: {
  * Set preview scale
  */
 export function setPreviewScale(scale: number): void {
-  uiStore$.ui.previewScale.set(Math.max(scale, 0.01))
+  uiStore$.ui.previewScale.set(Math.min(Math.max(scale, 0.01), MAX_SCALE))
 }
 
 /**

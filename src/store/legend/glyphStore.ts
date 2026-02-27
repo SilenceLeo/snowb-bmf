@@ -21,6 +21,22 @@ import type {
 } from './types'
 
 // ============================================================================
+// Module-level DOM element storage
+// HTMLCanvasElement is kept outside the observable to avoid Legend State
+// "[legend-state] Set an HTMLElement into state" warnings.
+// The observable uses a version counter to trigger reactivity.
+// ============================================================================
+
+let _sourceCanvas: HTMLCanvasElement | null = null
+
+/**
+ * Get the source canvas (stored outside observable).
+ */
+export function getSourceCanvas(): HTMLCanvasElement | null {
+  return _sourceCanvas
+}
+
+// ============================================================================
 // Store State
 // ============================================================================
 
@@ -38,9 +54,13 @@ export const glyphStore$ = observable({
   packing: {
     isPacking: false,
     isRenderingGlyphs: false,
-    sourceCanvas: null as HTMLCanvasElement | null,
-    packCanvases: [] as HTMLCanvasElement[],
+    sourceCanvasVersion: 0,
+    packCanvases: opaqueObject([] as HTMLCanvasElement[]),
   },
+
+  // Version counter: increments on glyph data changes (dimensions/style),
+  // but NOT on position-only changes (x, y, page from packing).
+  glyphDataVersion: 0,
 })
 
 // ============================================================================
@@ -204,16 +224,17 @@ export function batchUpdateGlyphPositions(
   const startTime = DEBUG_CONFIG.logBatchUpdates ? performance.now() : 0
 
   batch(() => {
-    // Pre-build index map for O(1) image glyph lookups (avoids O(n*m) in loop)
+    // Pre-build index map for O(1) image glyph lookups using uid as key
+    // to correctly handle multiple image glyphs with the same letter
     const imageGlyphs = glyphStore$.imageGlyphs.get()
     const imageIndexMap = new Map<string, number>()
     imageGlyphs.forEach((img, i) => {
-      if (img.selected) imageIndexMap.set(img.letter, i)
+      if (img.selected) imageIndexMap.set(img.uid, i)
     })
 
-    updates.forEach(({ letter, x, y, page, type }) => {
-      if (type === 'image') {
-        const index = imageIndexMap.get(letter)
+    updates.forEach(({ letter, x, y, page, type, uid }) => {
+      if (type === 'image' && uid) {
+        const index = imageIndexMap.get(uid)
         if (index !== undefined) {
           glyphStore$.imageGlyphs[index].x.set(x)
           glyphStore$.imageGlyphs[index].y.set(y)
@@ -316,13 +337,32 @@ export function batchUpdateGlyphInfo(updates: GlyphInfoUpdate[]): void {
         glyph.canvasY.set(update.canvasY)
       }
     })
+    // Increment inside batch for single notification
+    glyphStore$.glyphDataVersion.set(glyphStore$.glyphDataVersion.get() + 1)
   })
 
   if (DEBUG_CONFIG.logBatchUpdates) {
     const duration = performance.now() - startTime
-    console.log(
-      `[GlyphStore] Batch glyph info update: ${updates.length} glyphs in ${duration.toFixed(2)}ms`,
-    )
+    if (duration > PERFORMANCE_THRESHOLDS.BATCH_UPDATE_WARN) {
+      console.warn(
+        `[GlyphStore] Batch glyph info update took ${duration.toFixed(2)}ms for ${updates.length} glyphs`,
+      )
+    } else {
+      console.log(
+        `[GlyphStore] Batch glyph info update: ${updates.length} glyphs in ${duration.toFixed(2)}ms`,
+      )
+    }
+  }
+}
+
+/**
+ * Release GPU memory held by a canvas by zeroing its dimensions.
+ * Browsers release the backing GPU texture when width/height become 0.
+ */
+function releaseCanvas(canvas: HTMLCanvasElement | null): void {
+  if (canvas) {
+    canvas.width = 0
+    canvas.height = 0
   }
 }
 
@@ -345,16 +385,29 @@ export function setRenderingState(isRendering: boolean): void {
 }
 
 /**
- * Set source canvas
+ * Set source canvas (stored in module-level variable, not in observable)
  */
 export function setSourceCanvas(canvas: HTMLCanvasElement | null): void {
-  glyphStore$.packing.sourceCanvas.set(canvas ? opaqueObject(canvas) : null)
+  if (_sourceCanvas && _sourceCanvas !== canvas) {
+    releaseCanvas(_sourceCanvas)
+  }
+  _sourceCanvas = canvas
+  glyphStore$.packing.sourceCanvasVersion.set(
+    glyphStore$.packing.sourceCanvasVersion.get() + 1,
+  )
 }
 
 /**
  * Set pack canvases
  */
 export function setPackCanvases(canvases: HTMLCanvasElement[]): void {
+  const oldCanvases = glyphStore$.packing.packCanvases.get()
+  if (oldCanvases && oldCanvases.length > 0) {
+    const newSet = new Set(canvases)
+    oldCanvases.forEach((c) => {
+      if (!newSet.has(c)) releaseCanvas(c)
+    })
+  }
   glyphStore$.packing.packCanvases.set(opaqueObject(canvases))
 }
 
@@ -399,7 +452,9 @@ export function getGlyphList(
   text: string,
 ): Array<FontGlyphData | ImageGlyphData> {
   // Prepend space to ensure space glyph is always included in bitmap font
-  return Array.from(` ${text}`)
+  // Deduplicate characters to avoid processing the same glyph multiple times
+  const uniqueChars = [...new Set(Array.from(` ${text}`))]
+  return uniqueChars
     .map((letter) => getGlyphForLetter(letter))
     .filter((g): g is FontGlyphData | ImageGlyphData => g !== undefined)
 }
@@ -418,6 +473,7 @@ export function getRectangleList(
   height: number
   x: number
   y: number
+  uid?: string
 }> {
   const glyphList = getGlyphList(text)
 
@@ -430,6 +486,7 @@ export function getRectangleList(
       height: isNotEmpty ? glyph.height + padding * 2 + spacing : 0,
       x: 0,
       y: 0,
+      ...(glyph.type === 'image' && 'uid' in glyph ? { uid: glyph.uid } : {}),
     }
   })
 }
@@ -469,12 +526,29 @@ export function observePackingState(
  * Reset glyph store to initial state
  */
 export function resetGlyphStore(): void {
+  // Release GPU memory before clearing references
+  releaseCanvas(_sourceCanvas)
+  _sourceCanvas = null
+  const packCanvases = glyphStore$.packing.packCanvases.get()
+  if (packCanvases) packCanvases.forEach(releaseCanvas)
+
   batch(() => {
     glyphStore$.glyphs.set({})
     glyphStore$.imageGlyphs.set([])
     glyphStore$.packing.isPacking.set(false)
     glyphStore$.packing.isRenderingGlyphs.set(false)
-    glyphStore$.packing.sourceCanvas.set(null)
-    glyphStore$.packing.packCanvases.set([])
+    glyphStore$.packing.sourceCanvasVersion.set(
+      glyphStore$.packing.sourceCanvasVersion.get() + 1,
+    )
+    glyphStore$.packing.packCanvases.set(opaqueObject([]))
+    glyphStore$.glyphDataVersion.set(0)
   })
+}
+
+/**
+ * Increment glyph data version counter.
+ * Call this when glyph data (dimensions, style) changes outside of batchUpdateGlyphInfo.
+ */
+export function incrementGlyphDataVersion(): void {
+  glyphStore$.glyphDataVersion.set(glyphStore$.glyphDataVersion.get() + 1)
 }

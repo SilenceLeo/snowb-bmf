@@ -224,6 +224,7 @@ export {
   // Packing state
   setPackingState,
   setRenderingState,
+  getSourceCanvas,
   setSourceCanvas,
   setPackCanvases,
   // Selectors
@@ -237,17 +238,19 @@ export {
   observePackingState,
   // Reset
   resetGlyphStore,
+  incrementGlyphDataVersion,
 } from './glyphStore'
 
 // Project Store
 export {
   projectStore$,
+  DEFAULT_PROJECT_TEXT,
   setCurrentProject,
   setProjectName,
   setProjectText,
   getProjectText,
-  setPackStart,
-  getPackStart,
+  setPackLastExecuteTime as setPackStart,
+  getPackLastExecuteTime as getPackStart,
   setPackTimer,
   getPackTimer,
   clearPackTimer,
@@ -264,6 +267,7 @@ export {
   useGlyphDimensions,
   useGlyphLetters,
   useGlyphCount,
+  useGlyphDataVersion,
   useAllGlyphs,
   // Image glyph hooks
   useImageGlyphs,
@@ -286,6 +290,7 @@ export {
   // Style hooks
   useStyle,
   useFont,
+  useFontBaselines,
   useFontSize,
   useFontLineHeight,
   useFontSharp,
@@ -304,6 +309,7 @@ export {
   useGlobalAdjustMetric,
   // Layout hooks
   useLayout,
+  usePackDimensions,
   usePadding,
   useSpacing,
   useLayoutWidth,
@@ -313,6 +319,9 @@ export {
   usePageCount,
   // UI hooks
   useUi,
+  useUiDimensions,
+  useScale,
+  usePreviewScale,
   usePreviewText,
   useShowPreview,
   useSelectLetter,
@@ -325,6 +334,8 @@ export {
   useProjectList,
   useProjectCount,
   useProjectMeta,
+  // Kerning hooks
+  useGlyphKerning,
 } from './hooks'
 
 // ============================================================================

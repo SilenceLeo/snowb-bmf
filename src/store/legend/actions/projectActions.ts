@@ -1,6 +1,7 @@
 import { observe } from '@legendapp/state'
 import type { ExportGlyphData, ExportProjectData } from 'src/file/export/type'
 
+import { DEBUG_CONFIG } from '../config'
 import { getGlyphList, glyphStore$, resetGlyphStore } from '../glyphStore'
 import {
   DEFAULT_PROJECT_TEXT,
@@ -10,9 +11,18 @@ import {
   setInitializing,
   setProjectName as setProjectStoreName,
 } from '../projectStore'
-import { layoutStore$ } from '../stores/layoutStore'
-import { getMainFamily, getOpentype, styleStore$ } from '../stores/styleStore'
-import { uiStore$ } from '../stores/uiStore'
+import { layoutStore$, resetLayoutStore } from '../stores/layoutStore'
+import {
+  getMainFamily,
+  getOpentype,
+  resetStyleStore,
+  styleStore$,
+} from '../stores/styleStore'
+import { resetUiStore, uiStore$ } from '../stores/uiStore'
+import {
+  getActiveId,
+  setProjectName as setWorkspaceProjectName,
+} from '../stores/workspaceStore'
 import {
   clearAllImageGlyphs,
   ensureSpaceGlyph,
@@ -37,7 +47,7 @@ let cleanupFunctions: Array<() => void> = []
 export async function initializeProject(
   projectData: ProjectInitData = {},
 ): Promise<void> {
-  console.log('[Project] Initializing...')
+  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Initializing...')
 
   setInitializing(true)
 
@@ -73,7 +83,7 @@ export async function initializeProject(
       // Setup auto-run listeners after initial pack to avoid race conditions
       setupAutoRunListeners()
       setInitializing(false)
-      console.log('[Project] Initialization complete')
+      if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Initialization complete')
     }
 
     if (typeof requestIdleCallback !== 'undefined') {
@@ -94,7 +104,7 @@ export async function initializeProjectFromData(data: {
   text: string
   // Additional data can be passed for style, layout, glyphs, etc.
 }): Promise<void> {
-  console.log(`[Project] Loading: ${data.name}`)
+  if (DEBUG_CONFIG.logBatchUpdates) console.log(`[Project] Loading: ${data.name}`)
 
   setInitializing(true)
 
@@ -116,14 +126,26 @@ export async function initializeProjectFromData(data: {
     initializeGlyphsFromText(data.text)
     ensureSpaceGlyph()
 
-    // Setup auto-run listeners
-    setupAutoRunListeners()
+    // Guard: track current project ID for async safety
+    const currentProjectId = data.id
 
-    // Initial packing
+    // Initial packing first, then setup listeners
+    // (matches initializeProject order to avoid redundant packing during init)
     await packStyle()
 
+    // Re-check after async operation — abort if project switched
+    if (projectStore$.current.id.get() !== currentProjectId) {
+      if (DEBUG_CONFIG.logBatchUpdates) {
+        console.log('[Project] Aborted: project switched during loading')
+      }
+      return
+    }
+
+    // Setup auto-run listeners after initial pack
+    setupAutoRunListeners()
+
     setInitializing(false)
-    console.log('[Project] Loaded successfully')
+    if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Loaded successfully')
   } catch (error) {
     console.error('[Project] Loading failed:', error)
     setInitializing(false)
@@ -131,8 +153,8 @@ export async function initializeProjectFromData(data: {
   }
 }
 
-let layoutDebounceTimer: ReturnType<typeof setTimeout> | null = null
-let styleDebounceTimer: ReturnType<typeof setTimeout> | null = null
+let layoutDebounceTimer: number | null = null
+let styleDebounceTimer: number | null = null
 
 export function setupAutoRunListeners(): void {
   cleanupListeners()
@@ -154,32 +176,23 @@ export function setupAutoRunListeners(): void {
   })
 
   // Layout changes (excluding packWidth/packHeight output values)
-  const unsubscribePadding = layoutStore$.layout.padding.onChange(() => {
-    debouncedLayoutChange()
-  })
-
-  const unsubscribeSpacing = layoutStore$.layout.spacing.onChange(() => {
-    debouncedLayoutChange()
-  })
-
-  const unsubscribeWidth = layoutStore$.layout.width.onChange(() => {
-    debouncedLayoutChange()
-  })
-
-  const unsubscribeHeight = layoutStore$.layout.height.onChange(() => {
-    debouncedLayoutChange()
-  })
-
-  const unsubscribeAuto = layoutStore$.layout.auto.onChange(() => {
-    debouncedLayoutChange()
-  })
-
-  const unsubscribeFixedSize = layoutStore$.layout.fixedSize.onChange(() => {
-    debouncedLayoutChange()
-  })
-
-  const unsubscribePage = layoutStore$.layout.page.onChange(() => {
-    debouncedLayoutChange()
+  // Monitor input fields only; packWidth/packHeight are output values set by packing
+  const layoutInputFields = new Set([
+    'padding',
+    'spacing',
+    'width',
+    'height',
+    'auto',
+    'fixedSize',
+    'page',
+  ])
+  const unsubscribeLayout = layoutStore$.layout.onChange(({ changes }) => {
+    const hasInputChange = changes.some(({ path }) =>
+      layoutInputFields.has(path[0] as string),
+    )
+    if (hasInputChange) {
+      debouncedLayoutChange()
+    }
   })
 
   // Background color changes - re-packing only
@@ -225,13 +238,7 @@ export function setupAutoRunListeners(): void {
 
   cleanupFunctions = [
     unsubscribeImageGlyphs,
-    unsubscribePadding,
-    unsubscribeSpacing,
-    unsubscribeWidth,
-    unsubscribeHeight,
-    unsubscribeAuto,
-    unsubscribeFixedSize,
-    unsubscribePage,
+    unsubscribeLayout,
     unsubscribeBgColor,
     unsubscribeFontSize,
     unsubscribeFontFonts,
@@ -243,14 +250,14 @@ export function setupAutoRunListeners(): void {
     unsubscribeUseShadow,
   ]
 
-  console.log('[Project] Auto-run listeners setup complete')
+  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Auto-run listeners setup complete')
 }
 
 function debouncedLayoutChange(): void {
   if (layoutDebounceTimer) {
-    clearTimeout(layoutDebounceTimer)
+    window.clearTimeout(layoutDebounceTimer)
   }
-  layoutDebounceTimer = setTimeout(() => {
+  layoutDebounceTimer = window.setTimeout(() => {
     throttlePack()
     layoutDebounceTimer = null
   }, 50)
@@ -258,9 +265,9 @@ function debouncedLayoutChange(): void {
 
 function debouncedStyleChange(): void {
   if (styleDebounceTimer) {
-    clearTimeout(styleDebounceTimer)
+    window.clearTimeout(styleDebounceTimer)
   }
-  styleDebounceTimer = setTimeout(() => {
+  styleDebounceTimer = window.setTimeout(() => {
     packStyle()
     styleDebounceTimer = null
   }, 50)
@@ -269,6 +276,16 @@ function debouncedStyleChange(): void {
 export function cleanupListeners(): void {
   cleanupFunctions.forEach((cleanup) => cleanup())
   cleanupFunctions = []
+
+  // Cancel pending debounce timers to prevent stale callbacks
+  if (layoutDebounceTimer) {
+    window.clearTimeout(layoutDebounceTimer)
+    layoutDebounceTimer = null
+  }
+  if (styleDebounceTimer) {
+    window.clearTimeout(styleDebounceTimer)
+    styleDebounceTimer = null
+  }
 }
 
 // ============================================================================
@@ -276,11 +293,21 @@ export function cleanupListeners(): void {
 // ============================================================================
 
 /**
- * Set project name
+ * Set project name and sync to workspace.
+ *
+ * Note: Sync is intentionally one-way (projectStore → workspaceStore).
+ * ProjectTabs.handleRename calls setWorkspaceProjectName directly,
+ * which is correct because the active project's projectStore is the
+ * source of truth and gets overwritten on project switch anyway.
  */
 export function setProjectName(name: string): void {
   if (name) {
     setProjectStoreName(name)
+    // Sync the workspace project list name to keep both stores in sync
+    const activeId = getActiveId()
+    if (activeId) {
+      setWorkspaceProjectName(activeId, name)
+    }
   }
 }
 
@@ -295,7 +322,7 @@ export function getProjectId(): number {
 export { setText } from './glyphActions'
 
 export function destroyProject(): void {
-  console.log('[Project] Destroying...')
+  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Destroying...')
 
   cancelAllOperations()
   clearPackTimer()
@@ -303,12 +330,15 @@ export function destroyProject(): void {
   destroyPackingEngine()
   clearAllImageGlyphs()
   resetGlyphStore()
+  resetStyleStore()
+  resetLayoutStore()
+  resetUiStore()
 
-  console.log('[Project] Destroyed')
+  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Destroyed')
 }
 
 export function resetProject(): void {
-  console.log('[Project] Resetting...')
+  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Resetting...')
 
   cancelAllOperations()
   clearAllImageGlyphs()
@@ -324,7 +354,7 @@ export function resetProject(): void {
   ensureSpaceGlyph()
   packStyle()
 
-  console.log('[Project] Reset complete')
+  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Reset complete')
 }
 
 export function isProjectInitializing(): boolean {

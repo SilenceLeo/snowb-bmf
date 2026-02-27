@@ -1,16 +1,18 @@
 import type { Font as OpenType } from 'opentype.js'
+import type { GlyphRenderConfig } from 'src/types/style'
 import { PackingEngine } from 'src/utils/PackingEngine'
+import { isCancelError } from 'src/utils/concurrency'
 import getFontGlyphs from 'src/utils/getFontGlyphs'
 import getFontGlyphsProgressive from 'src/utils/getFontGlyphsProgressive'
 
-import { DEBUG_CONFIG } from '../config'
+import { DEBUG_CONFIG, PERFORMANCE_THRESHOLDS } from '../config'
 import {
   batchUpdateGlyphInfo,
   batchUpdateGlyphPositions,
   getGlyphForLetter,
   getGlyphList,
   getRectangleList,
-  glyphStore$,
+  getSourceCanvas,
   resetFailedGlyphPositions,
   resetGlyphPages,
   setPackCanvases,
@@ -20,10 +22,10 @@ import {
 } from '../glyphStore'
 import {
   clearPackTimer,
+  getPackLastExecuteTime,
   getPackTimer,
   getProjectText,
-  projectStore$,
-  setPackStart,
+  setPackLastExecuteTime,
   setPackTimer,
 } from '../projectStore'
 import {
@@ -41,8 +43,9 @@ import {
   getMainFont,
   styleStore$,
 } from '../stores/styleStore'
+import { getPatternImage } from '../stores/styleSetterFactory'
 import { setPackFailed, setSize } from '../stores/uiStore'
-import type { GlyphInfoUpdate, TextRectangle } from '../types'
+import type { GlyphInfoUpdate, ImageGlyphData, TextRectangle } from '../types'
 
 let packingEngine: PackingEngine | null = null
 let packingAbortController: AbortController | null = null
@@ -52,7 +55,6 @@ export function initPackingEngine(): void {
   if (!packingEngine) {
     packingEngine = new PackingEngine({
       maxConcurrentWorkers: Math.min(navigator.hardwareConcurrency || 4, 8),
-      workerTimeout: 5000,
       enableSentry: true,
     })
   }
@@ -100,8 +102,9 @@ export function pack(): void {
   const text = getProjectText()
 
   const rectangleList = getRectangleList(text, padding, spacing)
-  const packList = rectangleList.sort((a, b) => b.height - a.height)
-  const validList = packList.filter(({ width, height }) => !!(width && height))
+  const validList = rectangleList
+    .filter(({ width, height }) => !!(width && height))
+    .sort((a, b) => b.height - a.height)
 
   const pageCount = Math.max(1, Math.floor(page || 1))
 
@@ -234,7 +237,7 @@ async function executePacking(
 
     setPackingState(false)
   } catch (error) {
-    if (!(error instanceof Error && error.message.includes('cancelled'))) {
+    if (!isCancelError(error)) {
       console.error('[Packing] Failed:', error)
     }
     setPackingState(false)
@@ -272,6 +275,7 @@ function assignGlyphPositions(
       y: rectangle.y ?? 0,
       page: pageIndex,
       type: rectangle.type,
+      uid: rectangle.uid,
     })),
   )
 
@@ -335,7 +339,7 @@ function generatePageCanvases(
 ): void {
   const layout = layoutStore$.layout.get()
   const style = styleStore$.style.get()
-  const sourceCanvas = glyphStore$.packing.sourceCanvas.get()
+  const sourceCanvas = getSourceCanvas()
   const { padding } = layout
   const text = getProjectText()
 
@@ -371,12 +375,12 @@ function generatePageCanvases(
 
     pageGlyphs.forEach((glyph) => {
       if (glyph.type === 'image') {
-        const imageGlyph = glyphStore$.imageGlyphs
-          .get()
-          .find((img) => img.letter === glyph.letter && img.selected)
-        if (imageGlyph?.source) {
+        // Use glyph directly — it's already the correct ImageGlyphData
+        // from getGlyphList → getGlyphForLetter → findImageGlyph
+        const source = (glyph as ImageGlyphData).source
+        if (source) {
           ctx.drawImage(
-            imageGlyph.source as HTMLCanvasElement,
+            source as HTMLCanvasElement,
             glyph.x + padding,
             glyph.y + padding,
           )
@@ -503,6 +507,30 @@ function createStyleConfig(): StyleConfig {
   }
 }
 
+/**
+ * Convert internal StyleConfig to the GlyphRenderConfig expected by
+ * getFontGlyphs / getFontGlyphsProgressive, avoiding double type assertions.
+ */
+function toGlyphRenderConfig(config: StyleConfig): GlyphRenderConfig {
+  return {
+    font: {
+      ...config.font,
+      fonts: config.font.mainFont ? [config.font.mainFont] : [],
+    },
+    fill: {
+      ...config.fill,
+      patternImage: getPatternImage('fill'),
+    },
+    stroke: config.stroke
+      ? {
+          ...config.stroke,
+          patternImage: getPatternImage('stroke'),
+        }
+      : undefined,
+    shadow: config.shadow,
+  }
+}
+
 function toGlyphInfoUpdates(
   glyphs: Map<
     string,
@@ -545,14 +573,11 @@ export async function packStyle(): Promise<void> {
 
   try {
     const text = getProjectText()
-    const glyphText = Array.from(new Set(Array.from(` ${text}`)))
+    const glyphText = Array.from(new Set(` ${text}`))
     const totalGlyphs = glyphText.length
-    const useProgressive = totalGlyphs > 500
+    const useProgressive = totalGlyphs > PERFORMANCE_THRESHOLDS.PROGRESSIVE_THRESHOLD
 
-    // Double assertion bridges plain objects to the index-signature Config type
-    const styleOptions = createStyleConfig() as unknown as Parameters<
-      typeof getFontGlyphsProgressive
-    >[1]
+    const styleOptions = toGlyphRenderConfig(createStyleConfig())
 
     let canvas: HTMLCanvasElement
     let glyphs: Map<string, any>
@@ -563,11 +588,11 @@ export async function packStyle(): Promise<void> {
       }
 
       const result = await getFontGlyphsProgressive(glyphText, styleOptions, {
-        batchSize: Math.min(100, Math.ceil(totalGlyphs / 20)),
+        batchSize: Math.min(PERFORMANCE_THRESHOLDS.BATCH_SIZE, Math.ceil(totalGlyphs / 20)),
         signal,
         onProgress: DEBUG_CONFIG.logBatchUpdates
           ? (completed, total) => {
-              if (completed % 100 === 0 || completed === total) {
+              if (completed % PERFORMANCE_THRESHOLDS.BATCH_SIZE === 0 || completed === total) {
                 console.log(`[Packing] Glyph rendering: ${completed}/${total}`)
               }
             }
@@ -590,7 +615,7 @@ export async function packStyle(): Promise<void> {
     setSourceCanvas(canvas)
     throttlePack()
   } catch (error) {
-    if (!(error instanceof Error && error.message.includes('cancelled'))) {
+    if (!isCancelError(error)) {
       console.error('[Packing] Failed to render glyphs:', error)
     }
   } finally {
@@ -598,26 +623,33 @@ export async function packStyle(): Promise<void> {
   }
 }
 
+const THROTTLE_INTERVAL = 300
+const DEBOUNCE_DELAY = 200
+
 export function throttlePack(): void {
   const currentTimer = getPackTimer()
   if (currentTimer) {
     window.clearTimeout(currentTimer)
   }
 
-  const packStart = projectStore$.timing.packStart.get()
+  const elapsed = Date.now() - getPackLastExecuteTime()
 
-  if (Date.now() - packStart > 500) {
-    // Use setTimeout(0) to ensure Legend State batch updates propagate before pack
-    const timer = window.setTimeout(pack, 0)
+  if (elapsed >= THROTTLE_INTERVAL) {
+    // Enough time since last execution, fire immediately (via setTimeout(0) for batch propagation)
+    const timer = window.setTimeout(() => {
+      setPackLastExecuteTime(Date.now())
+      pack()
+    }, 0)
     setPackTimer(timer)
   } else {
+    // Trailing debounce ensures the last change in a burst also triggers pack
     const timer = window.setTimeout(() => {
+      setPackLastExecuteTime(Date.now())
       pack()
-    }, 500)
+    }, DEBOUNCE_DELAY)
     setPackTimer(timer)
   }
-
-  setPackStart(Date.now())
+  // Key fix: do NOT reset lastExecuteTime here - only update when pack() actually runs
 }
 
 export function cancelAllOperations(): void {

@@ -1,4 +1,4 @@
-import { batch } from '@legendapp/state'
+import { batch, opaqueObject } from '@legendapp/state'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 
 import {
@@ -6,6 +6,9 @@ import {
   createFontGlyph,
   generateImageGlyphUid,
   glyphStore$,
+  incrementGlyphDataVersion,
+  setPackCanvases,
+  setSourceCanvas,
 } from '../glyphStore'
 import { getProjectText, setProjectText } from '../projectStore'
 import type { FontGlyphData, ImageGlyphData } from '../types'
@@ -27,6 +30,9 @@ export interface KerningUpdate {
 }
 
 export interface MetricAdjustment {
+  // `letter` identifies the glyph but is not used when passed as Partial<MetricAdjustment>
+  // to setGlyphAdjustMetric/setImageGlyphAdjustMetric (letter is a separate parameter).
+  // Retained for batch update scenarios where letter must travel with the adjustment.
   letter: string
   xAdvance?: number
   xOffset?: number
@@ -52,24 +58,8 @@ export function setText(newText: string): void {
 export function syncGlyphsWithTextChange(oldText: string = ''): void {
   const currentText = getProjectText()
 
-  const currentSet = new Set(Array.from(currentText))
+  const currentSet = new Set(currentText)
   currentSet.add(' ')
-
-  const oldSet = new Set(Array.from(oldText))
-
-  const toAdd: string[] = []
-  currentSet.forEach((char) => {
-    if (!oldSet.has(char)) {
-      toAdd.push(char)
-    }
-  })
-
-  const toRemove: string[] = []
-  oldSet.forEach((char) => {
-    if (!currentSet.has(char)) {
-      toRemove.push(char)
-    }
-  })
 
   // For first-time initialization (no old text), add all current characters
   if (!oldText) {
@@ -84,6 +74,22 @@ export function syncGlyphsWithTextChange(oldText: string = ''): void {
     packStyle()
     return
   }
+
+  const oldSet = new Set(oldText)
+
+  const toAdd: string[] = []
+  currentSet.forEach((char) => {
+    if (!oldSet.has(char)) {
+      toAdd.push(char)
+    }
+  })
+
+  const toRemove: string[] = []
+  oldSet.forEach((char) => {
+    if (!currentSet.has(char)) {
+      toRemove.push(char)
+    }
+  })
 
   if (toAdd.length === 0 && toRemove.length === 0) {
     return
@@ -124,18 +130,32 @@ export function ensureSpaceGlyph(): void {
 // Image Glyph Management
 
 export async function addImages(fileList: ImageFileInfo[]): Promise<void> {
-  const initPromises = fileList.map(async (fileInfo) => {
-    const imageGlyph = createImageGlyphFromFile(fileInfo)
-    await initializeImageGlyphOffStore(imageGlyph, fileInfo.buffer)
-    return imageGlyph
+  const results = await Promise.allSettled(
+    fileList.map(async (fileInfo) => {
+      const imageGlyph = createImageGlyphFromFile(fileInfo)
+      await initializeImageGlyphOffStore(imageGlyph, fileInfo.buffer)
+      return imageGlyph
+    }),
+  )
+
+  const initializedGlyphs: ImageGlyphData[] = []
+  results.forEach((result) => {
+    if (result.status === 'fulfilled') {
+      initializedGlyphs.push(result.value)
+    } else {
+      console.warn(`[GlyphActions] ${result.reason}`)
+    }
   })
 
-  const initializedGlyphs = await Promise.all(initPromises)
+  if (initializedGlyphs.length === 0) {
+    return
+  }
 
   batch(() => {
     initializedGlyphs.forEach((glyph) => {
       glyphStore$.imageGlyphs.push(glyph)
     })
+    incrementGlyphDataVersion()
   })
 
   throttlePack()
@@ -163,7 +183,7 @@ function createImageGlyphFromFile(fileInfo: ImageFileInfo): ImageGlyphData {
     adjustMetric: { xAdvance: 0, xOffset: 0, yOffset: 0 },
     fileName: fileInfo.fileName,
     fileType: fileInfo.fileType,
-    buffer: fileInfo.buffer,
+    buffer: opaqueObject(fileInfo.buffer),
     src: '',
   }
 }
@@ -176,7 +196,7 @@ async function initializeImageGlyphOffStore(
   imageGlyph: ImageGlyphData,
   buffer: ArrayBuffer,
 ): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const src = URL.createObjectURL(new Blob([buffer]))
     const image = new Image()
 
@@ -190,7 +210,7 @@ async function initializeImageGlyphOffStore(
       imageGlyph.height = trimInfo.height
       imageGlyph.trimOffsetLeft = trimInfo.trimOffsetLeft
       imageGlyph.trimOffsetTop = trimInfo.trimOffsetTop
-      imageGlyph.source = trimInfo.canvas
+      imageGlyph.source = opaqueObject(trimInfo.canvas)
       imageGlyph.src = src
 
       resolve()
@@ -198,8 +218,7 @@ async function initializeImageGlyphOffStore(
 
     image.onerror = () => {
       URL.revokeObjectURL(src)
-      console.error(`Failed to load image: ${imageGlyph.fileName}`)
-      resolve()
+      reject(new Error(`Failed to load image: ${imageGlyph.fileName}`))
     }
 
     image.src = src
@@ -215,6 +234,7 @@ export function removeImage(index: number): void {
       URL.revokeObjectURL(imageGlyph.src)
     }
     glyphStore$.imageGlyphs.set(imageGlyphs.filter((_, i) => i !== index))
+    incrementGlyphDataVersion()
     throttlePack()
   }
 }
@@ -236,6 +256,7 @@ export function setImageGlyphLetter(index: number, letter: string): void {
 
   if (index >= 0 && index < imageGlyphs.length) {
     glyphStore$.imageGlyphs[index].letter.set(letter[0] || '')
+    incrementGlyphDataVersion()
     throttlePack()
   }
 }
@@ -245,6 +266,7 @@ export function setImageGlyphSelected(index: number, selected: boolean): void {
 
   if (index >= 0 && index < imageGlyphs.length) {
     glyphStore$.imageGlyphs[index].selected.set(selected)
+    incrementGlyphDataVersion()
     throttlePack()
   }
 }
@@ -284,7 +306,41 @@ export function batchSetKerning(updates: KerningUpdate[]): void {
 
 export function getKerning(letter: string, nextLetter: string): number {
   const glyph = glyphStore$.glyphs[letter].get()
-  return glyph?.kerning[nextLetter] || 0
+  if (glyph) {
+    return glyph.kerning[nextLetter] || 0
+  }
+  // Fallback: check image glyphs
+  // Kerning is semantically per-letter (character pair spacing), so letter-based
+  // lookup is correct here — multiple image glyphs sharing a letter share kerning.
+  const imageGlyph = glyphStore$.imageGlyphs
+    .get()
+    .find((img) => img.letter === letter && img.selected)
+  return imageGlyph?.kerning[nextLetter] || 0
+}
+
+/**
+ * Apply metric adjustments to an observable adjustMetric node.
+ * Shared helper for both font and image glyph metric updates.
+ */
+function applyMetricUpdate(
+  adjustMetricNode: {
+    xAdvance: { set: (v: number) => void }
+    xOffset: { set: (v: number) => void }
+    yOffset: { set: (v: number) => void }
+  },
+  metric: Partial<MetricAdjustment>,
+): void {
+  batch(() => {
+    if (metric.xAdvance !== undefined) {
+      adjustMetricNode.xAdvance.set(metric.xAdvance)
+    }
+    if (metric.xOffset !== undefined) {
+      adjustMetricNode.xOffset.set(metric.xOffset)
+    }
+    if (metric.yOffset !== undefined) {
+      adjustMetricNode.yOffset.set(metric.yOffset)
+    }
+  })
 }
 
 export function setGlyphAdjustMetric(
@@ -294,17 +350,7 @@ export function setGlyphAdjustMetric(
   const glyph = glyphStore$.glyphs[letter].get()
 
   if (glyph) {
-    batch(() => {
-      if (metric.xAdvance !== undefined) {
-        glyphStore$.glyphs[letter].adjustMetric.xAdvance.set(metric.xAdvance)
-      }
-      if (metric.xOffset !== undefined) {
-        glyphStore$.glyphs[letter].adjustMetric.xOffset.set(metric.xOffset)
-      }
-      if (metric.yOffset !== undefined) {
-        glyphStore$.glyphs[letter].adjustMetric.yOffset.set(metric.yOffset)
-      }
-    })
+    applyMetricUpdate(glyphStore$.glyphs[letter].adjustMetric, metric)
   }
 }
 
@@ -315,19 +361,7 @@ export function setImageGlyphAdjustMetric(
   const imageGlyphs = glyphStore$.imageGlyphs.get()
 
   if (index >= 0 && index < imageGlyphs.length) {
-    batch(() => {
-      if (metric.xAdvance !== undefined) {
-        glyphStore$.imageGlyphs[index].adjustMetric.xAdvance.set(
-          metric.xAdvance,
-        )
-      }
-      if (metric.xOffset !== undefined) {
-        glyphStore$.imageGlyphs[index].adjustMetric.xOffset.set(metric.xOffset)
-      }
-      if (metric.yOffset !== undefined) {
-        glyphStore$.imageGlyphs[index].adjustMetric.yOffset.set(metric.yOffset)
-      }
-    })
+    applyMetricUpdate(glyphStore$.imageGlyphs[index].adjustMetric, metric)
   }
 }
 
@@ -378,10 +412,9 @@ export function clearAllImageGlyphs(): void {
 
 export function resetAllGlyphs(): void {
   clearAllImageGlyphs()
-
   batch(() => {
+    setSourceCanvas(null)
+    setPackCanvases([])
     glyphStore$.glyphs.set({})
-    glyphStore$.packing.sourceCanvas.set(null)
-    glyphStore$.packing.packCanvases.set([])
   })
 }

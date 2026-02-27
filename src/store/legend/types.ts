@@ -78,6 +78,7 @@ export interface GlyphPositionUpdate {
   y: number
   page: number
   type?: GlyphType
+  uid?: string
 }
 
 /**
@@ -103,11 +104,13 @@ export interface PackingState {
   isPacking: boolean
   isRenderingGlyphs: boolean
   packCanvases: HTMLCanvasElement[]
-  sourceCanvas: HTMLCanvasElement | null
+  sourceCanvasVersion: number
 }
 
 /**
- * Project state for Legend State
+ * Project state - a composite snapshot type used for serialization.
+ * This is NOT a 1:1 mapping to any single store; it aggregates fields
+ * from projectStore$ and glyphStore$.packing for persistence purposes.
  */
 export interface ProjectState {
   id: number
@@ -126,10 +129,15 @@ export interface TextRectangle {
   y: number
   letter: string
   type: GlyphType
+  uid?: string
 }
 
 /**
  * Glyph store state
+ *
+ * Matches the shape of glyphStore$ observable.
+ * glyphCount and glyphLetters are derived via standalone functions
+ * (getGlyphCount, getGlyphLetters) rather than stored in the observable.
  */
 export interface GlyphStoreState {
   // Font glyphs indexed by letter
@@ -138,7 +146,9 @@ export interface GlyphStoreState {
   // Image glyphs array
   imageGlyphs: ImageGlyphData[]
 
-  // Computed helpers
-  glyphCount: number
-  glyphLetters: string[]
+  // Packing state (managed within glyphStore$)
+  packing: PackingState
+
+  // Version counter for batch update tracking
+  glyphDataVersion: number
 }
