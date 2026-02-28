@@ -114,7 +114,7 @@ function calculateBufferSize(
 }
 
 const getContent: FontToContent = (bmfont) => {
-  const { info, common, pages, chars, kernings } = bmfont
+  const { info, common, distanceField, pages, chars, kernings } = bmfont
 
   // Pre-encode strings once for reuse in size calculation and writing
   const fontNameBytes = new TextEncoder().encode(info.face || '')
@@ -137,9 +137,10 @@ const getContent: FontToContent = (bmfont) => {
   const infoBlockSize = 14 + fontNameBytes.length + 1 // fixed fields + font name + null terminator
   writer.writeBlockHeader(1, infoBlockSize)
 
-  // Note: Math.abs() drops the sign bit. Negative fontSize indicates SDF font
-  // in BMFont spec, but current implementation does not support SDF.
-  writer.writeUint16(Math.abs(info.size) || 16) // fontSize
+  // BMFont convention: negative fontSize indicates SDF/distance field font
+  // (used by libGDX, Hiero, msdf-atlas-gen)
+  const fontSize = distanceField ? -(info.size || 16) : (info.size || 16)
+  writer.writeInt16(fontSize)
 
   // Build bit field (smooth, unicode, italic, bold, fixedHeight)
   let bitField = 0
@@ -249,6 +250,6 @@ const getContent: FontToContent = (bmfont) => {
   return new Uint8Array(buffer)
 }
 
-const outputConfig: Output = { type, exts, getContent }
+const outputConfig: Output = { type, exts, getContent, supportsDistanceField: true }
 
 export default outputConfig

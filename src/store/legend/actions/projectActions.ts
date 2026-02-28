@@ -236,6 +236,23 @@ export function setupAutoRunListeners(): void {
     debouncedStyleChange()
   })
 
+  // Render mode changes — requires full glyph re-render (white fill vs styled)
+  const unsubscribeRenderMode = styleStore$.style.render.mode.onChange(() => {
+    debouncedStyleChange()
+  })
+
+  // Distance range changes — requires SDF regeneration
+  const unsubscribeDistanceRange = styleStore$.style.render.distanceRange.onChange(
+    () => {
+      debouncedStyleChange()
+    },
+  )
+
+  // SDF channel changes — requires SDF regeneration
+  const unsubscribeSdfChannel = styleStore$.style.render.sdfChannel.onChange(() => {
+    debouncedStyleChange()
+  })
+
   cleanupFunctions = [
     unsubscribeImageGlyphs,
     unsubscribeLayout,
@@ -248,6 +265,9 @@ export function setupAutoRunListeners(): void {
     unsubscribeUseStroke,
     unsubscribeShadow,
     unsubscribeUseShadow,
+    unsubscribeRenderMode,
+    unsubscribeDistanceRange,
+    unsubscribeSdfChannel,
   ]
 
   if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Auto-run listeners setup complete')
@@ -426,6 +446,9 @@ export function getExportProjectData(): ExportProjectData {
     globalAdjustMetric,
     glyphList,
     xFractional: styleStore$.xFractional.get(),
+    renderMode: style.render.mode,
+    distanceRange: style.render.distanceRange,
+    sdfChannel: style.render.sdfChannel,
     ui: {
       width: ui.width,
       height: ui.height,

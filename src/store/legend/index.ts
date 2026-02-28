@@ -31,6 +31,9 @@ export {
   styleStore$,
   // Types
   type StyleData,
+  type RenderData,
+  type RenderMode,
+  type SdfChannel,
   type FontData,
   type FillData,
   type StrokeData,
@@ -89,6 +92,10 @@ export {
   setShadowOffsetX,
   setShadowOffsetY,
   setShadowOffset,
+  // Render mode
+  setRenderMode,
+  setDistanceRange,
+  setSdfChannel,
   // Background color
   setBgColor,
   // Global metric actions
@@ -328,6 +335,9 @@ export {
   useShowPreview,
   useSelectLetter,
   usePackFailed,
+  useRenderMode,
+  useDistanceRange,
+  useSdfChannel,
   useXFractional,
   useUiTransform,
   usePreviewTransform,

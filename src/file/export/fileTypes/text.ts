@@ -15,7 +15,7 @@ const type = 'TEXT'
 const exts = ['fnt', 'txt']
 
 const getContent: FontToContent = (bmfont) => {
-  const { info, common, pages, chars, kernings } = bmfont
+  const { info, common, distanceField, pages, chars, kernings } = bmfont
 
   // Generate charset description based on actual character IDs
   const generateCharset = () => {
@@ -52,6 +52,10 @@ const getContent: FontToContent = (bmfont) => {
     charset: info.charset || generateCharset(),
   })
 
+  if (distanceField) {
+    str += `distanceField fieldType=${distanceField.fieldType} distanceRange=${distanceField.distanceRange}\n`
+  }
+
   let commonLine = formatStr(TEMP_COMMON, common).trimEnd()
   if (common.xFpBits) {
     commonLine += ` xFpBits=${common.xFpBits}`
@@ -79,6 +83,6 @@ const getContent: FontToContent = (bmfont) => {
   return str
 }
 
-const outputConfig: Output = { type, exts, getContent }
+const outputConfig: Output = { type, exts, getContent, supportsDistanceField: true }
 
 export default outputConfig

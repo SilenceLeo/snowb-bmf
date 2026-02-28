@@ -362,6 +362,8 @@ function buildCFiles(context: ExportContext): ExportFilesResult {
   const includeTextures = options?.includeTextures === true
   const extended = options?.extended === true
   const name = safeIdentifier(fileName)
+  const distanceField = bmfont.distanceField
+  const isSdf = !!distanceField
 
   const { glyphs, baseLine } = buildGlyphData(
     project,
@@ -465,6 +467,16 @@ function buildCFiles(context: ExportContext): ExportFilesResult {
     `\t${baseLine},`,
     `\t${glyphs.length},`,
     `\t${bpp},`,
+    ...(isSdf
+      ? [
+          `\t1, // sdf`,
+          `\t${distanceField.distanceRange}, // sdf_range`,
+          `\t${bmfont.common.alphaChnl ?? 0}, // alpha_chnl`,
+          `\t${bmfont.common.redChnl ?? 0}, // red_chnl`,
+          `\t${bmfont.common.greenChnl ?? 0}, // green_chnl`,
+          `\t${bmfont.common.blueChnl ?? 0}, // blue_chnl`,
+        ]
+      : []),
     ...(includeTextures ? [`\t${name}_texture,`] : []),
     `\t${name}_kern,`,
     `\t${name}_glyph,`,
@@ -538,6 +550,16 @@ function buildCFiles(context: ExportContext): ExportFilesResult {
     '\tuint16_t baseline;',
     '\tuint16_t glyph_count;',
     '\tuint16_t bpp;',
+    ...(isSdf
+      ? [
+          '\tuint8_t sdf;           // 1 = SDF font',
+          '\tuint8_t sdf_range;     // distance field range (pixels)',
+          '\tuint8_t alpha_chnl;    // alpha channel (0=glyph, 4=one)',
+          '\tuint8_t red_chnl;      // red channel',
+          '\tuint8_t green_chnl;    // green channel',
+          '\tuint8_t blue_chnl;     // blue channel',
+        ]
+      : []),
     ...(includeTextures ? ['\tconst texture_t *texture;'] : []),
     '\tconst kern_t *kern;',
     '\tconst glyph_t *glyph;',
@@ -550,6 +572,12 @@ function buildCFiles(context: ExportContext): ExportFilesResult {
     '#include "bmfont.h"',
     '',
     `#define ${name.toUpperCase()}_FONT_NAME "${fileName}"`,
+    ...(isSdf
+      ? [
+          `#define ${name.toUpperCase()}_FONT_SDF 1`,
+          `#define ${name.toUpperCase()}_FONT_SDF_RANGE ${distanceField.distanceRange}`,
+        ]
+      : []),
     '',
     `extern const font_t ${name}_font;`,
     '',
@@ -578,6 +606,7 @@ const outputConfig: Output = {
   supportsBlur: true,
   supportsTextures: true,
   supportsExtended: true,
+  supportsDistanceField: true,
 }
 
 export default outputConfig

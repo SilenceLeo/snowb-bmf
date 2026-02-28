@@ -16,6 +16,7 @@ import {
   useIsPacking,
   usePackCanvases,
   usePackDimensions,
+  useRenderMode,
   useUiDimensions,
   useUiTransform,
 } from 'src/store/legend'
@@ -29,6 +30,7 @@ const PackCanvas: FunctionComponent = () => {
   const { packWidth, packHeight, page: pageCount } = usePackDimensions()
   const bgColor = useBgColor()
   const packCanvases = usePackCanvases()
+  const renderMode = useRenderMode()
   const canvasRefs = useRef<HTMLCanvasElement[]>([])
   const domRef = useRef<HTMLDivElement>(null)
   const [refsReady, setRefsReady] = useState(false)
@@ -87,6 +89,9 @@ const PackCanvas: FunctionComponent = () => {
     },
   )
 
+  // SDF canvases are fully opaque grayscale — skip bgColor overlay
+  const isSdfMode = renderMode !== 'default'
+
   useEffect(() => {
     if (isPacking || !packWidth || !packHeight) {
       return
@@ -112,13 +117,12 @@ const PackCanvas: FunctionComponent = () => {
         continue
       }
 
-      // Set background color
-      if (bgColor) {
+      // SDF canvases are fully opaque grayscale — skip bgColor overlay
+      if (!isSdfMode && bgColor) {
         ctx.fillStyle = bgColor
         ctx.fillRect(0, 0, canvas.width, canvas.height)
       }
 
-      // Unified processing: directly copy corresponding page canvas content
       if (packCanvases[pageIndex]) {
         ctx.drawImage(packCanvases[pageIndex], 0, 0)
       }
@@ -131,6 +135,7 @@ const PackCanvas: FunctionComponent = () => {
     packHeight,
     pageCount,
     refsReady,
+    isSdfMode,
   ])
 
   return (

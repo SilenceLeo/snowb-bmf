@@ -3,7 +3,7 @@ import JSZip from 'jszip'
 
 import getPageFileName from './getPageFileName'
 import toBmfInfo from './toBmfInfo'
-import { ConfigItem, ExportOptions, ExportProjectData } from './type'
+import { BMFontDistanceField, ConfigItem, ExportOptions, ExportProjectData } from './type'
 
 export default async function exportFile(
   projectData: ExportProjectData,
@@ -13,11 +13,21 @@ export default async function exportFile(
   options?: ExportOptions,
 ): Promise<void> {
   const zip = new JSZip()
-  const { packCanvases, layout, name } = projectData
+  const { layout, name } = projectData
   const saveFileName = fileName || name
 
+  // Build distanceField metadata for BMFont descriptor (SDF/MSDF modes)
+  // Pack canvases are already SDF textures when renderMode !== 'default'
+  let distanceField: BMFontDistanceField | undefined
+  if (projectData.renderMode !== 'default') {
+    distanceField = {
+      fieldType: projectData.renderMode as 'sdf' | 'msdf',
+      distanceRange: projectData.distanceRange,
+    }
+  }
+
   // Generate BMFont info with correct file names from the start
-  const bmfont = toBmfInfo(projectData, fontName, saveFileName)
+  const bmfont = toBmfInfo(projectData, fontName, saveFileName, distanceField)
 
   let includePng = false
 
@@ -45,7 +55,7 @@ export default async function exportFile(
 
   // Add PNG pages if needed, then generate the zip
   if (includePng) {
-    await addPngPages(zip, packCanvases, layout, saveFileName)
+    await addPngPages(zip, projectData.packCanvases, layout, saveFileName)
   }
   const zipBlob = await zip.generateAsync({ type: 'blob' })
   saveAs(zipBlob, `${saveFileName}.zip`)

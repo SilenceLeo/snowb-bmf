@@ -35,6 +35,7 @@ import {
 } from '../stores/layoutStore'
 import {
   type FillData,
+  FillType,
   type FontData,
   type FontResource,
   type ShadowData,
@@ -45,6 +46,7 @@ import {
 } from '../stores/styleStore'
 import { getPatternImage } from '../stores/styleSetterFactory'
 import { setPackFailed, setSize } from '../stores/uiStore'
+import { processAtlasForSdf } from 'src/file/export/sdf/atlasProcessor'
 import type { GlyphInfoUpdate, ImageGlyphData, TextRectangle } from '../types'
 
 let packingEngine: PackingEngine | null = null
@@ -342,6 +344,7 @@ function generatePageCanvases(
   const sourceCanvas = getSourceCanvas()
   const { padding } = layout
   const text = getProjectText()
+  const isSdfMode = style.render.mode !== 'default'
 
   const canvases: HTMLCanvasElement[] = []
 
@@ -365,7 +368,8 @@ function generatePageCanvases(
       continue
     }
 
-    if (style.bgColor) {
+    // SDF mode: skip bgColor to keep transparent background for alpha extraction
+    if (!isSdfMode && style.bgColor) {
       ctx.fillStyle = style.bgColor
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
@@ -403,7 +407,29 @@ function generatePageCanvases(
     canvases[pageIndex] = canvas
   }
 
-  setPackCanvases(canvases)
+  // SDF post-processing: convert clean white glyphs to distance field textures
+  if (isSdfMode) {
+    const glyphList = getGlyphList(text)
+    const sdfGlyphs = glyphList.map((g) => ({
+      x: g.x,
+      y: g.y,
+      page: g.page,
+      width: g.width,
+      height: g.height,
+      letter: g.letter,
+      type: g.type as 'text' | 'image' | undefined,
+    }))
+    const sdfCanvases = processAtlasForSdf(canvases, sdfGlyphs, padding, {
+      radius: style.render.distanceRange,
+      // 0.25 = asymmetric mapping: 75% range for outside, 25% for inside
+      // This produces thinner edges, standard for game font SDF rendering
+      cutoff: 0.25,
+      channel: style.render.sdfChannel,
+    })
+    setPackCanvases(sdfCanvases)
+  } else {
+    setPackCanvases(canvases)
+  }
 
   if (DEBUG_CONFIG.logBatchUpdates) {
     console.log(`[Packing] Generated ${canvases.length} page canvases`)
@@ -497,6 +523,18 @@ function createStyleConfig(): StyleConfig {
       style.font.ideographic,
       style.font.bottom,
     ),
+  }
+
+  // SDF mode: render with solid white fill, no stroke/shadow
+  // This produces clean alpha masks for distance field generation
+  const isSdfMode = style.render.mode !== 'default'
+  if (isSdfMode) {
+    return {
+      font: fontConfig,
+      fill: { ...style.fill, type: FillType.SOLID, color: '#ffffff' },
+      stroke: undefined,
+      shadow: undefined,
+    }
   }
 
   return {

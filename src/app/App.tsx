@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react'
 import {
   cleanupListeners,
   initLegendState,
+  initPackingEngine,
   initializeProject,
+  packStyle,
   setupAutoRunListeners,
 } from 'src/store/legend'
 import { loadGradientPresets } from 'src/store/legend/stores/gradientPresetStore'
@@ -41,7 +43,9 @@ function App(): React.JSX.Element {
           // No saved data, initialize default project
           await initializeProject()
         } else {
-          // Setup listeners for the loaded project
+          // Restored project needs packing before listeners
+          initPackingEngine()
+          await packStyle()
           setupAutoRunListeners()
         }
       } catch (error) {

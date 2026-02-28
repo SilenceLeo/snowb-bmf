@@ -15,6 +15,8 @@ import {
   type GradientData,
   type MetricData,
   type PatternTextureData,
+  type RenderMode,
+  type SdfChannel,
   type ShadowData,
   type StrokeData,
   type StyleData,
@@ -456,6 +458,18 @@ export function useSelectLetter(): {
 
 export function usePackFailed(): boolean {
   return useSelector(() => uiStore$.ui.packFailed.get())
+}
+
+export function useRenderMode(): RenderMode {
+  return useSelector(() => styleStore$.style.render.mode.get())
+}
+
+export function useDistanceRange(): number {
+  return useSelector(() => styleStore$.style.render.distanceRange.get())
+}
+
+export function useSdfChannel(): SdfChannel {
+  return useSelector(() => styleStore$.style.render.sdfChannel.get())
 }
 
 export function useXFractional(): number {

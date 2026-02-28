@@ -4,6 +4,7 @@ import {
   BMFont,
   BMFontChars,
   BMFontCommon,
+  BMFontDistanceField,
   BMFontInfo,
   BMFontKernings,
   BMFontMetadata,
@@ -11,11 +12,32 @@ import {
   ExportProjectData,
 } from './type'
 
+/**
+ * Determine BMFont channel flags based on SDF mode and channel format.
+ * Values: glyph=0, outline=1, glyph+outline=2, zero=3, one=4
+ */
+function getSdfChannelFlags(
+  distanceField?: BMFontDistanceField,
+  sdfChannel?: string,
+): { alphaChnl: number; redChnl: number; greenChnl: number; blueChnl: number } {
+  if (distanceField) {
+    if (sdfChannel === 'alpha' || sdfChannel === 'alpha-inv') {
+      // Distance in Alpha channel: RGB=one(4), A=glyph(0)
+      return { alphaChnl: 0, redChnl: 4, greenChnl: 4, blueChnl: 4 }
+    }
+    // Distance in RGB channels (rgb / rgb-inv): RGB=glyph(0), A=one(4)
+    return { alphaChnl: 4, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+  }
+  // Normal mode: A=glyph(0), RGB=one(4)
+  return { alphaChnl: 0, redChnl: 4, greenChnl: 4, blueChnl: 4 }
+}
+
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
 export default function toBmfInfo(
   projectData: ExportProjectData,
   fontFamily = '',
   outputFileName?: string,
+  distanceField?: BMFontDistanceField,
 ): BMFont {
   const {
     name,
@@ -99,10 +121,9 @@ export default function toBmfInfo(
     pages: layout.page,
     packed: 0,
     xFpBits: fractionalBits,
-    alphaChnl: 0, // Alpha channel contains glyph data
-    redChnl: 4, // Red channel set to one (full color)
-    greenChnl: 4, // Green channel set to one (full color)
-    blueChnl: 4, // Blue channel set to one (full color)
+    // Channel info: glyph=0, outline=1, glyph+outline=2, zero=3, one=4
+    // Set based on where distance/glyph data is stored
+    ...getSdfChannelFlags(distanceField, projectData.sdfChannel),
   }
 
   const finalFileName = outputFileName || name
@@ -299,6 +320,7 @@ export default function toBmfInfo(
     metadata,
     info,
     common,
+    distanceField,
     pages,
     chars,
     kernings,

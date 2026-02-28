@@ -19,6 +19,7 @@ list.forEach(
     supportsBlur,
     supportsTextures,
     supportsExtended,
+    supportsDistanceField,
   }) => {
     exts.forEach((ext) => {
       configList.push({
@@ -32,6 +33,7 @@ list.forEach(
         supportsBlur,
         supportsTextures,
         supportsExtended,
+        supportsDistanceField,
       })
     })
   },

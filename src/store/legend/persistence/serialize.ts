@@ -27,6 +27,8 @@ import {
   type GradientPaletteItem,
   type MetricData,
   type PatternTextureData,
+  type RenderMode,
+  type SdfChannel,
   type ShadowData,
   type StrokeData,
   styleStore$,
@@ -236,6 +238,36 @@ function serializeFont(font: FontData): IFont {
 }
 
 /**
+ * Convert RenderMode string to proto int32
+ */
+function renderModeToInt(mode: RenderMode): number {
+  switch (mode) {
+    case 'sdf':
+      return 1
+    case 'msdf':
+      return 2
+    default:
+      return 0
+  }
+}
+
+/**
+ * Convert SdfChannel string to proto int32
+ */
+function sdfChannelToInt(channel: SdfChannel): number {
+  switch (channel) {
+    case 'alpha':
+      return 1
+    case 'rgb-inv':
+      return 2
+    case 'alpha-inv':
+      return 3
+    default:
+      return 0 // 'rgb'
+  }
+}
+
+/**
  * Serialize complete style data
  */
 function serializeStyle(): IStyle {
@@ -249,6 +281,11 @@ function serializeStyle(): IStyle {
     useShadow: style.useShadow,
     shadow: serializeShadow(style.shadow),
     bgColor: style.bgColor,
+    render: {
+      mode: renderModeToInt(style.render.mode),
+      distanceRange: style.render.distanceRange,
+      sdfChannel: sdfChannelToInt(style.render.sdfChannel),
+    },
   }
 }
 

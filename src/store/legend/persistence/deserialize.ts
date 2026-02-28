@@ -33,6 +33,8 @@ import {
   type GradientPaletteItem,
   GradientType,
   type PatternTextureData,
+  type RenderMode,
+  type SdfChannel,
   type ShadowData,
   type StrokeData,
   type StyleData,
@@ -457,6 +459,36 @@ async function deserializeFont(
 }
 
 /**
+ * Convert proto int32 to RenderMode string
+ */
+function intToRenderMode(value: number | null | undefined): RenderMode {
+  switch (value) {
+    case 1:
+      return 'sdf'
+    case 2:
+      return 'msdf'
+    default:
+      return 'default'
+  }
+}
+
+/**
+ * Convert proto int32 to SdfChannel string
+ */
+function intToSdfChannel(value: number | null | undefined): SdfChannel {
+  switch (value) {
+    case 1:
+      return 'alpha'
+    case 2:
+      return 'rgb-inv'
+    case 3:
+      return 'alpha-inv'
+    default:
+      return 'rgb'
+  }
+}
+
+/**
  * Deserialize complete style data
  */
 async function deserializeStyle(
@@ -509,6 +541,11 @@ async function deserializeStyle(
           offsetY?: number
         }
         bgColor?: string
+        render?: {
+          mode?: number
+          distanceRange?: number
+          sdfChannel?: number
+        }
       }
     | null
     | undefined,
@@ -523,6 +560,11 @@ async function deserializeStyle(
     useShadow: data?.useShadow ?? false,
     shadow: deserializeShadow(data?.shadow),
     bgColor: data?.bgColor ?? 'rgba(0,0,0,0)',
+    render: {
+      mode: intToRenderMode(data?.render?.mode),
+      distanceRange: data?.render?.distanceRange || 16,
+      sdfChannel: intToSdfChannel(data?.render?.sdfChannel),
+    },
   }
 }
 

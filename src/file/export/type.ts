@@ -3,7 +3,7 @@
 // ============================================================================
 import type { Font as OpenType } from 'opentype.js'
 import type { LayoutData } from 'src/store/legend/stores/layoutStore'
-import type { FontData } from 'src/store/legend/stores/styleStore'
+import type { FontData, SdfChannel } from 'src/store/legend/stores/styleStore'
 import type { MetricData } from 'src/types/style'
 
 export interface BMFontInfo {
@@ -84,11 +84,17 @@ export interface BMFontMetadata {
   spacing: number
 }
 
+export interface BMFontDistanceField {
+  fieldType: 'sdf' | 'msdf'
+  distanceRange: number
+}
+
 export interface BMFont {
   version?: number
   metadata?: BMFontMetadata
   info: BMFontInfo
   common: BMFontCommon
+  distanceField?: BMFontDistanceField
   pages: BMFontPage[]
   chars: BMFontChars
   kernings: BMFontKernings
@@ -142,6 +148,7 @@ export interface Output {
   supportsBlur?: boolean
   supportsTextures?: boolean
   supportsExtended?: boolean
+  supportsDistanceField?: boolean
 }
 
 export interface ConfigItem extends Omit<Output, 'exts'> {
@@ -181,6 +188,9 @@ export interface ExportProjectData {
   globalAdjustMetric: MetricData
   glyphList: ExportGlyphData[]
   xFractional: number
+  renderMode: 'default' | 'sdf' | 'msdf'
+  distanceRange: number
+  sdfChannel: SdfChannel
   ui: {
     width: number
     height: number

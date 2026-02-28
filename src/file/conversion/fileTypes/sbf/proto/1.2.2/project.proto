@@ -118,6 +118,14 @@ message Shadow {
   sint32 offsetY = 4;
 }
 
+message Render {
+  int32 mode = 1;
+
+  int32 distanceRange = 2;
+
+  int32 sdfChannel = 3;
+}
+
 message Style {
   Font font = 1;
 
@@ -132,6 +140,8 @@ message Style {
   Shadow shadow = 6;
 
   string bgColor = 7;
+
+  Render render = 8;
 }
 
 message Ui {

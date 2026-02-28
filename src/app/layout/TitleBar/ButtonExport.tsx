@@ -70,13 +70,14 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   const handleSave = useCallback(() => {
     const projectData = getExportProjectData()
     const config = configList[val]
-    const options =
+    const hasOptions =
       config.supportsPixelFormat ||
       config.supportsBlur ||
       config.supportsTextures ||
       config.supportsExtended
-        ? { pixelFormat, blur, includeTextures, extended }
-        : undefined
+    const options = hasOptions
+      ? { pixelFormat, blur, includeTextures, extended }
+      : undefined
     exportFile(projectData, config, fontName, fileName, options).catch(
       (error) => {
         console.error('[Export] Failed:', error)

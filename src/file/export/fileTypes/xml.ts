@@ -26,7 +26,7 @@ function setAttrs(
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
 const getContent: FontToContent = (bmfont: BMFont) => {
-  const { info, common, pages, chars, kernings } = bmfont
+  const { info, common, distanceField, pages, chars, kernings } = bmfont
 
   const xmlDOM = document.implementation.createDocument('', 'font', null)
   const root = xmlDOM.documentElement
@@ -48,6 +48,16 @@ const getContent: FontToContent = (bmfont: BMFont) => {
     outline: info.outline,
   })
   root.appendChild(infoEl)
+
+  // Distance field element (between info and common, per BMFont de facto standard)
+  if (distanceField) {
+    const dfEl = xmlDOM.createElement('distanceField')
+    setAttrs(dfEl, {
+      fieldType: distanceField.fieldType,
+      distanceRange: distanceField.distanceRange,
+    })
+    root.appendChild(dfEl)
+  }
 
   // Common element
   const commonEl = xmlDOM.createElement('common')
@@ -125,6 +135,6 @@ const getContent: FontToContent = (bmfont: BMFont) => {
   )}`
 }
 
-const outputConfig: Output = { type, exts, getContent }
+const outputConfig: Output = { type, exts, getContent, supportsDistanceField: true }
 
 export default outputConfig

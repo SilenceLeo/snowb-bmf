@@ -3305,6 +3305,260 @@ export const Shadow = ($root.Shadow = (() => {
   return Shadow
 })())
 
+export const Render = ($root.Render = (() => {
+  /**
+   * Properties of a Render.
+   * @exports IRender
+   * @interface IRender
+   * @property {number|null} [mode] Render mode
+   * @property {number|null} [distanceRange] Render distanceRange
+   * @property {number|null} [sdfChannel] Render sdfChannel
+   */
+
+  /**
+   * Constructs a new Render.
+   * @exports Render
+   * @classdesc Represents a Render.
+   * @implements IRender
+   * @constructor
+   * @param {IRender=} [properties] Properties to set
+   */
+  function Render(properties) {
+    if (properties)
+      for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+        if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
+  }
+
+  /**
+   * Render mode.
+   * @member {number} mode
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.mode = 0
+
+  /**
+   * Render distanceRange.
+   * @member {number} distanceRange
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.distanceRange = 0
+
+  /**
+   * Render sdfChannel.
+   * @member {number} sdfChannel
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.sdfChannel = 0
+
+  /**
+   * Creates a new Render instance using the specified properties.
+   * @function create
+   * @memberof Render
+   * @static
+   * @param {IRender=} [properties] Properties to set
+   * @returns {Render} Render instance
+   */
+  Render.create = function create(properties) {
+    return new Render(properties)
+  }
+
+  /**
+   * Encodes the specified Render message. Does not implicitly {@link Render.verify|verify} messages.
+   * @function encode
+   * @memberof Render
+   * @static
+   * @param {IRender} message Render message or plain object to encode
+   * @param {$protobuf.Writer} [writer] Writer to encode to
+   * @returns {$protobuf.Writer} Writer
+   */
+  Render.encode = function encode(message, writer) {
+    if (!writer) writer = $Writer.create()
+    if (message.mode != null && Object.hasOwnProperty.call(message, 'mode'))
+      writer.uint32(/* id 1, wireType 0 =*/ 8).int32(message.mode)
+    if (
+      message.distanceRange != null &&
+      Object.hasOwnProperty.call(message, 'distanceRange')
+    )
+      writer.uint32(/* id 2, wireType 0 =*/ 16).int32(message.distanceRange)
+    if (
+      message.sdfChannel != null &&
+      Object.hasOwnProperty.call(message, 'sdfChannel')
+    )
+      writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.sdfChannel)
+    return writer
+  }
+
+  /**
+   * Encodes the specified Render message, length delimited. Does not implicitly {@link Render.verify|verify} messages.
+   * @function encodeDelimited
+   * @memberof Render
+   * @static
+   * @param {IRender} message Render message or plain object to encode
+   * @param {$protobuf.Writer} [writer] Writer to encode to
+   * @returns {$protobuf.Writer} Writer
+   */
+  Render.encodeDelimited = function encodeDelimited(message, writer) {
+    return this.encode(message, writer).ldelim()
+  }
+
+  /**
+   * Decodes a Render message from the specified reader or buffer.
+   * @function decode
+   * @memberof Render
+   * @static
+   * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+   * @param {number} [length] Message length if known beforehand
+   * @returns {Render} Render
+   * @throws {Error} If the payload is not a reader or valid buffer
+   * @throws {$protobuf.util.ProtocolError} If required fields are missing
+   */
+  Render.decode = function decode(reader, length, error) {
+    if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
+    let end = length === undefined ? reader.len : reader.pos + length,
+      message = new $root.Render()
+    while (reader.pos < end) {
+      let tag = reader.uint32()
+      if (tag === error) break
+      switch (tag >>> 3) {
+        case 1: {
+          message.mode = reader.int32()
+          break
+        }
+        case 2: {
+          message.distanceRange = reader.int32()
+          break
+        }
+        case 3: {
+          message.sdfChannel = reader.int32()
+          break
+        }
+        default:
+          reader.skipType(tag & 7)
+          break
+      }
+    }
+    return message
+  }
+
+  /**
+   * Decodes a Render message from the specified reader or buffer, length delimited.
+   * @function decodeDelimited
+   * @memberof Render
+   * @static
+   * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+   * @returns {Render} Render
+   * @throws {Error} If the payload is not a reader or valid buffer
+   * @throws {$protobuf.util.ProtocolError} If required fields are missing
+   */
+  Render.decodeDelimited = function decodeDelimited(reader) {
+    if (!(reader instanceof $Reader)) reader = new $Reader(reader)
+    return this.decode(reader, reader.uint32())
+  }
+
+  /**
+   * Verifies a Render message.
+   * @function verify
+   * @memberof Render
+   * @static
+   * @param {Object.<string,*>} message Plain object to verify
+   * @returns {string|null} `null` if valid, otherwise the reason why it is not
+   */
+  Render.verify = function verify(message) {
+    if (typeof message !== 'object' || message === null)
+      return 'object expected'
+    if (message.mode != null && message.hasOwnProperty('mode'))
+      if (!$util.isInteger(message.mode)) return 'mode: integer expected'
+    if (
+      message.distanceRange != null &&
+      message.hasOwnProperty('distanceRange')
+    )
+      if (!$util.isInteger(message.distanceRange))
+        return 'distanceRange: integer expected'
+    if (message.sdfChannel != null && message.hasOwnProperty('sdfChannel'))
+      if (!$util.isInteger(message.sdfChannel))
+        return 'sdfChannel: integer expected'
+    return null
+  }
+
+  /**
+   * Creates a Render message from a plain object. Also converts values to their respective internal types.
+   * @function fromObject
+   * @memberof Render
+   * @static
+   * @param {Object.<string,*>} object Plain object
+   * @returns {Render} Render
+   */
+  Render.fromObject = function fromObject(object) {
+    if (object instanceof $root.Render) return object
+    let message = new $root.Render()
+    if (object.mode != null) message.mode = object.mode | 0
+    if (object.distanceRange != null)
+      message.distanceRange = object.distanceRange | 0
+    if (object.sdfChannel != null) message.sdfChannel = object.sdfChannel | 0
+    return message
+  }
+
+  /**
+   * Creates a plain object from a Render message. Also converts values to other types if specified.
+   * @function toObject
+   * @memberof Render
+   * @static
+   * @param {Render} message Render
+   * @param {$protobuf.IConversionOptions} [options] Conversion options
+   * @returns {Object.<string,*>} Plain object
+   */
+  Render.toObject = function toObject(message, options) {
+    if (!options) options = {}
+    let object = {}
+    if (options.defaults) {
+      object.mode = 0
+      object.distanceRange = 0
+      object.sdfChannel = 0
+    }
+    if (message.mode != null && message.hasOwnProperty('mode'))
+      object.mode = message.mode
+    if (
+      message.distanceRange != null &&
+      message.hasOwnProperty('distanceRange')
+    )
+      object.distanceRange = message.distanceRange
+    if (message.sdfChannel != null && message.hasOwnProperty('sdfChannel'))
+      object.sdfChannel = message.sdfChannel
+    return object
+  }
+
+  /**
+   * Converts this Render to JSON.
+   * @function toJSON
+   * @memberof Render
+   * @instance
+   * @returns {Object.<string,*>} JSON object
+   */
+  Render.prototype.toJSON = function toJSON() {
+    return this.constructor.toObject(this, $protobuf.util.toJSONOptions)
+  }
+
+  /**
+   * Gets the default type url for Render
+   * @function getTypeUrl
+   * @memberof Render
+   * @static
+   * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns {string} The default type url
+   */
+  Render.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+    if (typeUrlPrefix === undefined) {
+      typeUrlPrefix = 'type.googleapis.com'
+    }
+    return typeUrlPrefix + '/Render'
+  }
+
+  return Render
+})())
+
 export const Style = ($root.Style = (() => {
   /**
    * Properties of a Style.
@@ -3317,6 +3571,7 @@ export const Style = ($root.Style = (() => {
    * @property {boolean|null} [useShadow] Style useShadow
    * @property {IShadow|null} [shadow] Style shadow
    * @property {string|null} [bgColor] Style bgColor
+   * @property {IRender|null} [render] Style render
    */
 
   /**
@@ -3390,6 +3645,14 @@ export const Style = ($root.Style = (() => {
   Style.prototype.bgColor = ''
 
   /**
+   * Style render.
+   * @member {IRender|null|undefined} render
+   * @memberof Style
+   * @instance
+   */
+  Style.prototype.render = null
+
+  /**
    * Creates a new Style instance using the specified properties.
    * @function create
    * @memberof Style
@@ -3447,6 +3710,11 @@ export const Style = ($root.Style = (() => {
       Object.hasOwnProperty.call(message, 'bgColor')
     )
       writer.uint32(/* id 7, wireType 2 =*/ 58).string(message.bgColor)
+    if (message.render != null && Object.hasOwnProperty.call(message, 'render'))
+      $root.Render.encode(
+        message.render,
+        writer.uint32(/* id 8, wireType 2 =*/ 66).fork(),
+      ).ldelim()
     return writer
   }
 
@@ -3510,6 +3778,10 @@ export const Style = ($root.Style = (() => {
           message.bgColor = reader.string()
           break
         }
+        case 8: {
+          message.render = $root.Render.decode(reader, reader.uint32())
+          break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -3568,6 +3840,10 @@ export const Style = ($root.Style = (() => {
     }
     if (message.bgColor != null && message.hasOwnProperty('bgColor'))
       if (!$util.isString(message.bgColor)) return 'bgColor: string expected'
+    if (message.render != null && message.hasOwnProperty('render')) {
+      let error = $root.Render.verify(message.render)
+      if (error) return 'render.' + error
+    }
     return null
   }
 
@@ -3605,6 +3881,11 @@ export const Style = ($root.Style = (() => {
       message.shadow = $root.Shadow.fromObject(object.shadow)
     }
     if (object.bgColor != null) message.bgColor = String(object.bgColor)
+    if (object.render != null) {
+      if (typeof object.render !== 'object')
+        throw TypeError('.Style.render: object expected')
+      message.render = $root.Render.fromObject(object.render)
+    }
     return message
   }
 
@@ -3628,6 +3909,7 @@ export const Style = ($root.Style = (() => {
       object.useShadow = false
       object.shadow = null
       object.bgColor = ''
+      object.render = null
     }
     if (message.font != null && message.hasOwnProperty('font'))
       object.font = $root.Font.toObject(message.font, options)
@@ -3643,6 +3925,8 @@ export const Style = ($root.Style = (() => {
       object.shadow = $root.Shadow.toObject(message.shadow, options)
     if (message.bgColor != null && message.hasOwnProperty('bgColor'))
       object.bgColor = message.bgColor
+    if (message.render != null && message.hasOwnProperty('render'))
+      object.render = $root.Render.toObject(message.render, options)
     return object
   }
 

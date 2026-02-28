@@ -50,6 +50,10 @@ export type { GradientColor } from 'src/types/style'
 // Store-specific Type Definitions
 // ============================================================================
 
+export type RenderMode = 'default' | 'sdf' | 'msdf'
+
+export type SdfChannel = 'rgb' | 'rgb-inv' | 'alpha' | 'alpha-inv'
+
 export interface FontResource {
   font: ArrayBuffer
   family: string
@@ -69,6 +73,12 @@ export interface FontData {
   sharp: number
 }
 
+export interface RenderData {
+  mode: RenderMode
+  distanceRange: number
+  sdfChannel: SdfChannel
+}
+
 export interface StyleData {
   font: FontData
   fill: FillData
@@ -77,6 +87,7 @@ export interface StyleData {
   useShadow: boolean
   shadow: ShadowData
   bgColor: string
+  render: RenderData
 }
 
 export interface StyleStoreState {
@@ -165,6 +176,14 @@ function createDefaultMetric(): MetricData {
   }
 }
 
+function createDefaultRender(): RenderData {
+  return {
+    mode: 'default',
+    distanceRange: 16,
+    sdfChannel: 'rgb',
+  }
+}
+
 function createDefaultStyle(): StyleData {
   return {
     font: createDefaultFont(),
@@ -174,6 +193,7 @@ function createDefaultStyle(): StyleData {
     useShadow: false,
     shadow: createDefaultShadow(),
     bgColor: 'rgba(0,0,0,0)',
+    render: createDefaultRender(),
   }
 }
 
@@ -381,6 +401,31 @@ export function setSharp(sharp: number): void {
 }
 
 // ============================================================================
+// Render Mode Management
+// ============================================================================
+
+/**
+ * Set render mode (default / sdf / msdf)
+ */
+export function setRenderMode(mode: RenderMode): void {
+  styleStore$.style.render.mode.set(mode)
+}
+
+/**
+ * Set SDF distance range
+ */
+export function setDistanceRange(range: number): void {
+  styleStore$.style.render.distanceRange.set(Math.max(range, 1))
+}
+
+/**
+ * Set SDF output channel format
+ */
+export function setSdfChannel(channel: SdfChannel): void {
+  styleStore$.style.render.sdfChannel.set(channel)
+}
+
+// ============================================================================
 // Fill & Stroke Management (via factory — DRY)
 // ============================================================================
 
@@ -582,6 +627,9 @@ export function initializeStyleStore(data: Partial<StyleStoreState>): void {
       }
       if (data.style.shadow) {
         newStyle.shadow = { ...currentStyle.shadow, ...data.style.shadow }
+      }
+      if (data.style.render) {
+        newStyle.render = { ...currentStyle.render, ...data.style.render }
       }
 
       styleStore$.style.set(newStyle)

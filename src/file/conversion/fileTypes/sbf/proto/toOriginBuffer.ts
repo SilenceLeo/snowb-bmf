@@ -1,7 +1,7 @@
 import type { Project } from 'src/types/project'
 import { uint8ArrayToArrayBuffer } from 'src/utils/bufferUtils'
 
-import { IProject } from './1.2.1/project'
+import { IProject } from './1.2.2/project'
 
 function convertKerning(
   kerning: Record<string, number>,

@@ -1411,6 +1411,125 @@ export class Shadow implements IShadow {
   public static getTypeUrl(typeUrlPrefix?: string): string
 }
 
+/** Properties of a Render. */
+export interface IRender {
+  /** Render mode */
+  mode?: number | null
+
+  /** Render distanceRange */
+  distanceRange?: number | null
+
+  /** Render sdfChannel */
+  sdfChannel?: number | null
+}
+
+/** Represents a Render. */
+export class Render implements IRender {
+  /**
+   * Constructs a new Render.
+   * @param [properties] Properties to set
+   */
+  constructor(properties?: IRender)
+
+  /** Render mode. */
+  public mode: number
+
+  /** Render distanceRange. */
+  public distanceRange: number
+
+  /** Render sdfChannel. */
+  public sdfChannel: number
+
+  /**
+   * Creates a new Render instance using the specified properties.
+   * @param [properties] Properties to set
+   * @returns Render instance
+   */
+  public static create(properties?: IRender): Render
+
+  /**
+   * Encodes the specified Render message. Does not implicitly {@link Render.verify|verify} messages.
+   * @param message Render message or plain object to encode
+   * @param [writer] Writer to encode to
+   * @returns Writer
+   */
+  public static encode(
+    message: IRender,
+    writer?: $protobuf.Writer,
+  ): $protobuf.Writer
+
+  /**
+   * Encodes the specified Render message, length delimited. Does not implicitly {@link Render.verify|verify} messages.
+   * @param message Render message or plain object to encode
+   * @param [writer] Writer to encode to
+   * @returns Writer
+   */
+  public static encodeDelimited(
+    message: IRender,
+    writer?: $protobuf.Writer,
+  ): $protobuf.Writer
+
+  /**
+   * Decodes a Render message from the specified reader or buffer.
+   * @param reader Reader or buffer to decode from
+   * @param [length] Message length if known beforehand
+   * @returns Render
+   * @throws {Error} If the payload is not a reader or valid buffer
+   * @throws {$protobuf.util.ProtocolError} If required fields are missing
+   */
+  public static decode(
+    reader: $protobuf.Reader | Uint8Array,
+    length?: number,
+  ): Render
+
+  /**
+   * Decodes a Render message from the specified reader or buffer, length delimited.
+   * @param reader Reader or buffer to decode from
+   * @returns Render
+   * @throws {Error} If the payload is not a reader or valid buffer
+   * @throws {$protobuf.util.ProtocolError} If required fields are missing
+   */
+  public static decodeDelimited(reader: $protobuf.Reader | Uint8Array): Render
+
+  /**
+   * Verifies a Render message.
+   * @param message Plain object to verify
+   * @returns `null` if valid, otherwise the reason why it is not
+   */
+  public static verify(message: { [k: string]: any }): string | null
+
+  /**
+   * Creates a Render message from a plain object. Also converts values to their respective internal types.
+   * @param object Plain object
+   * @returns Render
+   */
+  public static fromObject(object: { [k: string]: any }): Render
+
+  /**
+   * Creates a plain object from a Render message. Also converts values to other types if specified.
+   * @param message Render
+   * @param [options] Conversion options
+   * @returns Plain object
+   */
+  public static toObject(
+    message: Render,
+    options?: $protobuf.IConversionOptions,
+  ): { [k: string]: any }
+
+  /**
+   * Converts this Render to JSON.
+   * @returns JSON object
+   */
+  public toJSON(): { [k: string]: any }
+
+  /**
+   * Gets the default type url for Render
+   * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+   * @returns The default type url
+   */
+  public static getTypeUrl(typeUrlPrefix?: string): string
+}
+
 /** Properties of a Style. */
 export interface IStyle {
   /** Style font */
@@ -1433,6 +1552,9 @@ export interface IStyle {
 
   /** Style bgColor */
   bgColor?: string | null
+
+  /** Style render */
+  render?: IRender | null
 }
 
 /** Represents a Style. */
@@ -1463,6 +1585,9 @@ export class Style implements IStyle {
 
   /** Style bgColor. */
   public bgColor: string
+
+  /** Style render. */
+  public render?: IRender | null
 
   /**
    * Creates a new Style instance using the specified properties.
