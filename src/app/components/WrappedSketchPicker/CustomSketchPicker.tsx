@@ -1,11 +1,17 @@
-import { ComponentClass, CSSProperties, FunctionComponent, useCallback, useMemo } from 'react'
+import {
+  CSSProperties,
+  ComponentClass,
+  FunctionComponent,
+  useCallback,
+  useMemo,
+} from 'react'
 import { CustomPicker, HSLColor, RGBColor } from 'react-color'
-import { ExportedColorProps } from 'react-color/lib/components/common/ColorWrap'
 // @types/react-color sub-component types are incomplete: they don't declare
 // hsl/hsv/rgb/renderers props that the runtime components actually accept.
 // We cast imports to `FunctionComponent<any>` to bypass the incorrect typings.
 import _Alpha from 'react-color/lib/components/common/Alpha'
 import _Checkboard from 'react-color/lib/components/common/Checkboard'
+import { ExportedColorProps } from 'react-color/lib/components/common/ColorWrap'
 import _EditableInput from 'react-color/lib/components/common/EditableInput'
 import _Hue from 'react-color/lib/components/common/Hue'
 import _Saturation from 'react-color/lib/components/common/Saturation'
@@ -218,7 +224,9 @@ const CustomSketchPickerInner = (props: InnerProps) => {
   // Color preview override from passed styles
   const colorPreviewMerged = useMemo<CSSProperties>(() => {
     const overrides = passedStyles?.default?.color
-    return overrides ? { ...colorPreviewStyle, ...overrides } : colorPreviewStyle
+    return overrides
+      ? { ...colorPreviewStyle, ...overrides }
+      : colorPreviewStyle
   }, [passedStyles])
 
   // Handle hex/rgba field changes (mirrors SketchFields.js logic)
@@ -271,7 +279,7 @@ const CustomSketchPickerInner = (props: InnerProps) => {
   )
 
   return (
-    <div style={pickerStyle} className="sketch-picker">
+    <div style={pickerStyle} className='sketch-picker'>
       {/* Saturation panel */}
       <div style={saturationWrapStyle}>
         <SaturationC
@@ -283,14 +291,10 @@ const CustomSketchPickerInner = (props: InnerProps) => {
       </div>
 
       {/* Controls: Hue + Alpha + Color preview */}
-      <div style={controlsStyle} className="flexbox-fix">
+      <div style={controlsStyle} className='flexbox-fix'>
         <div style={slidersStyle}>
           <div style={hueWrapStyle}>
-            <HueC
-              hsl={hsl}
-              onChange={onChange}
-              style={hueInnerStyle}
-            />
+            <HueC hsl={hsl} onChange={onChange} style={hueInnerStyle} />
           </div>
           {!disableAlpha && (
             <div style={alphaWrapStyle}>
@@ -304,17 +308,22 @@ const CustomSketchPickerInner = (props: InnerProps) => {
           )}
         </div>
         <div style={colorPreviewMerged}>
-          <CheckboardC white="transparent" grey="rgba(0,0,0,.08)" size={8} renderers={{}} />
+          <CheckboardC
+            white='transparent'
+            grey='rgba(0,0,0,.08)'
+            size={8}
+            renderers={{}}
+          />
           <div style={activeColorStyle} />
         </div>
       </div>
 
       {/* Fields row: hex | r | g | b | a | [%] */}
-      <div style={fieldsStyle} className="flexbox-fix">
+      <div style={fieldsStyle} className='flexbox-fix'>
         <div style={fieldDoubleStyle}>
           <EditableInputC
             style={fieldStyle}
-            label="hex"
+            label='hex'
             value={hex.replace('#', '')}
             onChange={handleColorChange}
           />
@@ -322,42 +331,42 @@ const CustomSketchPickerInner = (props: InnerProps) => {
         <div style={fieldSingleStyle}>
           <EditableInputC
             style={fieldStyle}
-            label="r"
+            label='r'
             value={rgb.r}
             onChange={handleColorChange}
-            dragLabel="true"
-            dragMax="255"
+            dragLabel='true'
+            dragMax='255'
           />
         </div>
         <div style={fieldSingleStyle}>
           <EditableInputC
             style={fieldStyle}
-            label="g"
+            label='g'
             value={rgb.g}
             onChange={handleColorChange}
-            dragLabel="true"
-            dragMax="255"
+            dragLabel='true'
+            dragMax='255'
           />
         </div>
         <div style={fieldSingleStyle}>
           <EditableInputC
             style={fieldStyle}
-            label="b"
+            label='b'
             value={rgb.b}
             onChange={handleColorChange}
-            dragLabel="true"
-            dragMax="255"
+            dragLabel='true'
+            dragMax='255'
           />
         </div>
         {!disableAlpha && (
           <div style={fieldSingleStyle}>
             <EditableInputC
               style={fieldStyle}
-              label="a"
+              label='a'
               value={Math.round((rgb.a ?? 1) * 100)}
               onChange={handleColorChange}
-              dragLabel="true"
-              dragMax="100"
+              dragLabel='true'
+              dragMax='100'
             />
           </div>
         )}
@@ -365,11 +374,11 @@ const CustomSketchPickerInner = (props: InnerProps) => {
           <div style={fieldSingleStyle}>
             <EditableInputC
               style={fieldStyle}
-              label="%"
+              label='%'
               value={Math.round(offset! * 100)}
               onChange={handlePositionChange}
-              dragLabel="true"
-              dragMax="100"
+              dragLabel='true'
+              dragMax='100'
             />
           </div>
         )}
@@ -377,7 +386,7 @@ const CustomSketchPickerInner = (props: InnerProps) => {
 
       {/* Preset colors */}
       {presetColors.length > 0 && (
-        <div style={presetsWrapStyle} className="flexbox-fix">
+        <div style={presetsWrapStyle} className='flexbox-fix'>
           {presetColors.map((color) => (
             <div key={color} style={swatchWrapStyle}>
               <div
@@ -392,6 +401,6 @@ const CustomSketchPickerInner = (props: InnerProps) => {
   )
 }
 
-export default CustomPicker(CustomSketchPickerInner as any) as unknown as ComponentClass<
-  CustomSketchPickerOwnProps & ExportedColorProps
->
+export default CustomPicker(
+  CustomSketchPickerInner as any,
+) as unknown as ComponentClass<CustomSketchPickerOwnProps & ExportedColorProps>

@@ -22,12 +22,12 @@ import {
   resetStyleStore,
   resetUiStore,
   selectProject,
-  setPackCanvases,
-  setSourceCanvas,
-  updateBaselines,
   setCurrentProject,
   setInitializing,
+  setPackCanvases,
+  setSourceCanvas,
   setupAutoRunListeners,
+  updateBaselines,
   workspaceStore$,
 } from 'src/store/legend'
 import {
@@ -65,6 +65,12 @@ class SnowBambooDatabase extends Dexie {
     this.version(1).stores({
       workspaceMeta: 'id',
       projects: 'id, name, lastModified',
+    })
+
+    this.version(2).stores({
+      workspaceMeta: 'id',
+      projects: 'id, name, lastModified',
+      gradientPresets: 'id',
     })
   }
 }
@@ -370,7 +376,9 @@ export async function createNewLegendProject(): Promise<{
   id: number
 }> {
   if (isSwitchingProject) {
-    console.warn('[Persistence] Project operation already in progress, skipping')
+    console.warn(
+      '[Persistence] Project operation already in progress, skipping',
+    )
     return { status: -1, id: 0 }
   }
   isSwitchingProject = true
@@ -456,7 +464,9 @@ export async function openLegendProject(
   }
 
   if (isSwitchingProject) {
-    console.warn('[Persistence] Project operation already in progress, skipping')
+    console.warn(
+      '[Persistence] Project operation already in progress, skipping',
+    )
     return { status: -1, id: 0 }
   }
   isSwitchingProject = true
@@ -515,9 +525,7 @@ export async function openLegendProject(
  * then removes the metadata and data.
  * Cannot remove the last remaining project.
  */
-export async function removeLegendProject(
-  projectId: number,
-): Promise<boolean> {
+export async function removeLegendProject(projectId: number): Promise<boolean> {
   const namedList = getNamedList()
   const remaining = namedList.filter((item) => item.id !== projectId)
 
@@ -528,7 +536,9 @@ export async function removeLegendProject(
   }
 
   if (isSwitchingProject) {
-    console.warn('[Persistence] Project operation already in progress, skipping')
+    console.warn(
+      '[Persistence] Project operation already in progress, skipping',
+    )
     return false
   }
 
@@ -552,10 +562,7 @@ export async function removeLegendProject(
     console.log(`[Persistence] Removed project: ${projectId}`)
     return true
   } catch (error) {
-    console.error(
-      `[Persistence] Failed to remove project ${projectId}:`,
-      error,
-    )
+    console.error(`[Persistence] Failed to remove project ${projectId}:`, error)
     return false
   }
 }

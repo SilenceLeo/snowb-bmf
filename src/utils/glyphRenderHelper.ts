@@ -211,12 +211,28 @@ function renderOpentypeGlyph(
 
   ctx.translate(translateX, translateY)
   ctxDoPath(ctx, path.commands)
-  ctx.fillStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, fill, fill.patternImage)
+  ctx.fillStyle = getCanvasStyle(
+    ctx,
+    0,
+    0,
+    fontWidth,
+    fontHeight,
+    fill,
+    fill.patternImage,
+  )
 
   const hasStroke = !!(stroke && lineWidth)
 
   if (hasStroke) {
-    ctx.strokeStyle = getCanvasStyle(ctx, 0, 0, fontWidth, fontHeight, stroke, stroke.patternImage)
+    ctx.strokeStyle = getCanvasStyle(
+      ctx,
+      0,
+      0,
+      fontWidth,
+      fontHeight,
+      stroke,
+      stroke.patternImage,
+    )
     ctx.lineWidth = path.strokeWidth =
       stroke.strokeType === 1 ? stroke.width : lineWidth
   }
@@ -311,7 +327,15 @@ function renderFallbackGlyph(
     ctx.globalCompositeOperation = 'source-over'
   }
 
-  ctx.fillStyle = getCanvasStyle(ctx, styleX, drawY, font.size, font.size, fill, fill.patternImage)
+  ctx.fillStyle = getCanvasStyle(
+    ctx,
+    styleX,
+    drawY,
+    font.size,
+    font.size,
+    fill,
+    fill.patternImage,
+  )
   ctx.fillText(letter, drawX, drawY)
 
   if (hasStroke && stroke.strokeType === 1) {

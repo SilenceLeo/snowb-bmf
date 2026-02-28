@@ -48,9 +48,13 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
   useEffect(() => {
     // Detect newly added palette items by comparing IDs
     const prevIds = new Set(prevPaletteRef.current.map(({ id }) => id))
-    const newItem = palette.find(({ id }) => !prevIds.has(id))
-    if (newItem) {
-      setActiveId(newItem.id)
+    const newItems = palette.filter(({ id }) => !prevIds.has(id))
+    if (newItems.length === 1) {
+      // User manually added a single stop — auto-select it
+      setActiveId(newItems[0].id)
+    } else if (newItems.length > 1) {
+      // Bulk replacement (e.g. preset apply) — close color picker
+      setActiveId(0)
     }
     prevPaletteRef.current = palette
   }, [palette])
@@ -134,6 +138,11 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
     [handleUpdate],
   )
 
+  const handleOffsetChange = useCallback(
+    (offset: number) => handleUpdate({ offset }),
+    [handleUpdate],
+  )
+
   return (
     <ClickAwayListener
       mouseEvent='onMouseDown'
@@ -157,7 +166,7 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
             color: activeColor,
             onChange: handleColorChange,
             offset: activeItem?.offset ?? 0,
-            onOffsetChange: (offset: number) => handleUpdate({ offset }),
+            onOffsetChange: handleOffsetChange,
           })}
       </div>
     </ClickAwayListener>

@@ -8,6 +8,7 @@ import {
   initializeProject,
   setupAutoRunListeners,
 } from 'src/store/legend'
+import { loadGradientPresets } from 'src/store/legend/stores/gradientPresetStore'
 import { loadWorkspaceToLegendState } from 'src/utils/persistence'
 
 import DynamicTitle from './components/DynamicTitle'
@@ -26,6 +27,7 @@ function App(): React.JSX.Element {
 
     // Initialize Legend State
     initLegendState()
+    loadGradientPresets()
 
     // Initialize store asynchronously
     const init = async () => {

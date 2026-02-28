@@ -1,8 +1,11 @@
 import { useSelector } from '@legendapp/state/react'
 import { useRef } from 'react'
 
+import type { GradientPreset } from 'src/types/gradientPreset'
+
 import { getSourceCanvas, glyphStore$ } from './glyphStore'
 import { projectStore$ } from './projectStore'
+import { gradientPresetStore$ } from './stores/gradientPresetStore'
 import { type LayoutData, layoutStore$ } from './stores/layoutStore'
 import {
   type FillData,
@@ -511,4 +514,14 @@ export function useProjectMeta(projectId: number): ProjectMeta | undefined {
   return useSelector(() =>
     workspaceStore$.workspace.projectList[projectId].get(),
   )
+}
+
+// Gradient Preset Hooks
+
+export function useGradientPresets(): GradientPreset[] {
+  return useSelector(() => gradientPresetStore$.presets.get())
+}
+
+export function useGradientPresetsLoaded(): boolean {
+  return useSelector(() => gradientPresetStore$.isLoaded.get())
 }

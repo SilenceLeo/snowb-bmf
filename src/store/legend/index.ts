@@ -339,7 +339,21 @@ export {
   useProjectMeta,
   // Kerning hooks
   useGlyphKerning,
+  // Gradient preset hooks
+  useGradientPresets,
+  useGradientPresetsLoaded,
 } from './hooks'
+
+// Gradient Preset Store
+export {
+  gradientPresetStore$,
+  loadGradientPresets,
+  saveGradientPreset,
+  deleteGradientPreset,
+} from './stores/gradientPresetStore'
+
+// Gradient Preset Types
+export type { GradientPreset } from 'src/types/gradientPreset'
 
 // ============================================================================
 // Actions (Business Logic)
