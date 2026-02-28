@@ -1,13 +1,17 @@
 import Popper, { PopperPlacementType } from '@mui/material/Popper'
 import { type Theme, useTheme } from '@mui/material/styles'
 import { FunctionComponent } from 'react'
-import { ColorResult, SketchPicker } from 'react-color'
+import { ColorResult } from 'react-color'
+
+import CustomSketchPicker from './CustomSketchPicker'
 
 export interface ChildrenProps {
   open: boolean
   color: string
   placement: PopperPlacementType
   anchorEl: HTMLDivElement | null
+  offset?: number
+  onOffsetChange?: (offset: number) => void
   onChange(color: string): void
 }
 
@@ -38,7 +42,8 @@ const usePickerStyle = (theme: Theme) => {
 const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
   props: Partial<ChildrenProps>,
 ) => {
-  const { open, anchorEl, color, onChange, placement } = props
+  const { open, anchorEl, color, onChange, placement, offset, onOffsetChange } =
+    props
   const theme = useTheme()
   const pickerStyle = usePickerStyle(theme)
   const { palette } = theme
@@ -62,9 +67,11 @@ const WrappedSketchPicker: FunctionComponent<Partial<ChildrenProps>> = (
         },
       }}
     >
-      <SketchPicker
+      <CustomSketchPicker
         color={color}
         styles={pickerStyle}
+        offset={offset}
+        onOffsetChange={onOffsetChange}
         onChange={({ rgb }: ColorResult) => {
           if (onChange)
             onChange(

@@ -40,7 +40,8 @@
     "العربية",
     "ttcf",
     "sfnt",
-    "Bahnschrift"
+    "Bahnschrift",
+    "Checkboard"
   ],
   "ignorePaths": [
     "node_modules",

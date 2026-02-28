@@ -26,6 +26,8 @@ export interface ChildrenProps {
   open: boolean
   anchorEl: HTMLDivElement | null
   color: string
+  offset?: number
+  onOffsetChange?: (offset: number) => void
   onChange(color: string): void
 }
 
@@ -37,10 +39,11 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
   const prevPaletteRef = useRef(palette)
   const [activeId, setActiveId] = useState<number>(0)
 
-  const activeColor = useMemo(
-    () => palette.find((item) => item.id === activeId)?.color ?? '',
+  const activeItem = useMemo(
+    () => palette.find((item) => item.id === activeId),
     [activeId, palette],
   )
+  const activeColor = activeItem?.color ?? ''
 
   useEffect(() => {
     // Detect newly added palette items by comparing IDs
@@ -153,6 +156,8 @@ const GradientBuilder: FunctionComponent<GradientBuilderProps> = (
             anchorEl: rootEl.current,
             color: activeColor,
             onChange: handleColorChange,
+            offset: activeItem?.offset ?? 0,
+            onOffsetChange: (offset: number) => handleUpdate({ offset }),
           })}
       </div>
     </ClickAwayListener>
