@@ -14,6 +14,7 @@ import { batch, opaqueObject } from '@legendapp/state'
 import type { Font as OpenType } from 'opentype.js'
 import { parse } from 'opentype.js'
 import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.2.2/project'
+import { uint8ArrayToArrayBuffer } from 'src/utils/bufferUtils'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 import updateFontFace from 'src/utils/updateFontFace'
 
@@ -26,7 +27,10 @@ import { setCurrentProject } from '../projectStore'
 import { initializeLayoutStore } from '../stores/layoutStore'
 import type { MetricData } from '../stores/styleStore'
 import {
+  type ColoringStrategy,
+  type ErrorCorrectionMode,
   type FillData,
+  type FillRule,
   FillType,
   type FontData,
   type FontResource,
@@ -56,10 +60,7 @@ function normalizeToArrayBuffer(
   input: Uint8Array | ArrayBuffer,
 ): ArrayBuffer {
   if (input instanceof ArrayBuffer) return input
-  return input.buffer.slice(
-    input.byteOffset,
-    input.byteOffset + input.byteLength,
-  ) as ArrayBuffer
+  return uint8ArrayToArrayBuffer(input)
 }
 
 // ============================================================================
@@ -467,6 +468,10 @@ function intToRenderMode(value: number | null | undefined): RenderMode {
       return 'sdf'
     case 2:
       return 'msdf'
+    case 3:
+      return 'mtsdf'
+    case 4:
+      return 'psdf'
     default:
       return 'default'
   }
@@ -485,6 +490,50 @@ function intToSdfChannel(value: number | null | undefined): SdfChannel {
       return 'alpha-inv'
     default:
       return 'rgb'
+  }
+}
+
+/**
+ * Convert proto int32 to FillRule string
+ */
+function intToFillRule(value: number | null | undefined): FillRule {
+  switch (value) {
+    case 1:
+      return 'evenodd'
+    default:
+      return 'nonzero'
+  }
+}
+
+/**
+ * Convert proto int32 to ColoringStrategy string
+ */
+function intToColoringStrategy(
+  value: number | null | undefined,
+): ColoringStrategy {
+  switch (value) {
+    case 1:
+      return 'inktrap'
+    case 2:
+      return 'distance'
+    default:
+      return 'simple'
+  }
+}
+
+/**
+ * Convert proto int32 to ErrorCorrectionMode string
+ */
+function intToErrorCorrection(
+  value: number | null | undefined,
+): ErrorCorrectionMode {
+  switch (value) {
+    case 1:
+      return 'disabled'
+    case 2:
+      return 'indiscriminate'
+    default:
+      return 'edge-priority'
   }
 }
 
@@ -545,6 +594,13 @@ async function deserializeStyle(
           mode?: number
           distanceRange?: number
           sdfChannel?: number
+          angleThreshold?: number
+          overlapSupport?: boolean
+          edgeColoringSeed?: number
+          scanlinePass?: boolean
+          fillRule?: number
+          coloringStrategy?: number
+          errorCorrection?: number
         }
       }
     | null
@@ -562,8 +618,15 @@ async function deserializeStyle(
     bgColor: data?.bgColor ?? 'rgba(0,0,0,0)',
     render: {
       mode: intToRenderMode(data?.render?.mode),
-      distanceRange: data?.render?.distanceRange || 16,
+      distanceRange: data?.render?.distanceRange ?? 16,
       sdfChannel: intToSdfChannel(data?.render?.sdfChannel),
+      angleThreshold: data?.render?.angleThreshold ?? 3.0,
+      overlapSupport: data?.render?.overlapSupport ?? true,
+      edgeColoringSeed: data?.render?.edgeColoringSeed ?? 0,
+      scanlinePass: data?.render?.scanlinePass ?? false,
+      fillRule: intToFillRule(data?.render?.fillRule),
+      coloringStrategy: intToColoringStrategy(data?.render?.coloringStrategy),
+      errorCorrection: intToErrorCorrection(data?.render?.errorCorrection),
     },
   }
 }

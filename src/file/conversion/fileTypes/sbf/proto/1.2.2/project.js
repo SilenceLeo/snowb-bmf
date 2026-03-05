@@ -3313,6 +3313,13 @@ export const Render = ($root.Render = (() => {
    * @property {number|null} [mode] Render mode
    * @property {number|null} [distanceRange] Render distanceRange
    * @property {number|null} [sdfChannel] Render sdfChannel
+   * @property {number|null} [angleThreshold] Render angleThreshold
+   * @property {boolean|null} [overlapSupport] Render overlapSupport
+   * @property {number|null} [edgeColoringSeed] Render edgeColoringSeed
+   * @property {boolean|null} [scanlinePass] Render scanlinePass
+   * @property {number|null} [fillRule] Render fillRule
+   * @property {number|null} [coloringStrategy] Render coloringStrategy
+   * @property {number|null} [errorCorrection] Render errorCorrection
    */
 
   /**
@@ -3354,6 +3361,62 @@ export const Render = ($root.Render = (() => {
   Render.prototype.sdfChannel = 0
 
   /**
+   * Render angleThreshold.
+   * @member {number} angleThreshold
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.angleThreshold = 0
+
+  /**
+   * Render overlapSupport.
+   * @member {boolean} overlapSupport
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.overlapSupport = false
+
+  /**
+   * Render edgeColoringSeed.
+   * @member {number} edgeColoringSeed
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.edgeColoringSeed = 0
+
+  /**
+   * Render scanlinePass.
+   * @member {boolean} scanlinePass
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.scanlinePass = false
+
+  /**
+   * Render fillRule.
+   * @member {number} fillRule
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.fillRule = 0
+
+  /**
+   * Render coloringStrategy.
+   * @member {number} coloringStrategy
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.coloringStrategy = 0
+
+  /**
+   * Render errorCorrection.
+   * @member {number} errorCorrection
+   * @memberof Render
+   * @instance
+   */
+  Render.prototype.errorCorrection = 0
+
+  /**
    * Creates a new Render instance using the specified properties.
    * @function create
    * @memberof Render
@@ -3388,6 +3451,41 @@ export const Render = ($root.Render = (() => {
       Object.hasOwnProperty.call(message, 'sdfChannel')
     )
       writer.uint32(/* id 3, wireType 0 =*/ 24).int32(message.sdfChannel)
+    if (
+      message.angleThreshold != null &&
+      Object.hasOwnProperty.call(message, 'angleThreshold')
+    )
+      writer.uint32(/* id 4, wireType 1 =*/ 33).double(message.angleThreshold)
+    if (
+      message.overlapSupport != null &&
+      Object.hasOwnProperty.call(message, 'overlapSupport')
+    )
+      writer.uint32(/* id 5, wireType 0 =*/ 40).bool(message.overlapSupport)
+    if (
+      message.edgeColoringSeed != null &&
+      Object.hasOwnProperty.call(message, 'edgeColoringSeed')
+    )
+      writer.uint32(/* id 6, wireType 0 =*/ 48).int32(message.edgeColoringSeed)
+    if (
+      message.scanlinePass != null &&
+      Object.hasOwnProperty.call(message, 'scanlinePass')
+    )
+      writer.uint32(/* id 7, wireType 0 =*/ 56).bool(message.scanlinePass)
+    if (
+      message.fillRule != null &&
+      Object.hasOwnProperty.call(message, 'fillRule')
+    )
+      writer.uint32(/* id 8, wireType 0 =*/ 64).int32(message.fillRule)
+    if (
+      message.coloringStrategy != null &&
+      Object.hasOwnProperty.call(message, 'coloringStrategy')
+    )
+      writer.uint32(/* id 9, wireType 0 =*/ 72).int32(message.coloringStrategy)
+    if (
+      message.errorCorrection != null &&
+      Object.hasOwnProperty.call(message, 'errorCorrection')
+    )
+      writer.uint32(/* id 10, wireType 0 =*/ 80).int32(message.errorCorrection)
     return writer
   }
 
@@ -3435,6 +3533,34 @@ export const Render = ($root.Render = (() => {
           message.sdfChannel = reader.int32()
           break
         }
+        case 4: {
+          message.angleThreshold = reader.double()
+          break
+        }
+        case 5: {
+          message.overlapSupport = reader.bool()
+          break
+        }
+        case 6: {
+          message.edgeColoringSeed = reader.int32()
+          break
+        }
+        case 7: {
+          message.scanlinePass = reader.bool()
+          break
+        }
+        case 8: {
+          message.fillRule = reader.int32()
+          break
+        }
+        case 9: {
+          message.coloringStrategy = reader.int32()
+          break
+        }
+        case 10: {
+          message.errorCorrection = reader.int32()
+          break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -3480,6 +3606,42 @@ export const Render = ($root.Render = (() => {
     if (message.sdfChannel != null && message.hasOwnProperty('sdfChannel'))
       if (!$util.isInteger(message.sdfChannel))
         return 'sdfChannel: integer expected'
+    if (
+      message.angleThreshold != null &&
+      message.hasOwnProperty('angleThreshold')
+    )
+      if (typeof message.angleThreshold !== 'number')
+        return 'angleThreshold: number expected'
+    if (
+      message.overlapSupport != null &&
+      message.hasOwnProperty('overlapSupport')
+    )
+      if (typeof message.overlapSupport !== 'boolean')
+        return 'overlapSupport: boolean expected'
+    if (
+      message.edgeColoringSeed != null &&
+      message.hasOwnProperty('edgeColoringSeed')
+    )
+      if (!$util.isInteger(message.edgeColoringSeed))
+        return 'edgeColoringSeed: integer expected'
+    if (message.scanlinePass != null && message.hasOwnProperty('scanlinePass'))
+      if (typeof message.scanlinePass !== 'boolean')
+        return 'scanlinePass: boolean expected'
+    if (message.fillRule != null && message.hasOwnProperty('fillRule'))
+      if (!$util.isInteger(message.fillRule))
+        return 'fillRule: integer expected'
+    if (
+      message.coloringStrategy != null &&
+      message.hasOwnProperty('coloringStrategy')
+    )
+      if (!$util.isInteger(message.coloringStrategy))
+        return 'coloringStrategy: integer expected'
+    if (
+      message.errorCorrection != null &&
+      message.hasOwnProperty('errorCorrection')
+    )
+      if (!$util.isInteger(message.errorCorrection))
+        return 'errorCorrection: integer expected'
     return null
   }
 
@@ -3498,6 +3660,19 @@ export const Render = ($root.Render = (() => {
     if (object.distanceRange != null)
       message.distanceRange = object.distanceRange | 0
     if (object.sdfChannel != null) message.sdfChannel = object.sdfChannel | 0
+    if (object.angleThreshold != null)
+      message.angleThreshold = Number(object.angleThreshold)
+    if (object.overlapSupport != null)
+      message.overlapSupport = Boolean(object.overlapSupport)
+    if (object.edgeColoringSeed != null)
+      message.edgeColoringSeed = object.edgeColoringSeed | 0
+    if (object.scanlinePass != null)
+      message.scanlinePass = Boolean(object.scanlinePass)
+    if (object.fillRule != null) message.fillRule = object.fillRule | 0
+    if (object.coloringStrategy != null)
+      message.coloringStrategy = object.coloringStrategy | 0
+    if (object.errorCorrection != null)
+      message.errorCorrection = object.errorCorrection | 0
     return message
   }
 
@@ -3517,6 +3692,13 @@ export const Render = ($root.Render = (() => {
       object.mode = 0
       object.distanceRange = 0
       object.sdfChannel = 0
+      object.angleThreshold = 0
+      object.overlapSupport = false
+      object.edgeColoringSeed = 0
+      object.scanlinePass = false
+      object.fillRule = 0
+      object.coloringStrategy = 0
+      object.errorCorrection = 0
     }
     if (message.mode != null && message.hasOwnProperty('mode'))
       object.mode = message.mode
@@ -3527,6 +3709,38 @@ export const Render = ($root.Render = (() => {
       object.distanceRange = message.distanceRange
     if (message.sdfChannel != null && message.hasOwnProperty('sdfChannel'))
       object.sdfChannel = message.sdfChannel
+    if (
+      message.angleThreshold != null &&
+      message.hasOwnProperty('angleThreshold')
+    )
+      object.angleThreshold =
+        options.json && !isFinite(message.angleThreshold)
+          ? String(message.angleThreshold)
+          : message.angleThreshold
+    if (
+      message.overlapSupport != null &&
+      message.hasOwnProperty('overlapSupport')
+    )
+      object.overlapSupport = message.overlapSupport
+    if (
+      message.edgeColoringSeed != null &&
+      message.hasOwnProperty('edgeColoringSeed')
+    )
+      object.edgeColoringSeed = message.edgeColoringSeed
+    if (message.scanlinePass != null && message.hasOwnProperty('scanlinePass'))
+      object.scanlinePass = message.scanlinePass
+    if (message.fillRule != null && message.hasOwnProperty('fillRule'))
+      object.fillRule = message.fillRule
+    if (
+      message.coloringStrategy != null &&
+      message.hasOwnProperty('coloringStrategy')
+    )
+      object.coloringStrategy = message.coloringStrategy
+    if (
+      message.errorCorrection != null &&
+      message.hasOwnProperty('errorCorrection')
+    )
+      object.errorCorrection = message.errorCorrection
     return object
   }
 

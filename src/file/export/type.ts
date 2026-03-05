@@ -85,7 +85,7 @@ export interface BMFontMetadata {
 }
 
 export interface BMFontDistanceField {
-  fieldType: 'sdf' | 'msdf'
+  fieldType: 'sdf' | 'psdf' | 'msdf' | 'mtsdf'
   distanceRange: number
 }
 
@@ -188,12 +188,12 @@ export interface ExportProjectData {
   globalAdjustMetric: MetricData
   glyphList: ExportGlyphData[]
   xFractional: number
-  renderMode: 'default' | 'sdf' | 'msdf'
+  renderMode: 'default' | 'sdf' | 'psdf' | 'msdf' | 'mtsdf'
   distanceRange: number
   sdfChannel: SdfChannel
   ui: {
     width: number
     height: number
   }
-  packCanvases: HTMLCanvasElement[]
+  packCanvases: HTMLCanvasElement[] | null
 }

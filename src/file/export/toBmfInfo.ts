@@ -21,6 +21,19 @@ function getSdfChannelFlags(
   sdfChannel?: string,
 ): { alphaChnl: number; redChnl: number; greenChnl: number; blueChnl: number } {
   if (distanceField) {
+    if (distanceField.fieldType === 'mtsdf') {
+      // MTSDF: all 4 channels carry glyph/distance data
+      return { alphaChnl: 0, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+    }
+    if (distanceField.fieldType === 'psdf') {
+      // PSDF: single-channel distance in RGB, A=one (opaque)
+      return { alphaChnl: 4, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+    }
+    if (distanceField.fieldType === 'msdf') {
+      // MSDF: RGB carry per-channel distance, A=one (opaque)
+      return { alphaChnl: 4, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+    }
+    // SDF channel modes
     if (sdfChannel === 'alpha' || sdfChannel === 'alpha-inv') {
       // Distance in Alpha channel: RGB=one(4), A=glyph(0)
       return { alphaChnl: 0, redChnl: 4, greenChnl: 4, blueChnl: 4 }
@@ -77,7 +90,7 @@ export default function toBmfInfo(
       const subfamilyName = opentype.names.fontSubfamily?.en || ''
       const fullName = `${familyName} ${subfamilyName}`.toLowerCase()
 
-      bold = /bold|black|heavy|extra/.test(fullName) ? 1 : 0
+      bold = /\bbold\b|\bblack\b|\bheavy\b|\bextrabold\b/.test(fullName) ? 1 : 0
       italic = /italic|oblique|slant/.test(fullName) ? 1 : 0
     }
   }
@@ -149,7 +162,7 @@ export default function toBmfInfo(
     const isUnEmpty = !!(glyph.width && glyph.height)
     const charInfo = {
       letter: glyph.letter,
-      id: glyph.letter.codePointAt(0) || 0,
+      id: glyph.letter.codePointAt(0) ?? 0,
       x: glyph.x,
       y: glyph.y,
       width: isUnEmpty ? glyph.width + layout.padding * 2 : 0,
@@ -181,10 +194,10 @@ export default function toBmfInfo(
 
   // Step 1: Manual kerning — always O(n * k_avg), typically sparse
   glyphList.forEach((glyph) => {
-    const firstId = glyph.letter.codePointAt(0) || 0
+    const firstId = glyph.letter.codePointAt(0) ?? 0
     Object.entries(glyph.kerning).forEach(([letter, amount]) => {
       if (amount) {
-        const secondId = letter.codePointAt(0) || 0
+        const secondId = letter.codePointAt(0) ?? 0
         kerningMap.set(
           `${firstId}-${secondId}`,
           Math.round(amount * fractionalScale),
@@ -199,7 +212,7 @@ export default function toBmfInfo(
     glyphList.forEach((glyph) => {
       const glyphIndex = opentype.charToGlyphIndex(glyph.letter)
       if (glyphIndex !== 0) {
-        glyphIndexToId.set(glyphIndex, glyph.letter.codePointAt(0) || 0)
+        glyphIndexToId.set(glyphIndex, glyph.letter.codePointAt(0) ?? 0)
       }
     })
 
@@ -242,8 +255,20 @@ export default function toBmfInfo(
 
     // Step 3: GPOS kerning fallback — O(n²) via position.getKerningValue.
     // Uses opentype.js internal `position.defaultKerningTables` (undocumented).
-    // Values are additive with Steps 1-2. For fonts with both kern and GPOS
-    // tables containing identical pairs, values accumulate (uncommon in practice).
+    // Values are additive with Step 1 (manual kerning). Skip pairs already
+    // covered by Step 2 (kern table) to prevent double-counting on fonts
+    // that include identical pairs in both kern and GPOS tables.
+    const kernTableKeys = kernPairs ? new Set(
+      Object.entries(kernPairs)
+        .filter(([, v]) => v !== 0)
+        .map(([key]) => {
+          const ci = key.indexOf(',')
+          const li = glyphIndexToId.get(Number(key.slice(0, ci)))
+          const ri = glyphIndexToId.get(Number(key.slice(ci + 1)))
+          return li !== undefined && ri !== undefined ? `${li}-${ri}` : ''
+        })
+        .filter(Boolean),
+    ) : new Set<string>()
     const position = opentypeAny.position as
       | { defaultKerningTables: unknown; getKerningValue: (tables: unknown, left: number, right: number) => number }
       | undefined
@@ -256,7 +281,7 @@ export default function toBmfInfo(
         if (glyphIndex !== 0) {
           validGlyphs.push({
             index: glyphIndex,
-            id: glyph.letter.codePointAt(0) || 0,
+            id: glyph.letter.codePointAt(0) ?? 0,
             letter: glyph.letter,
           })
         }
@@ -275,6 +300,8 @@ export default function toBmfInfo(
           const amount = Math.round(gposKerning * fontScale * fractionalScale)
           if (amount) {
             const key = `${first.id}-${second.id}`
+            // Skip pairs already handled by kern table (Step 2) to avoid double-counting
+            if (kernTableKeys.has(key)) continue
             const existing = kerningMap.get(key)
             if (existing !== undefined) {
               const combined = existing + amount

@@ -50,7 +50,7 @@ export type { GradientColor } from 'src/types/style'
 // Store-specific Type Definitions
 // ============================================================================
 
-export type RenderMode = 'default' | 'sdf' | 'msdf'
+export type RenderMode = 'default' | 'sdf' | 'psdf' | 'msdf' | 'mtsdf'
 
 export type SdfChannel = 'rgb' | 'rgb-inv' | 'alpha' | 'alpha-inv'
 
@@ -73,10 +73,24 @@ export interface FontData {
   sharp: number
 }
 
+export type FillRule = 'nonzero' | 'evenodd'
+
+export type ColoringStrategy = 'simple' | 'inktrap' | 'distance'
+
+export type ErrorCorrectionMode = 'edge-priority' | 'disabled' | 'indiscriminate'
+
 export interface RenderData {
   mode: RenderMode
   distanceRange: number
   sdfChannel: SdfChannel
+  // MSDF/MTSDF parameters
+  angleThreshold: number // edge coloring angle threshold (radians, default 3.0)
+  overlapSupport: boolean // overlap contour combiner (default true)
+  edgeColoringSeed: number // coloring seed (default 0)
+  scanlinePass: boolean // scanline sign correction (default false)
+  fillRule: FillRule // winding rule (default 'nonzero')
+  coloringStrategy: ColoringStrategy // edge coloring algorithm (default 'simple')
+  errorCorrection: ErrorCorrectionMode // error correction mode (default 'edge-priority')
 }
 
 export interface StyleData {
@@ -181,6 +195,13 @@ function createDefaultRender(): RenderData {
     mode: 'default',
     distanceRange: 16,
     sdfChannel: 'rgb',
+    angleThreshold: 3.0,
+    overlapSupport: true,
+    edgeColoringSeed: 0,
+    scanlinePass: false,
+    fillRule: 'nonzero',
+    coloringStrategy: 'simple',
+    errorCorrection: 'edge-priority',
   }
 }
 
@@ -423,6 +444,55 @@ export function setDistanceRange(range: number): void {
  */
 export function setSdfChannel(channel: SdfChannel): void {
   styleStore$.style.render.sdfChannel.set(channel)
+}
+
+/**
+ * Set MSDF edge coloring angle threshold (radians)
+ */
+export function setAngleThreshold(value: number): void {
+  styleStore$.style.render.angleThreshold.set(Math.max(0.5, Math.min(Math.PI, value)))
+}
+
+/**
+ * Set MSDF overlap contour support
+ */
+export function setOverlapSupport(value: boolean): void {
+  styleStore$.style.render.overlapSupport.set(value)
+}
+
+/**
+ * Set MSDF edge coloring seed
+ */
+export function setEdgeColoringSeed(value: number): void {
+  styleStore$.style.render.edgeColoringSeed.set(Math.max(0, Math.round(value)))
+}
+
+/**
+ * Set MSDF scanline sign correction pass
+ */
+export function setScanlinePass(value: boolean): void {
+  styleStore$.style.render.scanlinePass.set(value)
+}
+
+/**
+ * Set MSDF fill rule for winding detection
+ */
+export function setFillRule(value: FillRule): void {
+  styleStore$.style.render.fillRule.set(value)
+}
+
+/**
+ * Set MSDF edge coloring strategy
+ */
+export function setColoringStrategy(value: ColoringStrategy): void {
+  styleStore$.style.render.coloringStrategy.set(value)
+}
+
+/**
+ * Set MSDF error correction mode
+ */
+export function setErrorCorrection(value: ErrorCorrectionMode): void {
+  styleStore$.style.render.errorCorrection.set(value)
 }
 
 // ============================================================================

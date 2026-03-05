@@ -41,3 +41,10 @@ CLAUDE.local.md
 .cursor/
 dist
 .serena
+
+# WASM build artifacts
+wasm/build/
+wasm/msdfgen/
+wasm/freetype/
+wasm/*.ttf
+wasm/*.TTF

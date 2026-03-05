@@ -1421,6 +1421,27 @@ export interface IRender {
 
   /** Render sdfChannel */
   sdfChannel?: number | null
+
+  /** Render angleThreshold */
+  angleThreshold?: number | null
+
+  /** Render overlapSupport */
+  overlapSupport?: boolean | null
+
+  /** Render edgeColoringSeed */
+  edgeColoringSeed?: number | null
+
+  /** Render scanlinePass */
+  scanlinePass?: boolean | null
+
+  /** Render fillRule */
+  fillRule?: number | null
+
+  /** Render coloringStrategy */
+  coloringStrategy?: number | null
+
+  /** Render errorCorrection */
+  errorCorrection?: number | null
 }
 
 /** Represents a Render. */
@@ -1439,6 +1460,27 @@ export class Render implements IRender {
 
   /** Render sdfChannel. */
   public sdfChannel: number
+
+  /** Render angleThreshold. */
+  public angleThreshold: number
+
+  /** Render overlapSupport. */
+  public overlapSupport: boolean
+
+  /** Render edgeColoringSeed. */
+  public edgeColoringSeed: number
+
+  /** Render scanlinePass. */
+  public scanlinePass: boolean
+
+  /** Render fillRule. */
+  public fillRule: number
+
+  /** Render coloringStrategy. */
+  public coloringStrategy: number
+
+  /** Render errorCorrection. */
+  public errorCorrection: number
 
   /**
    * Creates a new Render instance using the specified properties.

@@ -124,6 +124,20 @@ message Render {
   int32 distanceRange = 2;
 
   int32 sdfChannel = 3;
+
+  double angleThreshold = 4;
+
+  bool overlapSupport = 5;
+
+  int32 edgeColoringSeed = 6;
+
+  bool scanlinePass = 7;
+
+  int32 fillRule = 8;
+
+  int32 coloringStrategy = 9;
+
+  int32 errorCorrection = 10;
 }
 
 message Style {

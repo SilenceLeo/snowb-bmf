@@ -46,7 +46,11 @@ import {
 } from '../stores/styleStore'
 import { getPatternImage } from '../stores/styleSetterFactory'
 import { setPackFailed, setSize } from '../stores/uiStore'
-import { processAtlasForSdf } from 'src/file/export/sdf/atlasProcessor'
+import {
+  type MsdfGlyphData,
+  processAtlasForMsdf,
+  processAtlasForSdf,
+} from 'src/file/export/sdf/atlasProcessor'
 import type { GlyphInfoUpdate, ImageGlyphData, TextRectangle } from '../types'
 
 let packingEngine: PackingEngine | null = null
@@ -235,7 +239,7 @@ async function executePacking(
       maxHeight: result.height,
     }))
 
-    processPackingResults(pageResults, options)
+    await processPackingResults(pageResults, options)
 
     setPackingState(false)
   } catch (error) {
@@ -246,7 +250,7 @@ async function executePacking(
   }
 }
 
-function processPackingResults(
+async function processPackingResults(
   pageResults: {
     pageIndex: number
     list: TextRectangle[]
@@ -254,10 +258,10 @@ function processPackingResults(
     maxHeight: number
   }[],
   options: { auto: boolean; fixedSize: boolean; page: number },
-): void {
+): Promise<void> {
   assignGlyphPositions(pageResults)
   calculateAndSetDimensions(pageResults, options)
-  generatePageCanvases(pageResults, options.page)
+  await generatePageCanvases(pageResults, options.page)
   handleFailedGlyphs(pageResults)
   updateUIState(pageResults, options.page)
 }
@@ -330,7 +334,7 @@ function calculateAndSetDimensions(
   setPackSize(globalMaxWidth, globalMaxHeight)
 }
 
-function generatePageCanvases(
+async function generatePageCanvases(
   pageResults: {
     pageIndex: number
     list: TextRectangle[]
@@ -338,13 +342,14 @@ function generatePageCanvases(
     maxHeight: number
   }[],
   pageCount: number,
-): void {
+): Promise<void> {
   const layout = layoutStore$.layout.get()
   const style = styleStore$.style.get()
   const sourceCanvas = getSourceCanvas()
   const { padding } = layout
   const text = getProjectText()
   const isSdfMode = style.render.mode !== 'default'
+  const glyphList = getGlyphList(text)
 
   const canvases: HTMLCanvasElement[] = []
 
@@ -374,7 +379,6 @@ function generatePageCanvases(
       ctx.fillRect(0, 0, canvas.width, canvas.height)
     }
 
-    const glyphList = getGlyphList(text)
     const pageGlyphs = glyphList.filter((glyph) => glyph.page === pageIndex)
 
     pageGlyphs.forEach((glyph) => {
@@ -407,26 +411,66 @@ function generatePageCanvases(
     canvases[pageIndex] = canvas
   }
 
-  // SDF post-processing: convert clean white glyphs to distance field textures
+  // Distance field post-processing
   if (isSdfMode) {
-    const glyphList = getGlyphList(text)
-    const sdfGlyphs = glyphList.map((g) => ({
-      x: g.x,
-      y: g.y,
-      page: g.page,
-      width: g.width,
-      height: g.height,
-      letter: g.letter,
-      type: g.type as 'text' | 'image' | undefined,
-    }))
-    const sdfCanvases = processAtlasForSdf(canvases, sdfGlyphs, padding, {
-      radius: style.render.distanceRange,
-      // 0.25 = asymmetric mapping: 75% range for outside, 25% for inside
-      // This produces thinner edges, standard for game font SDF rendering
-      cutoff: 0.25,
-      channel: style.render.sdfChannel,
-    })
-    setPackCanvases(sdfCanvases)
+    const renderMode = style.render.mode
+
+    const mainFont = getMainFont()
+    const hasFontFile = !!mainFont?.font
+
+    if (renderMode !== 'default' && (renderMode !== 'sdf' || hasFontFile)) {
+      // WASM path: SDF (with font file) / PSDF / MSDF / MTSDF
+      // processAtlasForMsdf internally falls back to EDT for glyphs without fontBuffer
+      // (e.g., image glyphs, CSS-only fonts)
+      const msdfGlyphs: MsdfGlyphData[] = glyphList.map((g) => ({
+        x: g.x,
+        y: g.y,
+        page: g.page,
+        width: g.width,
+        height: g.height,
+        letter: g.letter,
+        type: g.type as 'text' | 'image' | undefined,
+        fontBuffer: mainFont?.font ?? undefined,
+        fontSize: style.font.size,
+      }))
+      const msdfCanvases = await processAtlasForMsdf(
+        canvases,
+        msdfGlyphs,
+        padding,
+        {
+          type: renderMode,
+          radius: style.render.distanceRange,
+          angleThreshold: style.render.angleThreshold,
+          overlapSupport: style.render.overlapSupport,
+          edgeColoringSeed: style.render.edgeColoringSeed,
+          scanlinePass: style.render.scanlinePass,
+          fillRule: style.render.fillRule,
+          coloringStrategy: style.render.coloringStrategy,
+          errorCorrection: style.render.errorCorrection,
+          sdfChannel: style.render.sdfChannel,
+        },
+      )
+      setPackCanvases(msdfCanvases)
+    } else {
+      // SDF without font file: EDT on rasterized alpha channel
+      const sdfGlyphs = glyphList.map((g) => ({
+        x: g.x,
+        y: g.y,
+        page: g.page,
+        width: g.width,
+        height: g.height,
+        letter: g.letter,
+        type: g.type as 'text' | 'image' | undefined,
+      }))
+      const sdfCanvases = processAtlasForSdf(canvases, sdfGlyphs, padding, {
+        radius: style.render.distanceRange,
+        // 0.25 = asymmetric mapping: 75% range for outside, 25% for inside
+        // This produces thinner edges, standard for game font SDF rendering
+        cutoff: 0.25,
+        channel: style.render.sdfChannel,
+      })
+      setPackCanvases(sdfCanvases)
+    }
   } else {
     setPackCanvases(canvases)
   }

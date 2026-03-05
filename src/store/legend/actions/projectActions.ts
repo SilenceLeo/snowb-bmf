@@ -195,9 +195,11 @@ export function setupAutoRunListeners(): void {
     }
   })
 
-  // Background color changes - re-packing only
+  // Background color changes - re-packing only (skip in SDF mode where bgColor is ignored)
   const unsubscribeBgColor = styleStore$.style.bgColor.onChange(() => {
-    throttlePack()
+    if (styleStore$.style.render.mode.get() === 'default') {
+      throttlePack()
+    }
   })
 
   // Font changes - requires glyph regeneration
@@ -236,22 +238,69 @@ export function setupAutoRunListeners(): void {
     debouncedStyleChange()
   })
 
-  // Render mode changes — requires full glyph re-render (white fill vs styled)
-  const unsubscribeRenderMode = styleStore$.style.render.mode.onChange(() => {
-    debouncedStyleChange()
+  // Render mode changes — only needs full glyph re-render when switching between
+  // default and SDF modes (different fill styles). Switching within SDF modes
+  // (sdf↔msdf↔psdf↔mtsdf) only needs re-packing since all use white fill.
+  let prevRenderMode = styleStore$.style.render.mode.get()
+  const unsubscribeRenderMode = styleStore$.style.render.mode.onChange(({ value }) => {
+    const wasDefault = prevRenderMode === 'default'
+    const isDefault = value === 'default'
+    prevRenderMode = value
+    if (wasDefault !== isDefault) {
+      // Crossing default↔SDF boundary: glyph style changes (white fill vs styled)
+      debouncedStyleChange()
+    } else {
+      // Within SDF modes or within default: only re-pack
+      debouncedLayoutChange()
+    }
   })
 
-  // Distance range changes — requires SDF regeneration
+  // Distance range changes — only affects SDF post-processing (no glyph re-render needed)
   const unsubscribeDistanceRange = styleStore$.style.render.distanceRange.onChange(
     () => {
-      debouncedStyleChange()
+      debouncedLayoutChange()
     },
   )
 
-  // SDF channel changes — requires SDF regeneration
+  // SDF channel changes — only affects SDF post-processing (no glyph re-render needed)
   const unsubscribeSdfChannel = styleStore$.style.render.sdfChannel.onChange(() => {
-    debouncedStyleChange()
+    debouncedLayoutChange()
   })
+
+  // MSDF parameters — changes only need re-packing (no glyph re-render)
+  const unsubscribeAngleThreshold =
+    styleStore$.style.render.angleThreshold.onChange(() => {
+      debouncedLayoutChange()
+    })
+
+  const unsubscribeOverlapSupport =
+    styleStore$.style.render.overlapSupport.onChange(() => {
+      debouncedLayoutChange()
+    })
+
+  const unsubscribeEdgeColoringSeed =
+    styleStore$.style.render.edgeColoringSeed.onChange(() => {
+      debouncedLayoutChange()
+    })
+
+  const unsubscribeScanlinePass =
+    styleStore$.style.render.scanlinePass.onChange(() => {
+      debouncedLayoutChange()
+    })
+
+  const unsubscribeFillRule = styleStore$.style.render.fillRule.onChange(() => {
+    debouncedLayoutChange()
+  })
+
+  const unsubscribeColoringStrategy =
+    styleStore$.style.render.coloringStrategy.onChange(() => {
+      debouncedLayoutChange()
+    })
+
+  const unsubscribeErrorCorrection =
+    styleStore$.style.render.errorCorrection.onChange(() => {
+      debouncedLayoutChange()
+    })
 
   cleanupFunctions = [
     unsubscribeImageGlyphs,
@@ -268,6 +317,13 @@ export function setupAutoRunListeners(): void {
     unsubscribeRenderMode,
     unsubscribeDistanceRange,
     unsubscribeSdfChannel,
+    unsubscribeAngleThreshold,
+    unsubscribeOverlapSupport,
+    unsubscribeEdgeColoringSeed,
+    unsubscribeScanlinePass,
+    unsubscribeFillRule,
+    unsubscribeColoringStrategy,
+    unsubscribeErrorCorrection,
   ]
 
   if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Auto-run listeners setup complete')

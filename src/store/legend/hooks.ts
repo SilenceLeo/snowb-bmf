@@ -8,7 +8,10 @@ import { projectStore$ } from './projectStore'
 import { gradientPresetStore$ } from './stores/gradientPresetStore'
 import { type LayoutData, layoutStore$ } from './stores/layoutStore'
 import {
+  type ColoringStrategy,
+  type ErrorCorrectionMode,
   type FillData,
+  type FillRule,
   FillType,
   type FontData,
   type FontResource,
@@ -20,6 +23,7 @@ import {
   type ShadowData,
   type StrokeData,
   type StyleData,
+  getMainFont,
   styleStore$,
 } from './stores/styleStore'
 import { type UiData, uiStore$ } from './stores/uiStore'
@@ -327,6 +331,12 @@ export function useMainFontFamily(): string {
   })
 }
 
+export function useMainFont(): FontResource | null {
+  // Observe fonts array changes, then return the computed result
+  useSelector(() => styleStore$.style.font.fonts.get())
+  return getMainFont()
+}
+
 export function useFill(): FillData {
   return useSelector(() => styleStore$.style.fill.get())
 }
@@ -470,6 +480,34 @@ export function useDistanceRange(): number {
 
 export function useSdfChannel(): SdfChannel {
   return useSelector(() => styleStore$.style.render.sdfChannel.get())
+}
+
+export function useAngleThreshold(): number {
+  return useSelector(() => styleStore$.style.render.angleThreshold.get())
+}
+
+export function useOverlapSupport(): boolean {
+  return useSelector(() => styleStore$.style.render.overlapSupport.get())
+}
+
+export function useEdgeColoringSeed(): number {
+  return useSelector(() => styleStore$.style.render.edgeColoringSeed.get())
+}
+
+export function useScanlinePass(): boolean {
+  return useSelector(() => styleStore$.style.render.scanlinePass.get())
+}
+
+export function useFillRule(): FillRule {
+  return useSelector(() => styleStore$.style.render.fillRule.get())
+}
+
+export function useColoringStrategy(): ColoringStrategy {
+  return useSelector(() => styleStore$.style.render.coloringStrategy.get())
+}
+
+export function useErrorCorrection(): ErrorCorrectionMode {
+  return useSelector(() => styleStore$.style.render.errorCorrection.get())
 }
 
 export function useXFractional(): number {

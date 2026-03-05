@@ -21,7 +21,10 @@ import { glyphStore$ } from '../glyphStore'
 import { projectStore$ } from '../projectStore'
 import { layoutStore$ } from '../stores/layoutStore'
 import {
+  type ColoringStrategy,
+  type ErrorCorrectionMode,
   type FillData,
+  type FillRule,
   type FontData,
   type FontResource,
   type GradientPaletteItem,
@@ -246,6 +249,10 @@ function renderModeToInt(mode: RenderMode): number {
       return 1
     case 'msdf':
       return 2
+    case 'mtsdf':
+      return 3
+    case 'psdf':
+      return 4
     default:
       return 0
   }
@@ -268,6 +275,46 @@ function sdfChannelToInt(channel: SdfChannel): number {
 }
 
 /**
+ * Convert FillRule string to proto int32
+ */
+function fillRuleToInt(rule: FillRule): number {
+  switch (rule) {
+    case 'evenodd':
+      return 1
+    default:
+      return 0 // 'nonzero'
+  }
+}
+
+/**
+ * Convert ColoringStrategy string to proto int32
+ */
+function coloringStrategyToInt(strategy: ColoringStrategy): number {
+  switch (strategy) {
+    case 'inktrap':
+      return 1
+    case 'distance':
+      return 2
+    default:
+      return 0 // 'simple'
+  }
+}
+
+/**
+ * Convert ErrorCorrectionMode string to proto int32
+ */
+function errorCorrectionToInt(mode: ErrorCorrectionMode): number {
+  switch (mode) {
+    case 'disabled':
+      return 1
+    case 'indiscriminate':
+      return 2
+    default:
+      return 0 // 'edge-priority'
+  }
+}
+
+/**
  * Serialize complete style data
  */
 function serializeStyle(): IStyle {
@@ -285,6 +332,13 @@ function serializeStyle(): IStyle {
       mode: renderModeToInt(style.render.mode),
       distanceRange: style.render.distanceRange,
       sdfChannel: sdfChannelToInt(style.render.sdfChannel),
+      angleThreshold: style.render.angleThreshold,
+      overlapSupport: style.render.overlapSupport,
+      edgeColoringSeed: style.render.edgeColoringSeed,
+      scanlinePass: style.render.scanlinePass,
+      fillRule: fillRuleToInt(style.render.fillRule),
+      coloringStrategy: coloringStrategyToInt(style.render.coloringStrategy),
+      errorCorrection: errorCorrectionToInt(style.render.errorCorrection),
     },
   }
 }

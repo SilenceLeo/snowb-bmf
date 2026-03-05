@@ -21,7 +21,7 @@ export default async function exportFile(
   let distanceField: BMFontDistanceField | undefined
   if (projectData.renderMode !== 'default') {
     distanceField = {
-      fieldType: projectData.renderMode as 'sdf' | 'msdf',
+      fieldType: projectData.renderMode as 'sdf' | 'psdf' | 'msdf' | 'mtsdf',
       distanceRange: projectData.distanceRange,
     }
   }

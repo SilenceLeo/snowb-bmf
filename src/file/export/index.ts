@@ -1,10 +1,12 @@
 import binary from './fileTypes/binary'
 import c from './fileTypes/c'
+import json from './fileTypes/json'
+import msdfAtlasJson from './fileTypes/msdfAtlasJson'
 import text from './fileTypes/text'
 import xml from './fileTypes/xml'
 import { ConfigItem } from './type'
 
-const list = [text, xml, binary, c]
+const list = [text, xml, binary, c, json, msdfAtlasJson]
 
 export const configList: ConfigItem[] = []
 
@@ -40,7 +42,6 @@ list.forEach(
 )
 
 export { default as exportFile } from './exportFile'
-export * from './toBmfInfo'
 export { default as toBmfInfo } from './toBmfInfo'
 export * from './type'
 export default configList
