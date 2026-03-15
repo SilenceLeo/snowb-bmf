@@ -217,7 +217,7 @@ const RenderConfig: FunctionComponent = () => {
   const isMsdfMode = renderMode === 'msdf' || renderMode === 'mtsdf'
 
   return (
-    <ConfigSection title='Render Mode'>
+    <ConfigSection title='Render Mode (Experimental)'>
       <Box sx={{ px: 2, my: 4, display: 'flex', justifyContent: 'center' }}>
         <ButtonGroup size='small' color='primary'>
           <Button
