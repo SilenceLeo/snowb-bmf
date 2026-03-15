@@ -46,19 +46,6 @@
           "type": "image/png"
         }
       ]
-    },
-    {
-      "name": "GitHub Repository",
-      "short_name": "GitHub",
-      "description": "View source code on GitHub",
-      "url": "https://github.com/SilenceLeo/snowb-bmf",
-      "icons": [
-        {
-          "src": "logo192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
     }
   ],
   "screenshots": [
