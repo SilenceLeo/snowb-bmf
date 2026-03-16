@@ -9,15 +9,14 @@
 
 <p align="center">
   <a href="https://snowb.org/">Web App</a> •
-  <a href="https://snowb.org/en/docs/">Documentation</a> •
-  <a href="README_ZH.md">简体中文</a>
+  <a href="https://snowb.org/en/docs/">Documentation</a>
 </p>
 
 ---
 
 ## Overview
 
-SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export professional bitmap fonts directly in your browser—no installation, no registration, no cloud uploads.
+SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export professional bitmap fonts directly in your browser—no installation, no registration, no cloud uploads. Supports SDF/MSDF rendering for resolution-independent text in modern game engines.
 
 **[Try it now at snowb.org](https://snowb.org/)**
 
@@ -29,8 +28,9 @@ SnowBamboo BMF is a free, open-source bitmap font generator for game developers 
 - **True Cross-Platform** - Works identically on Windows, Mac, Linux, ChromeOS
 - **Privacy-First** - 100% local processing, no tracking, no cloud uploads
 - **Production-Ready** - Advanced packing algorithms reduce texture memory by 30-50%
+- **SDF/MSDF Support** - Resolution-independent rendering via msdfgen WASM integration
 - **Full Compatibility** - Native support for Unity, Unreal, Godot, Cocos2d, Phaser, PixiJS
-- **Legacy Support** - Import from Littera migrate existing projects seamlessly
+- **Legacy Support** - Import from Littera to migrate existing projects seamlessly
 
 ## Core Features
 
@@ -43,11 +43,18 @@ SnowBamboo BMF is a free, open-source bitmap font generator for game developers 
 - **Flexible Input** - Unicode blocks, custom sets
 - **Interactive Canvas** - Precise control via mouse and keyboard
 
+### SDF/MSDF Rendering
+
+- **5 Rendering Modes** - SDF, PSDF, MSDF, MTSDF, and standard bitmap
+- **msdfgen Integration** - Compiled to WASM via Emscripten for native-speed distance field generation
+- **Configurable Parameters** - Distance range, angle threshold, coloring strategy, error correction
+- **Resolution Independent** - Sharp text at any scale in game engines with SDF shader support
+
 ### File Format Support
 
 **Import** - `.sbf`, `.ltr`, `TTF/OTF/WOFF`
 
-**Export** - [AngelCode format](https://www.angelcode.com/products/bmfont/doc/file_format.html) BMFont Text/XML, `.fnt` binary, PNG atlases
+**Export** - [AngelCode format](https://www.angelcode.com/products/bmfont/doc/file_format.html) BMFont Text, XML, Binary, JSON, C Header, PNG atlases, MSDF Atlas JSON
 
 ### Game Engine Integration
 
@@ -58,7 +65,7 @@ Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine
 - **Optimized Rendering** - React 19 with Canvas API and Web Workers for heavy computation
 - **Smart Packing** - MaxRects, Guillotine, and Shelf algorithms via worker pool
 - **Progressive Web App** - Works offline with automatic updates
-- **Type-Safe** - Full TypeScript with strict mode, reactive MobX state management
+- **Type-Safe** - Full TypeScript with strict mode, reactive Legend State v2
 
 ## Tech Stack
 
@@ -66,8 +73,9 @@ Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine
 |----------|-----------|
 | **Framework** | React 19, TypeScript 5.8+ |
 | **Build Tool** | Vite 7 with optimized bundling |
-| **State Management** | MobX 6 (strict mode) |
+| **State Management** | Legend State v2 |
 | **UI Components** | Material-UI v7, Emotion CSS-in-JS |
+| **WASM** | msdfgen (SDF/MSDF generation), FreeType (font parsing) |
 | **Testing** | Vitest, React Testing Library |
 | **Graphics** | Canvas API, Web Workers |
 | **Serialization** | Protocol Buffers (.sbf format) |
@@ -136,7 +144,7 @@ yarn find-unused:cleanup      # Remove unused files
 ### Key Development Patterns
 
 See [CLAUDE.md](./CLAUDE.md) for detailed development patterns including:
-- State management with MobX 6
+- State management with Legend State v2
 - Protocol Buffer schema versioning
 - Canvas operations and utilities
 - Performance optimization strategies
@@ -145,3 +153,10 @@ See [CLAUDE.md](./CLAUDE.md) for detailed development patterns including:
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This project uses third-party open-source libraries. See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete license information.
+
+## Acknowledgments
+
+- [msdfgen](https://github.com/Chlumsky/msdfgen) by Viktor Chlumsky — Multi-channel signed distance field generator
+- [FreeType](https://www.freetype.org) — Font rendering library

@@ -1,10 +1,12 @@
 ---
-title: Font Stroke and Outline Styles
+title: "Stroke Styles: Add Outlines and Borders to Bitmap Fonts"
 description: A comprehensive guide to applying and customizing font strokes (outlines). Learn to use width, color, position, and line styles to create professional and readable text.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Font Stroke and Outline Styles"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "A comprehensive guide to applying and customizing font strokes (outlines). Learn to use width, color, position, and line styles to create professional and readable text."
   "about":
     "@type": "SoftwareApplication"
@@ -17,21 +19,22 @@ schema:
   "keywords": ["font stroke", "outline styles", "bitmap font design", "text styling", "font effects", "typography", "SnowB BMF"]
   "mainEntityOfPage":
     "@type": "WebPage"
-    "url": "https://snowb.org/en/docs/font-design/stroke-styles"
+    "@id": "https://snowb.org/en/docs/font-design/stroke-styles/"
   "articleSection": "Font Design"
-  "genre": "Technical Documentation"
-  "educationalLevel": "Intermediate"
-  "learningResourceType": "Tutorial"
   "teaches": ["Font stroke application", "Outline customization", "Text readability enhancement", "Visual styling techniques"]
-  "creator":
+  "inLanguage": "en"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
-  "license": "https://github.com/SilenceLeo/snowb-bmf/blob/master/LICENSE"
 ---
 
 A stroke (or outline) is a powerful tool for enhancing font characters. It adds definition, improves readability against busy backgrounds, and allows for a wide range of visual styles.
@@ -72,3 +75,8 @@ Go beyond basic outlines by customizing the stroke's fill.
 - **Contrast is Key**: Ensure high contrast between the stroke and the font's main fill for maximum readability.
 - **Size Matters**: Use thinner strokes for smaller font sizes to prevent the outline from overwhelming the character shape.
 - **Outer for Readability**: The **Outer** stroke type is generally the best choice for making text stand out from a background.
+
+## Related Topics
+
+- [Fill Styles](/en/docs/font-design/fill-styles/)
+- [Shadow Effects](/en/docs/font-design/shadow-effects/)

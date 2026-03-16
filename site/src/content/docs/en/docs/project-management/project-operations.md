@@ -1,19 +1,26 @@
 ---
-title: Managing Bitmap Font Projects
+title: "Project Management: Create, Save, and Organize Font Projects"
 description: Learn how to create, open, save, and manage your bitmap font projects. Efficiently handle multiple projects and understand the supported file formats.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Managing Bitmap Font Projects - SnowB BMF Documentation"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Complete guide to project management in SnowB BMF: creating, opening, saving, and managing bitmap font projects with support for .sbf and .ltr file formats."
   "about":
     "@type": "SoftwareApplication"
     "name": "SnowB BMF"
     "applicationCategory": "DesignApplication"
-  "author":
-    "@type": "Organization"
-    "name": "SnowB BMF Team"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "inLanguage": "en"
   "publisher":
     "@type": "Organization"
     "name": "SnowB BMF"
@@ -61,16 +68,36 @@ You can open projects from your local file system.
 
 ## Save Your Project
 
-**Crucial:** Project data is stored temporarily in the browser's memory. **You will lose unsaved work if you refresh or close the browser tab.** Always save your project to a file to prevent data loss.
+**Important:** While SnowB BMF automatically saves your projects to the browser's IndexedDB, we strongly recommend also saving your project to a `.sbf` file as a portable backup. This protects against browser data clearing, device changes, and browser-specific storage limitations.
 
 ### How to Save
 1. Click the **Save Project** button or press `Cmd/Ctrl+S`.
 2. Select a location on your computer and enter a filename.
 3. The project will be saved as an `.sbf` file, which uses Protocol Buffers for efficient storage.
 
+## Automatic Persistence
+
+SnowB BMF automatically saves all your projects to the browser's **IndexedDB** storage, so you don't have to worry about losing work due to accidental page refreshes or browser crashes.
+
+### How It Works
+
+- **Automatic Triggers**: Projects are saved when you navigate away from the page (`beforeunload`) and when the tab loses visibility (e.g., switching to another tab).
+- **Efficient Storage**: Projects are serialized using Protocol Buffers for compact storage.
+- **Multi-Project Support**: All open projects in your workspace are saved and restored automatically.
+
+### Important Notes
+
+- **Browser Data Clearing**: If you clear your browser's data (cookies, storage, etc.), your saved projects will be lost. Always keep `.sbf` file backups for important projects.
+- **Private/Incognito Mode**: Auto-save may not persist in private browsing mode, depending on your browser.
+- **Cross-Browser**: Saved projects are specific to the browser and profile you used. They do not sync across browsers or devices.
+
 ## Manage Multiple Projects
 
-The tool supports working on multiple projects simultaneously.
+The tool features a **tabbed workspace** that keeps all your projects organized in one place. Each project tab maintains its own independent state, including font settings, character sets, and styling.
+
+- **Create Projects**: Click the **New** button or double-click the empty area in the tab bar.
+- **Close Projects**: Click the close (x) icon on a project tab. Note: at least one project must always remain open.
+- **Project Isolation**: Changes in one project do not affect others.
 
 ### Switching Between Projects
 - Simply click on the corresponding tab to switch between open projects.
@@ -79,3 +106,7 @@ The tool supports working on multiple projects simultaneously.
 ### Renaming a Project
 1. Double-click the project's name in its tab to make it editable.
 2. Type the new name and click anywhere outside the tab to confirm the change.
+
+## Related Topics
+
+- [Export Formats](/en/docs/project-management/export-formats/)

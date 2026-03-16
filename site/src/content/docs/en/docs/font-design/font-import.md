@@ -1,10 +1,12 @@
 ---
-title: Font Import
+title: "Font Import: Load TTF, OTF, and WOFF Files"
 description: A comprehensive guide to importing fonts in SnowB BMF. Learn about supported formats (TTF, OTF, WOFF), the font fallback system, vector rendering, and the Sharp feature for pixel-perfect results.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Font Import Guide for SnowB BMF - Complete Documentation"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "A comprehensive guide to importing fonts in SnowB BMF. Learn about supported formats (TTF, OTF, WOFF), the font fallback system, vector rendering, and the Sharp feature for pixel-perfect results."
   "about":
     "@type": "SoftwareApplication"
@@ -12,7 +14,7 @@ schema:
     "description": "Browser-based bitmap font generator"
     "url": "https://snowb.org"
   "keywords": ["font import", "TTF", "OTF", "WOFF", "vector rendering", "font fallback", "Sharp feature", "bitmap font", "SnowB BMF", "font design", "opentype.js"]
-  "articleSection": "Documentation"
+  "articleSection": "Font Design"
   "audience":
     "@type": "Audience"
     "audienceType": "Developers and Font Designers"
@@ -40,6 +42,14 @@ schema:
       - "@type": "HowToStep"
         "name": "Configure Sharp feature"
         "text": "Adjust the Sharp setting (recommended 80%) for pixel-perfect clarity"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "inLanguage": "en"
   "isPartOf":
     "@type": "WebSite"
@@ -132,3 +142,9 @@ The Sharp feature intelligently adjusts the vector paths of each glyph to align 
 
 **Why did my font import fail?**
 - Double-check that the file is a supported format (TTF, OTF, or WOFF) and that the file is not corrupted.
+
+## Related Topics
+
+- [Sharp Rendering](/en/docs/font-design/sharp/)
+- [Character Sets](/en/docs/font-design/character-sets/)
+- [SDF Rendering](/en/docs/font-design/sdf-rendering/)

@@ -1,14 +1,16 @@
 ---
-title: Layout Settings
+title: "Layout Settings: Padding, Spacing, and Page Configuration"
 description: Configure bitmap font layout with spacing, padding, and alignment options for optimal texture atlas generation.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Layout Settings for Bitmap Font Design"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Configure bitmap font layout with spacing, padding, and alignment options for optimal texture atlas generation in SnowB BMF."
   "keywords": ["bitmap font layout", "texture atlas", "font padding", "glyph spacing", "font design", "texture packing", "game development", "font configuration"]
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "Layout Settings"
     "description": "Configuration options for arranging glyphs in bitmap font texture atlases"
   "mainEntity":
@@ -25,10 +27,14 @@ schema:
       - "@type": "HowToStep"
         "name": "Manage Pages"
         "text": "Allow automatic page distribution for large character sets or texture size constraints"
-  "author":
-    "@type": "Organization"
-    "name": "SnowB BMF"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
     "name": "SnowB BMF"
@@ -138,3 +144,8 @@ Layout settings directly influence the data in the exported font file (e.g., `.f
 - **Texture Atlas Too Large**: Reduce font size, reduce character set, or allow more **Pages**.
 - **Inefficient Glyph Packing**: Adjust **Spacing**.
 - **Slow Rendering with Many Glyphs**: This might be due to too many **Pages**. Try to fit glyphs into fewer textures if possible.
+
+## Related Topics
+
+- [Texture Packing](/en/docs/font-design/texture-packing/)
+- [Font Size](/en/docs/font-design/font-size/)

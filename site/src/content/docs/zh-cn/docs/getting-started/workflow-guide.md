@@ -1,10 +1,12 @@
 ---
-title: 位图字体工作流指南
-description: 掌握使用 SnowB BMF 创建高质量、游戏可用的位图字体的分步工作流。学习如何高效地配置、设计和导出字体。
+title: 工作流指南：逐步创建位图字体
+description: 掌握使用 SnowB BMF 创建高质量、游戏可用的位图字体的分步工作流。学习如何高效地配置、设计和导出字体。免费使用，无需下载。
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "位图字体工作流指南"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "掌握使用 SnowB BMF 创建高质量、游戏可用的位图字体的分步工作流。学习如何高效地配置、设计和导出字体。"
   "about":
     "@type": "SoftwareApplication"
@@ -38,11 +40,19 @@ schema:
       - "@type": "HowToStep"
         "name": "导出"
         "text": "选择格式（.txt 或 .xml）并下载字体描述文件和纹理图集"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
   "inLanguage": "zh-CN"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org"
 ---
 
 本指南概述了在 SnowB BMF 中创建专业位图字体的完整工作流程，从初始设置到最终导出。请遵循以下步骤，为您的项目生成优化的高质量资源。
@@ -140,3 +150,10 @@ schema:
 
 ### 移动端
 - **iOS & Android:** 始终使用二次幂的纹理尺寸 (例如, 512, 1024)。高效的打包对于移动设备上的性能至关重要。
+
+## 相关主题
+
+- [字符集](/zh-cn/docs/font-design/character-sets/)
+- [字体导入](/zh-cn/docs/font-design/font-import/)
+- [填充样式](/zh-cn/docs/font-design/fill-styles/)
+- [导出格式](/zh-cn/docs/project-management/export-formats/)

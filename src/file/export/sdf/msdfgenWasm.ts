@@ -1,6 +1,12 @@
 /**
  * TypeScript binding layer for msdfgen WASM module.
  *
+ * This module uses msdfgen by Viktor Chlumsky (MIT License)
+ * https://github.com/Chlumsky/msdfgen
+ *
+ * WASM binary also links FreeType (FreeType License)
+ * https://www.freetype.org
+ *
  * Lazily loads the WASM binary on first use, then provides a typed API
  * for loading fonts, extracting glyph shapes, and generating MSDF/MTSDF
  * distance-field bitmaps via the official Chlumsky msdfgen C++ library.
@@ -18,7 +24,11 @@
 export type DistanceFieldType = 'sdf' | 'psdf' | 'msdf' | 'mtsdf'
 
 // Re-export types already defined in styleStore for convenience
-export type { FillRule, ColoringStrategy, ErrorCorrectionMode } from 'src/store/legend/stores/styleStore'
+export type {
+  FillRule,
+  ColoringStrategy,
+  ErrorCorrectionMode,
+} from 'src/store/legend/stores/styleStore'
 
 // ============================================================================
 // Internal WASM module types
@@ -27,7 +37,11 @@ export type { FillRule, ColoringStrategy, ErrorCorrectionMode } from 'src/store/
 interface MsdfgenWasmModule {
   _msdfgen_init(): number
   _msdfgen_deinit(ftHandle: number): void
-  _msdfgen_loadFontData(ftHandle: number, dataPtr: number, length: number): number
+  _msdfgen_loadFontData(
+    ftHandle: number,
+    dataPtr: number,
+    length: number,
+  ): number
   _msdfgen_destroyFont(fontHandle: number): void
   _msdfgen_getFontMetrics(fontHandle: number, outPtr: number): number
   _msdfgen_loadGlyph(
@@ -83,9 +97,14 @@ export async function ensureMsdfgenLoaded(): Promise<void> {
       // Load Emscripten ES6 module from public/wasm/ via dynamic import.
       // Use import.meta.env.BASE_URL to support deployments with base path.
       const base = import.meta.env.BASE_URL || '/'
-      const moduleUrl = new URL(`${base}wasm/msdfgen.js`, window.location.origin).href
+      const moduleUrl = new URL(
+        `${base}wasm/msdfgen.js`,
+        window.location.origin,
+      ).href
       const mod = await import(/* @vite-ignore */ moduleUrl)
-      const factory = mod.default as (arg?: Record<string, unknown>) => Promise<MsdfgenWasmModule>
+      const factory = mod.default as (
+        arg?: Record<string, unknown>,
+      ) => Promise<MsdfgenWasmModule>
       wasmModule = await factory()
       ftHandle = wasmModule._msdfgen_init()
       if (!ftHandle) {
@@ -137,7 +156,9 @@ export interface FontHandle {
  */
 export function loadFont(buffer: ArrayBuffer): FontHandle {
   if (!wasmModule || !ftHandle) {
-    throw new Error('msdfgen: WASM module not loaded — call ensureMsdfgenLoaded() first')
+    throw new Error(
+      'msdfgen: WASM module not loaded — call ensureMsdfgenLoaded() first',
+    )
   }
 
   const data = new Uint8Array(buffer)
@@ -145,7 +166,11 @@ export function loadFont(buffer: ArrayBuffer): FontHandle {
   if (!dataPtr) throw new Error('msdfgen: malloc failed for font data')
 
   wasmModule.HEAPU8.set(data, dataPtr)
-  const fontPtr = wasmModule._msdfgen_loadFontData(ftHandle, dataPtr, data.length)
+  const fontPtr = wasmModule._msdfgen_loadFontData(
+    ftHandle,
+    dataPtr,
+    data.length,
+  )
 
   if (!fontPtr) {
     wasmModule._free(dataPtr)
@@ -201,7 +226,11 @@ export function getFontMetrics(fontHandle: FontHandle): FontMetrics | null {
   }
 
   // Use DataView for safe unaligned double reads (no alignment assumption)
-  const view = new DataView(mod.HEAPU8.buffer, outPtr, METRICS_COUNT * SIZEOF_DOUBLE)
+  const view = new DataView(
+    mod.HEAPU8.buffer,
+    outPtr,
+    METRICS_COUNT * SIZEOF_DOUBLE,
+  )
   const metrics: FontMetrics = {
     emSize: view.getFloat64(0, true),
     ascender: view.getFloat64(8, true),
@@ -269,7 +298,12 @@ export function generateMsdfWasm(
   const mod = wasmModule
 
   // Reject unreasonably large dimensions to prevent overflow
-  if (config.width <= 0 || config.height <= 0 || config.width > 8192 || config.height > 8192) {
+  if (
+    config.width <= 0 ||
+    config.height <= 0 ||
+    config.width > 8192 ||
+    config.height > 8192
+  ) {
     return null
   }
 
@@ -281,9 +315,22 @@ export function generateMsdfWasm(
   }
 
   // Map config enums to numeric values for WASM API
-  const TYPE_MAP: Record<DistanceFieldType, number> = { sdf: 0, psdf: 1, msdf: 2, mtsdf: 3 }
-  const COLORING_MAP: Record<string, number> = { simple: 0, inktrap: 1, distance: 2 }
-  const EC_MAP: Record<string, number> = { disabled: 0, indiscriminate: 1, 'edge-priority': 2 }
+  const TYPE_MAP: Record<DistanceFieldType, number> = {
+    sdf: 0,
+    psdf: 1,
+    msdf: 2,
+    mtsdf: 3,
+  }
+  const COLORING_MAP: Record<string, number> = {
+    simple: 0,
+    inktrap: 1,
+    distance: 2,
+  }
+  const EC_MAP: Record<string, number> = {
+    disabled: 0,
+    indiscriminate: 1,
+    'edge-priority': 2,
+  }
 
   const typeNum = TYPE_MAP[config.type]
   const coloringNum = COLORING_MAP[config.coloringStrategy ?? 'simple']
@@ -344,7 +391,12 @@ export function getGlyphInfo(
   const advancePtr = outPtr
   const boundsPtr = outPtr + SIZEOF_DOUBLE
 
-  const shapePtr = mod._msdfgen_loadGlyph(fontHandle.ptr, unicode, advancePtr, boundsPtr)
+  const shapePtr = mod._msdfgen_loadGlyph(
+    fontHandle.ptr,
+    unicode,
+    advancePtr,
+    boundsPtr,
+  )
   if (!shapePtr) {
     mod._free(outPtr)
     return null

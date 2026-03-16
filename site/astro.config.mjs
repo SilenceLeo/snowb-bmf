@@ -49,6 +49,41 @@ export default defineConfig({
           content:
             'window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config", "G-8KVLZM97BB")',
         },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image',
+            content: 'https://snowb.org/summary_large_image.png',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image:width',
+            content: '1200',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image:height',
+            content: '630',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            property: 'og:image:alt',
+            content: 'SnowB BMF - Free Online Bitmap Font Generator',
+          },
+        },
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'twitter:image',
+            content: 'https://snowb.org/summary_large_image.png',
+          },
+        },
       ],
       plugins: [
         starlightThemeBlack({
@@ -209,6 +244,14 @@ export default defineConfig({
                 'zh-CN': '字偶距',
               },
               slug: 'docs/font-design/kerning-pairs',
+            },
+            {
+              label: 'SDF Rendering',
+              translations: {
+                'zh-CN': 'SDF 渲染',
+              },
+              badge: { text: 'New', variant: 'tip' },
+              slug: 'docs/font-design/sdf-rendering',
             },
           ],
         },

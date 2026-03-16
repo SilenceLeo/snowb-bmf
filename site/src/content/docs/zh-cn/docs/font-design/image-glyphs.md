@@ -6,18 +6,25 @@ schema:
   "@type": "TechArticle"
   "headline": "在位图字体中使用图片字形"
   "description": "将自定义图片、图标和符号作为字形添加到您的位图字体中。学习如何为游戏和应用开发导入、管理和优化图片字形。"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "图片字形"
     "description": "位图字体创建的自定义图像集成功能"
-  "applicationCategory": "字体设计"
   "keywords": ["图片字形", "位图字体", "字体设计", "图标", "符号", "纹理图集", "游戏开发", "SnowB BMF", "字形映射", "字符分配"]
   "audience":
     "@type": "Audience"
     "audienceType": "开发者"
-    "geographicArea": "全球"
-  "educationalLevel": "中级"
-  "proficiencyRequired": "基础字体设计知识"
+  "inLanguage": "zh-CN"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "teaches": ["如何向位图字体添加图片字形", "图片字形的字符映射", "图片字形优化", "纹理图集集成"]
   "mainEntity":
     "@type": "HowTo"
@@ -33,9 +40,12 @@ schema:
       - "@type": "HowToStep"
         "name": "管理字形"
         "text": "启用/禁用图片并组织您的图片字形集合"
+      - "@type": "HowToStep"
+        "name": "导出字体"
+        "text": "导出您的项目 — 所有启用的图片字形会自动包含在纹理图集和描述文件中"
   "isPartOf":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
     "url": "https://snowb.org"
 ---
 
@@ -110,3 +120,8 @@ schema:
 -   **纹理图集：** 图片被渲染到最终的纹理图纸中。
 -   **字体数据文件：** 您的图片字形的字符映射和度量信息保存在字体描述符文件（`.fnt`、`.xml` 等）中。
 -   **完全兼容：** 与所有支持的导出格式兼容。
+
+## 相关主题
+
+- [字符集](/zh-cn/docs/font-design/character-sets/)
+- [导出格式](/zh-cn/docs/project-management/export-formats/)

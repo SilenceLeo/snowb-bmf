@@ -5,6 +5,8 @@ schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "SnowB BMF: A Practical Online Bitmap Font Generator"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Complete overview and getting started guide for SnowB BMF, a free web-based bitmap font generator for game developers, app creators, and designers."
   "author":
     "@type": "Person"
@@ -23,13 +25,15 @@ schema:
     "@type": "Audience"
     "audienceType": ["Game Developers", "App Developers", "Embedded System Developers", "Web Developers", "Designers"]
   "teaches": ["bitmap font creation", "font customization", "texture atlas generation", "font export formats", "font styling techniques"]
-  "learningResourceType": "Overview Guide"
-  "educationalLevel": "Beginner to Intermediate"
-  "inLanguage": "en-US"
+  "inLanguage": "en"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB"
+    "url": "https://snowb.org"
   "isPartOf":
-    "@type": "TechArticle"
+    "@type": "WebSite"
     "name": "SnowB BMF Documentation"
-    "url": "https://snowb.org/en/docs/"
+    "url": "https://snowb.org"
 ---
 
 **SnowB BMF is a free online bitmap font generator** that makes professional font creation accessible to everyone. Whether you're a game developer, pixel artist, or designer, this tool provides a simple **drag and drop interface** for converting TTF, OTF, and WOFF fonts into optimized bitmap fonts—all without writing a single line of code.
@@ -89,7 +93,8 @@ A bitmap font stores each character (glyph) as a pre-rendered image in a texture
 - **Professional Effects**: Gradients, shadows, strokes—all without writing shaders
 - **Smart Texture Packing**: Automatic optimization saves 30-50% texture memory
 - **Image to Font Conversion**: Turn custom graphics into font characters
-- **Multiple Format Support**: Import and export various bitmap font formats
+- **Multiple Format Support**: Export in 6 formats — Text (.fnt/.txt), XML, Binary, JSON, C Header, and MSDF Atlas JSON
+- **SDF/MSDF Rendering**: Generate resolution-independent distance field fonts for game engines using msdfgen WASM technology (experimental feature)
 
 ## Getting Started
 

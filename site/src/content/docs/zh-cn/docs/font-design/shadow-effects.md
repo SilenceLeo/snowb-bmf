@@ -1,39 +1,43 @@
 ---
-title: 阴影效果
+title: 阴影效果：为位图字体添加深度和发光
 description: 学习如何为位图字体创建和自定义专业的投影效果。通过调整偏移、模糊和颜色，优化字体外观，增强文本的视觉吸引力。
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "位图字体设计中的阴影效果"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "使用 SnowB BMF 为位图字体创建和自定义专业投影和文本效果的全面指南。学习阴影参数、样式和最佳实践。"
   "keywords": ["阴影效果", "投影", "位图字体", "字体设计", "文本效果", "SnowB BMF", "字体样式", "视觉效果"]
   "about":
-    "@type": "Thing"
-    "name": "阴影效果"
-    "description": "通过阴影为位图字体增加深度和层次的视觉效果"
-  "mentions":
-    - "@type": "SoftwareApplication"
-      "name": "SnowB BMF"
-      "description": "基于浏览器的位图字体生成器"
-      "url": "https://snowb.org"
-    - "@type": "Thing"
-      "name": "投影"
-      "description": "用于提高文本可读性的经典阴影效果"
-    - "@type": "Thing"
-      "name": "光晕效果"
-      "description": "文本周围的柔和发光光环效果"
-    - "@type": "Thing"
-      "name": "长阴影"
-      "description": "戏剧性的投射阴影效果"
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
   "audience":
     "@type": "Audience"
     "audienceType": "字体设计师、游戏开发者、UI/UX 设计师"
-  "genre": "技术文档"
+  "articleSection": "字体设计"
+  "teaches":
+    - "如何启用和配置阴影效果"
+    - "调整阴影偏移、模糊和颜色"
+    - "创建投影、光晕效果和长阴影"
+    - "阴影性能和设计的最佳实践"
   "inLanguage": "zh-CN"
-  "isAccessibleForFree": true
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/zh-cn/docs/font-design/shadow-effects/"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
   "mainEntity":
     "@type": "HowTo"
@@ -124,3 +128,8 @@ schema:
 - 阴影效果直接烘焙到最终的位图字体图像中。
 - 规划好您的纹理图集大小，以确保其足够大以容纳阴影尺寸。
 - 仅支持单层阴影。
+
+## 相关主题
+
+- [填充样式](/zh-cn/docs/font-design/fill-styles/)
+- [描边样式](/zh-cn/docs/font-design/stroke-styles/)

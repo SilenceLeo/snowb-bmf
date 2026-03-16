@@ -1,13 +1,15 @@
 ---
-title: Configuring Font Size
+title: "Font Size: Optimal Sizing for Bitmap Font Textures"
 description: Learn how to set the font size for your bitmap font and understand its impact on glyph quality, texture size, and performance.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Configuring Font Size in SnowB BMF - Bitmap Font Generator"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Learn how to set the font size for your bitmap font and understand its impact on glyph quality, texture size, and performance in SnowB BMF."
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "Font Size Configuration"
     "description": "Font size setting that defines the rendering resolution of glyphs in pixels for bitmap font generation"
   "mainEntity":
@@ -33,6 +35,10 @@ schema:
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "inLanguage": "en"
   "audience":
     "@type": "Audience"
@@ -94,3 +100,9 @@ This usually means the font size is too low for the resolution at which it's bei
 
 This occurs when the generated texture is too large for the target platform.
 - **Solution**: Decrease the font size. You can also optimize the texture size by removing any unused glyphs from your character set.
+
+## Related Topics
+
+- [Sharp Rendering](/en/docs/font-design/sharp/)
+- [Layout Settings](/en/docs/font-design/layout-settings/)
+- [Texture Packing](/en/docs/font-design/texture-packing/)

@@ -1,5 +1,5 @@
 ---
-title: SnowB BMF Documentation
+title: "SnowB BMF Documentation: Bitmap Font Generator Guide"
 description: Master bitmap font creation with the official SnowB BMF documentation. Learn everything from basic setup to advanced styling, texture packing, and exporting for game engines like Unity, Unreal, and Godot.
 template: splash
 hero:
@@ -76,7 +76,7 @@ import { ContainerSection } from 'starlight-theme-black/components'
 		Leverages an efficient Guillotine algorithm to auto-pack glyphs into the smallest texture atlas, or lets you define fixed, power-of-two dimensions for GPU optimization.
 	</Card>
 	<Card title="Broad Export Compatibility" icon="document">
-		Export in Text (.fnt/.txt), XML, and Binary formats compatible with popular game engines like Unity, Godot, and Unreal Engine.
+		Export in 6 formats: Text (.fnt/.txt), XML, Binary, JSON, C Header, and MSDF Atlas JSON. Compatible with Unity, Godot, Unreal Engine, embedded systems, and MSDF shader pipelines.
 	</Card>
 	<Card title="Real-Time Preview" icon="magnifier">
 		See your changes instantly. The live canvas provides immediate feedback on styling, metrics, and kerning adjustments.
@@ -112,8 +112,14 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	<Card title="Visual Kerning" icon="setting">
 		Visually adjust the spacing between character pairs. The tool provides highlighting and precise pixel-level control for professional results.
 	</Card>
+	<Card title="SDF/MSDF Rendering" icon="star">
+		Generate resolution-independent distance field fonts using msdfgen WASM technology. Supports SDF, PSDF, MSDF, and MTSDF modes for crisp text rendering at any scale in game engines.
+	</Card>
 	<Card title="Project Management" icon="open-book">
 		Save and load projects in the native .sbf format. The tool also supports importing legacy .ltr files from Littera for easy migration.
+	</Card>
+	<Card title="Auto-Save & Persistence" icon="approve-check-circle">
+		All projects are automatically saved to IndexedDB storage. Supports multi-project workspaces with a tabbed interface. Never lose your work due to accidental page refreshes.
 	</Card>
 </CardGrid>
 
