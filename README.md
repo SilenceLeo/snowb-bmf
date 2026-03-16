@@ -171,3 +171,4 @@ This project uses third-party open-source libraries. See [THIRD_PARTY_LICENSES.m
 
 - [msdfgen](https://github.com/Chlumsky/msdfgen) by Viktor Chlumsky — Multi-channel signed distance field generator
 - [FreeType](https://www.freetype.org) — Font rendering library
+- [opentype.js](https://github.com/opentypejs/opentype.js) by Frederik De Bleser — OpenType and TrueType font parser

@@ -171,3 +171,4 @@ yarn find-unused:cleanup      # 删除未使用的文件
 
 - [msdfgen](https://github.com/Chlumsky/msdfgen)（Viktor Chlumsky）— 多通道有符号距离场生成器
 - [FreeType](https://www.freetype.org) — 字体渲染库
+- [opentype.js](https://github.com/opentypejs/opentype.js)（Frederik De Bleser）— OpenType 和 TrueType 字体解析库
