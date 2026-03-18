@@ -3,6 +3,7 @@ import {
   type GlyphItem,
   type GlyphRenderConfig,
   type LayoutInfo,
+  applyInnerShadow,
   applyShadow,
   applyStrokeType2,
   computeLayout,
@@ -30,7 +31,7 @@ export default async function getFontGlyphsProgressive(
   config: Config,
   options: ProgressiveOptions = {},
 ): Promise<GlyphInfo> {
-  const { stroke, shadow } = config
+  const { stroke, shadow, innerShadow } = config
   const { batchSize = 50, onProgress, signal } = options
 
   if (signal?.aborted) {
@@ -50,10 +51,13 @@ export default async function getFontGlyphsProgressive(
   strokeCanvas.height = canvas.height
 
   const map = new Map<string, GlyphItem>()
+  const hasStroke = !!(stroke && lineWidth)
 
   setupStrokeContext(ctx, strokeCtx, stroke, lineWidth)
 
   let completedCount = 0
+  const renderConfig =
+    innerShadow && hasStroke ? { ...config, stroke: undefined } : config
 
   for (let batchStart = 0; batchStart < text.length; batchStart += batchSize) {
     if (signal?.aborted) {
@@ -65,7 +69,15 @@ export default async function getFontGlyphsProgressive(
     await new Promise<void>((resolve) => {
       requestAnimationFrame(() => {
         for (let i = batchStart; i < batchEnd; i++) {
-          renderSingleGlyph(i, text[i], ctx, strokeCtx, map, config, layout)
+          renderSingleGlyph(
+            i,
+            text[i],
+            ctx,
+            strokeCtx,
+            map,
+            renderConfig,
+            layout,
+          )
         }
 
         completedCount = batchEnd
@@ -79,27 +91,67 @@ export default async function getFontGlyphsProgressive(
     }
   }
 
-  applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
+  if (innerShadow && hasStroke) {
+    // Two-pass: fill-only rendered above → inner shadow → stroke on top
+    const fillOnlyCanvas = document.createElement('canvas')
+    fillOnlyCanvas.width = canvas.width
+    fillOnlyCanvas.height = canvas.height
+    fillOnlyCanvas.getContext('2d')?.drawImage(canvas, 0, 0)
 
-  if (shadow) {
-    const result = applyShadow(canvas, strokeCanvas, strokeCtx, shadow)
+    applyInnerShadow(canvas, innerShadow)
 
-    await processTrimmingBatched(text, map, result.ctx, layout, {
-      batchSize,
-      onProgress,
-      signal,
-    })
+    // Render fill+stroke on a separate canvas
+    const { canvas: fullCanvas, ctx: fullCtx } = createCanvas2D()
+    const { canvas: fullStrokeCanvas, ctx: fullStrokeCtx } = createCanvas2D()
+    fullCanvas.width = canvas.width
+    fullCanvas.height = canvas.height
+    fullStrokeCanvas.width = canvas.width
+    fullStrokeCanvas.height = canvas.height
+    setupStrokeContext(fullCtx, fullStrokeCtx, stroke, lineWidth)
+    const tempMap = new Map<string, GlyphItem>()
+    for (let i = 0; i < text.length; i++) {
+      renderSingleGlyph(
+        i,
+        text[i],
+        fullCtx,
+        fullStrokeCtx,
+        tempMap,
+        config,
+        layout,
+      )
+    }
+    applyStrokeType2(fullCtx, fullStrokeCanvas, stroke, lineWidth)
 
-    return { canvas: copyToCleanCanvas(result.canvas), glyphs: map }
+    // Extract stroke-only: remove fill pixels
+    fullCtx.globalCompositeOperation = 'destination-out'
+    fullCtx.drawImage(fillOnlyCanvas, 0, 0)
+    fullCtx.globalCompositeOperation = 'source-over'
+
+    // Draw stroke-only on top
+    ctx.drawImage(fullCanvas, 0, 0)
+  } else {
+    applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
+    if (innerShadow) {
+      applyInnerShadow(canvas, innerShadow)
+    }
   }
 
-  await processTrimmingBatched(text, map, ctx, layout, {
+  let finalCanvas = canvas
+  let finalCtx = ctx
+
+  if (shadow) {
+    const result = applyShadow(finalCanvas, strokeCanvas, strokeCtx, shadow)
+    finalCanvas = result.canvas
+    finalCtx = result.ctx
+  }
+
+  await processTrimmingBatched(text, map, finalCtx, layout, {
     batchSize,
     onProgress,
     signal,
   })
 
-  return { canvas: copyToCleanCanvas(canvas), glyphs: map }
+  return { canvas: copyToCleanCanvas(finalCanvas), glyphs: map }
 }
 
 /**

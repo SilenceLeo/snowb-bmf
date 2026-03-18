@@ -95,6 +95,13 @@ export {
   setShadowOffsetX,
   setShadowOffsetY,
   setShadowOffset,
+  // Inner Shadow actions
+  setUseInnerShadow,
+  setInnerShadowColor,
+  setInnerShadowBlur,
+  setInnerShadowOffsetX,
+  setInnerShadowOffsetY,
+  setInnerShadowOffset,
   // Render mode
   setRenderMode,
   setDistanceRange,
@@ -326,6 +333,8 @@ export {
   useStroke,
   useShadowEnabled,
   useShadow,
+  useInnerShadowEnabled,
+  useInnerShadow,
   useBgColor,
   useGlobalAdjustMetric,
   // Layout hooks

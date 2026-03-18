@@ -15,7 +15,7 @@ import type {
   IShadow,
   IStyle,
   IUi,
-} from 'src/file/conversion/fileTypes/sbf/proto/1.2.2/project'
+} from 'src/file/conversion/fileTypes/sbf/proto/1.3.0/project'
 
 import { glyphStore$ } from '../glyphStore'
 import { projectStore$ } from '../projectStore'
@@ -327,6 +327,8 @@ function serializeStyle(): IStyle {
     stroke: serializeStroke(style.stroke),
     useShadow: style.useShadow,
     shadow: serializeShadow(style.shadow),
+    useInnerShadow: style.useInnerShadow,
+    innerShadow: serializeShadow(style.innerShadow),
     bgColor: style.bgColor,
     render: {
       mode: renderModeToInt(style.render.mode),

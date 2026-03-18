@@ -1,4 +1,4 @@
-import type { IProject } from './1.2.2/project'
+import type { IProject } from './1.3.0/project'
 // NOTE: Circular dependency with ./index.ts. This works due to JavaScript's
 // module initialization order but should ideally be refactored by extracting
 // CURRENT_VERSION and allProto to a separate constants file.

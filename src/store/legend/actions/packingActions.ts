@@ -1,4 +1,9 @@
 import type { Font as OpenType } from 'opentype.js'
+import {
+  type MsdfGlyphData,
+  processAtlasForMsdf,
+  processAtlasForSdf,
+} from 'src/file/export/sdf/atlasProcessor'
 import type { GlyphRenderConfig } from 'src/types/style'
 import { PackingEngine } from 'src/utils/PackingEngine'
 import { isCancelError } from 'src/utils/concurrency'
@@ -33,6 +38,7 @@ import {
   layoutStore$,
   setPackSize,
 } from '../stores/layoutStore'
+import { getPatternImage } from '../stores/styleSetterFactory'
 import {
   type FillData,
   FillType,
@@ -44,13 +50,7 @@ import {
   getMainFont,
   styleStore$,
 } from '../stores/styleStore'
-import { getPatternImage } from '../stores/styleSetterFactory'
 import { setPackFailed, setSize } from '../stores/uiStore'
-import {
-  type MsdfGlyphData,
-  processAtlasForMsdf,
-  processAtlasForSdf,
-} from 'src/file/export/sdf/atlasProcessor'
 import type { GlyphInfoUpdate, ImageGlyphData, TextRectangle } from '../types'
 
 let packingEngine: PackingEngine | null = null
@@ -539,6 +539,7 @@ interface StyleConfig {
   fill: FillData
   stroke: StrokeData | undefined
   shadow: ShadowData | undefined
+  innerShadow: ShadowData | undefined
 }
 
 function createStyleConfig(): StyleConfig {
@@ -578,6 +579,7 @@ function createStyleConfig(): StyleConfig {
       fill: { ...style.fill, type: FillType.SOLID, color: '#ffffff' },
       stroke: undefined,
       shadow: undefined,
+      innerShadow: undefined,
     }
   }
 
@@ -586,6 +588,7 @@ function createStyleConfig(): StyleConfig {
     fill: style.fill,
     stroke: style.useStroke ? style.stroke : undefined,
     shadow: style.useShadow ? style.shadow : undefined,
+    innerShadow: style.useInnerShadow ? style.innerShadow : undefined,
   }
 }
 
@@ -610,6 +613,7 @@ function toGlyphRenderConfig(config: StyleConfig): GlyphRenderConfig {
         }
       : undefined,
     shadow: config.shadow,
+    innerShadow: config.innerShadow,
   }
 }
 
@@ -657,7 +661,8 @@ export async function packStyle(): Promise<void> {
     const text = getProjectText()
     const glyphText = Array.from(new Set(` ${text}`))
     const totalGlyphs = glyphText.length
-    const useProgressive = totalGlyphs > PERFORMANCE_THRESHOLDS.PROGRESSIVE_THRESHOLD
+    const useProgressive =
+      totalGlyphs > PERFORMANCE_THRESHOLDS.PROGRESSIVE_THRESHOLD
 
     const styleOptions = toGlyphRenderConfig(createStyleConfig())
 
@@ -670,11 +675,17 @@ export async function packStyle(): Promise<void> {
       }
 
       const result = await getFontGlyphsProgressive(glyphText, styleOptions, {
-        batchSize: Math.min(PERFORMANCE_THRESHOLDS.BATCH_SIZE, Math.ceil(totalGlyphs / 20)),
+        batchSize: Math.min(
+          PERFORMANCE_THRESHOLDS.BATCH_SIZE,
+          Math.ceil(totalGlyphs / 20),
+        ),
         signal,
         onProgress: DEBUG_CONFIG.logBatchUpdates
           ? (completed, total) => {
-              if (completed % PERFORMANCE_THRESHOLDS.BATCH_SIZE === 0 || completed === total) {
+              if (
+                completed % PERFORMANCE_THRESHOLDS.BATCH_SIZE === 0 ||
+                completed === total
+              ) {
                 console.log(`[Packing] Glyph rendering: ${completed}/${total}`)
               }
             }

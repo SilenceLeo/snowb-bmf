@@ -409,6 +409,59 @@ export function applyShadow(
   return { canvas: strokeCanvas, ctx: strokeCtx }
 }
 
+export function applyInnerShadow(
+  canvas: HTMLCanvasElement,
+  shadow: ShadowConfig,
+): void {
+  const { width, height } = canvas
+  if (width === 0 || height === 0) return
+
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+
+  // 1. Create inverted mask: opaque everywhere except where glyphs are
+  const maskCanvas = document.createElement('canvas')
+  maskCanvas.width = width
+  maskCanvas.height = height
+  const maskCtx = maskCanvas.getContext('2d')
+  if (!maskCtx) return
+
+  maskCtx.fillStyle = '#ffffff'
+  maskCtx.fillRect(0, 0, width, height)
+  maskCtx.globalCompositeOperation = 'destination-out'
+  maskCtx.drawImage(canvas, 0, 0)
+  maskCtx.globalCompositeOperation = 'source-over'
+
+  // 2. Draw the inverted mask with shadow onto a new canvas
+  const shadowCanvas = document.createElement('canvas')
+  shadowCanvas.width = width
+  shadowCanvas.height = height
+  const shadowCtx = shadowCanvas.getContext('2d')
+  if (!shadowCtx) return
+
+  shadowCtx.shadowBlur = shadow.blur
+  shadowCtx.shadowColor = shadow.color
+  shadowCtx.shadowOffsetX = shadow.offsetX
+  shadowCtx.shadowOffsetY = shadow.offsetY
+  shadowCtx.drawImage(maskCanvas, 0, 0)
+
+  // 3. Remove the opaque border, keep only the inward-bleeding shadow
+  shadowCtx.shadowBlur = 0
+  shadowCtx.shadowColor = 'transparent'
+  shadowCtx.shadowOffsetX = 0
+  shadowCtx.shadowOffsetY = 0
+  shadowCtx.globalCompositeOperation = 'destination-out'
+  shadowCtx.drawImage(maskCanvas, 0, 0)
+
+  // 4. Clip inner shadow to the glyph shape
+  shadowCtx.globalCompositeOperation = 'destination-in'
+  shadowCtx.drawImage(canvas, 0, 0)
+  shadowCtx.globalCompositeOperation = 'source-over'
+
+  // 5. Composite inner shadow over the original canvas
+  ctx.drawImage(shadowCanvas, 0, 0)
+}
+
 export function trimGlyphs(
   text: string[],
   map: Map<string, GlyphItem>,
