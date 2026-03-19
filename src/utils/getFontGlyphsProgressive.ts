@@ -58,8 +58,9 @@ export default async function getFontGlyphsProgressive(
   setupStrokeContext(ctx, strokeCtx, stroke, lineWidth)
 
   let completedCount = 0
-  const renderConfig =
-    innerShadow && hasStroke ? { ...config, stroke: undefined } : config
+  const needsTwoPass = !!(innerShadow && hasStroke)
+  const totalSteps = needsTwoPass ? text.length * 2 : text.length
+  const renderConfig = needsTwoPass ? { ...config, stroke: undefined } : config
 
   for (let batchStart = 0; batchStart < text.length; batchStart += batchSize) {
     if (signal?.aborted) {
@@ -83,7 +84,7 @@ export default async function getFontGlyphsProgressive(
         }
 
         completedCount = batchEnd
-        onProgress?.(completedCount, text.length)
+        onProgress?.(completedCount, totalSteps)
         resolve()
       })
     })
@@ -93,7 +94,7 @@ export default async function getFontGlyphsProgressive(
     }
   }
 
-  if (innerShadow && hasStroke) {
+  if (needsTwoPass) {
     // Two-pass: fill-only rendered above → inner shadow → stroke on top
     const twoPass = prepareTwoPassRender(
       canvas,
@@ -127,6 +128,7 @@ export default async function getFontGlyphsProgressive(
               layout,
             )
           }
+          onProgress?.(text.length + batchEnd, totalSteps)
           resolve()
         })
       })

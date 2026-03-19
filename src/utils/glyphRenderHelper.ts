@@ -501,7 +501,11 @@ export function prepareTwoPassRender(
   const fillOnlyCanvas = document.createElement('canvas')
   fillOnlyCanvas.width = canvas.width
   fillOnlyCanvas.height = canvas.height
-  fillOnlyCanvas.getContext('2d')?.drawImage(canvas, 0, 0)
+  const fillOnlyCtx = fillOnlyCanvas.getContext('2d')
+  if (!fillOnlyCtx) {
+    throw new Error('Failed to get 2d context for fillOnlyCanvas')
+  }
+  fillOnlyCtx.drawImage(canvas, 0, 0)
 
   applyInnerShadow(canvas, innerShadow)
 
