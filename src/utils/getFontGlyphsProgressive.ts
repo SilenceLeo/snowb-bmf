@@ -8,6 +8,8 @@ import {
   applyStrokeType2,
   computeLayout,
   createCanvas2D,
+  finalizeTwoPassRender,
+  prepareTwoPassRender,
   renderSingleGlyph,
   setupStrokeContext,
   trimGlyphs,
@@ -93,42 +95,48 @@ export default async function getFontGlyphsProgressive(
 
   if (innerShadow && hasStroke) {
     // Two-pass: fill-only rendered above → inner shadow → stroke on top
-    const fillOnlyCanvas = document.createElement('canvas')
-    fillOnlyCanvas.width = canvas.width
-    fillOnlyCanvas.height = canvas.height
-    fillOnlyCanvas.getContext('2d')?.drawImage(canvas, 0, 0)
+    const twoPass = prepareTwoPassRender(
+      canvas,
+      innerShadow,
+      stroke!,
+      lineWidth,
+    )
 
-    applyInnerShadow(canvas, innerShadow)
+    // Second pass: render fill+stroke in batches (matches first pass pattern)
+    for (
+      let batchStart = 0;
+      batchStart < text.length;
+      batchStart += batchSize
+    ) {
+      if (signal?.aborted) {
+        throw new Error('Rendering cancelled')
+      }
 
-    // Render fill+stroke on a separate canvas
-    const { canvas: fullCanvas, ctx: fullCtx } = createCanvas2D()
-    const { canvas: fullStrokeCanvas, ctx: fullStrokeCtx } = createCanvas2D()
-    fullCanvas.width = canvas.width
-    fullCanvas.height = canvas.height
-    fullStrokeCanvas.width = canvas.width
-    fullStrokeCanvas.height = canvas.height
-    setupStrokeContext(fullCtx, fullStrokeCtx, stroke, lineWidth)
-    const tempMap = new Map<string, GlyphItem>()
-    for (let i = 0; i < text.length; i++) {
-      renderSingleGlyph(
-        i,
-        text[i],
-        fullCtx,
-        fullStrokeCtx,
-        tempMap,
-        config,
-        layout,
-      )
+      const batchEnd = Math.min(batchStart + batchSize, text.length)
+
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          for (let i = batchStart; i < batchEnd; i++) {
+            renderSingleGlyph(
+              i,
+              text[i],
+              twoPass.fullCtx,
+              twoPass.fullStrokeCtx,
+              twoPass.tempMap,
+              config,
+              layout,
+            )
+          }
+          resolve()
+        })
+      })
+
+      if (batchEnd < text.length) {
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      }
     }
-    applyStrokeType2(fullCtx, fullStrokeCanvas, stroke, lineWidth)
 
-    // Extract stroke-only: remove fill pixels
-    fullCtx.globalCompositeOperation = 'destination-out'
-    fullCtx.drawImage(fillOnlyCanvas, 0, 0)
-    fullCtx.globalCompositeOperation = 'source-over'
-
-    // Draw stroke-only on top
-    ctx.drawImage(fullCanvas, 0, 0)
+    finalizeTwoPassRender(ctx, twoPass, stroke!, lineWidth)
   } else {
     applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
     if (innerShadow) {

@@ -7,6 +7,8 @@ import {
   applyStrokeType2,
   computeLayout,
   createCanvas2D,
+  finalizeTwoPassRender,
+  prepareTwoPassRender,
   renderSingleGlyph,
   setupStrokeContext,
   trimGlyphs,
@@ -44,43 +46,24 @@ export default function getFontGlyphs(text: string[], config: Config) {
       renderSingleGlyph(i, text[i], ctx, strokeCtx, map, fillOnlyConfig, layout)
     }
 
-    // Save fill-only for later diffing
-    const fillOnlyCanvas = document.createElement('canvas')
-    fillOnlyCanvas.width = canvas.width
-    fillOnlyCanvas.height = canvas.height
-    fillOnlyCanvas.getContext('2d')?.drawImage(canvas, 0, 0)
-
-    applyInnerShadow(canvas, innerShadow)
-
-    // Render fill+stroke on a separate canvas
-    const { canvas: fullCanvas, ctx: fullCtx } = createCanvas2D()
-    const { canvas: fullStrokeCanvas, ctx: fullStrokeCtx } = createCanvas2D()
-    fullCanvas.width = canvas.width
-    fullCanvas.height = canvas.height
-    fullStrokeCanvas.width = canvas.width
-    fullStrokeCanvas.height = canvas.height
-    setupStrokeContext(fullCtx, fullStrokeCtx, stroke, lineWidth)
-    const tempMap = new Map<string, GlyphItem>()
+    const twoPass = prepareTwoPassRender(
+      canvas,
+      innerShadow,
+      stroke!,
+      lineWidth,
+    )
     for (let i = 0; i < text.length; i++) {
       renderSingleGlyph(
         i,
         text[i],
-        fullCtx,
-        fullStrokeCtx,
-        tempMap,
+        twoPass.fullCtx,
+        twoPass.fullStrokeCtx,
+        twoPass.tempMap,
         config,
         layout,
       )
     }
-    applyStrokeType2(fullCtx, fullStrokeCanvas, stroke, lineWidth)
-
-    // Extract stroke-only: remove fill pixels from the full render
-    fullCtx.globalCompositeOperation = 'destination-out'
-    fullCtx.drawImage(fillOnlyCanvas, 0, 0)
-    fullCtx.globalCompositeOperation = 'source-over'
-
-    // Draw stroke-only on top of fill+innerShadow
-    ctx.drawImage(fullCanvas, 0, 0)
+    finalizeTwoPassRender(ctx, twoPass, stroke!, lineWidth)
   } else {
     for (let i = 0; i < text.length; i++) {
       renderSingleGlyph(i, text[i], ctx, strokeCtx, map, config, layout)
