@@ -1,6 +1,5 @@
 import { useSelector } from '@legendapp/state/react'
 import { useRef } from 'react'
-
 import type { GradientPreset } from 'src/types/gradientPreset'
 
 import { getSourceCanvas, glyphStore$ } from './glyphStore'
@@ -371,6 +370,14 @@ export function useShadowEnabled(): boolean {
 
 export function useShadow(): ShadowData {
   return useSelector(() => styleStore$.style.shadow.get())
+}
+
+export function useInnerShadowEnabled(): boolean {
+  return useSelector(() => styleStore$.style.useInnerShadow.get())
+}
+
+export function useInnerShadow(): ShadowData {
+  return useSelector(() => styleStore$.style.innerShadow.get())
 }
 
 export function useBgColor(): string {

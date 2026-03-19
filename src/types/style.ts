@@ -163,4 +163,5 @@ export interface GlyphRenderConfig {
   fill: FillRenderConfig
   stroke?: StrokeRenderConfig
   shadow?: ShadowData
+  innerShadow?: ShadowData
 }

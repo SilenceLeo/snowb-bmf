@@ -1,3 +1,4 @@
+// cspell:words Viktor Chlumsky
 /**
  * TypeScript binding layer for msdfgen WASM module.
  *

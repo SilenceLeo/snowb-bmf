@@ -3,10 +3,13 @@ import {
   type GlyphItem,
   type GlyphRenderConfig,
   type LayoutInfo,
+  applyInnerShadow,
   applyShadow,
   applyStrokeType2,
   computeLayout,
   createCanvas2D,
+  finalizeTwoPassRender,
+  prepareTwoPassRender,
   renderSingleGlyph,
   setupStrokeContext,
   trimGlyphs,
@@ -30,7 +33,7 @@ export default async function getFontGlyphsProgressive(
   config: Config,
   options: ProgressiveOptions = {},
 ): Promise<GlyphInfo> {
-  const { stroke, shadow } = config
+  const { stroke, shadow, innerShadow } = config
   const { batchSize = 50, onProgress, signal } = options
 
   if (signal?.aborted) {
@@ -50,10 +53,14 @@ export default async function getFontGlyphsProgressive(
   strokeCanvas.height = canvas.height
 
   const map = new Map<string, GlyphItem>()
+  const hasStroke = !!(stroke && lineWidth)
 
   setupStrokeContext(ctx, strokeCtx, stroke, lineWidth)
 
   let completedCount = 0
+  const needsTwoPass = !!(innerShadow && hasStroke)
+  const totalSteps = needsTwoPass ? text.length * 2 : text.length
+  const renderConfig = needsTwoPass ? { ...config, stroke: undefined } : config
 
   for (let batchStart = 0; batchStart < text.length; batchStart += batchSize) {
     if (signal?.aborted) {
@@ -65,11 +72,19 @@ export default async function getFontGlyphsProgressive(
     await new Promise<void>((resolve) => {
       requestAnimationFrame(() => {
         for (let i = batchStart; i < batchEnd; i++) {
-          renderSingleGlyph(i, text[i], ctx, strokeCtx, map, config, layout)
+          renderSingleGlyph(
+            i,
+            text[i],
+            ctx,
+            strokeCtx,
+            map,
+            renderConfig,
+            layout,
+          )
         }
 
         completedCount = batchEnd
-        onProgress?.(completedCount, text.length)
+        onProgress?.(completedCount, totalSteps)
         resolve()
       })
     })
@@ -79,27 +94,74 @@ export default async function getFontGlyphsProgressive(
     }
   }
 
-  applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
+  if (needsTwoPass) {
+    // Two-pass: fill-only rendered above → inner shadow → stroke on top
+    const twoPass = prepareTwoPassRender(
+      canvas,
+      innerShadow,
+      stroke!,
+      lineWidth,
+    )
 
-  if (shadow) {
-    const result = applyShadow(canvas, strokeCanvas, strokeCtx, shadow)
+    // Second pass: render fill+stroke in batches (matches first pass pattern)
+    for (
+      let batchStart = 0;
+      batchStart < text.length;
+      batchStart += batchSize
+    ) {
+      if (signal?.aborted) {
+        throw new Error('Rendering cancelled')
+      }
 
-    await processTrimmingBatched(text, map, result.ctx, layout, {
-      batchSize,
-      onProgress,
-      signal,
-    })
+      const batchEnd = Math.min(batchStart + batchSize, text.length)
 
-    return { canvas: copyToCleanCanvas(result.canvas), glyphs: map }
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          for (let i = batchStart; i < batchEnd; i++) {
+            renderSingleGlyph(
+              i,
+              text[i],
+              twoPass.fullCtx,
+              twoPass.fullStrokeCtx,
+              twoPass.tempMap,
+              config,
+              layout,
+            )
+          }
+          onProgress?.(text.length + batchEnd, totalSteps)
+          resolve()
+        })
+      })
+
+      if (batchEnd < text.length) {
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      }
+    }
+
+    finalizeTwoPassRender(ctx, twoPass, stroke!, lineWidth)
+  } else {
+    applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
+    if (innerShadow) {
+      applyInnerShadow(canvas, innerShadow)
+    }
   }
 
-  await processTrimmingBatched(text, map, ctx, layout, {
+  let finalCanvas = canvas
+  let finalCtx = ctx
+
+  if (shadow) {
+    const result = applyShadow(finalCanvas, strokeCanvas, strokeCtx, shadow)
+    finalCanvas = result.canvas
+    finalCtx = result.ctx
+  }
+
+  await processTrimmingBatched(text, map, finalCtx, layout, {
     batchSize,
     onProgress,
     signal,
   })
 
-  return { canvas: copyToCleanCanvas(canvas), glyphs: map }
+  return { canvas: copyToCleanCanvas(finalCanvas), glyphs: map }
 }
 
 /**

@@ -13,7 +13,7 @@
 import { batch, opaqueObject } from '@legendapp/state'
 import type { Font as OpenType } from 'opentype.js'
 import { parse } from 'opentype.js'
-import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.2.2/project'
+import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.3.0/project'
 import { uint8ArrayToArrayBuffer } from 'src/utils/bufferUtils'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 import updateFontFace from 'src/utils/updateFontFace'
@@ -56,9 +56,7 @@ import type { FontGlyphData, ImageGlyphData } from '../types'
  * Normalize a buffer to ArrayBuffer.
  * Handles both Uint8Array (from raw protobuf) and ArrayBuffer (from toOriginBuffer conversion).
  */
-function normalizeToArrayBuffer(
-  input: Uint8Array | ArrayBuffer,
-): ArrayBuffer {
+function normalizeToArrayBuffer(input: Uint8Array | ArrayBuffer): ArrayBuffer {
   if (input instanceof ArrayBuffer) return input
   return uint8ArrayToArrayBuffer(input)
 }
@@ -193,9 +191,7 @@ function deserializeImageGlyph(data: {
   kerning?: Record<string, number>
   page?: number
 }): ImageGlyphData {
-  const buffer = data.buffer
-    ? normalizeToArrayBuffer(data.buffer)
-    : undefined
+  const buffer = data.buffer ? normalizeToArrayBuffer(data.buffer) : undefined
 
   return {
     type: 'image' as const,
@@ -589,6 +585,13 @@ async function deserializeStyle(
           offsetX?: number
           offsetY?: number
         }
+        useInnerShadow?: boolean
+        innerShadow?: {
+          color?: string
+          blur?: number
+          offsetX?: number
+          offsetY?: number
+        }
         bgColor?: string
         render?: {
           mode?: number
@@ -615,6 +618,8 @@ async function deserializeStyle(
     stroke: deserializeStroke(data?.stroke),
     useShadow: data?.useShadow ?? false,
     shadow: deserializeShadow(data?.shadow),
+    useInnerShadow: data?.useInnerShadow ?? false,
+    innerShadow: deserializeShadow(data?.innerShadow),
     bgColor: data?.bgColor ?? 'rgba(0,0,0,0)',
     render: {
       mode: intToRenderMode(data?.render?.mode),

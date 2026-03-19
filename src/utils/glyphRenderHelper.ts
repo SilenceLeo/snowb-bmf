@@ -409,6 +409,158 @@ export function applyShadow(
   return { canvas: strokeCanvas, ctx: strokeCtx }
 }
 
+export function applyInnerShadow(
+  canvas: HTMLCanvasElement,
+  shadow: ShadowConfig,
+): void {
+  const { width, height } = canvas
+  if (width === 0 || height === 0) return
+
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+
+  // 1. Create inverted mask: opaque everywhere except where glyphs are
+  const maskCanvas = document.createElement('canvas')
+  maskCanvas.width = width
+  maskCanvas.height = height
+  const maskCtx = maskCanvas.getContext('2d')
+  if (!maskCtx) return
+
+  maskCtx.fillStyle = '#ffffff'
+  maskCtx.fillRect(0, 0, width, height)
+  maskCtx.globalCompositeOperation = 'destination-out'
+  maskCtx.drawImage(canvas, 0, 0)
+  maskCtx.globalCompositeOperation = 'source-over'
+
+  // 2. Draw the inverted mask with shadow onto a new canvas
+  const shadowCanvas = document.createElement('canvas')
+  shadowCanvas.width = width
+  shadowCanvas.height = height
+  const shadowCtx = shadowCanvas.getContext('2d')
+  if (!shadowCtx) return
+
+  shadowCtx.shadowBlur = shadow.blur
+  shadowCtx.shadowColor = shadow.color
+  shadowCtx.shadowOffsetX = shadow.offsetX
+  shadowCtx.shadowOffsetY = shadow.offsetY
+  shadowCtx.drawImage(maskCanvas, 0, 0)
+
+  // 3. Remove the opaque border, keep only the inward-bleeding shadow
+  shadowCtx.shadowBlur = 0
+  shadowCtx.shadowColor = 'transparent'
+  shadowCtx.shadowOffsetX = 0
+  shadowCtx.shadowOffsetY = 0
+  shadowCtx.globalCompositeOperation = 'destination-out'
+  shadowCtx.drawImage(maskCanvas, 0, 0)
+
+  // 4. Clip inner shadow to the glyph shape
+  shadowCtx.globalCompositeOperation = 'destination-in'
+  shadowCtx.drawImage(canvas, 0, 0)
+  shadowCtx.globalCompositeOperation = 'source-over'
+
+  // 5. Composite inner shadow over the original canvas
+  ctx.drawImage(shadowCanvas, 0, 0)
+
+  // Release temporary canvases
+  maskCanvas.width = 0
+  maskCanvas.height = 0
+  shadowCanvas.width = 0
+  shadowCanvas.height = 0
+}
+
+// ---------------------------------------------------------------------------
+// Two-pass rendering helpers (inner shadow + stroke)
+// ---------------------------------------------------------------------------
+
+/**
+ * Context object returned by `prepareTwoPassRender`.
+ * Callers render glyphs into `fullCtx` / `fullStrokeCtx` between the
+ * prepare and finalize steps.
+ */
+export interface TwoPassContext {
+  fillOnlyCanvas: HTMLCanvasElement
+  fullCanvas: HTMLCanvasElement
+  fullCtx: CanvasRenderingContext2D
+  fullStrokeCanvas: HTMLCanvasElement
+  fullStrokeCtx: CanvasRenderingContext2D
+  tempMap: Map<string, GlyphItem>
+}
+
+/**
+ * Prepare the two-pass stroke overlay:
+ * 1. Snapshot the current (fill-only) canvas
+ * 2. Apply inner shadow to the main canvas
+ * 3. Create auxiliary canvases for the full (fill+stroke) render
+ */
+export function prepareTwoPassRender(
+  canvas: HTMLCanvasElement,
+  innerShadow: ShadowConfig,
+  stroke: StrokeConfig,
+  lineWidth: number,
+): TwoPassContext {
+  const fillOnlyCanvas = document.createElement('canvas')
+  fillOnlyCanvas.width = canvas.width
+  fillOnlyCanvas.height = canvas.height
+  const fillOnlyCtx = fillOnlyCanvas.getContext('2d')
+  if (!fillOnlyCtx) {
+    throw new Error('Failed to get 2d context for fillOnlyCanvas')
+  }
+  fillOnlyCtx.drawImage(canvas, 0, 0)
+
+  applyInnerShadow(canvas, innerShadow)
+
+  const { canvas: fullCanvas, ctx: fullCtx } = createCanvas2D()
+  const { canvas: fullStrokeCanvas, ctx: fullStrokeCtx } = createCanvas2D()
+  fullCanvas.width = canvas.width
+  fullCanvas.height = canvas.height
+  fullStrokeCanvas.width = canvas.width
+  fullStrokeCanvas.height = canvas.height
+  setupStrokeContext(fullCtx, fullStrokeCtx, stroke, lineWidth)
+
+  return {
+    fillOnlyCanvas,
+    fullCanvas,
+    fullCtx,
+    fullStrokeCanvas,
+    fullStrokeCtx,
+    tempMap: new Map<string, GlyphItem>(),
+  }
+}
+
+/**
+ * Finalize the two-pass stroke overlay:
+ * 1. Apply stroke type 2
+ * 2. Extract stroke-only pixels (remove fill)
+ * 3. Composite stroke-only on top of the main canvas
+ * 4. Release temporary canvases
+ */
+export function finalizeTwoPassRender(
+  ctx: CanvasRenderingContext2D,
+  twoPass: TwoPassContext,
+  stroke: StrokeConfig,
+  lineWidth: number,
+): void {
+  const { fillOnlyCanvas, fullCanvas, fullCtx, fullStrokeCanvas } = twoPass
+
+  applyStrokeType2(fullCtx, fullStrokeCanvas, stroke, lineWidth)
+
+  // Extract stroke-only: remove fill pixels
+  fullCtx.globalCompositeOperation = 'destination-out'
+  fullCtx.drawImage(fillOnlyCanvas, 0, 0)
+  fullCtx.globalCompositeOperation = 'source-over'
+
+  // Draw stroke-only on top
+  ctx.drawImage(fullCanvas, 0, 0)
+
+  // Release temporary canvases
+  fillOnlyCanvas.width = 0
+  fillOnlyCanvas.height = 0
+  fullCanvas.width = 0
+  fullCanvas.height = 0
+  fullStrokeCanvas.width = 0
+  fullStrokeCanvas.height = 0
+}
+
 export function trimGlyphs(
   text: string[],
   map: Map<string, GlyphItem>,

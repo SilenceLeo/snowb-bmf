@@ -2,10 +2,13 @@ import {
   type GlyphInfo,
   type GlyphItem,
   type GlyphRenderConfig,
+  applyInnerShadow,
   applyShadow,
   applyStrokeType2,
   computeLayout,
   createCanvas2D,
+  finalizeTwoPassRender,
+  prepareTwoPassRender,
   renderSingleGlyph,
   setupStrokeContext,
   trimGlyphs,
@@ -15,7 +18,7 @@ export type { GlyphItem, GlyphInfo }
 export type Config = GlyphRenderConfig
 
 export default function getFontGlyphs(text: string[], config: Config) {
-  const { stroke, shadow } = config
+  const { stroke, shadow, innerShadow } = config
   const layout = computeLayout(text.length, config)
   const { lineWidth, itemWidth, itemHeight, padding, columnNum, lineNum } =
     layout
@@ -32,11 +35,44 @@ export default function getFontGlyphs(text: string[], config: Config) {
 
   setupStrokeContext(ctx, strokeCtx, stroke, lineWidth)
 
-  for (let i = 0; i < text.length; i++) {
-    renderSingleGlyph(i, text[i], ctx, strokeCtx, map, config, layout)
-  }
+  const hasStroke = !!(stroke && lineWidth)
 
-  applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
+  if (innerShadow && hasStroke) {
+    // Two-pass rendering so stroke appears above inner shadow:
+    // 1. Render fill-only → apply inner shadow
+    // 2. Render fill+stroke → extract stroke-only → draw on top
+    const fillOnlyConfig: Config = { ...config, stroke: undefined }
+    for (let i = 0; i < text.length; i++) {
+      renderSingleGlyph(i, text[i], ctx, strokeCtx, map, fillOnlyConfig, layout)
+    }
+
+    const twoPass = prepareTwoPassRender(
+      canvas,
+      innerShadow,
+      stroke!,
+      lineWidth,
+    )
+    for (let i = 0; i < text.length; i++) {
+      renderSingleGlyph(
+        i,
+        text[i],
+        twoPass.fullCtx,
+        twoPass.fullStrokeCtx,
+        twoPass.tempMap,
+        config,
+        layout,
+      )
+    }
+    finalizeTwoPassRender(ctx, twoPass, stroke!, lineWidth)
+  } else {
+    for (let i = 0; i < text.length; i++) {
+      renderSingleGlyph(i, text[i], ctx, strokeCtx, map, config, layout)
+    }
+    applyStrokeType2(ctx, strokeCanvas, stroke, lineWidth)
+    if (innerShadow) {
+      applyInnerShadow(canvas, innerShadow)
+    }
+  }
 
   if (shadow) {
     const result = applyShadow(canvas, strokeCanvas, strokeCtx, shadow)

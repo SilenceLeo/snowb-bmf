@@ -8,7 +8,7 @@
  * - Shadow configuration
  * - Background color
  */
-import { batch, opaqueObject, observable } from '@legendapp/state'
+import { batch, observable, opaqueObject } from '@legendapp/state'
 import type { Font as OpenType } from 'opentype.js'
 import { parse } from 'opentype.js'
 import {
@@ -77,7 +77,10 @@ export type FillRule = 'nonzero' | 'evenodd'
 
 export type ColoringStrategy = 'simple' | 'inktrap' | 'distance'
 
-export type ErrorCorrectionMode = 'edge-priority' | 'disabled' | 'indiscriminate'
+export type ErrorCorrectionMode =
+  | 'edge-priority'
+  | 'disabled'
+  | 'indiscriminate'
 
 export interface RenderData {
   mode: RenderMode
@@ -100,6 +103,8 @@ export interface StyleData {
   stroke: StrokeData
   useShadow: boolean
   shadow: ShadowData
+  useInnerShadow: boolean
+  innerShadow: ShadowData
   bgColor: string
   render: RenderData
 }
@@ -213,6 +218,8 @@ function createDefaultStyle(): StyleData {
     stroke: createDefaultStroke(),
     useShadow: false,
     shadow: createDefaultShadow(),
+    useInnerShadow: false,
+    innerShadow: createDefaultShadow(),
     bgColor: 'rgba(0,0,0,0)',
     render: createDefaultRender(),
   }
@@ -374,7 +381,11 @@ export async function addFont(fontBuffer: ArrayBuffer): Promise<void> {
   }
   styleStore$.style.font.fonts.set([
     ...currentFonts,
-    { font: opaqueObject(fontBuffer), family, opentype: opaqueObject(opentype) },
+    {
+      font: opaqueObject(fontBuffer),
+      family,
+      opentype: opaqueObject(opentype),
+    },
   ])
 
   updateBaselines()
@@ -450,7 +461,9 @@ export function setSdfChannel(channel: SdfChannel): void {
  * Set MSDF edge coloring angle threshold (radians)
  */
 export function setAngleThreshold(value: number): void {
-  styleStore$.style.render.angleThreshold.set(Math.max(0.5, Math.min(Math.PI, value)))
+  styleStore$.style.render.angleThreshold.set(
+    Math.max(0.5, Math.min(Math.PI, value)),
+  )
 }
 
 /**
@@ -596,6 +609,37 @@ export function setShadowOffset(offsetX: number, offsetY: number): void {
 }
 
 // ============================================================================
+// Inner Shadow Management
+// ============================================================================
+
+export function setUseInnerShadow(useInnerShadow: boolean): void {
+  styleStore$.style.useInnerShadow.set(useInnerShadow)
+}
+
+export function setInnerShadowColor(color: string): void {
+  styleStore$.style.innerShadow.color.set(color)
+}
+
+export function setInnerShadowBlur(blur: number): void {
+  styleStore$.style.innerShadow.blur.set(blur)
+}
+
+export function setInnerShadowOffsetX(offsetX: number): void {
+  styleStore$.style.innerShadow.offsetX.set(offsetX)
+}
+
+export function setInnerShadowOffsetY(offsetY: number): void {
+  styleStore$.style.innerShadow.offsetY.set(offsetY)
+}
+
+export function setInnerShadowOffset(offsetX: number, offsetY: number): void {
+  batch(() => {
+    styleStore$.style.innerShadow.offsetX.set(offsetX)
+    styleStore$.style.innerShadow.offsetY.set(offsetY)
+  })
+}
+
+// ============================================================================
 // Background Color Management
 // ============================================================================
 
@@ -697,6 +741,12 @@ export function initializeStyleStore(data: Partial<StyleStoreState>): void {
       }
       if (data.style.shadow) {
         newStyle.shadow = { ...currentStyle.shadow, ...data.style.shadow }
+      }
+      if (data.style.innerShadow) {
+        newStyle.innerShadow = {
+          ...currentStyle.innerShadow,
+          ...data.style.innerShadow,
+        }
       }
       if (data.style.render) {
         newStyle.render = { ...currentStyle.render, ...data.style.render }

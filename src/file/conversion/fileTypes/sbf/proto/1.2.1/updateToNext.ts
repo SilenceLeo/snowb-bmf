@@ -6,8 +6,8 @@ export default function updateToNext(project: IProject): IProjectNext {
     ...project,
     style: {
       ...project.style,
-      render: null,  // new field — deserialize layer provides defaults
+      render: null, // new field — deserialize layer provides defaults
     },
-    extensions: null,  // new field — reserved for future use
+    extensions: null, // new field — reserved for future use
   } as unknown as IProjectNext
 }

@@ -83,7 +83,8 @@ export async function initializeProject(
       // Setup auto-run listeners after initial pack to avoid race conditions
       setupAutoRunListeners()
       setInitializing(false)
-      if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Initialization complete')
+      if (DEBUG_CONFIG.logBatchUpdates)
+        console.log('[Project] Initialization complete')
     }
 
     if (typeof requestIdleCallback !== 'undefined') {
@@ -104,7 +105,8 @@ export async function initializeProjectFromData(data: {
   text: string
   // Additional data can be passed for style, layout, glyphs, etc.
 }): Promise<void> {
-  if (DEBUG_CONFIG.logBatchUpdates) console.log(`[Project] Loading: ${data.name}`)
+  if (DEBUG_CONFIG.logBatchUpdates)
+    console.log(`[Project] Loading: ${data.name}`)
 
   setInitializing(true)
 
@@ -145,7 +147,8 @@ export async function initializeProjectFromData(data: {
     setupAutoRunListeners()
 
     setInitializing(false)
-    if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Loaded successfully')
+    if (DEBUG_CONFIG.logBatchUpdates)
+      console.log('[Project] Loaded successfully')
   } catch (error) {
     console.error('[Project] Loading failed:', error)
     setInitializing(false)
@@ -238,34 +241,48 @@ export function setupAutoRunListeners(): void {
     debouncedStyleChange()
   })
 
+  // Inner shadow changes - requires glyph regeneration
+  const unsubscribeInnerShadow = styleStore$.style.innerShadow.onChange(() => {
+    debouncedStyleChange()
+  })
+
+  const unsubscribeUseInnerShadow = styleStore$.style.useInnerShadow.onChange(
+    () => {
+      debouncedStyleChange()
+    },
+  )
+
   // Render mode changes — only needs full glyph re-render when switching between
   // default and SDF modes (different fill styles). Switching within SDF modes
   // (sdf↔msdf↔psdf↔mtsdf) only needs re-packing since all use white fill.
   let prevRenderMode = styleStore$.style.render.mode.get()
-  const unsubscribeRenderMode = styleStore$.style.render.mode.onChange(({ value }) => {
-    const wasDefault = prevRenderMode === 'default'
-    const isDefault = value === 'default'
-    prevRenderMode = value
-    if (wasDefault !== isDefault) {
-      // Crossing default↔SDF boundary: glyph style changes (white fill vs styled)
-      debouncedStyleChange()
-    } else {
-      // Within SDF modes or within default: only re-pack
-      debouncedLayoutChange()
-    }
-  })
+  const unsubscribeRenderMode = styleStore$.style.render.mode.onChange(
+    ({ value }) => {
+      const wasDefault = prevRenderMode === 'default'
+      const isDefault = value === 'default'
+      prevRenderMode = value
+      if (wasDefault !== isDefault) {
+        // Crossing default↔SDF boundary: glyph style changes (white fill vs styled)
+        debouncedStyleChange()
+      } else {
+        // Within SDF modes or within default: only re-pack
+        debouncedLayoutChange()
+      }
+    },
+  )
 
   // Distance range changes — only affects SDF post-processing (no glyph re-render needed)
-  const unsubscribeDistanceRange = styleStore$.style.render.distanceRange.onChange(
+  const unsubscribeDistanceRange =
+    styleStore$.style.render.distanceRange.onChange(() => {
+      debouncedLayoutChange()
+    })
+
+  // SDF channel changes — only affects SDF post-processing (no glyph re-render needed)
+  const unsubscribeSdfChannel = styleStore$.style.render.sdfChannel.onChange(
     () => {
       debouncedLayoutChange()
     },
   )
-
-  // SDF channel changes — only affects SDF post-processing (no glyph re-render needed)
-  const unsubscribeSdfChannel = styleStore$.style.render.sdfChannel.onChange(() => {
-    debouncedLayoutChange()
-  })
 
   // MSDF parameters — changes only need re-packing (no glyph re-render)
   const unsubscribeAngleThreshold =
@@ -314,6 +331,8 @@ export function setupAutoRunListeners(): void {
     unsubscribeUseStroke,
     unsubscribeShadow,
     unsubscribeUseShadow,
+    unsubscribeInnerShadow,
+    unsubscribeUseInnerShadow,
     unsubscribeRenderMode,
     unsubscribeDistanceRange,
     unsubscribeSdfChannel,
@@ -326,7 +345,8 @@ export function setupAutoRunListeners(): void {
     unsubscribeErrorCorrection,
   ]
 
-  if (DEBUG_CONFIG.logBatchUpdates) console.log('[Project] Auto-run listeners setup complete')
+  if (DEBUG_CONFIG.logBatchUpdates)
+    console.log('[Project] Auto-run listeners setup complete')
 }
 
 function debouncedLayoutChange(): void {

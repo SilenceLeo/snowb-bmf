@@ -71,7 +71,7 @@ IndexedDB via Dexie (`src/utils/persistence.ts`):
 **Import:** `.sbf` (Protocol Buffer), `.ltr` (Littera/legacy Flash)
 **Export:** BMFont text, BMFont XML, BMFont binary, PNG texture atlases
 
-Protocol Buffer schema versioning: 8 versions (1.0.0 → 1.0.1 → 1.0.2 → 1.1.0 → 1.1.1 → 1.1.2 → 1.2.0 → 1.2.1). Each version has `updateToNext.ts` for automatic migration. Current schema: `src/file/conversion/fileTypes/sbf/proto/1.2.1/project.proto`. Run `yarn pb` after schema changes.
+Protocol Buffer schema versioning: 10 versions (1.0.0 → 1.0.1 → 1.0.2 → 1.1.0 → 1.1.1 → 1.1.2 → 1.2.0 → 1.2.1 → 1.2.2 → 1.3.0). Each version has `updateToNext.ts` for automatic migration. Current schema: `src/file/conversion/fileTypes/sbf/proto/1.3.0/project.proto`. Run `yarn pb` after schema changes.
 
 ### Application Layout
 

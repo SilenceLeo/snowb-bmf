@@ -1,7 +1,7 @@
 import type { Project } from 'src/types/project'
 import { ensureUint8Array } from 'src/utils/bufferUtils'
 
-import { IProject, Project as ProjectProto } from './1.2.2/project'
+import { IProject, Project as ProjectProto } from './1.3.0/project'
 
 function convertBuffersToUint8Array(project: Project): void {
   // font
