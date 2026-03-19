@@ -286,17 +286,23 @@ export function resetGlyphPages(): void {
 }
 
 /**
- * Reset failed glyph positions (glyphs not in packed set)
+ * Reset failed glyph positions (glyphs not in packed set).
+ * Zero-size glyphs (e.g., space) get page=0 — valid BMFont page index.
+ * Normal failed glyphs get page=-1 — unassigned sentinel.
  */
 export function resetFailedGlyphPositions(packedLetters: Set<string>): void {
   batch(() => {
-    // Reset unpacked font glyphs (page=-1 means unassigned, consistent with createFontGlyph)
     const glyphs = glyphStore$.glyphs.get()
     Object.keys(glyphs).forEach((letter) => {
       if (!packedLetters.has(letter)) {
+        const g = glyphs[letter]
         glyphStore$.glyphs[letter].x.set(0)
         glyphStore$.glyphs[letter].y.set(0)
-        glyphStore$.glyphs[letter].page.set(-1)
+        // Zero-size glyphs (e.g., space) get page=0 — valid BMFont page index
+        // Normal failed glyphs get page=-1 — unassigned sentinel
+        glyphStore$.glyphs[letter].page.set(
+          g.width === 0 && g.height === 0 ? 0 : -1,
+        )
       }
     })
 
@@ -306,7 +312,9 @@ export function resetFailedGlyphPositions(packedLetters: Set<string>): void {
       if (!packedLetters.has(img.letter)) {
         glyphStore$.imageGlyphs[index].x.set(0)
         glyphStore$.imageGlyphs[index].y.set(0)
-        glyphStore$.imageGlyphs[index].page.set(-1)
+        glyphStore$.imageGlyphs[index].page.set(
+          img.width === 0 && img.height === 0 ? 0 : -1,
+        )
       }
     })
   })
