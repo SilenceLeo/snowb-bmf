@@ -296,6 +296,7 @@ export function setKerning(
       newKerning[nextLetter] = value
     }
     glyphStore$.glyphs[letter].kerning.set(newKerning)
+    incrementGlyphDataVersion()
   }
 }
 
@@ -354,6 +355,7 @@ export function setGlyphAdjustMetric(
 
   if (glyph) {
     applyMetricUpdate(glyphStore$.glyphs[letter].adjustMetric, metric)
+    incrementGlyphDataVersion()
   }
 }
 
@@ -365,6 +367,7 @@ export function setImageGlyphAdjustMetric(
 
   if (index >= 0 && index < imageGlyphs.length) {
     applyMetricUpdate(glyphStore$.imageGlyphs[index].adjustMetric, metric)
+    incrementGlyphDataVersion()
   }
 }
 
