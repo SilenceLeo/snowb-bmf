@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent, useId } from 'react'
 
 export interface PaletteItem {
   id: number | string
@@ -17,9 +17,7 @@ interface PaletteProps {
 const Palette: FunctionComponent<PaletteProps> = (props: PaletteProps) => {
   const { palette, width, height } = props
   const { bgPixel } = useTheme()
-  const [id] = useState(
-    `palette_${Math.random().toString(36).substring(2, 11)}`,
-  )
+  const id = useId()
   const sortedPalette = [...palette].sort(
     ({ offset: offset1 }, { offset: offset2 }) => offset1 - offset2,
   )

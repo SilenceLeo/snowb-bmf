@@ -1,7 +1,9 @@
+// TODO: useSimpleState, useLoading, and useErrorHandler are generic hooks that should be moved to a shared hooks directory (e.g., src/app/hooks/common.ts)
 import { useCallback, useState } from 'react'
 
 /**
  * Generic state management Hook
+ * NOTE: React useState setter is already a stable reference. The useCallback wrapper here is redundant. Consider using useState directly.
  */
 export function useSimpleState<T>(initialValue: T) {
   const [value, setValue] = useState(initialValue)

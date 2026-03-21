@@ -17,8 +17,6 @@ export interface AddPaletteItem {
 
 export interface PaletteItem extends AddPaletteItem {
   id: number
-  offset: number
-  color: string
 }
 
 interface ColorStopsHolderProps {
@@ -40,10 +38,20 @@ const ColorStopsHolder: FunctionComponent<ColorStopsHolderProps> = (
   const rootRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (rootRef.current) {
-      setWidth(rootRef.current.clientWidth)
-    }
-  }, [rootRef])
+    const el = rootRef.current
+    if (!el) return
+
+    setWidth(el.clientWidth)
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setWidth(entry.contentRect.width)
+      }
+    })
+    observer.observe(el)
+
+    return () => observer.disconnect()
+  }, [])
 
   const handleAddPalette = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,

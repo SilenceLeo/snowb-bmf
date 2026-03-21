@@ -1,11 +1,10 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import { setPadding, usePadding } from 'src/store/legend'
 
-const Padding: FunctionComponent<unknown> = () => {
-  const { padding, setPadding } = useLayout()
+const Padding: FunctionComponent = () => {
+  const padding = usePadding()
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPadding(Number(event.target.value))
@@ -24,4 +23,4 @@ const Padding: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(Padding)
+export default Padding

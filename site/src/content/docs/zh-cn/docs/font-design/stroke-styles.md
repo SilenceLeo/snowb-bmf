@@ -1,10 +1,12 @@
 ---
-title: 字体描边与轮廓样式
+title: 描边样式：为位图字体添加轮廓和边框
 description: 一份全面的字体描边（轮廓）应用与自定义指南。学习如何使用宽度、颜色、位置和线条样式，创造出专业且易于阅读的文本效果。
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "字体描边与轮廓样式"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "一份全面的字体描边（轮廓）应用与自定义指南。学习如何使用宽度、颜色、位置和线条样式，创造出专业且易于阅读的文本效果。"
   "about":
     "@type": "SoftwareApplication"
@@ -17,21 +19,22 @@ schema:
   "keywords": ["字体描边", "轮廓样式", "位图字体设计", "文本样式", "字体效果", "排版", "SnowB BMF"]
   "mainEntityOfPage":
     "@type": "WebPage"
-    "url": "https://snowb.org/zh-cn/docs/font-design/stroke-styles"
+    "@id": "https://snowb.org/zh-cn/docs/font-design/stroke-styles/"
   "articleSection": "字体设计"
-  "genre": "技术文档"
-  "educationalLevel": "中级"
-  "learningResourceType": "教程"
   "teaches": ["字体描边应用", "轮廓自定义", "文本可读性增强", "视觉样式技巧"]
-  "creator":
+  "inLanguage": "zh-CN"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org"
+  "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
-  "license": "https://github.com/SilenceLeo/snowb-bmf/blob/master/LICENSE"
 ---
 
 描边（或轮廓）是增强字体字符的强大工具。它能增加清晰度，提高在复杂背景下的可读性，并实现多样的视觉风格。
@@ -72,3 +75,8 @@ schema:
 - **对比度是关键**：确保描边与字体主填充色之间有高对比度，以实现最佳可读性。
 - **尺寸很重要**：对较小的字号使用较细的描边，以防轮廓压倒字符形状。
 - **外部描边以提高可读性**：**外部** 描边类型通常是使文本从背景中脱颖而出的最佳选择。
+
+## 相关主题
+
+- [填充样式](/zh-cn/docs/font-design/fill-styles/)
+- [阴影效果](/zh-cn/docs/font-design/shadow-effects/)

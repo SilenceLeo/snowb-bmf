@@ -1,11 +1,10 @@
 import Checkbox from '@mui/material/Checkbox'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import { setAuto, useAutoLayout } from 'src/store/legend'
 
-const AutoPack: FunctionComponent<unknown> = () => {
-  const { auto, setAuto } = useLayout()
+const AutoPack: FunctionComponent = () => {
+  const auto = useAutoLayout()
 
   return (
     <GridInput before='Auto Pack:'>
@@ -19,4 +18,4 @@ const AutoPack: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(AutoPack)
+export default AutoPack

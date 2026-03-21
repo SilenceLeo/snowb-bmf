@@ -1,17 +1,14 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import {
+  ThemeOptions,
+  createTheme,
+  responsiveFontSizes,
+} from '@mui/material/styles'
 
 import components from './components'
 
-// Extend theme, add custom background colors
-declare module '@mui/material/styles' {
-  interface TypeBackground {
-    activityBar: string
-    titleBar: string
-    sidebar: string
-  }
-}
+// Type augmentation for TypeBackground is defined in types/theme/index.d.ts
 
-const theme = createTheme({
+const themeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: { main: '#444' },
@@ -47,6 +44,8 @@ const theme = createTheme({
   },
   shape: { borderRadius: 0 },
   components,
-} as any)
+}
+
+const theme = createTheme(themeOptions)
 
 export default responsiveFontSizes(theme)

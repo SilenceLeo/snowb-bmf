@@ -3,7 +3,12 @@ import Box from '@mui/material/Box'
 import InputBase from '@mui/material/InputBase'
 import { svgIconClasses } from '@mui/material/SvgIcon'
 import { useTheme } from '@mui/material/styles'
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react'
+import React, {
+  type FunctionComponent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 interface ProjectTabProps {
   name: string
@@ -83,13 +88,17 @@ const ProjectTab: FunctionComponent<ProjectTabProps> = (props) => {
     setSName(e.target.value)
   }
 
+  const prevEditorRef = useRef(false)
+
   useEffect(() => {
     if (editor && editorRef.current) {
       editorRef.current.focus()
     }
-    if (!editor && onRename) {
-      onRename(sName, value)
+    // Only call onRename when editor transitions from true to false
+    if (prevEditorRef.current && !editor) {
+      onRename?.(sName, value)
     }
+    prevEditorRef.current = editor
   }, [editor, onRename, sName, value])
 
   useEffect(() => {

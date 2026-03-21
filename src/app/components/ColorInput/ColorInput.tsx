@@ -15,7 +15,7 @@ const ColorInput: FunctionComponent<ColorInputProps> = (
 ) => {
   const { color, onChange } = props
   const { palette, bgPixel } = useTheme()
-  const anchorEl = useRef(null)
+  const anchorEl = useRef<HTMLDivElement>(null)
   const [open, setOpen] = useState(false)
 
   return (

@@ -61,6 +61,10 @@ export default function UpdateToast() {
     // If successful, the page will reload automatically
   }, [withLoading, handleError, clearError])
 
+  const checkTimerRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+  const stateRef = React.useRef(state)
+  stateRef.current = state
+
   const handleCheckForUpdates = React.useCallback(async () => {
     clearError()
 
@@ -70,19 +74,18 @@ export default function UpdateToast() {
         ...prev,
         lastUpdateCheck: Date.now(),
       }))
-      // Show brief feedback that check was completed
-      setTimeout(() => {
-        if (!state.isUpdateReady) {
+      clearTimeout(checkTimerRef.current)
+      checkTimerRef.current = setTimeout(() => {
+        if (!stateRef.current.isUpdateReady) {
           setState((prev) => ({ ...prev, isVisible: false }))
         }
       }, 2000)
     } else {
       handleError('Failed to check for updates')
     }
-  }, [withLoading, handleError, clearError, setState, state.isUpdateReady])
+  }, [withLoading, handleError, clearError, setState])
 
   React.useEffect(() => {
-    // Handle legacy updateVersion event (for backward compatibility)
     const handleUpdateVersion = (event: Event & { detail?: any }) => {
       if (event.detail) {
         setState((prev) => ({
@@ -94,7 +97,6 @@ export default function UpdateToast() {
       }
     }
 
-    // Handle new enhanced service worker events
     const handleUpdateFound = () => {
       setState((prev) => ({
         ...prev,
@@ -113,6 +115,8 @@ export default function UpdateToast() {
       clearError()
     }
 
+    let offlineTimerId: ReturnType<typeof setTimeout>
+
     const handleOfflineReady = () => {
       setState((prev) => ({
         ...prev,
@@ -120,8 +124,7 @@ export default function UpdateToast() {
         isOfflineReady: true,
       }))
       clearError()
-      // Auto-hide offline ready message after 5 seconds
-      setTimeout(() => {
+      offlineTimerId = setTimeout(() => {
         setState((prev) => ({
           ...prev,
           isVisible: false,
@@ -139,7 +142,6 @@ export default function UpdateToast() {
       handleError(error?.message || 'Service Worker error occurred')
     }
 
-    // Register event listeners
     window.addEventListener('updateVersion', handleUpdateVersion)
     window.addEventListener('sw-update-found', handleUpdateFound)
     window.addEventListener('sw-update-ready', handleUpdateReady)
@@ -147,6 +149,8 @@ export default function UpdateToast() {
     window.addEventListener('sw-error', handleServiceWorkerError)
 
     return () => {
+      clearTimeout(offlineTimerId)
+      clearTimeout(checkTimerRef.current)
       window.removeEventListener('updateVersion', handleUpdateVersion)
       window.removeEventListener('sw-update-found', handleUpdateFound)
       window.removeEventListener('sw-update-ready', handleUpdateReady)
@@ -173,11 +177,23 @@ export default function UpdateToast() {
   const getMessage = () => {
     if (updateError) return updateError.message
     if (state.isOfflineReady) return 'App is ready for offline use'
+    if (isUpdating && state.isUpdateReady) return 'Updating to new version...'
     if (state.isUpdateReady)
       return 'New version available, click update to experience now'
     if (isUpdating) return 'Checking for updates...'
     return 'Check for app updates'
   }
+
+  const closeButton = (
+    <IconButton
+      aria-label='close'
+      color='inherit'
+      sx={{ p: 0.5 }}
+      onClick={handleClose}
+    >
+      <CloseIcon />
+    </IconButton>
+  )
 
   const getActionButtons = () => {
     if (updateError) {
@@ -194,29 +210,13 @@ export default function UpdateToast() {
           >
             Retry
           </Button>
-          <IconButton
-            aria-label='close'
-            color='inherit'
-            sx={{ p: 0.5 }}
-            onClick={handleClose}
-          >
-            <CloseIcon />
-          </IconButton>
+          {closeButton}
         </>
       )
     }
 
     if (state.isOfflineReady) {
-      return (
-        <IconButton
-          aria-label='close'
-          color='inherit'
-          sx={{ p: 0.5 }}
-          onClick={handleClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      )
+      return closeButton
     }
 
     if (state.isUpdateReady) {
@@ -233,14 +233,7 @@ export default function UpdateToast() {
           >
             {isUpdating ? 'Updating...' : 'Update'}
           </Button>
-          <IconButton
-            aria-label='close'
-            color='inherit'
-            sx={{ p: 0.5 }}
-            onClick={handleClose}
-          >
-            <CloseIcon />
-          </IconButton>
+          {closeButton}
         </>
       )
     }
@@ -258,14 +251,7 @@ export default function UpdateToast() {
         >
           Check for Updates
         </Button>
-        <IconButton
-          aria-label='close'
-          color='inherit'
-          sx={{ p: 0.5 }}
-          onClick={handleClose}
-        >
-          <CloseIcon />
-        </IconButton>
+        {closeButton}
       </>
     )
   }

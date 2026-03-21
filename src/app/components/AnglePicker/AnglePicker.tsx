@@ -26,6 +26,7 @@ const AnglePicker: FunctionComponent<AnglePickerProps> = (
 
       const { clientX, clientY } = e
       const bounds = rootRef.current.getBoundingClientRect()
+      // Returns angle in degrees [-180, 180]. Consumers should normalize to [0, 360] if needed.
       const radians = Math.atan2(
         clientY - (bounds.y + bounds.height / 2),
         clientX - (bounds.x + bounds.width / 2),
@@ -62,12 +63,14 @@ const AnglePicker: FunctionComponent<AnglePickerProps> = (
     }
   }, [handleMouseMove, handleMouseUp, isDragging])
 
+  const size = props.width ? `${props.width}px` : '36px'
+
   return (
     <Box
       aria-hidden
       sx={{
-        width: props.width ? `${props.width}px` : '36px',
-        height: props.width ? `${props.width}px` : '36px',
+        width: size,
+        height: size,
         position: 'relative',
         cursor: 'crosshair',
         overflow: 'hidden',
@@ -89,6 +92,7 @@ const AnglePicker: FunctionComponent<AnglePickerProps> = (
           background: '#000',
           pointerEvents: 'none',
           transformOrigin: '0 50%',
+          // 8 = half the pointer element width, used to center the pointer on the circle
           transform: `rotate(${props.angle || 0}deg) translate(${
             (props.width || 36) / 2 - 8
           }px, 0)`,

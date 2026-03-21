@@ -11,16 +11,24 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent, useEffect, useState } from 'react'
-import { FileInfo } from 'src/store'
-import { useProject } from 'src/store/hooks'
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
+import { type ImageFileInfo, addImages } from 'src/store/legend'
 import readFile from 'src/utils/readFile'
 
 import ImageGlyphList from './ImageGlyphList'
 
-const LayerBox: FunctionComponent<unknown> = () => {
-  const { addImages } = useProject()
+const FULLSCREEN_Z_INDEX = 999999
+// Max height for the accordion in non-fullscreen mode (header + content area)
+const ACCORDION_MAX_HEIGHT = '305px'
+// Min height for the image glyph list content area
+const GLYPH_LIST_MIN_HEIGHT = '224px'
+
+const LayerBox: FunctionComponent = () => {
   const [isFullscreen, setFullscreen] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -45,9 +53,13 @@ const LayerBox: FunctionComponent<unknown> = () => {
           }
         }),
       ),
-    ).then((fileList) => {
-      addImages(fileList.filter((f) => f) as FileInfo[])
-    })
+    )
+      .then((fileList) => {
+        addImages(fileList.filter((f) => f) as ImageFileInfo[])
+      })
+      .catch((error) => {
+        console.error('Failed to load image files:', error)
+      })
   }
 
   const handleDrop = (e: React.DragEvent<HTMLElement>): void => {
@@ -75,16 +87,16 @@ const LayerBox: FunctionComponent<unknown> = () => {
     handleLoadFile(files)
   }
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const target = e.target as HTMLElement
-    if (e.keyCode === 27) {
+    if (e.key === 'Escape') {
       if (!target || target.tagName !== 'INPUT') {
         setFullscreen(false)
       } else if (target) {
         target.blur()
       }
     }
-  }
+  }, [])
 
   useEffect(() => {
     if (isFullscreen) {
@@ -93,7 +105,7 @@ const LayerBox: FunctionComponent<unknown> = () => {
       window.removeEventListener('keydown', handleKeyDown)
     }
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isFullscreen])
+  }, [isFullscreen, handleKeyDown])
 
   return (
     <Box
@@ -108,7 +120,7 @@ const LayerBox: FunctionComponent<unknown> = () => {
               position: 'fixed',
               left: 0,
               top: 0,
-              zIndex: 999999,
+              zIndex: FULLSCREEN_Z_INDEX,
               width: '100%',
               height: '100%',
             }
@@ -120,7 +132,7 @@ const LayerBox: FunctionComponent<unknown> = () => {
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
-          maxHeight: '305px',
+          maxHeight: ACCORDION_MAX_HEIGHT,
           ...(isFullscreen
             ? {
                 maxHeight: 'none',
@@ -176,7 +188,7 @@ const LayerBox: FunctionComponent<unknown> = () => {
             overflowY: 'auto',
           }}
         >
-          <Box sx={{ minHeight: '224px', height: '100%', width: '100%' }}>
+          <Box sx={{ minHeight: GLYPH_LIST_MIN_HEIGHT, height: '100%', width: '100%' }}>
             <ImageGlyphList />
           </Box>
         </AccordionDetails>
@@ -184,4 +196,4 @@ const LayerBox: FunctionComponent<unknown> = () => {
     </Box>
   )
 }
-export default observer(LayerBox)
+export default LayerBox

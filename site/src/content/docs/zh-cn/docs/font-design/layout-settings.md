@@ -1,5 +1,5 @@
 ---
-title: 布局设置
+title: "布局设置：间距、填充与页面配置"
 description: 配置位图字体的布局，包括间距、内边距和对齐选项，以生成最佳的纹理图集。
 schema:
   "@context": "https://schema.org"
@@ -7,8 +7,10 @@ schema:
   "headline": "位图字体设计的布局设置"
   "description": "在 SnowB BMF 中配置位图字体布局，包括间距、内边距和对齐选项，以实现最佳的纹理图集生成。"
   "keywords": ["位图字体布局", "纹理图集", "字体内边距", "字形间距", "字体设计", "纹理打包", "游戏开发", "字体配置"]
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "布局设置"
     "description": "在位图字体纹理图集中排列字形的配置选项"
   "mainEntity":
@@ -25,10 +27,14 @@ schema:
       - "@type": "HowToStep"
         "name": "管理页面"
         "text": "为大型字符集或纹理大小限制允许自动页面分布"
-  "author":
-    "@type": "Organization"
-    "name": "SnowB BMF"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
     "url": "https://snowb.org"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
     "name": "SnowB BMF"
@@ -138,3 +144,8 @@ schema:
 - **纹理图集过大 (Texture Atlas Too Large)**：减小字体大小、减少字符集或允许更多 **页 (Pages)**。
 - **字形打包效率低下 (Inefficient Glyph Packing)**：调整 **间距 (Spacing)**。
 - **大量字形渲染缓慢 (Slow Rendering with Many Glyphs)**：这可能是由于 **页 (Pages)** 过多。如果可能，尝试将字形放入更少的纹理中。
+
+## 相关主题
+
+- [纹理打包](/zh-cn/docs/font-design/texture-packing/)
+- [字体大小](/zh-cn/docs/font-design/font-size/)

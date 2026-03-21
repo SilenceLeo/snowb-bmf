@@ -1,26 +1,28 @@
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import ConfigSection from 'src/app/components/ConfigSection'
 import FormAdjustMetric from 'src/app/layout/common/FormAdjustMetric'
-import { useProject } from 'src/store/hooks'
+import {
+  setGlobalXAdvance,
+  setGlobalXOffset,
+  setGlobalYOffset,
+  useGlobalAdjustMetric,
+} from 'src/store/legend'
 
-const GlobalMetric: FunctionComponent<unknown> = () => {
-  const { globalAdjustMetric } = useProject()
-  const { xAdvance, xOffset, yOffset, setXAdvance, setXOffset, setYOffset } =
-    globalAdjustMetric
+const GlobalMetric: FunctionComponent = () => {
+  const globalAdjustMetric = useGlobalAdjustMetric()
 
   return (
     <ConfigSection title='Global Metric Adjustments'>
       <FormAdjustMetric
-        xAdvance={xAdvance}
-        xOffset={xOffset}
-        yOffset={yOffset}
-        setXAdvance={setXAdvance}
-        setXOffset={setXOffset}
-        setYOffset={setYOffset}
+        xAdvance={globalAdjustMetric.xAdvance}
+        xOffset={globalAdjustMetric.xOffset}
+        yOffset={globalAdjustMetric.yOffset}
+        setXAdvance={setGlobalXAdvance}
+        setXOffset={setGlobalXOffset}
+        setYOffset={setGlobalYOffset}
       />
     </ConfigSection>
   )
 }
 
-export default observer(GlobalMetric)
+export default GlobalMetric

@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react'
 import PackCanvas from './PackCanvas'
 import PackSizeBar from './PackSizeBar'
 
-const PackView: FunctionComponent<unknown> = () => {
+const PackView: FunctionComponent = () => {
   return (
     <>
       <PackSizeBar />

@@ -5,39 +5,59 @@ import IconButton from '@mui/material/IconButton'
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent, useState } from 'react'
-import { GlyphImage } from 'src/store'
-import { useProject } from 'src/store/hooks'
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react'
+import {
+  removeImage,
+  setImageGlyphLetter,
+  setImageGlyphSelected,
+  useImageGlyph,
+} from 'src/store/legend'
 
 interface ImageGlyphProps {
-  glyph: GlyphImage
-  selected?: boolean
+  index: number
 }
 
-const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
-  props: ImageGlyphProps,
-) => {
-  const { removeImage } = useProject()
+const ImageGlyph: FunctionComponent<ImageGlyphProps> = ({ index }) => {
+  const glyph = useImageGlyph(index)
   const [isIME, setIsIME] = useState(false)
-  const { glyph } = props
-  const [inputValue, setInputValue] = useState(glyph.letter)
-  const { changeSelect, selected, setGlyph } = glyph
+  const [inputValue, setInputValue] = useState(glyph?.letter || '')
+  const inputValueRef = useRef(inputValue)
+  inputValueRef.current = inputValue
+
+  // Update inputValue when glyph letter changes (e.g., on project load)
+  useEffect(() => {
+    if (glyph?.letter !== undefined) {
+      setInputValue(glyph.letter)
+    }
+  }, [glyph?.letter])
+
+  if (!glyph) {
+    return null
+  }
 
   const handleChangeGlyph = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { value } = e.target
-    if (!isIME) {
-      setGlyph(value)
+    if (isIME) {
+      // During IME composition, only update local state
+      setInputValue(value)
     } else {
-      setInputValue(value.slice(0, 1))
-      setGlyph(value.slice(0, 1))
+      setImageGlyphLetter(index, value)
     }
   }
 
   const handleCompositionEnd = (): void => {
     setIsIME(false)
-    setInputValue((iv) => iv.slice(0, 1))
-    setGlyph(inputValue.slice(0, 1))
+    const letter = inputValueRef.current.slice(0, 1)
+    setInputValue(letter)
+    setImageGlyphLetter(index, letter)
+  }
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setImageGlyphSelected(index, e.target.checked)
+  }
+
+  const handleDelete = (): void => {
+    removeImage(index)
   }
 
   return (
@@ -79,16 +99,12 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
           sx={{ justifyContent: 'space-between', alignItems: 'center' }}
         >
           <Checkbox
-            checked={selected}
+            checked={glyph.selected}
             size='small'
             color='default'
-            onChange={(e) => changeSelect(e.target.checked)}
+            onChange={handleSelectChange}
           />
-          <IconButton
-            color='info'
-            size='small'
-            onClick={() => removeImage(glyph)}
-          >
+          <IconButton color='info' size='small' onClick={handleDelete}>
             <DeleteIcon fontSize='small' />
           </IconButton>
         </Stack>
@@ -125,4 +141,4 @@ const ImageGlyph: FunctionComponent<ImageGlyphProps> = (
   )
 }
 
-export default observer(ImageGlyph)
+export default ImageGlyph

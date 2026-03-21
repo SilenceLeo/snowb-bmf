@@ -15,6 +15,7 @@ node_modules
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -39,3 +40,11 @@ backup/
 CLAUDE.local.md
 .cursor/
 dist
+.serena
+
+# WASM build artifacts
+wasm/build/
+wasm/msdfgen/
+wasm/freetype/
+wasm/*.ttf
+wasm/*.TTF

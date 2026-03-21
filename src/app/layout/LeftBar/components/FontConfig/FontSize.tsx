@@ -1,16 +1,15 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
-import { useFont } from 'src/store/hooks'
+import { setFontSize, useFontSize } from 'src/store/legend'
 
-const FontSize: FunctionComponent<unknown> = () => {
-  const { size, setSize } = useFont()
+const FontSize: FunctionComponent = () => {
+  const size = useFontSize()
 
   const handleInput = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ): void => {
-    setSize(Number(event.target.value))
+    setFontSize(Number(event.target.value))
   }
 
   return (
@@ -26,4 +25,4 @@ const FontSize: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(FontSize)
+export default FontSize

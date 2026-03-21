@@ -6,13 +6,12 @@ interface GradientColor {
 }
 
 interface Gradient {
-  type: 0 | 1
+  type: number
   palette: GradientColor[]
   angle: number
 }
 
 interface PatternTexture {
-  image: HTMLImageElement | null
   repetition: string
   scale: number
 }
@@ -22,10 +21,8 @@ interface Config {
   color: string
   gradient: Gradient
   patternTexture: PatternTexture
+  patternImage?: HTMLImageElement | null
 }
-
-const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-const matrix = svg.createSVGMatrix()
 
 export default function getCanvasStyle(
   ctx: CanvasRenderingContext2D,
@@ -34,6 +31,7 @@ export default function getCanvasStyle(
   width: number,
   height: number,
   config: Config,
+  patternImage?: HTMLImageElement | null,
 ): string | CanvasGradient | CanvasPattern {
   // Solid
   if (config.type === 0) {
@@ -67,7 +65,8 @@ export default function getCanvasStyle(
     return gradient
   }
 
-  const { image, repetition, scale } = config.patternTexture
+  const { repetition, scale } = config.patternTexture
+  const image = patternImage ?? config.patternImage ?? null
   if (!image) {
     return 'rgba(0,0,0,0)'
   }
@@ -77,6 +76,6 @@ export default function getCanvasStyle(
     return 'rgba(0,0,0,0)'
   }
   // TODO: Add trim translate and rotate.
-  pattern.setTransform(matrix.scale(scale).translate(x, y))
+  pattern.setTransform(new DOMMatrix().scale(scale).translate(x, y))
   return pattern
 }

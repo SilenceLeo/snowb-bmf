@@ -6,8 +6,10 @@ schema:
   "@type": "TechArticle"
   "headline": "控制字体锐度和抗锯齿"
   "description": "掌握位图字体的边缘渲染。调整锐度以控制抗锯齿效果，从完美平滑 (0%) 到清晰锐利的像素级 (100%)。"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "锐度功能"
     "description": "位图字体生成的抗锯齿和边缘渲染控制"
     "featureList":
@@ -17,17 +19,14 @@ schema:
       - "实时视觉反馈"
       - "针对复古和现代字体风格优化"
   "isPartOf":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
     "url": "https://snowb.org"
-    "applicationCategory": "DesignApplication"
   "keywords": ["位图字体", "抗锯齿", "字体锐度", "像素艺术", "矢量渲染", "字体设计", "游戏开发"]
-  "articleSection": "Font Design"
+  "articleSection": "字体设计"
   "audience":
     "@type": "Audience"
     "audienceType": ["游戏开发者", "字体设计师", "UI/UX 设计师"]
-  "educationalLevel": "中级"
-  "learningResourceType": "技术文档"
   "teaches": ["字体抗锯齿控制", "位图字体边缘渲染", "锐度功能使用"]
   "inLanguage": "zh-CN"
   "publisher":
@@ -38,6 +37,20 @@ schema:
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何在 SnowB BMF 中控制字体锐度"
+    "description": "调整字体锐度以获得最佳位图字体渲染效果的分步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "选择锐化百分比"
+        "text": "打开字体配置面板，调整锐度滑块以设置所需的锐化百分比（0-100%）"
+      - "@type": "HowToStep"
+        "name": "实时预览效果"
+        "text": "在工作区中观察实时预览，查看锐度设置对字体字形的影响"
+      - "@type": "HowToStep"
+        "name": "根据目标尺寸微调"
+        "text": "根据目标显示尺寸调整锐度值 — 小像素艺术字体使用较高值，大号平滑字体使用较低值"
 ---
 
 **锐度** 设置让您可以精确控制字体字形的抗锯齿和边缘渲染。它允许您定义字体的视觉风格，无论您需要柔和、平滑的边缘还是硬朗、像素完美的线条。
@@ -66,3 +79,8 @@ schema:
 -   此设置仅在应用程序中加载字体文件后可用。
 -   较高的锐度值通常会使纹理文件更小，因为需要存储的半透明像素更少。
 -   较低的锐度值可以提高复杂字符在大尺寸下的可读性。
+
+## 相关主题
+
+- [字体导入](/zh-cn/docs/font-design/font-import/)
+- [字体大小](/zh-cn/docs/font-design/font-size/)

@@ -1,22 +1,29 @@
-let fontTargeCache: HTMLStyleElement
+let fontTargetCache: HTMLStyleElement
 let loadDiv: HTMLDivElement
 
-export default function updateFontFace(
+export default async function updateFontFace(
   name: string,
   url: string,
+  isVariable = false,
 ): Promise<void> {
+  const safeName = name.replace(/"/g, '\\"')
+  const safeUrl = encodeURI(url)
+
+  // For variable fonts, declare full weight and stretch ranges
+  const fontWeightRule = isVariable ? '\n        font-weight: 1 999;' : ''
+  const fontStretchRule = isVariable ? '\n        font-stretch: 25% 200%;' : ''
   const cssNode = document.createTextNode(`
     @font-face {
-        font-family: "${name}";
-        src: url("${url}") format('truetype');
+        font-family: "${safeName}";
+        src: url("${safeUrl}") format('truetype');${fontWeightRule}${fontStretchRule}
     }`)
 
-  if (!fontTargeCache) {
+  if (!fontTargetCache) {
     const textNode = document.createTextNode(`A`)
-    fontTargeCache = document.createElement('style')
+    fontTargetCache = document.createElement('style')
     loadDiv = document.createElement('div')
-    document.head.appendChild(fontTargeCache)
-    fontTargeCache.appendChild(cssNode)
+    document.head.appendChild(fontTargetCache)
+    fontTargetCache.appendChild(cssNode)
     loadDiv.appendChild(textNode)
     loadDiv.style.position = 'absolute'
     loadDiv.style.left = '-1000px'
@@ -26,8 +33,17 @@ export default function updateFontFace(
     loadDiv.style.pointerEvents = 'none'
     document.body.appendChild(loadDiv)
   } else {
-    fontTargeCache.appendChild(cssNode)
+    // Clear previous @font-face rules to avoid accumulation
+    fontTargetCache.textContent = ''
+    fontTargetCache.appendChild(cssNode)
   }
   loadDiv.style.fontFamily = name
-  return new Promise((resolve) => setTimeout(resolve, 200))
+
+  // Use FontFace API to detect when font is loaded
+  try {
+    await document.fonts.load(`12px "${name}"`)
+  } catch {
+    // Fallback: if fonts.load fails, wait briefly for the CSS @font-face to apply
+    await new Promise((resolve) => setTimeout(resolve, 200))
+  }
 }

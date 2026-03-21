@@ -1,10 +1,12 @@
 ---
-title: Texture Packing Optimization
+title: "Texture Packing: Auto and Fixed Atlas Optimization"
 description: Learn how to efficiently pack glyphs into a texture atlas using advanced bin packing algorithms for optimal font rendering and memory usage.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Texture Packing Optimization in SnowB BMF"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Learn how to efficiently pack glyphs into a texture atlas using advanced bin packing algorithms for optimal font rendering and memory usage."
   "keywords": ["texture packing", "texture atlas", "bin packing", "glyph optimization", "bitmap font", "font rendering", "memory optimization", "GPU performance", "guillotine algorithm"]
   "about":
@@ -12,12 +14,22 @@ schema:
     "name": "Texture Atlas Generation"
     "description": "The process of efficiently arranging font glyphs into a single texture for optimal rendering performance"
   "mainEntity":
-    "@type": "SoftwareFeature"
-    "name": "SnowB BMF Texture Packing"
-    "description": "Advanced texture packing system with auto and fixed size modes for bitmap font generation"
+    "@type": "HowTo"
+    "name": "How to Pack Glyphs into a Texture Atlas"
+    "description": "Step-by-step guide to packing glyphs into a texture atlas using SnowB BMF"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Select packing mode (Auto/Fixed/Adaptive)"
+        "text": "Choose Auto Pack for maximum memory efficiency, Fixed Size for predictable dimensions, or Adaptive mode based on your project needs"
+      - "@type": "HowToStep"
+        "name": "Configure size parameters"
+        "text": "Set width, height, and other size parameters for the texture atlas output"
+      - "@type": "HowToStep"
+        "name": "Run packing and review results"
+        "text": "Execute the packing algorithm and review the generated texture atlas for optimal glyph arrangement"
   "isPartOf":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
   "author":
     "@type": "Person"
@@ -30,9 +42,7 @@ schema:
   "audience":
     "@type": "Audience"
     "audienceType": "Game Developers"
-    "name": "Game developers and font designers using bitmap fonts"
-  "learningResourceType": "Technical Documentation"
-  "educationalLevel": "Intermediate"
+  "inLanguage": "en"
   "teaches": ["Texture atlas optimization", "Bin packing algorithms", "GPU performance optimization", "Memory usage optimization"]
 ---
 
@@ -80,3 +90,8 @@ When **Auto Pack** is enabled, an additional optimization layer uses binary sear
 - **High Memory Usage:** Use Auto Pack to ensure the smallest possible texture size.
 
 By understanding and utilizing these texture packing features, you can create highly optimized bitmap fonts that perform well across a wide range of applications.
+
+## Related Topics
+
+- [Layout Settings](/en/docs/font-design/layout-settings/)
+- [Character Sets](/en/docs/font-design/character-sets/)

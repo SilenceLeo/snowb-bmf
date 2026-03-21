@@ -5,10 +5,80 @@ const starlightRoute = Astro.locals.starlightRoute
 const entry = starlightRoute?.entry
 
 const schema = entry?.data.schema
+
+// BreadcrumbList structured data for docs pages
+const sectionLabels: Record<string, Record<string, string>> = {
+  en: {
+    'docs': 'Documentation',
+    'getting-started': 'Getting Started',
+    'font-design': 'Font Design',
+    'project-management': 'Project Management',
+  },
+  'zh-cn': {
+    'docs': '文档',
+    'getting-started': '快速开始',
+    'font-design': '字体设计',
+    'project-management': '项目管理',
+  },
+}
+
+function toTitleCase(slug: string): string {
+  return slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+let breadcrumbSchema: object | null = null
+
+if (entry?.id) {
+  // entry.id format: "en/docs/font-design/fill-styles.md" or "zh-cn/docs/faq.md"
+  const parts = entry.id.replace(/\.mdx?$/, '').split('/')
+  const lang = parts[0] === 'zh-cn' ? 'zh-cn' : 'en'
+  const slug = parts.slice(1) // e.g. ["docs", "font-design", "fill-styles"]
+
+  if (slug[0] === 'docs' && slug.length > 0) {
+    const labels = sectionLabels[lang] || sectionLabels['en']
+    const homeLabel = lang === 'zh-cn' ? '首页' : 'Home'
+    const siteUrl = 'https://snowb.org'
+    const langPrefix = lang === 'en' ? '/en' : '/zh-cn'
+
+    const items: Array<{ '@type': string; position: number; name: string; item: string }> = [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: homeLabel,
+        item: `${siteUrl}${langPrefix}/`,
+      },
+    ]
+
+    let currentPath = langPrefix
+    for (let i = 0; i < slug.length; i++) {
+      currentPath += `/${slug[i]}`
+      const label = labels[slug[i]] || toTitleCase(slug[i])
+      items.push({
+        '@type': 'ListItem',
+        position: i + 2,
+        name: label,
+        item: `${siteUrl}${currentPath}/`,
+      })
+    }
+
+    breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items,
+    }
+  }
+}
 ---
 
 <Default {...Astro.props} />
 
 {schema && (
   <script type="application/ld+json" is:inline set:html={JSON.stringify(schema, null, 0)}></script>
+)}
+
+{breadcrumbSchema && (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbSchema, null, 0)}></script>
 )}

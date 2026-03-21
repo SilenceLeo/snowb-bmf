@@ -4,6 +4,7 @@ import { IProject } from './project'
 export default function updateToNext(project: IProject): IProjectNext {
   if (project.style?.font?.font) {
     ;(project.style.font as IFont).fonts = [{ font: project.style.font.font }]
+    delete (project.style.font as any).font
   }
   return project
 }

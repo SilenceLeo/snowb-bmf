@@ -3,6 +3,7 @@ import { IProject } from './project'
 
 export default function updateToNext(project: IProject): IProjectNext {
   // Add sharp field to font with default value 80
+  // `as any` is necessary due to cross-version type incompatibility between proto schemas
   const updatedProject = { ...project } as any
 
   // Add sharp field to font

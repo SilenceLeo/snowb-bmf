@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// TODO: Refactor nested spawn callbacks to async/await with promisified spawn for better readability
 import { spawn } from 'child_process'
 import getGitRelease from './getGitRelease.js'
 
@@ -12,7 +13,6 @@ async function buildWithSentryRelease() {
     const env = {
       ...process.env,
       VITE_SENTRY_RELEASE: release,
-      REACT_APP_SENTRY_RELEASE: release, // Maintain backward compatibility
     }
 
     // Execute TypeScript compilation check
@@ -21,6 +21,11 @@ async function buildWithSentryRelease() {
       stdio: 'inherit',
       env,
       shell: true,
+    })
+
+    tscProcess.on('error', (err) => {
+      console.error('Failed to start TypeScript compilation:', err)
+      process.exit(1)
     })
 
     tscProcess.on('close', (code) => {
@@ -35,6 +40,11 @@ async function buildWithSentryRelease() {
         stdio: 'inherit',
         env,
         shell: true,
+      })
+
+      buildProcess.on('error', (err) => {
+        console.error('Failed to start Vite build:', err)
+        process.exit(1)
       })
 
       buildProcess.on('close', (buildCode) => {

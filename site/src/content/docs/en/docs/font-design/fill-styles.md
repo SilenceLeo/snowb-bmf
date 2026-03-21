@@ -5,6 +5,8 @@ schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Font Fill Styles: Solid Colors, Gradients, and Patterns"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Learn how to apply solid colors, gradients, and unique image patterns to your bitmap fonts, creating eye-catching visual effects for any project."
   "about":
     "@type": "SoftwareApplication"
@@ -12,21 +14,21 @@ schema:
     "applicationCategory": "DesignApplication"
   "articleSection": "Font Design"
   "keywords": ["font fill styles", "bitmap font", "solid colors", "gradients", "image patterns", "font design", "SnowB BMF", "typography", "visual effects"]
-  "inLanguage": "en-US"
+  "inLanguage": "en"
   "isPartOf":
     "@type": "WebSite"
     "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
   "mainEntityOfPage":
     "@type": "WebPage"
-    "@id": "https://snowb.org/en/docs/font-design/fill-styles"
+    "@id": "https://snowb.org/en/docs/font-design/fill-styles/"
   "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
   "teaches":
     - "How to apply solid colors to bitmap fonts"
@@ -77,6 +79,16 @@ Our intuitive gradient editor makes customization easy:
 
 The default is a simple white-to-black linear gradient, giving you a great starting point.
 
+### Gradient Presets
+
+SnowB BMF includes a preset system to help you quickly apply and manage gradients:
+
+- **Built-in Presets**: Choose from 10 professionally designed gradient presets with a single click. Presets cover common use cases like fire, ice, metallic, neon, and more.
+- **Save Custom Presets**: Created the perfect gradient? Save it as a preset to reuse across projects. Your custom presets are stored alongside the built-in ones.
+- **Delete Presets**: Remove any custom preset you no longer need. Built-in presets cannot be deleted.
+
+The preset selector appears at the top of the gradient editor, making it easy to experiment with different looks before fine-tuning.
+
 ## Image Patterns
 
 Fill your characters with a custom image or texture to create truly unique and expressive fonts. This feature opens up endless possibilities for creativity.
@@ -97,3 +109,8 @@ Fill your characters with a custom image or texture to create truly unique and e
 - **Branding**: Integrate a logo or brand-specific pattern directly into your font.
 - **Artistic Typography**: Design highly decorative and creative fonts.
 - **Game Assets**: Make pixel art fonts or text with game-themed textures.
+
+## Related Topics
+
+- [Stroke Styles](/en/docs/font-design/stroke-styles/)
+- [Shadow Effects](/en/docs/font-design/shadow-effects/)

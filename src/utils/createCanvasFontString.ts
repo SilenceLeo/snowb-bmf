@@ -1,4 +1,5 @@
-import is from './is'
+const isNum = (n: unknown): n is number =>
+  typeof n === 'number' && !Number.isNaN(n)
 
 /**
  * Font style configuration interface
@@ -9,30 +10,8 @@ export interface FontStyleConfig {
   fontStyle?: 'normal' | 'italic' | 'oblique'
   /** Font variant - default: 'normal' */
   fontVariant?: 'normal' | 'small-caps'
-  /** Font weight - default: 'normal' */
-  fontWeight?:
-    | 'normal'
-    | 'bold'
-    | 'lighter'
-    | 'bolder'
-    | '100'
-    | '200'
-    | '300'
-    | '400'
-    | '500'
-    | '600'
-    | '700'
-    | '800'
-    | '900'
-    | 100
-    | 200
-    | 300
-    | 400
-    | 500
-    | 600
-    | 700
-    | 800
-    | 900
+  /** Font weight - default: 'normal'. CSS Fonts Level 4: 1-1000 */
+  fontWeight?: 'normal' | 'bold' | 'lighter' | 'bolder' | number | string
   /** Font size - required, supports number (px) or CSS length string */
   fontSize?: string | number
   /** Line height - optional, used in combination with fontSize */
@@ -75,7 +54,7 @@ const CSS_UNITS = [
  */
 function normalizeFontSize(fontSize: string | number | undefined): string {
   // If it's a number, convert to px units
-  if (is.num(fontSize)) {
+  if (isNum(fontSize)) {
     return fontSize <= 0 ? `${DEFAULT_CONFIG.fontSize}px` : `${fontSize}px`
   }
 
@@ -126,7 +105,7 @@ function normalizeLineHeight(
     return null
   }
 
-  if (is.num(lineHeight)) {
+  if (isNum(lineHeight)) {
     return lineHeight > 0 ? String(lineHeight) : null
   }
 
@@ -183,8 +162,12 @@ export default function createCanvasFontString(
     parts.push(config.fontVariant)
   }
 
-  // 3. font-weight (optional)
-  if (config.fontWeight && config.fontWeight !== 'normal') {
+  // 3. font-weight (optional, 400 is equivalent to 'normal')
+  if (
+    config.fontWeight != null &&
+    config.fontWeight !== 'normal' &&
+    config.fontWeight !== 400
+  ) {
     parts.push(String(config.fontWeight))
   }
 

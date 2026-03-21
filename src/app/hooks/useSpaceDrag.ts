@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  DependencyList,
-} from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface OffsetInfo {
   offsetX: number
@@ -15,80 +9,62 @@ interface WheelCallback {
   (offsetInfo: OffsetInfo): void
 }
 
-const point = {
-  x: 0,
-  y: 0,
-}
-
 function useSpaceDrag<T extends HTMLElement>(
   onMove: WheelCallback,
-  deps: DependencyList = [],
 ): [0 | 1 | 2, (e: React.MouseEvent<T, MouseEvent>) => void] {
+  const pointRef = useRef({ x: 0, y: 0 })
+  const callbackRef = useRef(onMove)
+  callbackRef.current = onMove
+
   const [moveState, setMoveState] = useState({
-    ks: false,
-    ms: false,
+    isSpaceDown: false,
+    isMouseDown: false,
   })
 
-  const dragStatus = useMemo(() => {
-    if (moveState.ks && moveState.ms) return 2
-    if (moveState.ks) return 1
-    return 0
-  }, [moveState.ks, moveState.ms])
+  const dragStatus: 0 | 1 | 2 =
+    moveState.isSpaceDown && moveState.isMouseDown
+      ? 2
+      : moveState.isSpaceDown
+        ? 1
+        : 0
 
-  const moveCallback = useCallback(onMove, [onMove, ...deps])
+  const handleKeyEvent = useCallback((e: KeyboardEvent) => {
+    // Only respond to Space key events; ignore all other keys
+    if (e.code !== 'Space') return
+    const spaceDown = e.type === 'keydown'
+    // De-duplicate check inside updater to avoid depending on external state
+    setMoveState((s) =>
+      s.isSpaceDown === spaceDown ? s : { ...s, isSpaceDown: spaceDown },
+    )
+  }, [])
 
-  const handleKeyEvent = useCallback(
-    (e: KeyboardEvent) => {
-      const state = e.keyCode === 32 && e.type === 'keydown'
-      if (moveState.ks === state) return
-      setMoveState((s) => {
-        return {
-          ...s,
-          ks: e.keyCode === 32 && e.type === 'keydown',
-        }
-      })
-    },
-    [moveState.ks],
-  )
-
+  // Not wrapped in useCallback: only used as a direct event handler in the returned tuple,
+  // not passed as a dependency to other hooks
   const handleMouseDown = (e: React.MouseEvent<T, MouseEvent>) => {
-    if (!moveState.ks) return
+    if (!moveState.isSpaceDown) return
     const { clientX, clientY } = e
-    point.x = clientX
-    point.y = clientY
-    setMoveState((s) => {
-      return {
-        ...s,
-        ms: true,
-      }
-    })
+    pointRef.current.x = clientX
+    pointRef.current.y = clientY
+    setMoveState((s) => ({ ...s, isMouseDown: true }))
   }
 
-  const handleMove = useCallback(
-    (e: MouseEvent) => {
-      const { clientX, clientY } = e
-      const { x, y } = point
+  const handleMove = useCallback((e: MouseEvent) => {
+    const { clientX, clientY } = e
+    const { x, y } = pointRef.current
 
-      if (clientX - x === 0 && clientY - y === 0) return
+    if (clientX - x === 0 && clientY - y === 0) return
 
-      moveCallback({
-        offsetX: clientX - x,
-        offsetY: clientY - y,
-      })
+    callbackRef.current({
+      offsetX: clientX - x,
+      offsetY: clientY - y,
+    })
 
-      point.x = clientX
-      point.y = clientY
-    },
-    [moveCallback],
-  )
+    pointRef.current.x = clientX
+    pointRef.current.y = clientY
+  }, [])
 
   const handleEnd = useCallback(() => {
-    setMoveState((s) => {
-      return {
-        ...s,
-        ms: false,
-      }
-    })
+    setMoveState((s) => ({ ...s, isMouseDown: false }))
   }, [])
 
   useEffect(() => {
@@ -102,7 +78,7 @@ function useSpaceDrag<T extends HTMLElement>(
   }, [handleKeyEvent])
 
   useEffect(() => {
-    if (moveState.ks && moveState.ms) {
+    if (moveState.isSpaceDown && moveState.isMouseDown) {
       window.addEventListener('mousemove', handleMove)
       window.addEventListener('mouseup', handleEnd)
     } else {
@@ -114,7 +90,7 @@ function useSpaceDrag<T extends HTMLElement>(
       window.removeEventListener('mousemove', handleMove)
       window.removeEventListener('mouseup', handleEnd)
     }
-  }, [handleEnd, handleMove, moveState.ks, moveState.ms])
+  }, [handleEnd, handleMove, moveState.isSpaceDown, moveState.isMouseDown])
 
   return [dragStatus, handleMouseDown]
 }

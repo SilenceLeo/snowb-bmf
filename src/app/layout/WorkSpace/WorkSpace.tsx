@@ -6,7 +6,7 @@ import ImageGlyphList from './modules/ImageGlyphList'
 import MainView from './modules/MainView'
 import ProjectTabs from './modules/ProjectTabs'
 
-const WorkSpace: FunctionComponent<unknown> = () => {
+const WorkSpace: FunctionComponent = () => {
   return (
     <Box
       sx={{

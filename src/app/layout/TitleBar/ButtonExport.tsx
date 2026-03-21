@@ -7,18 +7,18 @@ import DialogTitle from '@mui/material/DialogTitle'
 import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Switch from '@mui/material/Switch'
 import { SxProps, Theme } from '@mui/material/styles'
 import hotkeys from 'hotkeys-js'
-import { observer } from 'mobx-react-lite'
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react'
+import React, { FunctionComponent, useCallback, useEffect, useState } from 'react'
 import GridInput from 'src/app/components/GridInput/GridInput'
 import { configList, exportFile } from 'src/file/export'
-import { useProject } from 'src/store/hooks'
+import {
+  getExportProjectData,
+  setShowPreview,
+  useMainFontFamily,
+  useProjectName,
+} from 'src/store/legend'
 
 interface ButtonExportProps {
   sx?: SxProps<Theme>
@@ -28,20 +28,24 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   props: ButtonExportProps,
 ) => {
   const { sx } = props
-  const project = useProject()
-  const { setShowPreview } = project.ui
+  const projectName = useProjectName()
+  const mainFontFamily = useMainFontFamily()
+
   const [open, setOpen] = useState(false)
-  const [list] = useState(configList)
   const [val, setVal] = useState(0)
-  const [fontName, setFontName] = useState(project.style.font.mainFamily)
-  const [fileName, setFileName] = useState(project.name)
+  const [fontName, setFontName] = useState(mainFontFamily)
+  const [fileName, setFileName] = useState(projectName)
+  const [pixelFormat, setPixelFormat] = useState('GRAY8')
+  const [blur, setBlur] = useState(false)
+  const [includeTextures, setIncludeTextures] = useState(false)
+  const [extended, setExtended] = useState(false)
 
   const handleOpen = useCallback(() => {
-    setFontName(project.style.font.mainFamily)
-    setFileName(project.name)
+    setFontName(mainFontFamily)
+    setFileName(projectName)
     setShowPreview(false)
     setOpen(true)
-  }, [project.name, project.style.font.mainFamily, setShowPreview])
+  }, [projectName, mainFontFamily])
 
   const handleClose = () => {
     setOpen(false)
@@ -56,19 +60,36 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   }
 
   const handleChange = (e: SelectChangeEvent<number>) => {
-    setVal(e.target.value)
+    setVal(e.target.value as number)
+  }
+
+  const handleChangePixelFormat = (e: SelectChangeEvent<string>) => {
+    setPixelFormat(e.target.value)
   }
 
   const handleSave = useCallback(() => {
-    exportFile(project, list[val], fontName, fileName)
+    const projectData = getExportProjectData()
+    const config = configList[val]
+    const hasOptions =
+      config.supportsPixelFormat ||
+      config.supportsBlur ||
+      config.supportsTextures ||
+      config.supportsExtended
+    const options = hasOptions
+      ? { pixelFormat, blur, includeTextures, extended }
+      : undefined
+    exportFile(projectData, config, fontName, fileName, options).catch(
+      (error) => {
+        console.error('[Export] Failed:', error)
+      },
+    )
     handleClose()
-  }, [fileName, fontName, list, project, val])
+  }, [blur, fileName, fontName, extended, includeTextures, pixelFormat, val])
 
   useEffect(() => {
-    hotkeys.unbind('ctrl+shift+s,command+shift+s')
     hotkeys('ctrl+shift+s,command+shift+s', handleOpen)
     return () => {
-      hotkeys.unbind('ctrl+shift+s,command+shift+s')
+      hotkeys.unbind('ctrl+shift+s,command+shift+s', handleOpen)
     }
   }, [handleOpen])
 
@@ -86,7 +107,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
                 fullWidth
                 type='text'
                 value={fontName}
-                placeholder={project.style.font.mainFamily}
+                placeholder={mainFontFamily}
                 onChange={handleChangeFontName}
               />
             </GridInput>
@@ -97,7 +118,7 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
                 fullWidth
                 type='text'
                 value={fileName}
-                placeholder={project.name}
+                placeholder={projectName}
                 onChange={handleChangeFileName}
               />
             </GridInput>
@@ -110,9 +131,9 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
                 onChange={handleChange}
                 fullWidth
               >
-                {list.map((item, idx) => (
+                {configList.map((item, idx) => (
                   <MenuItem value={idx} key={item.id}>
-                    {`${fileName || project.name}.${
+                    {`${fileName || projectName}.${
                       item.ext
                     } (BMFont ${item.type.toUpperCase()})`}
                   </MenuItem>
@@ -120,6 +141,108 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
               </Select>
             </GridInput>
           </Box>
+          {configList[val]?.supportsPixelFormat ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput before='Pixel Format:' childrenWidth={6}>
+                <Select
+                  displayEmpty
+                  value={pixelFormat}
+                  onChange={handleChangePixelFormat}
+                  fullWidth
+                >
+                  <MenuItem value='GRAY8'>8-bit Grayscale</MenuItem>
+                  <MenuItem value='RGB'>RGB</MenuItem>
+                  <MenuItem value='RGBA'>RGBA</MenuItem>
+                  <MenuItem value='ARGB'>ARGB</MenuItem>
+                  <MenuItem value='BGR'>BGR</MenuItem>
+                  <MenuItem value='ABGR'>ABGR</MenuItem>
+                  <MenuItem value='BGRA'>BGRA</MenuItem>
+                  <MenuItem value='RGB565'>RGB565</MenuItem>
+                </Select>
+              </GridInput>
+            </Box>
+          ) : null}
+          {configList[val]?.supportsBlur ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput
+                before='Reconstruction Filter:'
+                component='div'
+                childrenWidth={6}
+              >
+                <Box
+                  component='label'
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                  }}
+                >
+                  Off
+                  <Switch
+                    size='small'
+                    checked={blur}
+                    onChange={(e) => setBlur(e.target.checked)}
+                  />
+                  On
+                </Box>
+              </GridInput>
+            </Box>
+          ) : null}
+          {configList[val]?.supportsTextures ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput
+                before='Include Textures:'
+                component='div'
+                childrenWidth={6}
+              >
+                <Box
+                  component='label'
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                  }}
+                >
+                  Off
+                  <Switch
+                    size='small'
+                    checked={includeTextures}
+                    onChange={(e) => setIncludeTextures(e.target.checked)}
+                  />
+                  On
+                </Box>
+              </GridInput>
+            </Box>
+          ) : null}
+          {configList[val]?.supportsExtended ? (
+            <Box sx={{ px: 2, my: 4 }}>
+              <GridInput
+                before='Extended Data Fields:'
+                component='div'
+                childrenWidth={6}
+              >
+                <Box
+                  component='label'
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                  }}
+                >
+                  Off
+                  <Switch
+                    size='small'
+                    checked={extended}
+                    onChange={(e) => setExtended(e.target.checked)}
+                  />
+                  On
+                </Box>
+              </GridInput>
+            </Box>
+          ) : null}
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleSave} color='inherit'>
@@ -131,4 +254,4 @@ const ButtonExport: FunctionComponent<ButtonExportProps> = (
   )
 }
 
-export default observer(ButtonExport)
+export default ButtonExport

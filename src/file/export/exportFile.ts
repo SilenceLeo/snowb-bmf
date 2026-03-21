@@ -1,61 +1,100 @@
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { Project } from 'src/store'
 
+import getPageFileName from './getPageFileName'
 import toBmfInfo from './toBmfInfo'
-import { ConfigItem } from './type'
+import { BMFontDistanceField, ConfigItem, ExportOptions, ExportProjectData } from './type'
 
-export default function exportFile(
-  project: Project,
+export default async function exportFile(
+  projectData: ExportProjectData,
   config: ConfigItem,
   fontName: string,
   fileName: string,
-): void {
+  options?: ExportOptions,
+): Promise<void> {
   const zip = new JSZip()
-  const { packCanvases, layout } = project
-  const saveFileName = fileName || project.name
+  const { layout, name } = projectData
+  const saveFileName = fileName || name
+
+  // Build distanceField metadata for BMFont descriptor (SDF/MSDF modes)
+  // Pack canvases are already SDF textures when renderMode !== 'default'
+  let distanceField: BMFontDistanceField | undefined
+  if (projectData.renderMode !== 'default') {
+    distanceField = {
+      fieldType: projectData.renderMode as 'sdf' | 'psdf' | 'msdf' | 'mtsdf',
+      distanceRange: projectData.distanceRange,
+    }
+  }
 
   // Generate BMFont info with correct file names from the start
-  const bmfont = toBmfInfo(project, fontName, saveFileName)
-  const content = config.getContent(bmfont)
+  const bmfont = toBmfInfo(projectData, fontName, saveFileName, distanceField)
 
-  // Add the font descriptor file to zip
-  zip.file(`${saveFileName}.${config.ext}`, content)
+  let includePng = false
 
-  // Create texture files for each page
+  if (config.getFiles) {
+    const filesResult = config.getFiles({
+      project: projectData,
+      bmfont,
+      fontName,
+      fileName: saveFileName,
+      options,
+    })
+
+    filesResult.files.forEach((file) => {
+      zip.file(file.name, file.content)
+    })
+
+    includePng = filesResult.includePng === true
+  } else if (config.getContent) {
+    const content = config.getContent(bmfont, options)
+    includePng = config.includePng !== false
+
+    // Add the font descriptor file to zip
+    zip.file(`${saveFileName}.${config.ext}`, content)
+  }
+
+  // Add PNG pages if needed, then generate the zip
+  if (includePng) {
+    await addPngPages(zip, projectData.packCanvases, layout, saveFileName)
+  }
+  const zipBlob = await zip.generateAsync({ type: 'blob' })
+  saveAs(zipBlob, `${saveFileName}.zip`)
+}
+
+function addPngPages(
+  zip: JSZip,
+  packCanvases: HTMLCanvasElement[] | null,
+  layout: ExportProjectData['layout'],
+  saveFileName: string,
+): Promise<void> {
+  if (!packCanvases) return Promise.resolve()
+
   const pagePromises: Promise<void>[] = []
 
   for (let pageIndex = 0; pageIndex < layout.page; pageIndex++) {
-    let sourceCanvas: HTMLCanvasElement | null = null
-
-    // Use the appropriate source canvas
-    if (packCanvases && packCanvases[pageIndex]) {
-      // Use the rendered page canvas (works for both single and multi-page)
-      sourceCanvas = packCanvases[pageIndex]
-    }
-
+    const sourceCanvas = packCanvases[pageIndex]
     if (!sourceCanvas) continue
 
-    const pagePromise = new Promise<void>((resolve) => {
-      sourceCanvas!.toBlob((blob) => {
+    const pagePromise = new Promise<void>((resolve, reject) => {
+      sourceCanvas.toBlob((blob) => {
         if (blob) {
-          const fileName =
-            layout.page > 1
-              ? `${saveFileName}_${pageIndex}.png`
-              : `${saveFileName}.png`
-          zip.file(fileName, blob)
+          const pageName = getPageFileName(saveFileName, pageIndex, layout.page)
+          zip.file(pageName, blob)
+          resolve()
+        } else {
+          reject(
+            new Error(
+              `[Export] Failed to create blob for page ${pageIndex}`,
+            ),
+          )
         }
-        resolve()
       })
     })
 
     pagePromises.push(pagePromise)
   }
 
-  // Wait for all pages to be processed, then generate the zip
-  Promise.all(pagePromises).then(() => {
-    zip
-      .generateAsync({ type: 'blob' })
-      .then((content) => saveAs(content, `${saveFileName}.zip`))
-  })
+  return pagePromises.length
+    ? Promise.all(pagePromises).then(() => {})
+    : Promise.resolve()
 }

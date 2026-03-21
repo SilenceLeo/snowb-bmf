@@ -1,18 +1,17 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { observer } from 'mobx-react-lite'
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react'
-import { useProject } from 'src/store/hooks'
+import { setText, useProjectText } from 'src/store/legend'
 
 import ConfigSection from '../../../components/ConfigSection'
 
-const Glyphs: FunctionComponent<unknown> = () => {
-  const { text, setText } = useProject()
+const Glyphs: FunctionComponent = () => {
+  const text = useProjectText()
   const [isIME, setIsIME] = useState(false)
   const [inputText, setInputText] = useState(text)
 
@@ -34,14 +33,14 @@ const Glyphs: FunctionComponent<unknown> = () => {
     setIsIME(true)
   }, [text])
 
-  const handleCompositionEnd = (): void => {
+  const handleCompositionEnd = useCallback((): void => {
     setIsIME(false)
     const str = Array.from(new Set(Array.from(inputText))).join('')
     setInputText(str)
     if (str !== text) {
       setText(str)
     }
-  }
+  }, [inputText, text])
 
   useEffect(() => {
     setInputText(text)
@@ -70,4 +69,4 @@ const Glyphs: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(Glyphs)
+export default Glyphs

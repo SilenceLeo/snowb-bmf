@@ -4,6 +4,9 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import tseslint from 'typescript-eslint'
 import cspell from '@cspell/eslint-plugin'
 
+// Note: eslint-plugin-import and eslint-plugin-jsx-a11y are installed
+// but not configured in this flat config. Consider adding them or removing
+// from devDependencies if not needed.
 export default [
   // Ignored files
   {
@@ -19,8 +22,8 @@ export default [
       'src/react-app-env.d.ts',
       'types/**/*.d.ts',
       'src/workers/*.worker.ts',
-      'src/file/conversion/types/sbf/proto/**/*.js',
-      'src/file/conversion/types/sbf/proto/**/*.d.ts',
+      'src/file/conversion/fileTypes/sbf/proto/**/*.js',
+      'src/file/conversion/fileTypes/sbf/proto/**/*.d.ts',
     ],
   },
 
@@ -106,7 +109,7 @@ export default [
     files: ['scripts/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         console: 'readonly',
         process: 'readonly',

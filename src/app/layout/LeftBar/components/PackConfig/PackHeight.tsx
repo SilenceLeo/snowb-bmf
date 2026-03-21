@@ -1,11 +1,17 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import {
+  setHeight,
+  useAutoLayout,
+  useFixedSize,
+  useLayoutHeight,
+} from 'src/store/legend'
 
-const PackHeight: FunctionComponent<unknown> = () => {
-  const { height, auto, fixedSize, setHeight } = useLayout()
+const PackHeight: FunctionComponent = () => {
+  const height = useLayoutHeight()
+  const auto = useAutoLayout()
+  const fixedSize = useFixedSize()
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setHeight(Number(event.target.value))
@@ -25,4 +31,4 @@ const PackHeight: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(PackHeight)
+export default PackHeight

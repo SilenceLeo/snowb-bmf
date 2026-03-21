@@ -1,4 +1,12 @@
-export interface BMFontInfo extends Record<string, unknown> {
+// ============================================================================
+// Export Data Types (for Legend State migration)
+// ============================================================================
+import type { LayoutData } from 'src/store/legend/stores/layoutStore'
+import type { FontData, SdfChannel } from 'src/store/legend/stores/styleStore'
+import type { MetricData } from 'src/types/style'
+import type { AdaptedFont } from 'src/utils/fontAdapter'
+
+export interface BMFontInfo {
   face: string
   size: number
   bold: number
@@ -13,25 +21,26 @@ export interface BMFontInfo extends Record<string, unknown> {
   outline?: number // BMFont v2+ outline thickness
 }
 
-export interface BMFontCommon extends Record<string, unknown> {
+export interface BMFontCommon {
   lineHeight: number
   base: number
   scaleW: number
   scaleH: number
   pages: number
   packed: number
+  xFpBits?: number
   alphaChnl?: number // BMFont v3+ alpha channel info
   redChnl?: number // BMFont v3+ red channel info
   greenChnl?: number // BMFont v3+ green channel info
   blueChnl?: number // BMFont v3+ blue channel info
 }
 
-export interface BMFontPage extends Record<string, unknown> {
+export interface BMFontPage {
   id: number
   file: string
 }
 
-export interface BMFontChar extends Record<string, unknown> {
+export interface BMFontChar {
   letter: string
   id: number
   x: number
@@ -45,18 +54,18 @@ export interface BMFontChar extends Record<string, unknown> {
   chnl: number
 }
 
-export interface BMFontChars extends Record<string, unknown> {
+export interface BMFontChars {
   count: number
   list: BMFontChar[]
 }
 
-export interface BMFontKerning extends Record<string, unknown> {
+export interface BMFontKerning {
   first: number
   second: number
   amount: number
 }
 
-export interface BMFontKernings extends Record<string, unknown> {
+export interface BMFontKernings {
   count: number
   list: BMFontKerning[]
 }
@@ -75,11 +84,17 @@ export interface BMFontMetadata {
   spacing: number
 }
 
+export interface BMFontDistanceField {
+  fieldType: 'sdf' | 'psdf' | 'msdf' | 'mtsdf'
+  distanceRange: number
+}
+
 export interface BMFont {
   version?: number
   metadata?: BMFontMetadata
   info: BMFontInfo
   common: BMFontCommon
+  distanceField?: BMFontDistanceField
   pages: BMFontPage[]
   chars: BMFontChars
   kernings: BMFontKernings
@@ -91,15 +106,94 @@ export type OutputExt = string
 
 export type OutputExts = OutputExt[]
 
-export type FontToContent = (fontInfo: BMFont) => string | Uint8Array
+export interface ExportOptions {
+  pixelFormat?: string
+  blur?: boolean
+  includeTextures?: boolean
+  extended?: boolean
+}
+
+export type FontToContent = (
+  fontInfo: BMFont,
+  options?: ExportOptions,
+) => string | Uint8Array
+
+export interface ExportFile {
+  name: string
+  content: string | Uint8Array
+}
+
+export interface ExportContext {
+  project: ExportProjectData
+  bmfont: BMFont
+  fontName: string
+  fileName: string
+  options?: ExportOptions
+}
+
+export interface ExportFilesResult {
+  files: ExportFile[]
+  includePng?: boolean
+}
+
+export type FontToFiles = (context: ExportContext) => ExportFilesResult
 
 export interface Output {
   type: OutputType
   exts: OutputExts
-  getContent: FontToContent
+  getContent?: FontToContent
+  getFiles?: FontToFiles
+  includePng?: boolean
+  supportsPixelFormat?: boolean
+  supportsBlur?: boolean
+  supportsTextures?: boolean
+  supportsExtended?: boolean
+  supportsDistanceField?: boolean
 }
 
 export interface ConfigItem extends Omit<Output, 'exts'> {
   id: string
   ext: string
+}
+
+/**
+ * Glyph data for export (unified type for both font and image glyphs)
+ */
+export interface ExportGlyphData {
+  letter: string
+  x: number
+  y: number
+  page: number
+  width: number
+  height: number
+  fontWidth: number
+  trimOffsetTop: number
+  trimOffsetLeft: number
+  adjustMetric: MetricData
+  kerning: Record<string, number>
+}
+
+/**
+ * Project data structure for export functions (toBmfInfo and exportFile)
+ */
+export interface ExportProjectData {
+  name: string
+  style: {
+    font: FontData & {
+      mainFamily: string
+      opentype: AdaptedFont | null
+    }
+  }
+  layout: LayoutData
+  globalAdjustMetric: MetricData
+  glyphList: ExportGlyphData[]
+  xFractional: number
+  renderMode: 'default' | 'sdf' | 'psdf' | 'msdf' | 'mtsdf'
+  distanceRange: number
+  sdfChannel: SdfChannel
+  ui: {
+    width: number
+    height: number
+  }
+  packCanvases: HTMLCanvasElement[] | null
 }

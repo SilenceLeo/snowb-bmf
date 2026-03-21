@@ -10,6 +10,7 @@ import ButtonNew from './ButtonNew'
 import ButtonOpen from './ButtonOpen'
 import ButtonSave from './ButtonSave'
 
+// TODO: Consider using theme palette tokens instead of hardcoded colors for dark/light mode support
 const btnSx = {
   textTransform: 'none',
   color: '#fff',
@@ -71,6 +72,7 @@ const TitleBar: FunctionComponent = () => {
           component={Link}
           href='https://github.com/SilenceLeo/snowb-bmf'
           target='_blank'
+          rel='noopener noreferrer'
           color='inherit'
           underline='none'
           sx={btnSx}

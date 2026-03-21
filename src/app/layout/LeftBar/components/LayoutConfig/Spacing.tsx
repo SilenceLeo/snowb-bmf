@@ -1,11 +1,10 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import { setSpacing, useSpacing } from 'src/store/legend'
 
-const Spacing: FunctionComponent<unknown> = () => {
-  const { spacing, setSpacing } = useLayout()
+const Spacing: FunctionComponent = () => {
+  const spacing = useSpacing()
 
   return (
     <GridInput before='Spacing:' after='px'>
@@ -20,4 +19,4 @@ const Spacing: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(Spacing)
+export default Spacing

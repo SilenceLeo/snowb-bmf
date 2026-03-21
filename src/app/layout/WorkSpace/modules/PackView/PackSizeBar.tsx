@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
 import { useTheme } from '@mui/material/styles'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
-import { useProject } from 'src/store/hooks'
+import { useIsPacking, useLayout } from 'src/store/legend'
 
-const PackSizeBar: FunctionComponent<unknown> = () => {
+const PackSizeBar: FunctionComponent = () => {
   const { palette } = useTheme()
-  const { isPacking, layout } = useProject()
+  const isPacking = useIsPacking()
+  const layout = useLayout()
   const { packWidth, packHeight } = layout
 
   return (
@@ -42,4 +42,4 @@ const PackSizeBar: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(PackSizeBar)
+export default PackSizeBar
