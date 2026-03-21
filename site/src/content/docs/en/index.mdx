@@ -50,15 +50,20 @@ schema:
     - "Gradient presets: 10 built-in presets with custom save/delete support"
     - "Multi-project workspace with tabbed interface and automatic project switching"
     - "IndexedDB auto-save persistence for all projects"
+    - "Inner shadow effects for engraved and embossed glyph styling"
+    - "Variable font support with automatic axis detection and real-time sliders"
+    - "TTC (TrueType Collection) import with multi-font selection dialog"
+    - "Ordered Grid packing mode for row-column based texture atlas layouts"
+    - "Keyboard shortcuts for efficient canvas navigation (pan, zoom, selection)"
   "creator":
     "@type": "Person"
     "name": "SilenceLeo"
     "image": "https://avatars0.githubusercontent.com/u/4632034?s=460&u=82fc46834be9426099b7366528006c330c2c3f91&v=4"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
-    "@type": "Person"
-    "name": "SilenceLeo"
-    "url": "https://github.com/SilenceLeo/"
+    "@type": "Organization"
+    "name": "SnowB"
+    "url": "https://snowb.org"
   "license": "https://github.com/SilenceLeo/snowb-bmf/blob/master/LICENSE"
   "codeRepository": "https://github.com/SilenceLeo/snowb-bmf"
 ---
@@ -87,6 +92,12 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	</Card>
 	<Card title="Smart Memory Optimization" icon="setting">
 		Advanced **texture atlas packing** with Guillotine algorithm. Automatic whitespace trimming and power-of-two sizing. Web Workers process thousands of glyphs in parallel without freezing. Reduces texture memory by 30-50%.
+	</Card>
+	<Card title="Variable Fonts & TTC Support" icon="pen">
+		Import **variable fonts** with automatic axis detection — adjust weight, width, italic, and custom axes with real-time sliders. Import **TTC (TrueType Collection)** files with a multi-font selection dialog.
+	</Card>
+	<Card title="Inner Shadow Effects" icon="star">
+		Create **engraved and embossed** text effects with inner shadows rendered inside glyph boundaries. Combine with outer shadows for professional multi-layer depth.
 	</Card>
 </CardGrid>
 

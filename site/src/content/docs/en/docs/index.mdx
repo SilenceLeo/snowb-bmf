@@ -1,6 +1,6 @@
 ---
 title: "SnowB BMF Documentation: Bitmap Font Generator Guide"
-description: Master bitmap font creation with the official SnowB BMF documentation. Learn everything from basic setup to advanced styling, texture packing, and exporting for game engines like Unity, Unreal, and Godot.
+description: Official SnowB BMF docs. Learn bitmap font creation from setup to advanced styling, texture packing, and export for Unity, Unreal, and Godot.
 template: splash
 hero:
   title: SnowB BMF Documentation
@@ -17,7 +17,7 @@ schema:
   "@context": "https://schema.org"
   "@type": "CollectionPage"
   "name": "SnowB BMF Documentation"
-  "description": "Master bitmap font creation with the official SnowB BMF documentation. Learn everything from basic setup to advanced styling, texture packing, and exporting for game engines like Unity, Unreal, and Godot."
+  "description": "Official SnowB BMF docs. Learn bitmap font creation from setup to advanced styling, texture packing, and export for Unity, Unreal, and Godot."
   "url": "https://snowb.org/en/docs/"
   "inLanguage": "en"
   "about":
@@ -45,9 +45,9 @@ schema:
   "keywords": ["documentation", "bitmap font", "font generator", "game development", "Unity", "Unreal", "Godot", "tutorial", "guide", "font design", "texture packing"]
   "image": "https://snowb.org/summary_large_image.png"
   "publisher":
-    "@type": "Person"
-    "name": "SilenceLeo"
-    "url": "https://github.com/SilenceLeo/"
+    "@type": "Organization"
+    "name": "SnowB"
+    "url": "https://snowb.org"
   "mainEntity":
     "@type": "SoftwareApplication"
     "name": "SnowB BMF"
@@ -80,6 +80,12 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	</Card>
 	<Card title="Real-Time Preview" icon="magnifier">
 		See your changes instantly. The live canvas provides immediate feedback on styling, metrics, and kerning adjustments.
+	</Card>
+	<Card title="Keyboard Shortcuts" icon="laptop">
+		Navigate the canvas efficiently with keyboard shortcuts. Space+drag to pan, Ctrl+scroll to zoom, and more shortcuts for streamlined font editing workflows.
+	</Card>
+	<Card title="PWA & Offline" icon="approve-check-circle">
+		Install SnowB BMF as a Progressive Web App for a native-like experience. Works fully offline with automatic update detection, so you can create fonts anywhere.
 	</Card>
 </CardGrid>
 
@@ -114,6 +120,15 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	</Card>
 	<Card title="SDF/MSDF Rendering" icon="star">
 		Generate resolution-independent distance field fonts using msdfgen WASM technology. Supports SDF, PSDF, MSDF, and MTSDF modes for crisp text rendering at any scale in game engines.
+	</Card>
+	<Card title="Inner Shadow Effects" icon="star">
+		Add engraved and embossed effects with inner shadows rendered inside glyph boundaries. Combine with outer shadows for multi-layer depth and dimension in your bitmap fonts.
+	</Card>
+	<Card title="Variable Fonts" icon="pen">
+		Full variable font support with automatic axis detection. Adjust weight, width, italic, and custom variation axes with real-time sliders for precise typographic control.
+	</Card>
+	<Card title="Ordered Grid Packing" icon="puzzle">
+		A third packing mode that arranges glyphs in ordered rows and columns. Configure column count for predictable, grid-based texture atlas layouts.
 	</Card>
 	<Card title="Project Management" icon="open-book">
 		Save and load projects in the native .sbf format. The tool also supports importing legacy .ltr files from Littera for easy migration.

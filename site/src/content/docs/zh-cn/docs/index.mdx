@@ -45,9 +45,9 @@ schema:
   "keywords": ["文档", "位图字体", "字体生成器", "游戏开发", "Unity", "Unreal", "Godot", "教程", "指南", "字体设计", "纹理打包"]
   "image": "https://snowb.org/summary_large_image.png"
   "publisher":
-    "@type": "Person"
-    "name": "SilenceLeo"
-    "url": "https://github.com/SilenceLeo/"
+    "@type": "Organization"
+    "name": "SnowB"
+    "url": "https://snowb.org"
   "mainEntity":
     "@type": "SoftwareApplication"
     "name": "SnowB BMF"
@@ -80,6 +80,12 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	</Card>
 	<Card title="实时预览" icon="magnifier">
 		所有更改即时可见。实时画布提供对样式、度量和字偶距调整的即时反馈。
+	</Card>
+	<Card title="快捷键" icon="laptop">
+		使用快捷键高效操控画布。Space+拖拽平移、Ctrl+滚轮缩放，以及更多快捷操作，让字体编辑工作流更加流畅。
+	</Card>
+	<Card title="PWA 与离线" icon="approve-check-circle">
+		将 SnowB BMF 安装为渐进式 Web 应用，享受类原生体验。支持完全离线工作，自动检测更新，随时随地创建字体。
 	</Card>
 </CardGrid>
 
@@ -114,6 +120,15 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	</Card>
 	<Card title="SDF/MSDF 渲染" icon="star">
 		使用 msdfgen WASM 技术生成分辨率无关的距离场字体。支持 SDF、PSDF、MSDF 和 MTSDF 模式，在游戏引擎中实现任意缩放下的清晰文本渲染。
+	</Card>
+	<Card title="内阴影效果" icon="star">
+		通过在字形内部渲染内阴影，实现雕刻和浮雕效果。可与外阴影同时使用，为位图字体增添多层深度和立体感。
+	</Card>
+	<Card title="可变字体" icon="pen">
+		完整的可变字体支持，自动检测变体轴。通过实时滑块调整字重、字宽、斜体及自定义变体轴，实现精确的排版控制。
+	</Card>
+	<Card title="有序网格打包" icon="puzzle">
+		第三种打包模式，按行列有序排列字形。可配置列数，实现可预测的网格化纹理图集布局。
 	</Card>
 	<Card title="项目管理" icon="open-book">
 		支持以原生的 .sbf 格式保存和加载项目。同时兼容导入来自 Littera 的旧版 .ltr 文件，轻松迁移。

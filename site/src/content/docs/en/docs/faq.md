@@ -127,6 +127,36 @@ schema:
       "acceptedAnswer":
         "@type": "Answer"
         "text": "The xFractional setting is an experimental feature that enables sub-pixel precision for glyph metrics by using fixed-point number format. When enabled, xAdvance, xOffset, and other metrics use fractional values stored as fixed-point numbers, providing smoother text rendering at small sizes. This is an advanced option—most users do not need to change it."
+    - "@type": "Question"
+      "name": "What is the Inner Shadow feature?"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "The Inner Shadow feature renders shadows inside glyph boundaries, creating engraved or embossed effects. It can be used simultaneously with outer shadows for multi-layer depth and dimension in your bitmap fonts. Configure color, blur, offset, and opacity in the Shadow settings panel."
+    - "@type": "Question"
+      "name": "Does SnowB BMF support variable fonts?"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "Yes, SnowB BMF automatically detects variable fonts when you import TTF/OTF/WOFF files and displays variation axis controls (weight, width, italic, and custom axes). Adjust each axis with real-time sliders to fine-tune your font's appearance before generating the bitmap."
+    - "@type": "Question"
+      "name": "Can I import TTC (TrueType Collection) files?"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "Yes, when you import a TTC file, SnowB BMF automatically detects it and displays a font selection dialog. You can choose one or multiple fonts from the collection to import into your project."
+    - "@type": "Question"
+      "name": "What is Ordered Grid packing?"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "Ordered Grid is the third texture packing mode alongside Auto and Fixed. It arranges glyphs in ordered rows and columns with a configurable column count, producing predictable grid-based texture atlas layouts ideal for certain game engine requirements."
+    - "@type": "Question"
+      "name": "Does SnowB BMF work offline?"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "Yes, SnowB BMF is a Progressive Web App (PWA) that supports full offline functionality. Once loaded, you can install it for a native-like experience and create fonts without an internet connection. The app automatically checks for updates when you go back online."
+    - "@type": "Question"
+      "name": "Where can I find keyboard shortcuts?"
+      "acceptedAnswer":
+        "@type": "Answer"
+        "text": "See the Keyboard Shortcuts documentation page for a full list. Key shortcuts include Space+drag to pan the canvas, Ctrl+scroll wheel to zoom in/out, and various navigation shortcuts for efficient font editing workflows."
 ---
 
 ## General
@@ -248,6 +278,30 @@ Yes, SnowB BMF supports five rendering modes as an experimental feature: **Defau
 ### What are gradient presets?
 
 SnowB BMF includes 10 built-in gradient presets that you can apply with one click. You can also save your custom gradients as presets for reuse across projects, and delete presets you no longer need. Find the preset selector in the gradient section of the Fill settings panel. See [Fill Styles](/en/docs/font-design/fill-styles/) for gradient configuration.
+
+### What is the Inner Shadow feature?
+
+The Inner Shadow feature renders shadows inside glyph boundaries, creating engraved or embossed effects. It can be used simultaneously with outer shadows for multi-layer depth and dimension in your bitmap fonts. Configure color, blur, offset, and opacity in the Shadow settings panel. See [Inner Shadow Effects](/en/docs/font-design/inner-shadow-effects/) for details.
+
+### Does SnowB BMF support variable fonts?
+
+Yes, SnowB BMF automatically detects variable fonts when you import TTF/OTF/WOFF files and displays variation axis controls (weight, width, italic, and custom axes). Adjust each axis with real-time sliders to fine-tune your font's appearance before generating the bitmap. See [Variable Fonts](/en/docs/font-design/variable-fonts/) for details.
+
+### Can I import TTC (TrueType Collection) files?
+
+Yes, when you import a TTC file, SnowB BMF automatically detects it and displays a font selection dialog. You can choose one or multiple fonts from the collection to import into your project. See [Font Import](/en/docs/font-design/font-import/) for details.
+
+### What is Ordered Grid packing?
+
+Ordered Grid is the third texture packing mode alongside Auto and Fixed. It arranges glyphs in ordered rows and columns with a configurable column count, producing predictable grid-based texture atlas layouts ideal for certain game engine requirements. See [Texture Packing](/en/docs/font-design/texture-packing/) for details.
+
+### Does SnowB BMF work offline?
+
+Yes, SnowB BMF is a Progressive Web App (PWA) that supports full offline functionality. Once loaded, you can install it for a native-like experience and create fonts without an internet connection. The app automatically checks for updates when you go back online. See [PWA & Offline](/en/docs/project-management/pwa-offline/) for details.
+
+### Where can I find keyboard shortcuts?
+
+See the [Keyboard Shortcuts](/en/docs/getting-started/keyboard-shortcuts/) documentation page for a full list. Key shortcuts include Space+drag to pan the canvas, Ctrl+scroll wheel to zoom in/out, and various navigation shortcuts for efficient font editing workflows.
 
 ## Data & Storage
 

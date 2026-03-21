@@ -153,6 +153,12 @@ export default defineConfig({
               },
               slug: 'docs/getting-started/workflow-guide',
             },
+            {
+              label: 'Keyboard Shortcuts',
+              translations: { 'zh-CN': '快捷键' },
+              badge: { text: 'New', variant: 'tip' },
+              slug: 'docs/getting-started/keyboard-shortcuts',
+            },
           ],
         },
         {
@@ -162,96 +168,106 @@ export default defineConfig({
           },
           items: [
             {
-              label: 'Character Sets',
-              translations: {
-                'zh-CN': '字符集',
-              },
-              slug: 'docs/font-design/character-sets',
+              label: 'Font Configuration',
+              translations: { 'zh-CN': '字体配置' },
+              items: [
+                {
+                  label: 'Character Sets',
+                  translations: { 'zh-CN': '字符集' },
+                  slug: 'docs/font-design/character-sets',
+                },
+                {
+                  label: 'Font Import',
+                  translations: { 'zh-CN': '导入字体' },
+                  slug: 'docs/font-design/font-import',
+                },
+                {
+                  label: 'Variable Fonts',
+                  translations: { 'zh-CN': '可变字体' },
+                  badge: { text: 'New', variant: 'tip' },
+                  slug: 'docs/font-design/variable-fonts',
+                },
+                {
+                  label: 'Sharp',
+                  translations: { 'zh-CN': '锐化' },
+                  slug: 'docs/font-design/sharp',
+                },
+                {
+                  label: 'Font Size',
+                  translations: { 'zh-CN': '字号' },
+                  slug: 'docs/font-design/font-size',
+                },
+                {
+                  label: 'Image Glyphs',
+                  translations: { 'zh-CN': '图片字形' },
+                  slug: 'docs/font-design/image-glyphs',
+                },
+              ],
             },
             {
-              label: 'Font Import',
-              translations: {
-                'zh-CN': '导入字体',
-              },
-              slug: 'docs/font-design/font-import',
+              label: 'Visual Styles',
+              translations: { 'zh-CN': '视觉样式' },
+              items: [
+                {
+                  label: 'Fill Styles',
+                  translations: { 'zh-CN': '填充样式' },
+                  slug: 'docs/font-design/fill-styles',
+                },
+                {
+                  label: 'Stroke Styles',
+                  translations: { 'zh-CN': '描边样式' },
+                  slug: 'docs/font-design/stroke-styles',
+                },
+                {
+                  label: 'Shadow Effects',
+                  translations: { 'zh-CN': '阴影效果' },
+                  slug: 'docs/font-design/shadow-effects',
+                },
+                {
+                  label: 'Inner Shadow Effects',
+                  translations: { 'zh-CN': '内阴影效果' },
+                  badge: { text: 'New', variant: 'tip' },
+                  slug: 'docs/font-design/inner-shadow-effects',
+                },
+              ],
             },
             {
-              label: 'Sharp',
-              translations: {
-                'zh-CN': '锐化',
-              },
-              slug: 'docs/font-design/sharp',
+              label: 'Layout & Packing',
+              translations: { 'zh-CN': '布局与打包' },
+              items: [
+                {
+                  label: 'Layout Settings',
+                  translations: { 'zh-CN': '布局设置' },
+                  slug: 'docs/font-design/layout-settings',
+                },
+                {
+                  label: 'Texture Packing',
+                  translations: { 'zh-CN': '纹理打包' },
+                  slug: 'docs/font-design/texture-packing',
+                },
+              ],
             },
             {
-              label: 'Font Size',
-              translations: {
-                'zh-CN': '字号',
-              },
-              slug: 'docs/font-design/font-size',
-            },
-            {
-              label: 'Image Glyphs',
-              translations: {
-                'zh-CN': '图片字形',
-              },
-              slug: 'docs/font-design/image-glyphs',
-            },
-            {
-              label: 'Layout Settings',
-              translations: {
-                'zh-CN': '布局设置',
-              },
-              slug: 'docs/font-design/layout-settings',
-            },
-            {
-              label: 'Texture Packing',
-              translations: {
-                'zh-CN': '纹理打包',
-              },
-              slug: 'docs/font-design/texture-packing',
-            },
-            {
-              label: 'Glyph Metrics',
-              translations: {
-                'zh-CN': '字形度量',
-              },
-              slug: 'docs/font-design/glyph-metrics',
-            },
-            {
-              label: 'Fill Styles',
-              translations: {
-                'zh-CN': '填充样式',
-              },
-              slug: 'docs/font-design/fill-styles',
-            },
-            {
-              label: 'Stroke Styles',
-              translations: {
-                'zh-CN': '描边样式',
-              },
-              slug: 'docs/font-design/stroke-styles',
-            },
-            {
-              label: 'Shadow Effects',
-              translations: {
-                'zh-CN': '阴影效果',
-              },
-              slug: 'docs/font-design/shadow-effects',
-            },
-            {
-              label: 'Kerning Pairs',
-              translations: {
-                'zh-CN': '字偶距',
-              },
-              slug: 'docs/font-design/kerning-pairs',
-            },
-            {
-              label: 'SDF Rendering',
-              translations: {
-                'zh-CN': 'SDF 渲染',
-              },
-              badge: { text: 'New', variant: 'tip' },
-              slug: 'docs/font-design/sdf-rendering',
+              label: 'Typography',
+              translations: { 'zh-CN': '排版' },
+              items: [
+                {
+                  label: 'Glyph Metrics',
+                  translations: { 'zh-CN': '字形度量' },
+                  slug: 'docs/font-design/glyph-metrics',
+                },
+                {
+                  label: 'Kerning Pairs',
+                  translations: { 'zh-CN': '字偶距' },
+                  slug: 'docs/font-design/kerning-pairs',
+                },
+                {
+                  label: 'SDF Rendering',
+                  translations: { 'zh-CN': 'SDF 渲染' },
+                  badge: { text: 'New', variant: 'tip' },
+                  slug: 'docs/font-design/sdf-rendering',
+                },
+              ],
             },
           ],
         },
@@ -274,6 +290,12 @@ export default defineConfig({
                 'zh-CN': '导出BMF',
               },
               slug: 'docs/project-management/export-formats',
+            },
+            {
+              label: 'PWA & Offline',
+              translations: { 'zh-CN': 'PWA 与离线' },
+              badge: { text: 'New', variant: 'tip' },
+              slug: 'docs/project-management/pwa-offline',
             },
           ],
         },

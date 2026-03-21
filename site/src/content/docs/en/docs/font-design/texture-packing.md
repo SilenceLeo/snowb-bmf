@@ -1,14 +1,14 @@
 ---
-title: "Texture Packing: Auto and Fixed Atlas Optimization"
-description: Learn how to efficiently pack glyphs into a texture atlas using advanced bin packing algorithms for optimal font rendering and memory usage.
+title: "Texture Packing: Auto, Fixed, and Ordered Grid Atlas Optimization"
+description: Learn how to efficiently pack glyphs into a texture atlas using auto packing, fixed size, and ordered grid layout modes for optimal font rendering and memory usage.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Texture Packing Optimization in SnowB BMF"
   "datePublished": "2025-01-15"
-  "dateModified": "2026-03-15"
-  "description": "Learn how to efficiently pack glyphs into a texture atlas using advanced bin packing algorithms for optimal font rendering and memory usage."
-  "keywords": ["texture packing", "texture atlas", "bin packing", "glyph optimization", "bitmap font", "font rendering", "memory optimization", "GPU performance", "guillotine algorithm"]
+  "dateModified": "2026-03-21"
+  "description": "Learn how to efficiently pack glyphs into a texture atlas using auto packing, fixed size, and ordered grid layout modes for optimal font rendering and memory usage."
+  "keywords": ["texture packing", "texture atlas", "bin packing", "glyph optimization", "bitmap font", "font rendering", "memory optimization", "GPU performance", "guillotine algorithm", "ordered grid", "grid layout", "glyph arrangement"]
   "about":
     "@type": "Thing"
     "name": "Texture Atlas Generation"
@@ -19,8 +19,11 @@ schema:
     "description": "Step-by-step guide to packing glyphs into a texture atlas using SnowB BMF"
     "step":
       - "@type": "HowToStep"
-        "name": "Select packing mode (Auto/Fixed/Adaptive)"
-        "text": "Choose Auto Pack for maximum memory efficiency, Fixed Size for predictable dimensions, or Adaptive mode based on your project needs"
+        "name": "Select packing mode (Auto/Fixed/Ordered Grid)"
+        "text": "Choose Auto Pack for maximum memory efficiency, Fixed Size for predictable dimensions, or Ordered Grid for neatly arranged glyph rows and columns"
+      - "@type": "HowToStep"
+        "name": "Enable Ordered Grid for structured glyph layout"
+        "text": "Check the Ordered Grid checkbox to arrange glyphs in a uniform grid, then set the Columns value to control how many glyphs appear per row"
       - "@type": "HowToStep"
         "name": "Configure size parameters"
         "text": "Set width, height, and other size parameters for the texture atlas output"
@@ -37,20 +40,23 @@ schema:
     "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/en/docs/font-design/texture-packing/"
   "audience":
     "@type": "Audience"
     "audienceType": "Game Developers"
   "inLanguage": "en"
-  "teaches": ["Texture atlas optimization", "Bin packing algorithms", "GPU performance optimization", "Memory usage optimization"]
+  "teaches": ["Texture atlas optimization", "Bin packing algorithms", "GPU performance optimization", "Memory usage optimization", "Ordered grid layout"]
 ---
 
 Texture packing is a critical step in font asset creation, where glyphs are efficiently arranged into a single image file known as a texture atlas. SnowB BMF leverages advanced bin packing algorithms to automate this process, ensuring your font glyphs are organized compactly to save memory and improve rendering performance.
 
-## Packing Modes: Auto vs. Fixed Size
+## Packing Modes: Auto, Fixed Size, and Ordered Grid
 
-SnowB BMF offers two primary modes for texture packing, allowing you to prioritize either memory efficiency or specific output dimensions.
+SnowB BMF offers three modes for texture packing, allowing you to prioritize memory efficiency, specific output dimensions, or structured grid arrangement.
 
 ### Auto Pack: For Maximum Memory Efficiency
 
@@ -71,6 +77,23 @@ When you need to adhere to specific texture constraints, such as power-of-two di
 - **Best For:**
     - **GPU Performance:** Use power-of-two dimensions (e.g., 256x256, 512x512, 1024x1024) for improved rendering speed and memory handling.
     - **Platform Constraints:** Meet the requirements of game engines or rendering frameworks that expect specific texture sizes.
+
+### Ordered Grid: For Structured Glyph Arrangement
+
+The **Ordered Grid** mode arranges glyphs in a uniform row-and-column grid instead of using compact bin packing. Enable it by checking the **Ordered Grid** checkbox in the Pack Config panel.
+
+- **Key Benefit:** Produces a clean, predictable grid layout where every glyph occupies an equal cell.
+- **Columns Setting:** When Ordered Grid is enabled, a **Columns** input becomes available (minimum value: 1). This controls how many glyphs appear in each row of the texture atlas.
+- **How it Works:** Glyphs are placed sequentially left to right, top to bottom, into a grid with the specified number of columns. Each cell is sized to fit the largest glyph, ensuring uniform alignment.
+- **Best For:**
+    - **Spritesheet production:** Creating neatly organized font spritesheets for game engines that expect grid-based glyph maps.
+    - **Debugging and preview:** Quickly inspecting individual glyphs in a visually ordered layout.
+    - **Grid-based rendering engines:** Meeting the requirements of renderers that rely on fixed-cell glyph lookup rather than per-glyph coordinates.
+    - **Consistency:** Ensuring every export produces the same predictable arrangement regardless of glyph count changes.
+
+:::note
+When Ordered Grid is enabled, the compact bin packing algorithm is bypassed. The resulting texture may be larger than an Auto Pack result because each cell uses the maximum glyph dimensions. Use this mode when layout clarity is more important than minimal texture size.
+:::
 
 ## Advanced Packing Algorithms
 

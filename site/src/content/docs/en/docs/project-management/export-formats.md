@@ -6,17 +6,28 @@ schema:
   "@type": "TechArticle"
   "headline": "Exporting Bitmap Fonts in 6 Formats from SnowB BMF"
   "datePublished": "2025-01-15"
-  "dateModified": "2026-03-15"
+  "dateModified": "2026-03-21"
   "description": "Learn how to export bitmap fonts in 6 formats: Text, XML, Binary, JSON, C Header, and MSDF Atlas JSON. Compatible with Unity, Unreal, Godot, embedded systems, and MSDF shader pipelines."
-  "keywords": ["bitmap font export", "font formats", "game development", "Unity", "Unreal", "Godot", "BMFont", "texture atlas", "fnt format", "XML format", "binary format", "JSON format", "C header format", "MSDF Atlas JSON", "embedded systems", "pixel format"]
+  "keywords": ["bitmap font export", "font formats", "game development", "Unity", "Unreal", "Godot", "BMFont", "texture atlas", "fnt format", "XML format", "binary format", "JSON format", "C header format", "MSDF Atlas JSON", "embedded systems", "pixel format", "export dialog", "font name", "reconstruction filter", "export options"]
   "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/en/docs/project-management/export-formats/"
+  "audience":
+    "@type": "Audience"
+    "audienceType": "Game Developers and Web Developers"
+  "teaches":
+    - "How to export bitmap fonts in multiple formats"
+    - "Configuring export dialog options"
+    - "Choosing the right format for your game engine"
+    - "Using C Header format for embedded systems"
   "mainEntity":
     "@type": "HowTo"
     "name": "How to Export Bitmap Fonts for Game Engines"
@@ -24,16 +35,22 @@ schema:
     "step":
       - "@type": "HowToStep"
         "name": "Open Export Dialog"
-        "text": "Click the Export button in the top menu bar or press Ctrl+E"
+        "text": "Click the Export button in the top menu bar or press Ctrl+Shift+S (Cmd+Shift+S on macOS)"
       - "@type": "HowToStep"
-        "name": "Choose Format"
-        "text": "Select from Text (.fnt), XML, Binary, JSON, C Header, or MSDF Atlas JSON format"
+        "name": "Set Font Name"
+        "text": "Enter a custom font name that will appear in the BMFont descriptor's info face field, or keep the default (main font family name)"
       - "@type": "HowToStep"
-        "name": "Configure Settings"
-        "text": "Adjust filename, texture format, pixel format (for C Header), and other export options"
+        "name": "Set File Name"
+        "text": "Enter a custom file name for the exported .zip archive, or keep the default (current project name)"
+      - "@type": "HowToStep"
+        "name": "Choose Export Type"
+        "text": "Select from Text (.fnt), XML, Binary, JSON, C Header, or MSDF Atlas JSON format using the dropdown menu"
+      - "@type": "HowToStep"
+        "name": "Configure Advanced Options"
+        "text": "For C Header format, configure pixel format (GRAY8, RGB, RGBA, etc.), reconstruction filter, include textures toggle, and extended data fields toggle"
       - "@type": "HowToStep"
         "name": "Download Files"
-        "text": "Click the download button to save a .zip archive containing the descriptor file and PNG texture atlas(es)"
+        "text": "Click the Save button to download a .zip archive containing the descriptor file and PNG texture atlas(es)"
   "isPartOf":
     "@type": "WebSite"
     "name": "SnowB BMF Documentation"
@@ -76,10 +93,12 @@ You can choose from several standard formats to ensure compatibility with most g
 
 ## How to Export Your Font
 
-1.  **Open the Export Dialog**: Click the **Export** button in the top menu bar or press `Ctrl+E`.
-2.  **Choose a Format**: Select the best format for your needs from the dropdown menu.
-3.  **Configure Settings**: Adjust the filename, texture format, and other options as needed.
-4.  **Download Files**: Click the download button to save a `.zip` archive containing the descriptor file and the PNG texture atlas(es).
+1.  **Open the Export Dialog**: Click the **Export** button in the top menu bar or press `Ctrl+Shift+S` (`Cmd+Shift+S` on macOS).
+2.  **Set Font Name**: Enter a custom name for your font, or keep the default (your main font family name). This value appears in the `info face` field of the BMFont descriptor.
+3.  **Set File Name**: Enter a custom name for the exported `.zip` file, or keep the default (your current project name).
+4.  **Choose Export Type**: Select the best format for your needs from the dropdown menu. The preview shows the output as `{fileName}.{ext} (BMFont TYPE)`.
+5.  **Configure Advanced Options**: Depending on the selected format, additional options may appear (see [Export Dialog Options](#export-dialog-options) below).
+6.  **Save**: Click the **Save** button to download a `.zip` archive containing the descriptor file and the PNG texture atlas(es).
 
 ## Supported Export Formats
 
@@ -196,19 +215,73 @@ Exported files automatically include useful metadata, such as the font name, siz
 
 ## Advanced Export Options
 
-### Pixel Format (C Header Only)
+### Export Dialog Options
 
-When exporting in C Header format, choose a pixel format that matches your target hardware. See the C Header Format section above for available formats.
+When you open the export dialog (`Ctrl+Shift+S` / `Cmd+Shift+S`), the following options are available:
 
-### Include Textures
+#### Font Name
 
-By default, texture atlas PNG files are included in the export archive. You can configure whether to include them when using programmatic export workflows.
+Customize the font name that appears in the exported BMFont descriptor file.
 
-### Extended Data Fields
+- **Field**: Text input
+- **Default**: Your main font family name
+- **Effect**: Sets the `info face` attribute in the BMFont descriptor (e.g., `info face="MyFont"`)
 
-Some export formats support additional metadata:
-- **distanceField**: Included in JSON and MSDF Atlas JSON formats when using SDF/MSDF rendering modes. Contains the field type (e.g., `msdf`, `sdf`) and distance range.
-- **xFractional**: When enabled, glyph metrics use fixed-point notation for sub-pixel precision.
+#### File Name
+
+Customize the name of the exported `.zip` archive.
+
+- **Field**: Text input with `.zip` suffix
+- **Default**: Current project name
+- **Effect**: The download file will be named `{fileName}.zip`
+
+#### Export Type
+
+Select the output format from a dropdown menu.
+
+- **Field**: Dropdown select
+- **Preview**: Each option shows `{fileName}.{ext} (BMFont TYPE)` so you can see the exact output filename and format
+- **Options**: All six supported formats -- Text (.fnt/.txt), XML (.xml/.fnt), Binary (.fnt), JSON (.json), C Header (.c), MSDF Atlas JSON (.json)
+
+#### Pixel Format (C Header only)
+
+Choose the pixel encoding format for texture data embedded in the C header file. This option only appears when C Header format is selected.
+
+- **Field**: Dropdown select
+- **Default**: GRAY8
+- **Options**:
+  - `GRAY8` (1 byte/pixel) -- Monochrome displays
+  - `RGB` (3 bytes/pixel) -- Standard color without alpha
+  - `RGBA` (4 bytes/pixel) -- Color with alpha
+  - `ARGB` (4 bytes/pixel) -- Alpha-first byte order
+  - `BGR` (3 bytes/pixel) -- Reversed byte order
+  - `ABGR` (4 bytes/pixel) -- Alpha-first reversed byte order
+  - `BGRA` (4 bytes/pixel) -- Reversed with trailing alpha
+  - `RGB565` (2 bytes/pixel) -- 16-bit color for memory-constrained displays
+
+#### Reconstruction Filter (C Header only)
+
+Apply a blur filter to the texture before encoding. This option only appears when the selected format supports it.
+
+- **Field**: Off/On toggle switch
+- **Default**: Off
+- **Effect**: When enabled, applies a reconstruction (blur) filter to the texture data, which can improve visual quality on certain display hardware
+
+#### Include Textures (C Header only)
+
+Control whether texture pixel data is embedded in the C header file. This option only appears when the selected format supports it.
+
+- **Field**: Off/On toggle switch
+- **Default**: Off
+- **Effect**: When enabled, the generated `.c` file includes the full texture pixel data as C byte arrays, ready to compile directly into your firmware
+
+#### Extended Data Fields (C Header only)
+
+Include additional metadata fields in the export. This option only appears when the selected format supports it.
+
+- **Field**: Off/On toggle switch
+- **Default**: Off
+- **Effect**: When enabled, the exported file includes extra metadata fields beyond the standard BMFont specification
 
 ## Troubleshooting Common Issues
 
@@ -222,3 +295,8 @@ Some export formats support additional metadata:
 
 -   **Export Fails**:
     -   If the export times out or fails, your character set may be too large for a single texture. Try increasing the texture dimensions in the **Layout** settings or reducing the number of characters.
+
+## Related Topics
+
+- [Texture Packing](/en/docs/font-design/texture-packing/)
+- [Project Operations](/en/docs/project-management/project-operations/)

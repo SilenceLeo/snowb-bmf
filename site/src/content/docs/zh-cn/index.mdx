@@ -24,10 +24,10 @@ schema:
   "operatingSystem": "Web Browser"
   "url": "https://snowb.org"
   "softwareVersion": "1.3.0"
+  "inLanguage": "zh-CN"
   "keywords": ["位图字体生成器", "免费在线位图字体生成器", "像素字体编辑器", "无需编程技能", "TTF转位图转换器", "WOFF字体转换", "游戏引擎位图字体", "Unity Godot Unreal字体", "游戏字体生成器", "跨平台桌面应用", "基于浏览器的字体工具", "拖放字体创建器", "AngelCode BMFont格式", "纹理图集生成器", "像素艺术字体制作器", "网页字体生成器", "免费开源字体工具", "DirectX OpenGL字体工具", "独立游戏开发者工具", "专业字体创建", "游戏UI字体", "SDF字体生成器", "MSDF位图字体", "距离场字体", "渐变预设", "自动保存"]
   "screenshot": "https://user-images.githubusercontent.com/4632034/89119353-85c0f680-d4e0-11ea-88ae-978dfc01d5fc.png"
   "image": "https://snowb.org/summary_large_image.png"
-  "inLanguage": "zh-CN"
   "offers":
     "@type": "Offer"
     "price": "0"
@@ -50,15 +50,20 @@ schema:
     - "渐变预设：10 个内置预设，支持自定义保存/删除"
     - "多项目工作区，带选项卡界面和自动项目切换"
     - "IndexedDB 自动保存持久化，覆盖所有项目"
+    - "内阴影效果，实现雕刻和浮雕字形样式"
+    - "可变字体支持，自动检测变体轴并提供实时滑块调整"
+    - "TTC（TrueType Collection）导入，支持多字体选择对话框"
+    - "有序网格打包模式，按行列排列的纹理图集布局"
+    - "快捷键支持，高效的画布导航（平移、缩放、选择）"
   "creator":
     "@type": "Person"
     "name": "SilenceLeo"
     "image": "https://avatars0.githubusercontent.com/u/4632034?s=460&u=82fc46834be9426099b7366528006c330c2c3f91&v=4"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
-    "@type": "Person"
-    "name": "SilenceLeo"
-    "url": "https://github.com/SilenceLeo/"
+    "@type": "Organization"
+    "name": "SnowB"
+    "url": "https://snowb.org"
   "license": "https://github.com/SilenceLeo/snowb-bmf/blob/master/LICENSE"
   "codeRepository": "https://github.com/SilenceLeo/snowb-bmf"
 ---
@@ -87,6 +92,12 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	</Card>
 	<Card title="智能内存优化" icon="setting">
 		采用 Guillotine 算法的高级**纹理图集打包**。自动空白修剪和二次幂大小调整。Web Workers 并行处理数千个字形而不会冻结。减少 30-50% 的纹理内存。
+	</Card>
+	<Card title="可变字体与 TTC 支持" icon="pen">
+		导入**可变字体**，自动检测变体轴——通过实时滑块调整字重、字宽、斜体及自定义轴。支持导入 **TTC（TrueType Collection）** 文件，提供多字体选择对话框。
+	</Card>
+	<Card title="内阴影效果" icon="star">
+		通过在字形内部渲染内阴影，创建**雕刻和浮雕**文字效果。可与外阴影结合使用，实现专业的多层深度效果。
 	</Card>
 </CardGrid>
 
