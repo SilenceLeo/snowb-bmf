@@ -281,22 +281,51 @@ export function findImageGlyphIndex(letter: string): number {
 
 // Glyph Property Modifications
 
+function updateKerningOnNode(
+  kerningNode: { set: (v: Record<string, number>) => void },
+  currentKerning: Record<string, number>,
+  nextLetter: string,
+  value: number,
+): void {
+  const newKerning = { ...currentKerning }
+  if (value === 0) {
+    delete newKerning[nextLetter]
+  } else {
+    newKerning[nextLetter] = value
+  }
+  kerningNode.set(newKerning)
+  incrementGlyphDataVersion()
+}
+
 export function setKerning(
   letter: string,
   nextLetter: string,
   value: number,
 ): void {
-  const glyph = glyphStore$.glyphs[letter].get()
+  // Image glyph first (consistent with getGlyphForLetter priority)
+  const imageGlyphs = glyphStore$.imageGlyphs.get()
+  const idx = imageGlyphs.findIndex(
+    (img) => img.letter === letter && img.selected,
+  )
+  if (idx >= 0) {
+    updateKerningOnNode(
+      glyphStore$.imageGlyphs[idx].kerning,
+      imageGlyphs[idx].kerning,
+      nextLetter,
+      value,
+    )
+    return
+  }
 
+  // Fallback: font glyph
+  const glyph = glyphStore$.glyphs[letter].get()
   if (glyph) {
-    const newKerning = { ...glyph.kerning }
-    if (value === 0) {
-      delete newKerning[nextLetter]
-    } else {
-      newKerning[nextLetter] = value
-    }
-    glyphStore$.glyphs[letter].kerning.set(newKerning)
-    incrementGlyphDataVersion()
+    updateKerningOnNode(
+      glyphStore$.glyphs[letter].kerning,
+      glyph.kerning,
+      nextLetter,
+      value,
+    )
   }
 }
 
@@ -309,17 +338,18 @@ export function batchSetKerning(updates: KerningUpdate[]): void {
 }
 
 export function getKerning(letter: string, nextLetter: string): number {
+  // Image glyph first (consistent with getGlyphForLetter priority)
+  const imageGlyph = glyphStore$.imageGlyphs
+    .get()
+    .find((img) => img.letter === letter && img.selected)
+  if (imageGlyph) {
+    return imageGlyph.kerning[nextLetter] || 0
+  }
   const glyph = glyphStore$.glyphs[letter].get()
   if (glyph) {
     return glyph.kerning[nextLetter] || 0
   }
-  // Fallback: check image glyphs
-  // Kerning is semantically per-letter (character pair spacing), so letter-based
-  // lookup is correct here — multiple image glyphs sharing a letter share kerning.
-  const imageGlyph = glyphStore$.imageGlyphs
-    .get()
-    .find((img) => img.letter === letter && img.selected)
-  return imageGlyph?.kerning[nextLetter] || 0
+  return 0
 }
 
 /**

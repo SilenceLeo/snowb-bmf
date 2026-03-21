@@ -1,6 +1,6 @@
 import './theme/index.d'
 import './workers/index.d'
-import './opentype.js/index.d'
+import './fontkit/index.d'
 import './fonteditor-core/index.d'
 
 // Debug globals exposed by AutoPackerWorkerPool

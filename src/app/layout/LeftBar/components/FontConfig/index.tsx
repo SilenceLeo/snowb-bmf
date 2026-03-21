@@ -6,6 +6,7 @@ import FontFile from './FontFile'
 import FontSharp from './FontSharp'
 import FontSize from './FontSize'
 import LineHeight from './LineHeight'
+import VariationAxes from './VariationAxes'
 
 const FontConfig: FunctionComponent = () => {
   return (
@@ -21,6 +22,9 @@ const FontConfig: FunctionComponent = () => {
       </Box>
       <Box sx={{ px: 2, my: 4 }}>
         <LineHeight />
+      </Box>
+      <Box sx={{ px: 2, my: 4 }}>
+        <VariationAxes />
       </Box>
     </ConfigSection>
   )

@@ -753,6 +753,9 @@ export interface IFont {
 
   /** Font sharp */
   sharp?: number | null
+
+  /** Font variationSettings */
+  variationSettings?: { [k: string]: number } | null
 }
 
 /** Represents a Font. */
@@ -774,6 +777,9 @@ export class Font implements IFont {
 
   /** Font sharp. */
   public sharp: number
+
+  /** Font variationSettings. */
+  public variationSettings: { [k: string]: number }
 
   /**
    * Creates a new Font instance using the specified properties.
@@ -1165,6 +1171,12 @@ export interface ILayout {
 
   /** Layout page */
   page?: number | null
+
+  /** Layout orderedGrid */
+  orderedGrid?: boolean | null
+
+  /** Layout columns */
+  columns?: number | null
 }
 
 /** Represents a Layout. */
@@ -1195,6 +1207,12 @@ export class Layout implements ILayout {
 
   /** Layout page. */
   public page: number
+
+  /** Layout orderedGrid. */
+  public orderedGrid: boolean
+
+  /** Layout columns. */
+  public columns: number
 
   /**
    * Creates a new Layout instance using the specified properties.

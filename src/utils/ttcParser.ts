@@ -60,10 +60,7 @@ interface TableRecord {
  * Read the table directory starting at `dirOffset` (an sfnt offset).
  * Returns the list of TableRecords.
  */
-function readTableDirectory(
-  view: DataView,
-  dirOffset: number,
-): TableRecord[] {
+function readTableDirectory(view: DataView, dirOffset: number): TableRecord[] {
   // sfnt header: sfVersion(4) + numTables(2) + searchRange(2) + entrySelector(2) + rangeShift(2)
   const numTables = view.getUint16(dirOffset + 4)
   const records: TableRecord[] = []
@@ -189,7 +186,7 @@ export function parseTtcHeader(buffer: ArrayBuffer): TtcFontEntry[] {
  * Extract a single TTF font from a TTC file.
  *
  * Reads the table directory of the font at `fontIndex`, then assembles
- * a standalone TTF (sfnt) binary that `opentype.parse()` can consume.
+ * a standalone TTF (sfnt) binary that `createAdaptedFont()` can consume.
  *
  * @throws if index is out of range or the buffer is invalid.
  */
@@ -205,9 +202,7 @@ export function extractTtfFromTtc(
   const numFonts = view.getUint32(8)
 
   if (fontIndex < 0 || fontIndex >= numFonts) {
-    throw new Error(
-      `Font index ${fontIndex} out of range (0–${numFonts - 1})`,
-    )
+    throw new Error(`Font index ${fontIndex} out of range (0–${numFonts - 1})`)
   }
 
   const fontOffset = view.getUint32(12 + fontIndex * 4)

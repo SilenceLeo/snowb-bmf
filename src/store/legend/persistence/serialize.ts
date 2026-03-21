@@ -237,6 +237,7 @@ function serializeFont(font: FontData): IFont {
     size: font.size,
     lineHeight: font.lineHeight,
     sharp: font.sharp,
+    variationSettings: font.variationSettings,
   }
 }
 
@@ -363,6 +364,8 @@ function serializeLayout(): ILayout {
     auto: layout.auto,
     fixedSize: layout.fixedSize,
     page: layout.page,
+    orderedGrid: layout.orderedGrid,
+    columns: layout.columns,
   }
 }
 

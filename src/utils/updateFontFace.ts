@@ -4,13 +4,18 @@ let loadDiv: HTMLDivElement
 export default async function updateFontFace(
   name: string,
   url: string,
+  isVariable = false,
 ): Promise<void> {
   const safeName = name.replace(/"/g, '\\"')
   const safeUrl = encodeURI(url)
+
+  // For variable fonts, declare full weight and stretch ranges
+  const fontWeightRule = isVariable ? '\n        font-weight: 1 999;' : ''
+  const fontStretchRule = isVariable ? '\n        font-stretch: 25% 200%;' : ''
   const cssNode = document.createTextNode(`
     @font-face {
         font-family: "${safeName}";
-        src: url("${safeUrl}") format('truetype');
+        src: url("${safeUrl}") format('truetype');${fontWeightRule}${fontStretchRule}
     }`)
 
   if (!fontTargetCache) {

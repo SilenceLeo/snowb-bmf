@@ -1,7 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline'
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles'
 import { SnackbarProvider } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   cleanupListeners,
   initLegendState,
@@ -19,8 +19,6 @@ import Wrap from './layout/Wrap'
 import theme from './theme'
 
 function App(): React.JSX.Element {
-  const [isLoading, setIsLoading] = useState(true)
-
   // Auto-save workspace on page unload
   useAutoSave()
 
@@ -60,10 +58,6 @@ function App(): React.JSX.Element {
             fallbackError,
           )
         }
-      } finally {
-        if (!cancelled) {
-          setIsLoading(false)
-        }
       }
     }
 
@@ -79,30 +73,15 @@ function App(): React.JSX.Element {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {isLoading ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100vh',
-              color: '#fff',
-              fontSize: '16px',
-            }}
-          >
-            Loading...
-          </div>
-        ) : (
-          <SnackbarProvider
-            anchorOrigin={{
-              horizontal: 'center',
-              vertical: 'top',
-            }}
-          >
-            <DynamicTitle />
-            <Wrap />
-          </SnackbarProvider>
-        )}
+        <SnackbarProvider
+          anchorOrigin={{
+            horizontal: 'center',
+            vertical: 'top',
+          }}
+        >
+          <DynamicTitle />
+          <Wrap />
+        </SnackbarProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   )

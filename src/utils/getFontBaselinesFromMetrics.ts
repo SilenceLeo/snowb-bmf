@@ -1,9 +1,8 @@
-import { Font } from 'opentype.js'
-
+import type { AdaptedFont } from './fontAdapter'
 import type { Baselines } from './types'
 
 export default function getFontBaselinesFromMetrics(
-  font: Font,
+  font: AdaptedFont,
   fontSize: number,
 ): Baselines {
   const scale = fontSize / font.unitsPerEm
@@ -11,8 +10,6 @@ export default function getFontBaselinesFromMetrics(
   // Get key font metrics
   const ascender = font.ascender * scale
   const descender = font.descender * scale
-  // const capHeight = (font.tables.os2?.sCapHeight || font.ascender * 0.7) * scale
-  // const xHeight = (font.tables.os2?.sxHeight || font.ascender * 0.5) * scale
   const lineGap = (font.tables.hhea?.lineGap || 0) * scale
 
   // Calculate total height and middle baseline position

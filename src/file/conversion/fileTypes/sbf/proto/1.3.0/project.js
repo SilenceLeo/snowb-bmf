@@ -1661,6 +1661,7 @@ export const Font = ($root.Font = (() => {
    * @property {number|null} [size] Font size
    * @property {number|null} [lineHeight] Font lineHeight
    * @property {number|null} [sharp] Font sharp
+   * @property {Object.<string,number>|null} [variationSettings] Font variationSettings
    */
 
   /**
@@ -1673,6 +1674,7 @@ export const Font = ($root.Font = (() => {
    */
   function Font(properties) {
     this.fonts = []
+    this.variationSettings = {}
     if (properties)
       for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
         if (properties[keys[i]] != null) this[keys[i]] = properties[keys[i]]
@@ -1709,6 +1711,14 @@ export const Font = ($root.Font = (() => {
    * @instance
    */
   Font.prototype.sharp = 0
+
+  /**
+   * Font variationSettings.
+   * @member {Object.<string,number>} variationSettings
+   * @memberof Font
+   * @instance
+   */
+  Font.prototype.variationSettings = $util.emptyObject
 
   /**
    * Creates a new Font instance using the specified properties.
@@ -1748,6 +1758,23 @@ export const Font = ($root.Font = (() => {
       writer.uint32(/* id 3, wireType 5 =*/ 29).float(message.lineHeight)
     if (message.sharp != null && Object.hasOwnProperty.call(message, 'sharp'))
       writer.uint32(/* id 4, wireType 0 =*/ 32).int32(message.sharp)
+    if (
+      message.variationSettings != null &&
+      Object.hasOwnProperty.call(message, 'variationSettings')
+    )
+      for (
+        let keys = Object.keys(message.variationSettings), i = 0;
+        i < keys.length;
+        ++i
+      )
+        writer
+          .uint32(/* id 5, wireType 2 =*/ 42)
+          .fork()
+          .uint32(/* id 1, wireType 2 =*/ 10)
+          .string(keys[i])
+          .uint32(/* id 2, wireType 5 =*/ 21)
+          .float(message.variationSettings[keys[i]])
+          .ldelim()
     return writer
   }
 
@@ -1778,7 +1805,9 @@ export const Font = ($root.Font = (() => {
   Font.decode = function decode(reader, length, error) {
     if (!(reader instanceof $Reader)) reader = $Reader.create(reader)
     let end = length === undefined ? reader.len : reader.pos + length,
-      message = new $root.Font()
+      message = new $root.Font(),
+      key,
+      value
     while (reader.pos < end) {
       let tag = reader.uint32()
       if (tag === error) break
@@ -1798,6 +1827,29 @@ export const Font = ($root.Font = (() => {
         }
         case 4: {
           message.sharp = reader.int32()
+          break
+        }
+        case 5: {
+          if (message.variationSettings === $util.emptyObject)
+            message.variationSettings = {}
+          let end2 = reader.uint32() + reader.pos
+          key = ''
+          value = 0
+          while (reader.pos < end2) {
+            let tag2 = reader.uint32()
+            switch (tag2 >>> 3) {
+              case 1:
+                key = reader.string()
+                break
+              case 2:
+                value = reader.float()
+                break
+              default:
+                reader.skipType(tag2 & 7)
+                break
+            }
+          }
+          message.variationSettings[key] = value
           break
         }
         default:
@@ -1848,6 +1900,17 @@ export const Font = ($root.Font = (() => {
         return 'lineHeight: number expected'
     if (message.sharp != null && message.hasOwnProperty('sharp'))
       if (!$util.isInteger(message.sharp)) return 'sharp: integer expected'
+    if (
+      message.variationSettings != null &&
+      message.hasOwnProperty('variationSettings')
+    ) {
+      if (!$util.isObject(message.variationSettings))
+        return 'variationSettings: object expected'
+      let key = Object.keys(message.variationSettings)
+      for (let i = 0; i < key.length; ++i)
+        if (typeof message.variationSettings[key[i]] !== 'number')
+          return 'variationSettings: number{k:string} expected'
+    }
     return null
   }
 
@@ -1876,6 +1939,19 @@ export const Font = ($root.Font = (() => {
     if (object.lineHeight != null)
       message.lineHeight = Number(object.lineHeight)
     if (object.sharp != null) message.sharp = object.sharp | 0
+    if (object.variationSettings) {
+      if (typeof object.variationSettings !== 'object')
+        throw TypeError('.Font.variationSettings: object expected')
+      message.variationSettings = {}
+      for (
+        let keys = Object.keys(object.variationSettings), i = 0;
+        i < keys.length;
+        ++i
+      )
+        message.variationSettings[keys[i]] = Number(
+          object.variationSettings[keys[i]],
+        )
+    }
     return message
   }
 
@@ -1892,6 +1968,7 @@ export const Font = ($root.Font = (() => {
     if (!options) options = {}
     let object = {}
     if (options.arrays || options.defaults) object.fonts = []
+    if (options.objects || options.defaults) object.variationSettings = {}
     if (options.defaults) {
       object.size = 0
       object.lineHeight = 0
@@ -1911,6 +1988,18 @@ export const Font = ($root.Font = (() => {
           : message.lineHeight
     if (message.sharp != null && message.hasOwnProperty('sharp'))
       object.sharp = message.sharp
+    let keys2
+    if (
+      message.variationSettings &&
+      (keys2 = Object.keys(message.variationSettings)).length
+    ) {
+      object.variationSettings = {}
+      for (let j = 0; j < keys2.length; ++j)
+        object.variationSettings[keys2[j]] =
+          options.json && !isFinite(message.variationSettings[keys2[j]])
+            ? String(message.variationSettings[keys2[j]])
+            : message.variationSettings[keys2[j]]
+    }
     return object
   }
 
@@ -2718,6 +2807,8 @@ export const Layout = ($root.Layout = (() => {
    * @property {boolean|null} [auto] Layout auto
    * @property {boolean|null} [fixedSize] Layout fixedSize
    * @property {number|null} [page] Layout page
+   * @property {boolean|null} [orderedGrid] Layout orderedGrid
+   * @property {number|null} [columns] Layout columns
    */
 
   /**
@@ -2791,6 +2882,22 @@ export const Layout = ($root.Layout = (() => {
   Layout.prototype.page = 0
 
   /**
+   * Layout orderedGrid.
+   * @member {boolean} orderedGrid
+   * @memberof Layout
+   * @instance
+   */
+  Layout.prototype.orderedGrid = false
+
+  /**
+   * Layout columns.
+   * @member {number} columns
+   * @memberof Layout
+   * @instance
+   */
+  Layout.prototype.columns = 0
+
+  /**
    * Creates a new Layout instance using the specified properties.
    * @function create
    * @memberof Layout
@@ -2836,6 +2943,16 @@ export const Layout = ($root.Layout = (() => {
       writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.fixedSize)
     if (message.page != null && Object.hasOwnProperty.call(message, 'page'))
       writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.page)
+    if (
+      message.orderedGrid != null &&
+      Object.hasOwnProperty.call(message, 'orderedGrid')
+    )
+      writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.orderedGrid)
+    if (
+      message.columns != null &&
+      Object.hasOwnProperty.call(message, 'columns')
+    )
+      writer.uint32(/* id 9, wireType 0 =*/ 72).int32(message.columns)
     return writer
   }
 
@@ -2899,6 +3016,14 @@ export const Layout = ($root.Layout = (() => {
           message.page = reader.int32()
           break
         }
+        case 8: {
+          message.orderedGrid = reader.bool()
+          break
+        }
+        case 9: {
+          message.columns = reader.int32()
+          break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -2948,6 +3073,11 @@ export const Layout = ($root.Layout = (() => {
         return 'fixedSize: boolean expected'
     if (message.page != null && message.hasOwnProperty('page'))
       if (!$util.isInteger(message.page)) return 'page: integer expected'
+    if (message.orderedGrid != null && message.hasOwnProperty('orderedGrid'))
+      if (typeof message.orderedGrid !== 'boolean')
+        return 'orderedGrid: boolean expected'
+    if (message.columns != null && message.hasOwnProperty('columns'))
+      if (!$util.isInteger(message.columns)) return 'columns: integer expected'
     return null
   }
 
@@ -2969,6 +3099,9 @@ export const Layout = ($root.Layout = (() => {
     if (object.auto != null) message.auto = Boolean(object.auto)
     if (object.fixedSize != null) message.fixedSize = Boolean(object.fixedSize)
     if (object.page != null) message.page = object.page | 0
+    if (object.orderedGrid != null)
+      message.orderedGrid = Boolean(object.orderedGrid)
+    if (object.columns != null) message.columns = object.columns | 0
     return message
   }
 
@@ -2992,6 +3125,8 @@ export const Layout = ($root.Layout = (() => {
       object.auto = false
       object.fixedSize = false
       object.page = 0
+      object.orderedGrid = false
+      object.columns = 0
     }
     if (message.padding != null && message.hasOwnProperty('padding'))
       object.padding = message.padding
@@ -3007,6 +3142,10 @@ export const Layout = ($root.Layout = (() => {
       object.fixedSize = message.fixedSize
     if (message.page != null && message.hasOwnProperty('page'))
       object.page = message.page
+    if (message.orderedGrid != null && message.hasOwnProperty('orderedGrid'))
+      object.orderedGrid = message.orderedGrid
+    if (message.columns != null && message.hasOwnProperty('columns'))
+      object.columns = message.columns
     return object
   }
 

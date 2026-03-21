@@ -74,6 +74,7 @@ export default defineConfig(({}) => ({
           legendstate: ['@legendapp/state', '@legendapp/state/react'],
           mui: ['@mui/material', '@mui/icons-material'],
           utils: ['color', 'file-saver', 'jszip'],
+          fontkit: ['fontkit'],
         },
       },
     },
@@ -122,6 +123,7 @@ export default defineConfig(({}) => ({
       '@emotion/styled',
       '@mui/material',
       'color',
+      'fontkit',
     ],
   },
   

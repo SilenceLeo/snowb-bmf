@@ -19,7 +19,7 @@ function buildMsdfAtlasJson(context: ExportContext): ExportFilesResult {
   const base = bmfont.common.base
   const fractionalScale = 1 << (bmfont.common.xFpBits || 0)
 
-  // Font metrics (em-normalized), prefer opentype.js (sync, no WASM dependency)
+  // Font metrics (em-normalized), prefer fontkit (sync, no WASM dependency)
   const unitsPerEm = opentype?.unitsPerEm ?? 1000
 
   // Underline data from post table
@@ -32,9 +32,7 @@ function buildMsdfAtlasJson(context: ExportContext): ExportFilesResult {
     lineHeight: opentype
       ? (opentype.ascender - opentype.descender) / unitsPerEm
       : bmfont.common.lineHeight / fontSize,
-    ascender: opentype
-      ? opentype.ascender / unitsPerEm
-      : base / fontSize,
+    ascender: opentype ? opentype.ascender / unitsPerEm : base / fontSize,
     descender: opentype
       ? opentype.descender / unitsPerEm
       : -(bmfont.common.lineHeight - base) / fontSize,
@@ -75,13 +73,14 @@ function buildMsdfAtlasJson(context: ExportContext): ExportFilesResult {
   })
 
   // Kerning (em-normalized, includes manual + opentype adjustments)
-  const kerning = bmfont.kernings.count > 0
-    ? bmfont.kernings.list.map((k) => ({
-        unicode1: k.first,
-        unicode2: k.second,
-        advance: k.amount / fractionalScale / fontSize,
-      }))
-    : []
+  const kerning =
+    bmfont.kernings.count > 0
+      ? bmfont.kernings.list.map((k) => ({
+          unicode1: k.first,
+          unicode2: k.second,
+          advance: k.amount / fractionalScale / fontSize,
+        }))
+      : []
 
   // Atlas descriptor
   const isSdf = renderMode !== 'default'
@@ -102,9 +101,7 @@ function buildMsdfAtlasJson(context: ExportContext): ExportFilesResult {
   // JS stringify already guarantees IEEE 754 round-trip; this just trims
   // long repeating fractions (e.g. 1/36 → 0.027778 instead of 0.027777…76).
   const roundPrecision = (v: unknown) =>
-    typeof v === 'number' && !Number.isInteger(v)
-      ? parseFloat(v.toFixed(6))
-      : v
+    typeof v === 'number' && !Number.isInteger(v) ? parseFloat(v.toFixed(6)) : v
 
   const json = JSON.stringify(
     { atlas, metrics, glyphs, kerning },

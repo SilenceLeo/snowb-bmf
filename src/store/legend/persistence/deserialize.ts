@@ -7,14 +7,14 @@
  * Key responsibilities:
  * - Convert plain objects from Protocol Buffer to Legend State observables
  * - Restore Map objects from Record format
- * - Handle font resources with opentype.js parsing
+ * - Handle font resources with fontkit parsing
  * - Initialize pattern texture images
  */
 import { batch, opaqueObject } from '@legendapp/state'
-import type { Font as OpenType } from 'opentype.js'
-import { parse } from 'opentype.js'
 import type { IProject } from 'src/file/conversion/fileTypes/sbf/proto/1.3.0/project'
 import { uint8ArrayToArrayBuffer } from 'src/utils/bufferUtils'
+import type { AdaptedFont } from 'src/utils/fontAdapter'
+import { createAdaptedFont } from 'src/utils/fontAdapter'
 import getTrimImageInfo from 'src/utils/getTrimImageInfo'
 import updateFontFace from 'src/utils/updateFontFace'
 
@@ -396,24 +396,35 @@ async function deserializeFontResources(
     try {
       const buffer = normalizeToArrayBuffer(fontData.font)
 
-      const opentype: OpenType = parse(buffer, { lowMemory: true })
+      const opentype: AdaptedFont = createAdaptedFont(buffer)
       const { names } = opentype
       const family =
+        names.fullName?.[Object.keys(names.fullName ?? {})[0]] ||
         names.postScriptName?.[Object.keys(names.postScriptName ?? {})[0]] ||
         names.fontFamily?.[Object.keys(names.fontFamily ?? {})[0]] ||
         'UnknownFont'
+
+      // Variable font axes and instances are natively available from the adapter
+      const variationAxes =
+        opentype.variationAxes.length > 0 ? opentype.variationAxes : undefined
+      const variationInstances =
+        opentype.variationInstances.length > 0
+          ? opentype.variationInstances
+          : undefined
 
       // Register font face
       // Note: Do NOT revoke the Object URL here. The CSS @font-face rule
       // references it via src: url(...), and the browser needs it valid for
       // the entire font lifetime. The URL is cleaned up on page unload.
       const url = URL.createObjectURL(new Blob([buffer]))
-      await updateFontFace(family, url)
+      await updateFontFace(family, url, !!variationAxes)
 
       return {
         font: opaqueObject(buffer),
         family,
         opentype: opaqueObject(opentype),
+        variationAxes,
+        variationInstances,
       } as FontResource
     } catch (error) {
       console.error('[Deserialize] Failed to parse font:', error)
@@ -435,6 +446,7 @@ async function deserializeFont(
         size?: number
         lineHeight?: number
         sharp?: number
+        variationSettings?: Record<string, number>
       }
     | null
     | undefined,
@@ -452,6 +464,7 @@ async function deserializeFont(
     ideographic: 0,
     bottom: 0,
     sharp: data?.sharp ?? 80,
+    variationSettings: data?.variationSettings ?? {},
   }
 }
 
@@ -697,6 +710,8 @@ export async function deserializeProject(data: DecodedProject): Promise<void> {
         auto: data.layout?.auto ?? true,
         fixedSize: data.layout?.fixedSize ?? false,
         page: data.layout?.page ?? 1,
+        orderedGrid: data.layout?.orderedGrid ?? false,
+        columns: data.layout?.columns ?? 8,
       })
 
       // Set UI store

@@ -62,6 +62,8 @@ message Font {
   float lineHeight = 3;
 
   int32 sharp = 4;
+
+  map<string, float> variationSettings = 5;
 }
 
 message GlyphFont {
@@ -106,6 +108,10 @@ message Layout {
   bool fixedSize = 6;
 
   int32 page = 7;
+
+  bool orderedGrid = 8;
+
+  int32 columns = 9;
 }
 
 message Shadow {

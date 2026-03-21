@@ -20,6 +20,7 @@ import {
 } from '../stores/styleStore'
 import { resetUiStore, uiStore$ } from '../stores/uiStore'
 import {
+  addProject,
   getActiveId,
   setProjectName as setWorkspaceProjectName,
 } from '../stores/workspaceStore'
@@ -64,6 +65,7 @@ export async function initializeProject(
     const text = projectData.text || DEFAULT_PROJECT_TEXT
 
     setCurrentProject({ id, name, text })
+    addProject({ id, name })
 
     // Initialize glyphs
     initializeGlyphsFromText(text)
@@ -187,6 +189,8 @@ export function setupAutoRunListeners(): void {
     'height',
     'auto',
     'fixedSize',
+    'orderedGrid',
+    'columns',
     'page',
   ])
   const unsubscribeLayout = layoutStore$.layout.onChange(({ changes }) => {
@@ -217,6 +221,12 @@ export function setupAutoRunListeners(): void {
   const unsubscribeFontSharp = styleStore$.style.font.sharp.onChange(() => {
     debouncedStyleChange()
   })
+
+  // Variable font variation settings changes - requires glyph regeneration
+  const unsubscribeVariationSettings =
+    styleStore$.style.font.variationSettings.onChange(() => {
+      debouncedStyleChange()
+    })
 
   // Fill changes - requires glyph regeneration
   const unsubscribeFill = styleStore$.style.fill.onChange(() => {
@@ -326,6 +336,7 @@ export function setupAutoRunListeners(): void {
     unsubscribeFontSize,
     unsubscribeFontFonts,
     unsubscribeFontSharp,
+    unsubscribeVariationSettings,
     unsubscribeFill,
     unsubscribeStroke,
     unsubscribeUseStroke,

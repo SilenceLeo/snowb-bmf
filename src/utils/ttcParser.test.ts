@@ -216,7 +216,9 @@ describe('parseTtcHeader', () => {
 
   it('throws for a non-TTC buffer', () => {
     const { bytes } = buildMinimalTtf('Test', 'Regular')
-    expect(() => parseTtcHeader(bytes.buffer as ArrayBuffer)).toThrow('Not a TTC file')
+    expect(() => parseTtcHeader(bytes.buffer as ArrayBuffer)).toThrow(
+      'Not a TTC file',
+    )
   })
 })
 
@@ -247,7 +249,8 @@ describe('extractTtfFromTtc', () => {
     // The two TTFs should be different (different name tables)
     const bytes0 = new Uint8Array(ttf0)
     const bytes1 = new Uint8Array(ttf1)
-    const same = bytes0.length === bytes1.length && bytes0.every((b, i) => b === bytes1[i])
+    const same =
+      bytes0.length === bytes1.length && bytes0.every((b, i) => b === bytes1[i])
     expect(same).toBe(false)
   })
 
@@ -273,6 +276,8 @@ describe('extractTtfFromTtc', () => {
 
   it('throws for a non-TTC buffer', () => {
     const { bytes } = buildMinimalTtf('Test', 'Regular')
-    expect(() => extractTtfFromTtc(bytes.buffer as ArrayBuffer, 0)).toThrow('Not a TTC file')
+    expect(() => extractTtfFromTtc(bytes.buffer as ArrayBuffer, 0)).toThrow(
+      'Not a TTC file',
+    )
   })
 })

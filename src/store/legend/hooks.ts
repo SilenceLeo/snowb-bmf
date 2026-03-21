@@ -152,9 +152,15 @@ export function useGlyphKerning(
 ): number {
   return useSelector(() => {
     if (!letter || !nextLetter) return 0
+    // Image glyph first (consistent with getGlyphForLetter priority)
+    const imageGlyph = glyphStore$.imageGlyphs
+      .get()
+      .find((img) => img.letter === letter && img.selected)
+    if (imageGlyph) {
+      return imageGlyph.kerning[nextLetter] ?? 0
+    }
     const glyphData = glyphStore$.glyphs[letter]?.get()
-    if (!glyphData?.kerning) return 0
-    return glyphData.kerning[nextLetter] ?? 0
+    return glyphData?.kerning[nextLetter] ?? 0
   })
 }
 
@@ -233,11 +239,18 @@ export function useGlyphForLetter(
   letter: string,
 ): FontGlyphData | ImageGlyphData | undefined {
   return useSelector(() => {
+    // Read glyphDataVersion to ensure re-render when glyph properties change
+    // (e.g. adjustMetric, kerning) — without this, useSelector may skip
+    // re-render if the returned object reference is unchanged
+    glyphStore$.glyphDataVersion.get()
     const imageGlyph = glyphStore$.imageGlyphs
       .get()
       .find((img) => img.letter === letter && img.selected)
     if (imageGlyph) {
-      return imageGlyph
+      // Spread to create a new reference — Legend State's .get() on arrays
+      // returns mutable element references, causing useSelector's === check
+      // to miss deep property changes (e.g. adjustMetric, kerning)
+      return { ...imageGlyph }
     }
     return glyphStore$.glyphs[letter].get()
   })
@@ -318,6 +331,10 @@ export function useFontSharp(): number {
 
 export function useFontResources(): FontResource[] {
   return useSelector(() => styleStore$.style.font.fonts.get())
+}
+
+export function useFontVariationSettings(): Record<string, number> {
+  return useSelector(() => styleStore$.style.font.variationSettings.get())
 }
 
 export function useMainFontFamily(): string {
@@ -408,6 +425,14 @@ export function useLayoutWidth(): number {
 
 export function useLayoutHeight(): number {
   return useSelector(() => layoutStore$.layout.height.get())
+}
+
+export function useOrderedGrid(): boolean {
+  return useSelector(() => layoutStore$.layout.orderedGrid.get())
+}
+
+export function useColumns(): number {
+  return useSelector(() => layoutStore$.layout.columns.get())
 }
 
 export function useAutoLayout(): boolean {

@@ -6,12 +6,15 @@ import type {
   StrokeRenderConfig,
 } from 'src/types/style'
 
+import applyCanvasVariationSettings from './applyCanvasVariationSettings'
 import createCanvasFontString from './createCanvasFontString'
 import ctxDoPath from './ctxDoPath'
+import type { AdaptedFont } from './fontAdapter'
 import getCanvasStyle from './getCanvasStyle'
 import measureTextSize, { LetterSize } from './measureTextSize'
 import pathDoSharp from './pathDoSharp'
 import { trimTransparentPixelsFromRegion } from './trimTransparentPixels'
+import variationSettingsToCssProps from './variationSettingsToCssProps'
 
 export interface GlyphItem extends LetterSize {
   canvasX: number
@@ -117,11 +120,52 @@ export function renderSingleGlyph(
 
   let letterSize: GlyphItem
 
-  const fontResource = font.fonts?.find(({ opentype }: { opentype?: any }) => {
-    if (!opentype) return false
-    const glyph = opentype.charToGlyph(letter)
-    return !!glyph.unicode
-  })
+  // Find a font resource that has the glyph.
+  // For variable fonts with non-default variation, apply getVariation()
+  // to get interpolated outlines (fontkit gvar support).
+  const variationSettings = font.variationSettings
+  const mainFontResource = font.fonts?.[0]
+  const hasNonDefaultVariation =
+    variationSettings &&
+    Object.keys(variationSettings).length > 0 &&
+    mainFontResource?.variationAxes?.some(
+      (axis: { tag: string; defaultValue: number }) =>
+        variationSettings[axis.tag] !== undefined &&
+        variationSettings[axis.tag] !== axis.defaultValue,
+    )
+
+  let fontResource: { opentype: AdaptedFont } | undefined
+  if (mainFontResource?.opentype) {
+    // Apply variation if needed, then check if the glyph exists
+    let activeOpentype = mainFontResource.opentype
+    if (hasNonDefaultVariation && variationSettings) {
+      activeOpentype = activeOpentype.getVariation(variationSettings)
+    }
+    const glyphIndex = activeOpentype.charToGlyphIndex(letter)
+    if (glyphIndex !== 0) {
+      fontResource = { opentype: activeOpentype }
+    } else {
+      // Try other font resources (fallback fonts)
+      for (let i = 1; i < (font.fonts?.length ?? 0); i++) {
+        const fb = font.fonts![i]
+        if (!fb.opentype) continue
+        let fbOpentype = fb.opentype
+        // Apply variation to fallback fonts that support it
+        if (
+          hasNonDefaultVariation &&
+          variationSettings &&
+          fb.variationAxes?.length
+        ) {
+          fbOpentype = fbOpentype.getVariation(variationSettings)
+        }
+        const fbGlyphIndex = fbOpentype.charToGlyphIndex(letter)
+        if (fbGlyphIndex !== 0) {
+          fontResource = { opentype: fbOpentype }
+          break
+        }
+      }
+    }
+  }
 
   if (fontResource) {
     letterSize = renderOpentypeGlyph(
@@ -164,7 +208,7 @@ export function renderSingleGlyph(
 
 function renderOpentypeGlyph(
   letter: string,
-  fontResource: { opentype: any },
+  fontResource: { opentype: AdaptedFont },
   font: FontConfig,
   fill: FillConfig,
   stroke: StrokeConfig | undefined,
@@ -282,10 +326,19 @@ function renderFallbackGlyph(
   itemHeight: number,
   padding: number,
 ): GlyphItem {
+  const variationSettings = font.variationSettings
+  const cssProps = variationSettingsToCssProps(variationSettings)
+  const hasVariation =
+    variationSettings && Object.keys(variationSettings).length > 0
+
   const letterSize: GlyphItem = {
     ...measureTextSize(letter, {
       fontSize: font.size,
       fontFamily: font.family,
+      fontWeight: cssProps.fontWeight,
+      fontStyle: cssProps.fontStyle,
+      variationSettings,
+      fontStretch: cssProps.fontStretch,
     }),
     canvasX: 0,
     canvasY: 0,
@@ -305,7 +358,14 @@ function renderFallbackGlyph(
   ctx.font = createCanvasFontString({
     fontSize: font.size,
     fontFamily: font.family,
+    fontWeight: cssProps.fontWeight,
+    fontStyle: cssProps.fontStyle,
   })
+
+  // Apply all variation axes + fontStretch AFTER ctx.font (which resets them)
+  if (hasVariation) {
+    applyCanvasVariationSettings(ctx, variationSettings, cssProps.fontStretch)
+  }
 
   const hasStroke = !!(stroke && lineWidth)
 
@@ -361,6 +421,13 @@ function renderFallbackGlyph(
     )
     strokeCtx.clip()
     strokeCtx.font = ctx.font
+    if (hasVariation) {
+      applyCanvasVariationSettings(
+        strokeCtx,
+        variationSettings,
+        cssProps.fontStretch,
+      )
+    }
     strokeCtx.fillStyle = '#000000'
     strokeCtx.strokeStyle = getCanvasStyle(
       strokeCtx,
@@ -377,6 +444,11 @@ function renderFallbackGlyph(
     strokeCtx.strokeText(letter, drawX, drawY)
     strokeCtx.globalCompositeOperation = 'source-over'
     strokeCtx.restore()
+  }
+
+  // Reset variation settings to avoid polluting subsequent glyphs
+  if (hasVariation) {
+    applyCanvasVariationSettings(ctx, {})
   }
 
   return letterSize
