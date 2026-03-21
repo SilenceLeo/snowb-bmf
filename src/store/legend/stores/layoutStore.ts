@@ -25,6 +25,8 @@ export interface LayoutData {
   // Packing mode settings
   auto: boolean
   fixedSize: boolean
+  orderedGrid: boolean
+  columns: number
 
   // Multi-page support
   page: number
@@ -50,6 +52,8 @@ function createDefaultLayout(): LayoutData {
     height: 512,
     auto: true,
     fixedSize: false,
+    orderedGrid: false,
+    columns: 8,
     page: 1,
     packWidth: 512,
     packHeight: 512,
@@ -114,6 +118,21 @@ export function setFixedSize(fixedSize: boolean): void {
 }
 
 /**
+ * Set ordered grid mode
+ * When true, glyphs are placed in input order using a grid layout
+ */
+export function setOrderedGrid(orderedGrid: boolean): void {
+  layoutStore$.layout.orderedGrid.set(orderedGrid)
+}
+
+/**
+ * Set column count for ordered grid mode
+ */
+export function setColumns(columns: number): void {
+  layoutStore$.layout.columns.set(Math.max(1, Math.floor(columns)))
+}
+
+/**
  * Set page count
  */
 export function setPage(page: number): void {
@@ -164,6 +183,12 @@ export function updateLayout(updates: Partial<LayoutData>): void {
     if (updates.fixedSize !== undefined) {
       layoutStore$.layout.fixedSize.set(updates.fixedSize)
     }
+    if (updates.orderedGrid !== undefined) {
+      layoutStore$.layout.orderedGrid.set(updates.orderedGrid)
+    }
+    if (updates.columns !== undefined) {
+      layoutStore$.layout.columns.set(Math.max(1, Math.floor(updates.columns)))
+    }
     if (updates.page !== undefined) {
       layoutStore$.layout.page.set(Math.max(1, Math.floor(updates.page)))
     }
@@ -197,6 +222,8 @@ export function getPackingParams(): {
   height: number
   auto: boolean
   fixedSize: boolean
+  orderedGrid: boolean
+  columns: number
   page: number
 } {
   const layout = layoutStore$.layout.get()
@@ -207,6 +234,8 @@ export function getPackingParams(): {
     height: layout.height,
     auto: layout.auto,
     fixedSize: layout.fixedSize,
+    orderedGrid: layout.orderedGrid,
+    columns: layout.columns,
     page: layout.page,
   }
 }

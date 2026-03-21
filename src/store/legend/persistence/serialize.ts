@@ -364,6 +364,8 @@ function serializeLayout(): ILayout {
     auto: layout.auto,
     fixedSize: layout.fixedSize,
     page: layout.page,
+    orderedGrid: layout.orderedGrid,
+    columns: layout.columns,
   }
 }
 

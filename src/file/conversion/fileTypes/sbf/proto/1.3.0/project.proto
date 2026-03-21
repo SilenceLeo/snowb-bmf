@@ -108,6 +108,10 @@ message Layout {
   bool fixedSize = 6;
 
   int32 page = 7;
+
+  bool orderedGrid = 8;
+
+  int32 columns = 9;
 }
 
 message Shadow {

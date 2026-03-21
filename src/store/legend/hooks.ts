@@ -427,6 +427,14 @@ export function useLayoutHeight(): number {
   return useSelector(() => layoutStore$.layout.height.get())
 }
 
+export function useOrderedGrid(): boolean {
+  return useSelector(() => layoutStore$.layout.orderedGrid.get())
+}
+
+export function useColumns(): number {
+  return useSelector(() => layoutStore$.layout.columns.get())
+}
+
 export function useAutoLayout(): boolean {
   return useSelector(() => layoutStore$.layout.auto.get())
 }

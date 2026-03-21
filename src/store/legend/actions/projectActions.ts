@@ -189,6 +189,8 @@ export function setupAutoRunListeners(): void {
     'height',
     'auto',
     'fixedSize',
+    'orderedGrid',
+    'columns',
     'page',
   ])
   const unsubscribeLayout = layoutStore$.layout.onChange(({ changes }) => {

@@ -30,6 +30,8 @@ export interface PackingOptions {
   padding: number
   page: number
   fixedSize: boolean
+  orderedGrid: boolean
+  columns: number
 }
 
 export interface PackingResult {
@@ -130,7 +132,9 @@ export class PackingEngine {
     const startTime = Date.now()
 
     try {
-      if (options.auto) {
+      if (options.orderedGrid) {
+        console.log(`[Packing] Mode: Ordered grid (${options.columns} columns)`)
+      } else if (options.auto) {
         console.log('[Packing] Mode: Auto (dynamic size)')
       } else if (options.fixedSize) {
         console.log(
@@ -146,9 +150,11 @@ export class PackingEngine {
         throw new Error('Packing cancelled')
       }
 
-      const results = options.auto
-        ? await this.autoPackPages(pageGroups, options, onProgress, signal)
-        : this.fixedPackPages(pageGroups, options, onProgress, signal)
+      const results = options.orderedGrid
+        ? this.orderedGridPackPages(pageGroups, options, onProgress, signal)
+        : options.auto
+          ? await this.autoPackPages(pageGroups, options, onProgress, signal)
+          : this.fixedPackPages(pageGroups, options, onProgress, signal)
 
       this.stats.duration = Date.now() - startTime
       this.stats.successfulPages = results.filter(
@@ -334,6 +340,91 @@ export class PackingEngine {
           rectangles: packer.usedRectangles,
           width: resultWidth,
           height: resultHeight,
+        })
+      }
+
+      onProgress?.(pageIndex + 1, pageGroups.length)
+    })
+
+    return results
+  }
+
+  /**
+   * Ordered grid packing mode
+   * Places glyphs in input order using equal-width columns.
+   * Respects auto/fixed/adaptive canvas sizing modes.
+   */
+  private orderedGridPackPages(
+    pageGroups: TextRectangle[][],
+    options: PackingOptions,
+    onProgress?: PackingProgressCallback,
+    signal?: AbortSignal,
+  ): PackingResult[] {
+    const results: PackingResult[] = []
+    const columns = Math.max(1, options.columns)
+
+    pageGroups.forEach((pageGlyphs, pageIndex) => {
+      if (signal?.aborted) {
+        throw new Error('Packing cancelled')
+      }
+
+      if (pageGlyphs.length === 0) {
+        results.push({
+          pageIndex,
+          rectangles: [],
+          width: 0,
+          height: 0,
+        })
+        return
+      }
+
+      // Calculate uniform cell size from max glyph dimensions
+      let maxGlyphWidth = 0
+      let maxGlyphHeight = 0
+      pageGlyphs.forEach((glyph) => {
+        maxGlyphWidth = Math.max(maxGlyphWidth, glyph.width)
+        maxGlyphHeight = Math.max(maxGlyphHeight, glyph.height)
+      })
+
+      const cellW = maxGlyphWidth + options.spacing
+      const cellH = maxGlyphHeight + options.spacing
+      const actualColumns = Math.min(columns, pageGlyphs.length)
+      const totalRows = Math.ceil(pageGlyphs.length / actualColumns)
+
+      // Place glyphs in input order: left-to-right, top-to-bottom
+      pageGlyphs.forEach((glyph, i) => {
+        const col = i % actualColumns
+        const row = Math.floor(i / actualColumns)
+        glyph.x = col * cellW
+        glyph.y = row * cellH
+      })
+
+      const contentWidth = actualColumns * cellW - options.spacing
+      const contentHeight = totalRows * cellH - options.spacing
+
+      // Check overflow for non-auto modes (fixed and adaptive)
+      const overflows =
+        !options.auto &&
+        (contentWidth > options.width || contentHeight > options.height)
+
+      if (overflows) {
+        console.warn(
+          `[Packing] Page ${pageIndex}: ordered grid ${contentWidth}x${contentHeight} exceeds ${options.fixedSize ? 'fixed' : 'max'} ${options.width}x${options.height}`,
+        )
+        results.push({
+          pageIndex,
+          rectangles: [],
+          width: options.width,
+          height: options.height,
+        })
+      } else {
+        // Auto/Adaptive: use content size; Fixed: use configured size
+        const useFixedDimensions = !options.auto && options.fixedSize
+        results.push({
+          pageIndex,
+          rectangles: pageGlyphs,
+          width: useFixedDimensions ? options.width : contentWidth,
+          height: useFixedDimensions ? options.height : contentHeight,
         })
       }
 

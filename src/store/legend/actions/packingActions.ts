@@ -103,14 +103,26 @@ export function pack(): void {
   packingAbortController = new AbortController()
   setPackingState(true)
 
-  const { page, auto, width, height, spacing, padding, fixedSize } =
-    getPackingParams()
+  const {
+    page,
+    auto,
+    width,
+    height,
+    spacing,
+    padding,
+    fixedSize,
+    orderedGrid,
+    columns,
+  } = getPackingParams()
   const text = getProjectText()
 
   const rectangleList = getRectangleList(text, padding, spacing)
-  const validList = rectangleList
-    .filter(({ width, height }) => !!(width && height))
-    .sort((a, b) => b.height - a.height)
+  const validList = rectangleList.filter(
+    ({ width, height }) => !!(width && height),
+  )
+  if (!orderedGrid) {
+    validList.sort((a, b) => b.height - a.height)
+  }
 
   const pageCount = Math.max(1, Math.floor(page || 1))
 
@@ -122,7 +134,7 @@ export function pack(): void {
 
   resetGlyphPages()
 
-  const pageGroups = distributeGlyphs(validList, pageCount)
+  const pageGroups = distributeGlyphs(validList, pageCount, orderedGrid)
   executePacking(pageGroups, {
     auto,
     width,
@@ -131,12 +143,15 @@ export function pack(): void {
     padding,
     page,
     fixedSize,
+    orderedGrid,
+    columns,
   })
 }
 
 function distributeGlyphs(
   glyphs: TextRectangle[],
   pageCount: number,
+  orderedGrid = false,
 ): TextRectangle[][] {
   const validPageCount = Math.max(1, Math.floor(pageCount))
 
@@ -145,6 +160,25 @@ function distributeGlyphs(
       console.log(`[Packing] Single page: ${glyphs.length} glyphs`)
     }
     return [glyphs]
+  }
+
+  // Ordered grid: distribute in input order, equal chunks per page
+  if (orderedGrid) {
+    const perPage = Math.ceil(glyphs.length / validPageCount)
+    const pages: TextRectangle[][] = []
+    for (let i = 0; i < validPageCount; i++) {
+      pages.push(glyphs.slice(i * perPage, (i + 1) * perPage))
+    }
+
+    if (DEBUG_CONFIG.logBatchUpdates) {
+      pages.forEach((page, idx) => {
+        console.log(
+          `[Packing] Page ${idx + 1}: ${page.length} glyphs (ordered grid)`,
+        )
+      })
+    }
+
+    return pages
   }
 
   const pages: TextRectangle[][] = Array.from(
@@ -205,6 +239,8 @@ async function executePacking(
     padding: number
     page: number
     fixedSize: boolean
+    orderedGrid: boolean
+    columns: number
   },
 ): Promise<void> {
   const engine = getPackingEngine()
@@ -224,6 +260,8 @@ async function executePacking(
         padding: options.padding,
         page: options.page,
         fixedSize: options.fixedSize,
+        orderedGrid: options.orderedGrid,
+        columns: options.columns,
       },
       undefined,
     )

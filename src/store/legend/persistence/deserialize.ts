@@ -710,6 +710,8 @@ export async function deserializeProject(data: DecodedProject): Promise<void> {
         auto: data.layout?.auto ?? true,
         fixedSize: data.layout?.fixedSize ?? false,
         page: data.layout?.page ?? 1,
+        orderedGrid: data.layout?.orderedGrid ?? false,
+        columns: data.layout?.columns ?? 8,
       })
 
       // Set UI store

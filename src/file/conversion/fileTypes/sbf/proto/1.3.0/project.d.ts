@@ -1171,6 +1171,12 @@ export interface ILayout {
 
   /** Layout page */
   page?: number | null
+
+  /** Layout orderedGrid */
+  orderedGrid?: boolean | null
+
+  /** Layout columns */
+  columns?: number | null
 }
 
 /** Represents a Layout. */
@@ -1201,6 +1207,12 @@ export class Layout implements ILayout {
 
   /** Layout page. */
   public page: number
+
+  /** Layout orderedGrid. */
+  public orderedGrid: boolean
+
+  /** Layout columns. */
+  public columns: number
 
   /**
    * Creates a new Layout instance using the specified properties.

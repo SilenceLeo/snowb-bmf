@@ -2807,6 +2807,8 @@ export const Layout = ($root.Layout = (() => {
    * @property {boolean|null} [auto] Layout auto
    * @property {boolean|null} [fixedSize] Layout fixedSize
    * @property {number|null} [page] Layout page
+   * @property {boolean|null} [orderedGrid] Layout orderedGrid
+   * @property {number|null} [columns] Layout columns
    */
 
   /**
@@ -2880,6 +2882,22 @@ export const Layout = ($root.Layout = (() => {
   Layout.prototype.page = 0
 
   /**
+   * Layout orderedGrid.
+   * @member {boolean} orderedGrid
+   * @memberof Layout
+   * @instance
+   */
+  Layout.prototype.orderedGrid = false
+
+  /**
+   * Layout columns.
+   * @member {number} columns
+   * @memberof Layout
+   * @instance
+   */
+  Layout.prototype.columns = 0
+
+  /**
    * Creates a new Layout instance using the specified properties.
    * @function create
    * @memberof Layout
@@ -2925,6 +2943,16 @@ export const Layout = ($root.Layout = (() => {
       writer.uint32(/* id 6, wireType 0 =*/ 48).bool(message.fixedSize)
     if (message.page != null && Object.hasOwnProperty.call(message, 'page'))
       writer.uint32(/* id 7, wireType 0 =*/ 56).int32(message.page)
+    if (
+      message.orderedGrid != null &&
+      Object.hasOwnProperty.call(message, 'orderedGrid')
+    )
+      writer.uint32(/* id 8, wireType 0 =*/ 64).bool(message.orderedGrid)
+    if (
+      message.columns != null &&
+      Object.hasOwnProperty.call(message, 'columns')
+    )
+      writer.uint32(/* id 9, wireType 0 =*/ 72).int32(message.columns)
     return writer
   }
 
@@ -2988,6 +3016,14 @@ export const Layout = ($root.Layout = (() => {
           message.page = reader.int32()
           break
         }
+        case 8: {
+          message.orderedGrid = reader.bool()
+          break
+        }
+        case 9: {
+          message.columns = reader.int32()
+          break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -3037,6 +3073,11 @@ export const Layout = ($root.Layout = (() => {
         return 'fixedSize: boolean expected'
     if (message.page != null && message.hasOwnProperty('page'))
       if (!$util.isInteger(message.page)) return 'page: integer expected'
+    if (message.orderedGrid != null && message.hasOwnProperty('orderedGrid'))
+      if (typeof message.orderedGrid !== 'boolean')
+        return 'orderedGrid: boolean expected'
+    if (message.columns != null && message.hasOwnProperty('columns'))
+      if (!$util.isInteger(message.columns)) return 'columns: integer expected'
     return null
   }
 
@@ -3058,6 +3099,9 @@ export const Layout = ($root.Layout = (() => {
     if (object.auto != null) message.auto = Boolean(object.auto)
     if (object.fixedSize != null) message.fixedSize = Boolean(object.fixedSize)
     if (object.page != null) message.page = object.page | 0
+    if (object.orderedGrid != null)
+      message.orderedGrid = Boolean(object.orderedGrid)
+    if (object.columns != null) message.columns = object.columns | 0
     return message
   }
 
@@ -3081,6 +3125,8 @@ export const Layout = ($root.Layout = (() => {
       object.auto = false
       object.fixedSize = false
       object.page = 0
+      object.orderedGrid = false
+      object.columns = 0
     }
     if (message.padding != null && message.hasOwnProperty('padding'))
       object.padding = message.padding
@@ -3096,6 +3142,10 @@ export const Layout = ($root.Layout = (() => {
       object.fixedSize = message.fixedSize
     if (message.page != null && message.hasOwnProperty('page'))
       object.page = message.page
+    if (message.orderedGrid != null && message.hasOwnProperty('orderedGrid'))
+      object.orderedGrid = message.orderedGrid
+    if (message.columns != null && message.hasOwnProperty('columns'))
+      object.columns = message.columns
     return object
   }
 
