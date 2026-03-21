@@ -45,11 +45,11 @@ schema:
     "audienceType": ["game developers", "font designers", "UI developers"]
 ---
 
-Font size is a critical setting in your bitmap font project. It defines the rendering resolution of your glyphs in pixels and directly influences visual quality, texture atlas dimensions, and memory usage.
+Font size defines the rendering resolution of your glyphs in pixels. It directly affects visual quality, texture atlas dimensions, and memory usage.
 
 ## How to Set Font Size
 
-You can configure the font size in the Font Configuration panel.
+Configure the font size in the Font Configuration panel.
 
 - **Unit**: Pixels (px)
 - **Default Value**: 72px
@@ -57,7 +57,7 @@ You can configure the font size in the Font Configuration panel.
 
 ## The Impact of Font Size
 
-Choosing the right font size is a balance between quality and performance.
+Font size is a trade-off between quality and performance.
 
 ### Glyph Quality
 
@@ -66,12 +66,12 @@ Choosing the right font size is a balance between quality and performance.
 
 ### Texture Atlas Size
 
-Font size is directly proportional to the final texture atlas size.
+Font size is directly proportional to texture atlas size.
 
-- **Larger Fonts**: Generate bigger textures, leading to increased memory consumption.
-- **Smaller Fonts**: Create smaller, more memory-efficient textures.
+- **Larger Fonts**: Bigger textures, higher memory consumption.
+- **Smaller Fonts**: Smaller, more memory-efficient textures.
 
-Always be mindful of the texture size limitations of your target game engine or device.
+Check the texture size limits of your target game engine or device.
 
 ### Automatic Baseline Recalculation
 
@@ -87,19 +87,19 @@ Changing the font size automatically triggers a recalculation of the font's base
 
 ### Performance & Memory
 
-A larger font size means a larger texture atlas, which increases both memory usage and load times. Profile your application on a target device to find the optimal balance between visual quality and performance.
+Larger font sizes produce larger texture atlases, which means more memory and longer load times. Profile on your target device to find a good balance.
 
 ## Common Problems & Solutions
 
 ### Problem: Glyphs Appear Blurry or Pixelated
 
-This usually means the font size is too low for the resolution at which it's being displayed.
+The font size is too low for the display resolution.
 - **Solution**: Increase the font size to provide more pixel detail.
 
 ### Problem: Texture Atlas Exceeds Memory Limits
 
-This occurs when the generated texture is too large for the target platform.
-- **Solution**: Decrease the font size. You can also optimize the texture size by removing any unused glyphs from your character set.
+The generated texture exceeds the target platform's limits.
+- **Solution**: Decrease the font size, or remove unused glyphs from your character set.
 
 ## Related Topics
 

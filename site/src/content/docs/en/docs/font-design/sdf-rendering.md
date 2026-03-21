@@ -37,9 +37,9 @@ schema:
     - "Using SDF fonts in game engines"
 ---
 
-Signed Distance Field (SDF) rendering is a technique that stores the distance from each pixel to the nearest glyph edge, rather than the glyph's actual pixel color. This allows fonts to be scaled to any size while remaining sharp and crisp — unlike traditional bitmap fonts that become pixelated when scaled up.
+Signed Distance Field (SDF) rendering stores the distance from each pixel to the nearest glyph edge, instead of pixel colors. This lets fonts scale to any size while staying sharp. Traditional bitmap fonts pixelate when enlarged; SDF fonts do not.
 
-SnowB BMF is a **free online** bitmap font generator that supports multiple SDF rendering modes, enabling you to generate high-quality, resolution-independent bitmap fonts directly in your browser.
+SnowB BMF supports multiple SDF rendering modes, generating resolution-independent bitmap fonts directly in your browser.
 
 :::caution
 SDF rendering is currently an **experimental** feature. Parameters and behavior may change in future releases.
@@ -47,13 +47,13 @@ SDF rendering is currently an **experimental** feature. Parameters and behavior 
 
 ## What is SDF Rendering?
 
-In a standard bitmap font, each glyph is stored as a rasterized image at a fixed resolution. Scaling this image up results in blurry or pixelated text. SDF solves this problem by encoding each pixel as a distance value — how far that pixel is from the nearest edge of the glyph.
+In a standard bitmap font, each glyph is a rasterized image at a fixed resolution. Scaling up makes the text blurry or pixelated. SDF encodes each pixel as a distance value from the nearest glyph edge.
 
-At render time, the game engine uses a shader to reconstruct the glyph outline from these distance values. Because the distance field is smooth and continuous, the resulting text remains sharp at virtually any scale. This technique is widely used in modern game engines like Unity (TextMeshPro), Godot, and Unreal Engine.
+At render time, a shader reconstructs the glyph outline from these distance values. Because the distance field is smooth and continuous, text stays sharp at any scale. This technique is widely used in Unity (TextMeshPro), Godot, and Unreal Engine.
 
 ## SDF Rendering Modes in SnowB BMF
 
-SnowB BMF provides five rendering modes. The **Default** mode produces standard bitmap fonts, while the other four modes generate different types of distance field textures.
+There are five rendering modes. **Default** produces standard bitmap fonts; the other four generate distance field textures.
 
 | Mode | Channels | Implementation | Font File Required |
 | --- | --- | --- | --- |
@@ -65,30 +65,30 @@ SnowB BMF provides five rendering modes. The **Default** mode produces standard 
 
 ### SDF (Signed Distance Field)
 
-The basic SDF mode generates a single-channel distance field. SnowB BMF offers two pipelines for SDF generation:
+Generates a single-channel distance field. Two pipelines are available:
 
-- **Pure JavaScript (EDT):** Uses the Felzenszwalb and Huttenlocher Euclidean Distance Transform algorithm. This works without uploading a font file — it processes the Canvas-rendered glyph directly.
-- **msdfgen WASM:** When a font file is uploaded, the WASM pipeline can be used instead, producing higher-quality results by working directly with the font's vector outlines.
+- **Pure JavaScript (EDT):** Uses the Felzenszwalb/Huttenlocher Euclidean Distance Transform. Works without a font file — processes Canvas-rendered glyphs directly.
+- **msdfgen WASM:** When a font file is uploaded, this pipeline produces higher-quality results by working with the font's vector outlines.
 
 ### PSDF (Pseudo-SDF)
 
-PSDF uses the msdfgen WASM pipeline to generate a pseudo-signed distance field. It produces a single-channel output similar to SDF but uses a different distance calculation method. A font file must be uploaded to use this mode.
+Uses the msdfgen WASM pipeline to generate a pseudo-signed distance field. Produces single-channel output similar to SDF but with a different distance calculation. Requires a font file.
 
 ### MSDF (Multi-channel SDF)
 
-MSDF encodes distance information across three color channels (RGB), which preserves sharp corners and fine details that single-channel SDF cannot reproduce. This is the most popular distance field format for game development, offering an excellent balance between quality and performance. A font file is required.
+Encodes distance information across three color channels (RGB), preserving sharp corners and fine details that single-channel SDF cannot reproduce. MSDF is the most common distance field format in game development, offering a good balance of quality and performance. Requires a font file.
 
 ### MTSDF (Multi-channel + True SDF)
 
-MTSDF combines the multi-channel approach of MSDF with an additional true SDF channel in the alpha channel. This provides the best of both worlds: sharp corners from MSDF and smooth anti-aliasing from the true SDF. A font file is required.
+Combines MSDF's multi-channel approach with a true SDF channel in alpha. This gives you sharp corners from MSDF and smooth anti-aliasing from the true SDF. Requires a font file.
 
 ## How to Generate SDF Fonts
 
 ### 1. Upload a Font File
 
-For PSDF, MSDF, and MTSDF modes, you must first upload a TrueType (.ttf) or OpenType (.otf) font file. Go to **Font Import** and load your font.
+PSDF, MSDF, and MTSDF modes require a TrueType (.ttf) or OpenType (.otf) font file. Go to **Font Import** and load your font.
 
-> SDF mode can work without a font file using the pure JavaScript EDT pipeline, but uploading a font file enables the higher-quality WASM pipeline.
+> SDF mode works without a font file (via the JS EDT pipeline), but uploading one enables the higher-quality WASM pipeline.
 
 ### 2. Select a Rendering Mode
 
@@ -106,7 +106,7 @@ Once satisfied with the preview, export your font using the standard export work
 
 ### Distance Range
 
-The distance range defines how far (in pixels) the distance field extends from the glyph edge. A larger range produces smoother scaling but requires more padding around each glyph.
+Controls how far (in pixels) the distance field extends from the glyph edge. Larger ranges produce smoother scaling but need more padding.
 
 - **Minimum:** 1
 - **Step:** 1
@@ -131,11 +131,11 @@ These parameters are available when using the msdfgen WASM pipeline (PSDF, MSDF,
 
 #### Overlap Support
 
-Enables handling of overlapping contours in the font glyphs. Turn this on if your font contains glyphs with self-overlapping paths — this is common in complex scripts and decorative fonts.
+Handles overlapping contours in font glyphs. Enable this if your font has self-overlapping paths — common in complex scripts and decorative fonts.
 
 #### Scanline Pass
 
-Enables an additional scanline-based correction pass to fix potential artifacts in the distance field output.
+Additional scanline-based correction pass to fix artifacts in the distance field output.
 
 #### Fill Rule
 
@@ -194,24 +194,24 @@ Controls the post-processing error correction applied to the MSDF output:
 | **MSDF** | 3 (RGB) | Yes | Excellent | Medium | Most game fonts — the industry standard |
 | **MTSDF** | 4 (RGBA) | Yes | Best | Slower | High-fidelity fonts needing both sharp corners and smooth AA |
 
-**General recommendation:** Use **MSDF** for most game development scenarios. It provides the best balance of quality and compatibility. Use **SDF** if you only need simple, large-scale text rendering or if you do not have a font file to upload.
+**Recommendation:** Use **MSDF** for most game development. It has the best balance of quality and compatibility. Use **SDF** for simple, large-scale text or when you don't have a font file.
 
 ## Exporting SDF Fonts
 
-SDF fonts are exported using the same workflow as standard bitmap fonts. The texture atlases (PNG) contain the distance field data, and the descriptor file contains the glyph metrics.
+SDF fonts use the same export workflow as standard bitmap fonts. PNG texture atlases contain the distance field data; the descriptor file contains glyph metrics.
 
-For **MSDF** and **MTSDF** modes, SnowB BMF also supports the **MSDF Atlas JSON** export format, which is compatible with msdf-atlas-gen-based workflows. See [Export Formats](/en/docs/project-management/export-formats/) for all available formats.
+**MSDF** and **MTSDF** modes also support the **MSDF Atlas JSON** format, compatible with msdf-atlas-gen workflows. See [Export Formats](/en/docs/project-management/export-formats/) for all formats.
 
 ## Using SDF Fonts in Game Engines
 
 ### Unity (TextMeshPro)
 
-TextMeshPro natively supports SDF fonts. Import the exported PNG texture and BMFont descriptor into your Unity project, then create a TextMeshPro Font Asset from the imported data. TextMeshPro's shader will handle the distance field rendering automatically.
+TextMeshPro natively supports SDF fonts. Import the PNG texture and BMFont descriptor, then create a TextMeshPro Font Asset. The shader handles distance field rendering automatically.
 
 ### Godot
 
-Godot 4 supports SDF font rendering through its built-in text rendering pipeline. Import the SDF texture atlas and configure the font resource to use the SDF shader. For MSDF fonts, ensure you select the multi-channel distance field option in the font import settings.
+Godot 4 supports SDF rendering through its built-in text pipeline. Import the texture atlas and configure the font resource to use the SDF shader. For MSDF, select the multi-channel distance field option in font import settings.
 
 ### Unreal Engine
 
-Unreal Engine supports distance field fonts through its Slate UI framework and UMG. Import the exported texture and create a font face asset that references the SDF texture. Configure the material to use an SDF-compatible shader for proper rendering.
+Unreal Engine supports distance field fonts through Slate UI and UMG. Import the texture and create a font face asset referencing the SDF texture, then configure the material with an SDF-compatible shader.

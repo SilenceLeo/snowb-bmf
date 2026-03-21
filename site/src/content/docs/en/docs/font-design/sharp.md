@@ -53,16 +53,14 @@ schema:
         "text": "Adjust the sharpness value based on your target display size — higher values for small pixel-art fonts, lower values for large smooth fonts"
 ---
 
-The **Sharpness** setting gives you precise control over the anti-aliasing and edge rendering of your font glyphs. It allows you to define the visual style of your font, whether you need soft, smooth edges or hard, pixel-perfect lines.
+The **Sharpness** setting controls anti-aliasing and edge rendering of your font glyphs, on a scale from 0% to 100%:
 
-This setting operates on a scale from 0% to 100%:
-
--   **0% Sharpness:** Delivers full anti-aliasing, resulting in the smoothest possible edges. This is ideal for a clean, modern look, especially at larger font sizes.
--   **100% Sharpness:** Disables anti-aliasing completely, producing crisp, pixelated edges. This is perfect for retro video games, pixel art, or creating ultra-clear text at very small sizes.
+-   **0% Sharpness** means full anti-aliasing, giving you the smoothest possible edges. Best for clean, modern text at larger sizes.
+-   **100% Sharpness** means no anti-aliasing, producing crisp, pixelated edges. Good for retro games, pixel art, or small text that needs to be readable.
 
 ## Visual Comparison
 
-The difference is most apparent when viewed up close. A sharpness of 0% creates a gradient of pixels to smooth the edge, while 100% uses a hard on/off transition.
+The difference is visible up close: 0% creates a gradient of pixels to smooth edges, while 100% uses a hard on/off transition.
 
 | 0% Sharpness (Smooth)                                  | 100% Sharpness (Crisp)                                     |
 | ------------------------------------------------------ | ---------------------------------------------------------- |
@@ -70,15 +68,15 @@ The difference is most apparent when viewed up close. A sharpness of 0% creates 
 
 ## Choosing the Right Sharpness
 
--   **For a smooth, professional look:** Use a low sharpness value (e.g., 0-25%). This works best for larger text where smooth curves are important.
--   **For a pixel-art or retro style:** Use a high sharpness value (e.g., 75-100%). This ensures crisp, blocky edges that align perfectly with a pixel grid.
--   **For a balanced approach:** Mid-range values offer a compromise, retaining some edge definition while avoiding heavy pixelation.
+-   **Smooth, professional look:** Low values (0-25%) work best for larger text where smooth curves matter.
+-   **Pixel-art or retro style:** High values (75-100%) produce crisp, blocky edges aligned to the pixel grid.
+-   **Balanced approach:** Mid-range values retain edge definition without heavy pixelation.
 
 ## Important Notes
 
--   This setting is only available when a font file is loaded into the application.
--   Higher sharpness values generally result in smaller texture file sizes because there are fewer semi-transparent pixels to store.
--   Lower sharpness values can improve readability for complex characters at large scales.
+-   Only available when a font file is loaded.
+-   Higher sharpness produces smaller texture files (fewer semi-transparent pixels to store).
+-   Lower sharpness improves readability for complex characters at large scales.
 
 ## Related Topics
 

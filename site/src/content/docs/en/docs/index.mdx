@@ -4,7 +4,7 @@ description: Official SnowB BMF docs. Learn bitmap font creation from setup to a
 template: splash
 hero:
   title: SnowB BMF Documentation
-  tagline: The definitive guide to creating professional, game-ready bitmap fonts. Master advanced typography, styling, and optimization—all in your browser.
+  tagline: A complete guide to creating game-ready bitmap fonts. Covers typography, styling, and optimization, all in your browser.
   actions:
     - text: Get Started
       link: /en/docs/getting-started/overview/
@@ -64,28 +64,28 @@ import { ContainerSection } from 'starlight-theme-black/components'
 
 <CardGrid stagger>
 	<Card title="100% Free & Private" icon="laptop">
-		No installation required. Runs entirely in your browser. All processing happens locally, so your data and fonts remain private.
+		No installation required. Runs in your browser with all processing done locally. Your data and fonts stay private.
 	</Card>
 	<Card title="Advanced Font Styling" icon="pen">
-		Apply solid colors, gradients, and image patterns. Add definition with strokes (outlines), depth with shadows, and control anti-aliasing with a powerful Sharpness setting.
+		Apply solid colors, gradients, and image patterns. Add strokes for definition and shadows for depth. Control anti-aliasing with the Sharpness slider.
 	</Card>
 	<Card title="Professional Typography" icon="pencil">
-		Fine-tune glyph metrics, line height, and configure kerning pairs for pixel-perfect text layout and readability.
+		Fine-tune glyph metrics, line height, and kerning pairs for pixel-perfect text layout.
 	</Card>
 	<Card title="Smart Texture Packing" icon="puzzle">
-		Leverages an efficient Guillotine algorithm to auto-pack glyphs into the smallest texture atlas, or lets you define fixed, power-of-two dimensions for GPU optimization.
+		Uses the Guillotine algorithm to auto-pack glyphs into the smallest texture atlas, or lets you define fixed, power-of-two dimensions for GPU optimization.
 	</Card>
 	<Card title="Broad Export Compatibility" icon="document">
 		Export in 6 formats: Text (.fnt/.txt), XML, Binary, JSON, C Header, and MSDF Atlas JSON. Compatible with Unity, Godot, Unreal Engine, embedded systems, and MSDF shader pipelines.
 	</Card>
 	<Card title="Real-Time Preview" icon="magnifier">
-		See your changes instantly. The live canvas provides immediate feedback on styling, metrics, and kerning adjustments.
+		The live canvas shows every change instantly. Styling, metrics, and kerning adjustments all update in real time.
 	</Card>
 	<Card title="Keyboard Shortcuts" icon="laptop">
-		Navigate the canvas efficiently with keyboard shortcuts. Space+drag to pan, Ctrl+scroll to zoom, and more shortcuts for streamlined font editing workflows.
+		Space+drag to pan, Ctrl+scroll to zoom, plus project shortcuts for faster editing workflows.
 	</Card>
 	<Card title="PWA & Offline" icon="approve-check-circle">
-		Install SnowB BMF as a Progressive Web App for a native-like experience. Works fully offline with automatic update detection, so you can create fonts anywhere.
+		Install as a Progressive Web App for native-like offline use. Automatic update detection keeps you current when you reconnect.
 	</Card>
 </CardGrid>
 
@@ -93,16 +93,16 @@ import { ContainerSection } from 'starlight-theme-black/components'
 
 <CardGrid stagger>
 	<Card title="Full Unicode Support" icon="translate">
-		Includes full support for international scripts, emoji, and symbols, with IME compatibility for easy character input.
+		International scripts, emoji, and symbols. IME compatible for easy character input.
 	</Card>
 	<Card title="Flexible Font Import" icon="add-document">
-		Import TTF, OTF, and WOFF files. A robust fallback system lets you combine multiple fonts to expand character coverage.
+		Import TTF, OTF, and WOFF files. The fallback system lets you combine multiple fonts to cover more characters.
 	</Card>
 	<Card title="Image Glyphs" icon="seti:image">
-		Integrate custom icons, symbols, or logos directly into your font by mapping images to specific characters.
+		Map custom icons, symbols, or logos to specific characters and include them in your font.
 	</Card>
 	<Card title="Automatic Deduplication" icon="approve-check-circle">
-		Smart character processing automatically removes duplicates, ensuring an efficient and clean character set.
+		Automatic duplicate removal keeps your character set clean and efficient.
 	</Card>
 </CardGrid>
 
@@ -110,31 +110,31 @@ import { ContainerSection } from 'starlight-theme-black/components'
 
 <CardGrid stagger>
 	<Card title="Pixel-Perfect Control" icon="puzzle">
-		Use the unique 'Sharp' feature to snap glyph vectors to the pixel grid, transforming smooth fonts into crisp, pixel-perfect art with a single slider.
+		The 'Sharp' feature snaps glyph vectors to the pixel grid. One slider turns smooth fonts into crisp, pixel-perfect art.
 	</Card>
 	<Card title="Interactive Gradient Editor" icon="star">
-		Create linear and radial gradients with unlimited color stops. Visually edit colors, positions, and angles with instant feedback.
+		Build linear and radial gradients with unlimited color stops. Edit colors, positions, and angles visually with instant feedback.
 	</Card>
 	<Card title="Visual Kerning" icon="setting">
-		Visually adjust the spacing between character pairs. The tool provides highlighting and precise pixel-level control for professional results.
+		Adjust spacing between character pairs with pair highlighting and pixel-level control.
 	</Card>
 	<Card title="SDF/MSDF Rendering" icon="star">
-		Generate resolution-independent distance field fonts using msdfgen WASM technology. Supports SDF, PSDF, MSDF, and MTSDF modes for crisp text rendering at any scale in game engines.
+		Generate resolution-independent distance field fonts using msdfgen WASM. Supports SDF, PSDF, MSDF, and MTSDF modes for crisp text at any scale in game engines.
 	</Card>
 	<Card title="Inner Shadow Effects" icon="star">
-		Add engraved and embossed effects with inner shadows rendered inside glyph boundaries. Combine with outer shadows for multi-layer depth and dimension in your bitmap fonts.
+		Add engraved and embossed effects with inner shadows rendered inside glyph boundaries. Combine with outer shadows for layered depth in your bitmap fonts.
 	</Card>
 	<Card title="Variable Fonts" icon="pen">
-		Full variable font support with automatic axis detection. Adjust weight, width, italic, and custom variation axes with real-time sliders for precise typographic control.
+		Full variable font support with automatic axis detection. Adjust weight, width, italic, and custom variation axes with real-time sliders.
 	</Card>
 	<Card title="Ordered Grid Packing" icon="puzzle">
-		A third packing mode that arranges glyphs in ordered rows and columns. Configure column count for predictable, grid-based texture atlas layouts.
+		A third packing mode that arranges glyphs in rows and columns. Set the column count for predictable, grid-based texture atlas layouts.
 	</Card>
 	<Card title="Project Management" icon="open-book">
-		Save and load projects in the native .sbf format. The tool also supports importing legacy .ltr files from Littera for easy migration.
+		Save and load projects in native .sbf format. Import legacy .ltr files from Littera for easy migration.
 	</Card>
 	<Card title="Auto-Save & Persistence" icon="approve-check-circle">
-		All projects are automatically saved to IndexedDB storage. Supports multi-project workspaces with a tabbed interface. Never lose your work due to accidental page refreshes.
+		All projects auto-save to IndexedDB. Multi-project workspaces with tabbed interface prevent data loss from accidental refreshes.
 	</Card>
 </CardGrid>
 
@@ -142,22 +142,22 @@ import { ContainerSection } from 'starlight-theme-black/components'
 
 <CardGrid>
 	<Card title="Getting Started" icon="rocket">
-		Learn the basics of SnowB BMF, explore the interface, and understand the bitmap font creation workflow.
+		Interface overview, workflow guide, and keyboard shortcuts. Get productive fast.
 
 		[View Getting Started →](/en/docs/getting-started/overview/)
 	</Card>
 	<Card title="Font Design" icon="pencil">
-		A deep dive into character sets, fill styles, strokes, shadows, and texture packing to master font creation.
+		Character sets, fill styles, strokes, shadows, and texture packing. Everything for font creation.
 
 		[View Font Design →](/en/docs/font-design/character-sets/)
 	</Card>
 	<Card title="Project Management" icon="setting">
-		Manage your projects, preview results, and export in various formats for use in games and applications.
+		Project operations, export formats, and offline/PWA usage.
 
 		[View Project Management →](/en/docs/project-management/project-operations/)
 	</Card>
 	<Card title="FAQ" icon="information">
-		Find answers to commonly asked questions and troubleshooting tips for SnowB BMF.
+		Common questions and troubleshooting tips.
 
 		[View FAQ →](/en/docs/faq/)
 	</Card>

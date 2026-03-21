@@ -48,22 +48,22 @@ schema:
         "text": "Check the real-time workspace preview to confirm your character set renders correctly with the selected font"
 ---
 
-Character sets define which characters (glyphs) are included in your bitmap font. You can manage your character set by adding or removing characters, with full support for Unicode. SnowB BMF automatically handles duplicates and ensures efficient glyph generation.
+Character sets control which glyphs appear in your bitmap font. Add or remove characters with full Unicode support — SnowB BMF deduplicates automatically.
 
 ## Understanding Character Sets
 
-A character set is a collection of characters that will be rendered as bitmap glyphs. Each unique character becomes a separate glyph in the final texture atlas.
+Each unique character in your set becomes a separate glyph in the final texture atlas.
 
 ### Default Set
 
-SnowB BMF starts with a comprehensive default character set that includes:
+SnowB BMF starts with a default character set that includes:
 
-- **Numbers**: `0123456789`
-- **Lowercase letters**: `abcdefghijklmnopqrstuvwxyz`
-- **Uppercase letters**: `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
-- **Common symbols**: `!№;%:?*()_+-=.,/|"'@#$^&{}`
+- Numbers: `0123456789`
+- Lowercase letters: `abcdefghijklmnopqrstuvwxyz`
+- Uppercase letters: `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
+- Common symbols: `!№;%:?*()_+-=.,/|"'@#$^&{}`
 
-This default set covers most common use cases for Western text.
+This default set covers most Western text use cases.
 
 ## Configuring Character Sets
 
@@ -71,22 +71,17 @@ This default set covers most common use cases for Western text.
 
 Configure your character set in the **Glyphs** input field, located in the left-hand Font Config panel:
 
-1. **Locate the Input**: Find the "Glyphs" section in the Font Config panel.
-2. **Add Characters**: Use the multi-line text field to type or paste your desired characters.
-3. **Real-time Updates**: Changes are applied immediately as you type
-4. **Visual Preview**: The workspace preview updates automatically to show your character set.
+1. Find the "Glyphs" section in the Font Config panel.
+2. Type or paste characters into the multi-line text field.
+3. Changes apply immediately as you type, and the workspace preview updates automatically.
 
 ### Features
 
-**Automatic Deduplication**: Duplicate characters are automatically removed. You can type the same character multiple times, but it will only be included once in the font.
+Duplicate characters are removed automatically — each character appears only once in the font.
 
-**Unicode Support**: Full Unicode support allows you to include:
-- International characters (é, ñ, ü, etc.)
-- Non-Latin scripts (中, 日, العربية, etc.)
-- Emoji and special symbols (★, ♫, ⚡, etc.)
-- Mathematical symbols (∑, π, ∞, etc.)
+The input supports full Unicode, so you can include international characters (e, n, u), non-Latin scripts, emoji, special symbols, and mathematical symbols.
 
-**IME Compatibility**: The input field supports Input Method Editors (IME) for typing complex and international characters.
+The input field also supports Input Method Editors (IME) for typing CJK and other complex scripts.
 
 ### The Space Character
 
@@ -126,40 +121,40 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZÑ
 
 ### Optimize for Performance
 
-Keep your character set minimal. Large sets increase texture size, memory usage, and loading times. Analyze your application's text to include only the characters you need.
+Keep your character set minimal. Each additional character increases texture size, memory usage, and load time. Audit your application's text and include only what you need.
 
 ### Workflow Tips
 
-- **Organize Logically**: Group characters in the input field (e.g., by language or function) to make your set easier to manage.
-- **Test Coverage**: Ensure your character set covers all text that will appear in your application, including UI elements, dialogs, and dynamic content.
+- Group characters by language or function for easier management.
+- Verify your set covers all text in your application — UI elements, dialogs, and dynamic content.
 
 ## Technical Details
 
 ### Character Processing
 
-When you input characters, SnowB BMF processes them as follows:
+When you input characters, SnowB BMF processes them in this order:
 
-1. **Unicode Parsing**: Characters are parsed as individual Unicode code points
-2. **Deduplication**: Duplicates are removed automatically.
-3. **Space Addition**: A space character is added if not present.
-4. **Glyph Generation**: Each character is rendered as a bitmap glyph using your font and styling settings
+1. Characters are parsed as individual Unicode code points.
+2. Duplicates are removed.
+3. A space character is added if not present.
+4. Each character is rendered as a bitmap glyph using your font and styling settings.
 
 ### Glyph Rendering Priority
 
 When rendering a character, SnowB BMF uses this priority order:
 
-1. **Imported Font**: If an imported TTF/OTF file contains the character.
-2. **System Fallback**: If not found, the system tries to render it using a browser-default font.
-3. **Missing Glyph**: An empty glyph is generated for unsupported characters.
+1. If an imported TTF/OTF file contains the character, that font is used.
+2. If not found, the system tries a browser-default font.
+3. If still missing, an empty glyph is generated.
 
 ## Integration with Font Export
 
-Your character set directly affects the exported font data:
+Your character set directly determines the exported font data:
 
 ### Font Descriptor Files
-- **Text Format**: Lists all characters with their texture coordinates
-- **XML Format**: Includes character codes and glyph information
-- **Binary Format**: Optimized character data for runtime use
+- Text format lists all characters with their texture coordinates.
+- XML format includes character codes and glyph information.
+- Binary format stores optimized character data for runtime use.
 
 ### Texture Atlas
 - Each character occupies space in the packed texture
@@ -169,14 +164,14 @@ Your character set directly affects the exported font data:
 ## Troubleshooting
 
 ### Missing or Incorrect Characters
-- **Font Support**: Ensure your imported font file contains the required glyphs.
-- **System Fallback**: If an imported font is missing a character, the system may fall back to a browser-default font, causing a style mismatch.
-- **Encoding Issues**: Verify your input text uses correct Unicode encoding.
+- Verify your imported font file contains the required glyphs.
+- Missing characters fall back to a browser-default font, which may cause style mismatches.
+- Confirm your input text uses correct Unicode encoding.
 
 ### Large Texture Size or Poor Performance
-- **Reduce Character Count**: The most common cause is a character set that is too large. Remove any characters that are not essential for your application.
-- **Optimize Layout**: Use auto-packing and adjust spacing/padding settings to reduce the final texture atlas size.
-- **Complex Glyphs**: Fonts with very detailed characters can take longer to process and consume more texture space.
+- An oversized character set is the most common cause. Remove non-essential characters.
+- Use auto-packing and adjust spacing/padding to shrink the texture atlas.
+- Highly detailed characters take longer to process and consume more texture space.
 
 ## Related Topics
 

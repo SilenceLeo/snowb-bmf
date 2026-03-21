@@ -55,11 +55,9 @@ schema:
     "url": "https://snowb.org"
 ---
 
-This guide outlines the complete workflow for creating professional bitmap fonts in SnowB BMF, from initial setup to final export. Follow these steps to produce optimized, high-quality assets for your project.
+Five steps from font file to exported bitmap font. This guide walks through each step, with optimization tips and platform-specific advice.
 
 ## Core Workflow: 5 Steps to Your Bitmap Font
-
-Follow these essential steps to generate your first bitmap font.
 
 1.  **Load Font:**
     - Click **"ADD FONT FILE"** and select your font (`.ttf`, `.otf`, `.woff`).
@@ -68,7 +66,7 @@ Follow these essential steps to generate your first bitmap font.
 2.  **Configure Font Basics:**
     - **Font Size:** Set the primary size for your glyphs (e.g., 32px).
     - **Line Height:** Adjust to control vertical line spacing.
-    - **Sharp:** Fine-tune the slider for optimal anti-aliasing and crispness (80% is a great starting point).
+    - **Sharp:** Fine-tune the slider for anti-aliasing and crispness (80% is a good starting point).
 
 3.  **Optimize Texture Layout:**
     - **Padding:** Use 1-2px to prevent glyphs from bleeding into each other.
@@ -89,26 +87,22 @@ Follow these essential steps to generate your first bitmap font.
 
 ## Optimizing for Quality and Performance
 
-Balance visual quality with performance by fine-tuning these settings.
-
 ### Texture & Memory Efficiency
-- **Enable Auto Pack:** This is the most critical step for a compact atlas.
+- **Enable Auto Pack:** This makes the biggest difference for a compact atlas.
 - **Use Minimal Padding/Spacing:** Start with `1px` and increase only if you see visual artifacts.
 - **Limit Character Set:** Only include the glyphs your application actually needs to save space.
 - **Choose Optimal Texture Size:**
   - **Mobile:** 512x512 or 1024x1024
   - **Desktop/Console:** 1024x1024 or 2048x2048
 
-### Achieving Visual Clarity
-- **Font Size:** Generate the font at the size it will be most commonly displayed.
+### Visual Clarity
+- **Font Size:** Generate the font at the size you plan to display it most often.
 - **Sharpness Control:**
   - **60-70%:** Softer look, good for smaller text.
-  - **80-90%:** Crisp and clear, a reliable choice for UI text.
+  - **80-90%:** Crisp and clear, works well for UI text.
   - **90-100%:** Ultra-sharp, ideal for large, stylized titles.
 
 ## Quality Assurance Checklist
-
-Before finalizing your font, perform these checks.
 
 - **[ ] Inspect Glyphs:** Zoom in on the preview to check for any rendering errors.
 - **[ ] Verify Alignment:** Ensure all characters sit correctly on the baseline.
@@ -149,7 +143,7 @@ Embed icons or symbols directly into your font atlas:
 - **Web/HTML5:** Use smaller texture sizes (e.g., 512x512) for faster load times.
 
 ### Mobile
-- **iOS & Android:** Always use power-of-two texture dimensions (e.g., 512, 1024). Efficient packing is crucial for performance on mobile devices.
+- **iOS & Android:** Always use power-of-two texture dimensions (e.g., 512, 1024). Tight packing matters more on mobile where memory is limited.
 
 ## Related Topics
 

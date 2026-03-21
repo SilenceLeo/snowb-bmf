@@ -45,32 +45,32 @@ schema:
     "audienceType": "Game Developers, Font Designers, Technical Artists"
 ---
 
-Layout Settings control how individual glyphs are arranged within the texture atlas when generating bitmap fonts. These parameters directly affect the final output quality, file size, and runtime performance of your bitmap font.
+Layout settings control how glyphs are arranged in the texture atlas. These parameters affect output quality, file size, and runtime performance.
 
 ## Overview
 
-The layout configuration determines the spatial organization of glyphs within the texture atlas. Key settings include:
+Three settings govern glyph arrangement:
 
-- **Padding**: Adds extra space around each glyph to prevent rendering artifacts like color bleeding.
-- **Spacing**: Defines the gap between adjacent glyphs in the texture atlas for efficient packing.
-- **Pages**: The number of texture atlas images generated, which is managed automatically.
+- **Padding**: Extra space around each glyph to prevent rendering artifacts like color bleeding.
+- **Spacing**: Gap between adjacent glyphs in the atlas for efficient packing.
+- **Pages**: Number of texture atlas images generated (managed automatically).
 
 ## Padding
 
 **Default**: 1 pixel
 
-Padding adds a transparent border around each glyph in the texture atlas. This is crucial for preventing visual artifacts, especially when fonts are scaled or filtered.
+Padding adds a transparent border around each glyph in the texture atlas, preventing visual artifacts when fonts are scaled or filtered.
 
 ### Key Benefits
-- **Prevents Bleeding**: Stops colors from adjacent glyphs from mixing during texture sampling.
+- **Prevents Bleeding**: Stops adjacent glyph colors from mixing during texture sampling.
 - **Improves Scaling**: Ensures clean rendering when fonts are scaled up or down.
-- **Supports Filtering**: Provides a necessary buffer for bilinear or trilinear texture filtering.
+- **Supports Filtering**: Provides buffer space for bilinear or trilinear texture filtering.
 
 ### Recommendations
-- **Standard**: 1-2 pixels is sufficient for most cases.
-- **High-DPI/Retina**: Use 2-4 pixels for crisp rendering.
-- **Heavy Scaling**: Increase padding if you plan to scale the font significantly.
-- **Memory**: Be aware that higher padding values increase the final texture size.
+- **Standard**: 1-2 pixels suffices for most cases.
+- **High-DPI/Retina**: 2-4 pixels for crisp rendering.
+- **Heavy Scaling**: Increase padding if the font will be scaled significantly.
+- **Memory**: Higher padding increases texture size.
 
 ### Example
 ```
@@ -83,11 +83,11 @@ Padding = 2: Extra buffer for high-quality rendering.
 
 **Default**: 1 pixel
 
-Spacing defines the gap between the bounding boxes of adjacent glyphs in the texture atlas. It helps optimize the packing algorithm.
+Spacing defines the gap between bounding boxes of adjacent glyphs in the texture atlas.
 
 ### Purpose
-- **Packing Efficiency**: Consistent gaps help the packing algorithm arrange glyphs more effectively.
-- **Debugging**: Makes it easier to visually identify individual glyphs in the atlas.
+- **Packing Efficiency**: Consistent gaps help the packing algorithm place glyphs more effectively.
+- **Debugging**: Makes individual glyphs easier to identify visually in the atlas.
 
 ### Spacing vs. Padding
 
@@ -105,32 +105,32 @@ Padding and Spacing work together to separate glyphs:
 
 **Default**: 1 page
 
-Determines the number of texture atlas images generated. If all glyphs don't fit on a single texture, they are automatically distributed across multiple pages.
+Determines the number of texture atlas images generated. Glyphs that don't fit on a single texture are automatically distributed across multiple pages.
 
 ### When are multiple pages used?
-- **Large Character Sets**: For fonts with thousands of glyphs (e.g., full CJK support).
-- **Texture Size Limits**: To stay within hardware limits (e.g., 4096x4096 pixels).
+- **Large Character Sets**: Fonts with thousands of glyphs (e.g., full CJK support).
+- **Texture Size Limits**: Staying within hardware limits (e.g., 4096x4096 pixels).
 
-The system automatically manages page creation to maximize texture space usage while trying to keep related glyphs together.
+The system manages page creation automatically to maximize texture space usage.
 
 ### Considerations
-- **Performance**: Each additional page can introduce a small performance cost (texture switching) during rendering.
-- **Single Page**: Most fonts with Latin-based character sets will fit on a single 512x512 or 1024x1024 texture.
+- **Performance**: Each additional page adds a texture-switching cost during rendering.
+- **Single Page**: Most Latin-based fonts fit on a single 512x512 or 1024x1024 texture.
 
 ## Impact on Exported Files
 
-Layout settings directly influence the data in the exported font file (e.g., `.fnt`).
+Layout settings affect the exported font file (e.g., `.fnt`) directly:
 
-- **Padding**: The padding value is often written directly into the font descriptor file (e.g., the `padding` attribute in the `info` block for BMFont format).
-- **Spacing**: Affects the x/y position and offset of each character in the atlas.
-- **Pages**: Determines the number of texture files referenced in the descriptor.
+- **Padding**: Written into the font descriptor (e.g., the `padding` attribute in BMFont's `info` block).
+- **Spacing**: Affects x/y position and offset of each character in the atlas.
+- **Pages**: Determines how many texture files the descriptor references.
 
 ## Best Practices
 
 ### General
-1.  **Start with Defaults**: Use 1px padding and 1px spacing, then adjust as needed.
-2.  **Test at Target Size**: Always check how the font looks at its final intended rendering size.
-3.  **Plan for Scaling**: If the font will be scaled at runtime, use slightly more padding.
+1.  **Start with Defaults**: 1px padding and 1px spacing, then adjust as needed.
+2.  **Test at Target Size**: Check how the font looks at its intended rendering size.
+3.  **Plan for Scaling**: If the font will be scaled at runtime, add more padding.
 4.  **Monitor Texture Size**: Balance visual quality with memory constraints.
 
 ### Platform-Specific

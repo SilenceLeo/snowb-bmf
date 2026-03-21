@@ -65,11 +65,11 @@ schema:
     "@id": "https://snowb.org/en/docs/font-design/variable-fonts/"
 ---
 
-Variable fonts are a modern OpenType technology that allows a single font file to contain multiple stylistic variations along continuous axes. Instead of loading separate files for Regular, Bold, Light, and other styles, a single variable font file provides all of these — and every value in between. SnowB BMF fully supports variable fonts, giving you precise control over each axis when generating bitmap fonts.
+A single variable font file replaces separate Regular, Bold, Light, and other style files, and provides every value in between. SnowB BMF gives you control over each variation axis when generating bitmap fonts.
 
 ## What Are Variable Fonts?
 
-Traditional font families require separate files for each style: one for Regular, one for Bold, one for Light, and so on. **OpenType Variable Fonts** solve this by embedding multiple variation axes into a single file.
+Traditional font families need one file per style. **OpenType Variable Fonts** pack multiple variation axes into a single file.
 
 Each axis defines a range of values that continuously adjust the font's appearance:
 
@@ -85,13 +85,13 @@ Fonts may also include custom axes defined by the type designer, which appear al
 
 ## Automatic Detection
 
-SnowB BMF automatically detects whether an imported font is a variable font. When you load a variable font file using the **"Add Font File"** button:
+SnowB BMF detects variable fonts automatically. When you load a font file using the **"Add Font File"** button:
 
 1. The application reads the font's OpenType variation tables.
-2. If variation axes are found, the **Variation Axes** control panel appears automatically below the font settings.
-3. No additional configuration is needed — the controls are ready to use immediately.
+2. If variation axes exist, the **Variation Axes** panel appears below the font settings.
+3. The controls are ready to use immediately. No extra configuration needed.
 
-If the imported font does not contain variation data, the panel simply does not appear.
+If the font contains no variation data, the panel does not appear.
 
 **Note:** Variable font controls apply only to the **primary font** (the first font in the fallback chain). Secondary and fallback fonts use their default axis values.
 
@@ -106,19 +106,19 @@ Each variation axis in the font is displayed as an individual slider with full c
 
 ### Common Axes in Practice
 
-**Weight (`wght`)** — The most frequently used axis. Drag the slider to move between Thin, Light, Regular, Medium, SemiBold, Bold, ExtraBold, and Black weights, or any value in between.
+**Weight (`wght`)** is the most commonly used axis. Drag the slider to move between Thin, Light, Regular, Medium, SemiBold, Bold, ExtraBold, and Black weights, or any value in between.
 
-**Width (`wdth`)** — Adjusts the horizontal proportion of characters. Useful for fitting text into constrained spaces or creating wide display styles.
+**Width (`wdth`)** adjusts the horizontal proportion of characters. Useful for fitting text into constrained spaces or creating wide display styles.
 
-**Italic (`ital`)** — A binary axis. Set to 0 for upright or 1 for italic. The step size of 1 ensures clean switching.
+**Italic (`ital`)** is a binary axis. Set to 0 for upright or 1 for italic. The step size of 1 ensures clean switching.
 
-**Optical Size (`opsz`)** — Adjusts fine typographic details. Smaller optical sizes typically increase stroke contrast and spacing for readability, while larger sizes tighten spacing for display use.
+**Optical Size (`opsz`)** adjusts fine typographic details. Smaller optical sizes typically increase stroke contrast and spacing for readability, while larger sizes tighten spacing for display use.
 
-**Slant (`slnt`)** — Controls the oblique angle of the text, providing a continuous range unlike the binary italic axis.
+**Slant (`slnt`)** controls the oblique angle of the text, providing a continuous range unlike the binary italic axis.
 
 ## Named Instances
 
-Many variable fonts come with **named instances** — predefined combinations of axis values that correspond to traditional font styles. These are set by the font designer and typically include familiar names like:
+Many variable fonts include **named instances**, which are predefined axis value combinations matching traditional font styles. These are set by the font designer and typically include:
 
 - Regular
 - Bold
@@ -138,18 +138,18 @@ When a variable font contains named instances, an **Instance** dropdown selector
 
 ### Automatic Instance Matching
 
-SnowB BMF continuously compares your current axis values against the font's named instances. If your manually adjusted values **exactly match** a named instance's coordinates, the dropdown automatically highlights that instance name. This helps you know when your custom adjustments align with a standard style.
+SnowB BMF compares your current axis values against named instances. If your values **exactly match** a named instance's coordinates, the dropdown highlights that instance name automatically.
 
-If your values do not match any instance, the dropdown shows "Custom" to indicate a non-standard configuration.
+If no instance matches, the dropdown shows "Custom".
 
 ## Best Practices
 
-1. **Start with Named Instances**: Begin with a predefined instance, then fine-tune individual axes for custom results.
-2. **Test at Target Size**: Variable font axis effects are most visible at the final bitmap font size. Always preview at your intended display resolution.
-3. **Use Weight for Emphasis**: Instead of importing separate Bold and Regular fonts, use a single variable font and adjust the weight axis.
-4. **Mind the Italic Axis**: The italic axis is a toggle (0 or 1), not a continuous range. For angular text variations, use the slant axis instead.
-5. **Check Font Support**: Not all fonts are variable fonts. If no Variation Axes panel appears after import, the font does not contain variation data.
-6. **Primary Font Only**: Remember that variation controls apply only to the first imported font. Additional fallback fonts use their default styles.
+1. **Start with Named Instances**: Pick a predefined instance, then fine-tune individual axes.
+2. **Test at Target Size**: Axis effects are most visible at the final bitmap font size. Preview at your intended resolution.
+3. **Use Weight for Emphasis**: One variable font replaces separate Bold and Regular files. Adjust the weight axis instead.
+4. **Mind the Italic Axis**: Italic is a toggle (0 or 1), not a continuous range. Use the slant axis for angular variations.
+5. **Check Font Support**: If no Variation Axes panel appears after import, the font is not a variable font.
+6. **Primary Font Only**: Variation controls apply only to the first imported font. Fallback fonts use their default styles.
 
 ## Related Topics
 

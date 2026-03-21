@@ -59,7 +59,7 @@ schema:
 
 ## Offline Capability
 
-SnowB BMF is a Progressive Web App (PWA) that works fully offline after your first visit. A **Service Worker** automatically caches all application resources — HTML, CSS, JavaScript, fonts, and icons — so you can create and edit bitmap fonts without an internet connection.
+SnowB BMF works fully offline after your first visit. A **Service Worker** caches all application resources (HTML, CSS, JavaScript, fonts, icons). After that, you can create and edit bitmap fonts without an internet connection.
 
 ### How Offline Mode Works
 
@@ -79,11 +79,11 @@ For more details on data persistence, see [Project Operations](/en/docs/project-
 
 ## Application Updates
 
-When you are online and a new version of SnowB BMF is published, the Service Worker detects it automatically. The update process is designed to be non-disruptive — you choose when to apply updates.
+When online, the Service Worker detects new versions automatically. Updates are non-disruptive: you choose when to apply them.
 
 ### Automatic Update Detection
 
-The Service Worker checks for new versions in the background. When a new version is found, you will see notifications guiding you through the update process:
+The Service Worker checks for new versions in the background. When it finds one, notifications walk you through the process:
 
 1. **Update downloading**: An info notification appears with a refresh icon: the new version is being downloaded in the background.
 2. **Update ready**: A warning notification appears: **"New version available, click update to experience now"** with an **Update** button.
@@ -96,7 +96,7 @@ If the update fails, an error notification appears with a **Retry** button. Clic
 
 ## Manual Update Check
 
-You can also check for updates manually at any time by opening the update notification panel.
+You can check for updates manually at any time through the notification panel.
 
 ### How to Check
 
@@ -112,7 +112,7 @@ If the manual check fails (e.g., due to network issues), an error notification a
 
 ## Notification States Reference
 
-SnowB BMF uses color-coded notifications at the bottom left of the screen to communicate Service Worker and update status:
+Color-coded notifications at the bottom left show Service Worker and update status:
 
 | State | Severity | Icon | Message | Action |
 |-------|----------|------|---------|--------|

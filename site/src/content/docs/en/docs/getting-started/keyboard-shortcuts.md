@@ -44,11 +44,11 @@ schema:
     "url": "https://snowb.org"
 ---
 
-SnowB BMF provides keyboard shortcuts and canvas navigation controls to streamline your bitmap font editing workflow. This page covers all available hotkeys, mouse gestures, and zoom controls.
+All available hotkeys, mouse gestures, and zoom controls for SnowB BMF.
 
 ## Global Keyboard Shortcuts
 
-Use these shortcuts anywhere in the application to perform common project operations.
+These shortcuts work anywhere in the application.
 
 | Action | Windows / Linux | macOS |
 |--------|----------------|-------|
@@ -101,7 +101,7 @@ The displayed percentage always reflects the active view (Pack or Preview).
 
 - **Quick reset**: select the **100%** preset from the zoom menu to return to the default zoom level.
 - **Large textures**: zoom out to 25% or 50% for an overview, then zoom in to inspect individual glyphs.
-- **Precise positioning**: combine Space+drag panning with Ctrl/Cmd+scroll zooming to navigate quickly to any area of the texture atlas.
+- **Precise positioning**: combine Space+drag panning with Ctrl/Cmd+scroll zooming to reach any part of the texture atlas quickly.
 
 ## Related Topics
 

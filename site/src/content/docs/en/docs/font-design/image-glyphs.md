@@ -58,19 +58,19 @@ schema:
     "url": "https://snowb.org"
 ---
 
-Image glyphs allow you to add custom images like **icons, symbols, or logos** directly into your bitmap font. This is perfect for games and applications that require unique visual elements not found in standard fonts.
+Image glyphs let you embed custom icons, symbols, or logos directly into your bitmap font. This is useful when your game or application needs visual elements that standard fonts don't provide.
 
 ![Image Glyphs Interface](~/assets/image-glyphs.png)
 
 ## How to Add Image Glyphs
 
-Adding images is straightforward. You can either drag and drop them into the workspace or use the "Select Images" button.
+Drag and drop images into the workspace, or use the "Select Images" button:
 
-1.  **Select or Drag-and-Drop** your image files into the image area.
-2.  The tool automatically processes them and adds them to your image glyph list.
-3.  **Assign a character** to each image for easy use.
+1.  **Select or Drag-and-Drop** image files into the image area.
+2.  The tool processes and adds them to your image glyph list.
+3.  **Assign a character** to each image.
 
-When you add an image, it's automatically optimized by trimming transparent pixels to save space in the texture atlas.
+Transparent pixels are trimmed automatically to save texture atlas space.
 
 ### Drag-and-Drop Upload
 
@@ -84,12 +84,12 @@ Click the **"Select Images"** button to open a file picker. The file picker supp
 
 For best results, use formats that support transparency:
 
--   **PNG:** Recommended for images with transparency.
--   **JPG/JPEG:** Suitable for solid, rectangular images.
+-   PNG is recommended for images with transparency.
+-   JPG/JPEG works for solid, rectangular images.
 
 ## Panel Interactions
 
-The image glyph panel provides several interaction features to improve your workflow.
+The image glyph panel has a few workflow features worth knowing about.
 
 ### Collapsible Panel
 
@@ -118,7 +118,7 @@ To use an image glyph, you must map it to a character:
 
 ### IME Compatibility
 
-The character input field fully supports Input Method Editors (IME) for CJK (Chinese, Japanese, Korean) and other complex scripts. During an active composition session, the input only updates locally; the character mapping is committed once composition ends. This prevents partial or garbled characters from being assigned.
+The character input field supports IME for CJK and other complex scripts. During composition, the input updates locally; the mapping commits once composition ends, preventing partial or garbled characters.
 
 ### Selection Control
 
@@ -131,51 +131,46 @@ Use this to quickly toggle individual images without removing them from your pro
 
 ### Organizing Your Image Glyphs
 
--   **Enable/Disable:** Use the checkbox on each thumbnail to include or exclude an image from the final font atlas.
--   **Delete:** Click the delete icon on any thumbnail to remove it from the project.
--   **Preview:** The interface provides real-time visual feedback.
+-   Use the checkbox on each thumbnail to include or exclude an image from the final font atlas.
+-   Click the delete icon on any thumbnail to remove it from the project.
+-   The interface provides real-time visual feedback as you make changes.
 
 ## Metric Adjustment in Preview Mode
 
-Image glyphs support individual metric adjustment in Preview mode, using the same interface as text glyphs. When you select an image glyph character in the preview, you can fine-tune:
+Image glyphs support individual metric adjustment in Preview mode, using the same interface as text glyphs. Select an image glyph character in the preview to fine-tune:
 
 -   **xAdvance:** Controls the horizontal distance to the next character.
 -   **xOffset:** Shifts the image horizontally within its character cell.
 -   **yOffset:** Shifts the image vertically within its character cell.
 
-This allows precise positioning of image glyphs alongside text for a polished result.
-
 ## Integration with the Font Atlas
 
-Image glyphs are treated like any other character and are packed into the same texture atlas alongside your text glyphs.
+Image glyphs are packed into the same texture atlas alongside text glyphs.
 
--   **Seamless Packing:** Images and text are arranged together efficiently to minimize texture size.
--   **Override Priority:** If an image glyph is mapped to the same character as a text glyph (e.g., 'A'), the **image glyph will be used**.
--   **Consistent Metrics:** Spacing and layout rules are applied consistently for all glyphs.
+-   Images and text glyphs are arranged together to minimize texture size.
+-   If an image glyph is mapped to the same character as a text glyph (e.g., 'A'), the image glyph takes priority.
+-   Spacing and layout rules apply consistently to all glyphs.
 
 ## Best Practices for Performance and Quality
 
-To get the most out of image glyphs, follow these tips:
-
 ### Image Preparation
--   **Use Transparent Backgrounds:** This ensures your images blend seamlessly.
--   **Use Consistent Padding:** Since image glyphs don't have a baseline for alignment, it's best to use images with equal top and bottom transparent padding to ensure vertical consistency.
--   **Optimize File Size:** Compress images before importing to improve performance.
--   **Maintain a Consistent Style:** Match the visual theme of your font for a professional look.
--   **Choose Appropriate Resolution:** Use resolutions that match your target font size to avoid scaling issues.
+-   Use transparent backgrounds so images blend properly.
+-   Image glyphs lack a baseline, so use equal top/bottom transparent padding for vertical consistency.
+-   Compress images before importing to keep file size down.
+-   Match the visual style and resolution of your target font size.
 
 ### Character Mapping & Performance
--   **Use Logical Mappings:** Assign intuitive characters to your images.
--   **Avoid Character Conflicts:** Be mindful not to override essential text characters unless intended.
--   **Limit Image Count and Size:** A large number of high-resolution images can increase texture memory usage and loading times.
+-   Assign intuitive characters to your images for easier use.
+-   Avoid overriding essential text characters unless that's your intent.
+-   Too many high-resolution images will increase texture memory usage and load times.
 
 ## Exporting Your Font
 
 When you export your project, all enabled image glyphs are included automatically.
 
--   **Texture Atlas:** Images are rendered into the final texture sheet(s).
--   **Font Data Files:** The character mappings and metrics for your image glyphs are saved in the font descriptor file (`.fnt`, `.xml`, etc.).
--   **Full Compatibility:** Works with all supported export formats.
+-   Images are rendered into the final texture sheet(s).
+-   Character mappings and metrics for image glyphs are saved in the font descriptor file (`.fnt`, `.xml`, etc.).
+-   All supported export formats include image glyph data.
 
 ## Related Topics
 

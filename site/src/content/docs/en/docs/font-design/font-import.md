@@ -63,75 +63,72 @@ schema:
     "url": "https://snowb.org"
 ---
 
-Importing custom fonts is a core feature for creating high-quality bitmap fonts. SnowB BMF provides powerful options for loading external font files, giving you precise control over glyph rendering. The application offers two rendering modes, with distinct advantages depending on how you load your fonts.
+Import custom font files to control exactly how your bitmap glyphs render. SnowB BMF supports two rendering modes: vector and canvas, each with different trade-offs.
 
 ## Supported Font Formats
 
-You can import a wide range of standard font formats, ensuring you can work with almost any font file you have.
+SnowB BMF accepts the following standard font formats:
 
-- **TTF** (TrueType Font) - Recommended for its excellent compatibility.
-- **OTF** (OpenType Font) - Fully supported with all features.
-- **WOFF** (Web Open Font Format) - Ideal for compressed web fonts.
-- **TTC** (TrueType Collection) - A collection file containing multiple fonts bundled together. When you import a TTC file, SnowB BMF automatically detects it and opens a selection dialog where you can choose which fonts to load.
+- **TTF** (TrueType Font) - Recommended for broad compatibility.
+- **OTF** (OpenType Font) - Fully supported.
+- **WOFF** (Web Open Font Format) - Good for compressed web fonts.
+- **TTC** (TrueType Collection) - Contains multiple fonts in one file. When you import a TTC, SnowB BMF detects it and opens a selection dialog where you choose which fonts to load.
 
 ### Importing TTC Files
 
-TTC (TrueType Collection) files bundle multiple related fonts — such as different weights or styles of a typeface — into a single file. SnowB BMF provides built-in support for TTC files with an intuitive selection workflow:
+TTC (TrueType Collection) files bundle multiple related fonts (different weights or styles of a typeface) into a single file. SnowB BMF supports TTC files with a selection workflow:
 
-1. **Automatic Detection**: When you import a `.ttc` file, the application automatically recognizes the collection format.
-2. **Font Selection Dialog**: A dialog appears listing every font in the collection. Each entry displays:
-   - **Full Name** — the complete font name (e.g., "Arial Bold").
-   - **Font Family** — the typeface family (e.g., "Arial").
-   - **Font Subfamily** — the specific style or weight (e.g., "Bold").
-3. **Multi-Select Support**: Use checkboxes to select one or more fonts from the collection.
-4. **Independent Loading**: Each selected font is added to the font list independently, allowing you to use them separately or combine them in a fallback chain.
+1. When you import a `.ttc` file, the application recognizes the collection format automatically.
+2. A dialog appears listing every font in the collection. Each entry shows the full name (e.g., "Arial Bold"), font family (e.g., "Arial"), and subfamily/weight (e.g., "Bold").
+3. Use checkboxes to select one or more fonts from the collection.
+4. Each selected font is added to the font list independently, so you can use them separately or combine them in a fallback chain.
 
 ## How the Font Fallback System Works
 
-SnowB BMF features a robust multi-font fallback chain. This allows you to combine several fonts to ensure complete character coverage. When generating glyphs, the application searches for each character in the order the fonts were imported:
+SnowB BMF uses a multi-font fallback chain to ensure complete character coverage. When generating glyphs, the application searches for each character in import order:
 
 1.  **Primary Font** (the first font you import) - Used for the majority of characters.
 2.  **Secondary & Additional Fonts** - If a character isn't found in the primary font, the application searches the next font in the list, and so on.
 3.  **System Font** (final fallback) - If a character is not found in any imported fonts, the browser's default system font is used as a last resort.
 
-This system is perfect for projects requiring broad language support. For example, you can combine a primary English (Latin) font with a secondary Chinese (CJK) font to cover both character sets in a single bitmap font.
+For example, combine a primary Latin font with a secondary CJK font to cover both character sets in a single bitmap font.
 
 ## Font Rendering Modes
 
 ### Vector Rendering (Recommended)
 
-When you import a font using the **"Add Font File"** button, the application uses vector rendering. This advanced method parses the font's outline data directly using the powerful [fontkit](https://github.com/foliojs/fontkit) library.
+When you import a font using the **"Add Font File"** button, the application parses the font's outline data directly using the [fontkit](https://github.com/foliojs/fontkit) library.
 
-**Why fontkit?** Compared to previous font parsing solutions, fontkit offers broader format compatibility, built-in TTC/TrueType Collection support, and better handling of variable fonts — making it the ideal choice for a bitmap font generator that needs to work with a wide variety of font files.
+Fontkit provides broad format compatibility, built-in TTC support, and solid variable font handling.
 
-**Key Advantages of Vector Rendering:**
-- **High-Precision Glyphs**: Renders directly from the font's vector data for maximum accuracy.
-- **"Sharp" Feature**: Enables the unique snap-to-grid feature to enhance glyph clarity.
-- **Accurate Metrics**: Extracts precise font baselines and measurements directly from the font's metadata.
-- **Seamless Font Fallback**: Automatically switches between fonts when characters are missing.
-- **Advanced Typography**: Preserves and utilizes kerning pairs for professional-grade text spacing.
+Vector rendering gives you:
+- High-precision glyphs rendered directly from the font's outline data.
+- The "Sharp" snap-to-grid feature for improved glyph clarity.
+- Accurate baselines and measurements extracted from font metadata.
+- Automatic font fallback when characters are missing.
+- Kerning pair support for proper text spacing.
 
 ### Canvas Rendering (Basic Fallback)
 
 If a font cannot be parsed as a vector file, the application defaults to the browser's standard canvas text rendering (`measureText()` and `fillText()`).
 
-**Limitations of Canvas Rendering:**
-- **No "Sharp" Feature**: The Sharp slider is disabled as there is no vector data to manipulate.
-- **Browser-Dependent**: Rendering results can vary between different web browsers.
-- **Limited Precision**: Relies on the browser's less-accurate text measurement APIs.
+Canvas rendering has some limitations:
+- The Sharp slider is disabled because there is no vector data to manipulate.
+- Rendering results vary between browsers.
+- Text measurement relies on less-accurate browser APIs.
 
 ## The "Sharp" Feature: Achieving Pixel-Perfect Clarity
 
-The **Sharp** feature is a key advantage of vector rendering, implementing a snap-to-grid algorithm that significantly enhances glyph clarity, especially at small sizes.
+The **Sharp** feature uses a snap-to-grid algorithm to improve glyph clarity, especially at small sizes.
 
 ### How It Works
 
-The Sharp feature intelligently adjusts the vector paths of each glyph to align them with the pixel grid.
+The Sharp feature adjusts the vector paths of each glyph to align them with the pixel grid.
 
-- **Snap Strength**: Controlled by a percentage (0-100%).
-- **Grid Alignment**: Rounds vector coordinates to the nearest pixel boundary.
-- **Path Optimization**: Adjusts control points to create cleaner curves and lines.
-- **Clarity Enhancement**: Reduces anti-aliasing artifacts, resulting in crisper text at small font sizes.
+- Snap strength is controlled by a percentage (0-100%).
+- Vector coordinates are rounded to the nearest pixel boundary.
+- Control points are adjusted to produce cleaner curves and lines.
+- Anti-aliasing artifacts are reduced, producing crisper text at small font sizes.
 
 ### Recommended Settings
 
@@ -144,12 +141,12 @@ The Sharp feature intelligently adjusts the vector paths of each glyph to align 
 
 ## Best Practices
 
-1.  **Always Import Fonts**: For maximum quality and control, always use the "Add Font File" feature.
-2.  **Plan Your Fallback Chain**: Import your primary font first, followed by supplementary fonts for additional character sets.
-3.  **Use TTC Files for Font Families**: If you have a TTC file containing an entire typeface family, import it once and select only the weights/styles you need.
-4.  **Start with 80% Sharp**: This is a great starting point. Adjust as needed based on your target font size and display resolution.
-5.  **Test Character Coverage**: Ensure your font combination covers all required characters (e.g., Latin, CJK, symbols).
-6.  **Preview at Target Size**: The effect of the Sharp setting is most apparent at the intended final resolution.
+1.  **Always Import Fonts**: Use the "Add Font File" feature for maximum quality and control.
+2.  **Plan Your Fallback Chain**: Import your primary font first, then supplementary fonts for additional character sets.
+3.  **Use TTC Files for Font Families**: Import once and select only the weights/styles you need.
+4.  **Start with 80% Sharp**: Adjust based on your target font size and display resolution.
+5.  **Test Character Coverage**: Verify your font combination covers all required characters (Latin, CJK, symbols, etc.).
+6.  **Preview at Target Size**: Sharp effects are most visible at the intended final resolution.
 
 ## Troubleshooting
 

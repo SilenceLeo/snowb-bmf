@@ -58,44 +58,44 @@ schema:
         "text": "Choose inner shadow color and opacity using the color picker"
 ---
 
-Inner shadow effects render shadows inside the glyph boundary, producing embossed, engraved, or inset text styles that add tactile depth to your bitmap fonts. Unlike outer shadows that extend beyond the character, inner shadows create the illusion that the text is carved into a surface. SnowB BMF provides a dedicated Inner Shadow panel with precise controls for offset, blur, and color.
+Inner shadows render inside the glyph boundary, producing embossed, engraved, or inset text styles. Unlike outer shadows that extend beyond the character, inner shadows look like text carved into a surface. SnowB BMF has a dedicated Inner Shadow panel with controls for offset, blur, and color.
 
 ## How Inner Shadows Differ from Outer Shadows
 
-Outer shadows (drop shadows) are drawn behind and outside the glyph, creating a raised or floating appearance. Inner shadows are drawn within the glyph's filled area, simulating light hitting a recessed or indented surface. This difference makes inner shadows ideal for emboss, engrave, and letterpress effects commonly used in game UIs, title screens, and stylized text.
+Outer shadows (drop shadows) are drawn behind the glyph, creating a raised appearance. Inner shadows are drawn within the glyph's filled area, simulating light hitting a recessed surface. Inner shadows work well for emboss, engrave, and letterpress effects in game UIs, title screens, and stylized text.
 
-You can use both inner and outer shadows simultaneously on the same font to create complex, layered depth effects.
+You can combine both inner and outer shadows on the same font for layered depth effects.
 
 ## Understanding Inner Shadow Controls
 
-The Inner Shadow panel is located in the right sidebar. All parameters work together to define the shadow's position, softness, and color within each glyph.
+The Inner Shadow panel is in the right sidebar.
 
 ### Enable or Disable Inner Shadows
 
-Toggle inner shadows on or off with the switch in the Inner Shadow panel header. When disabled, all your settings are preserved so you can re-enable them at any time without reconfiguration.
+Toggle inner shadows on or off with the switch in the panel header. When disabled, settings are preserved for re-enabling later.
 
 ### Core Inner Shadow Parameters
 
 #### Horizontal & Vertical Offset (Offset X & Offset Y)
-- **Description**: Controls where the inner shadow appears inside the glyph. `Offset X` shifts the shadow horizontally, and `Offset Y` shifts it vertically.
-- **Values**: Positive values move the shadow right and down; negative values move it left and up. Both positive and negative values are supported.
+- **Description**: Controls where the inner shadow appears inside the glyph. `Offset X` shifts horizontally; `Offset Y` shifts vertically.
+- **Values**: Positive values move right/down; negative values move left/up.
 - **Default**: `0px`
-- **Tip**: Think of the offset as a simulated light direction. A positive Offset Y with a negative Offset X suggests light coming from the upper right.
+- **Tip**: The offset simulates light direction. Positive Offset Y with negative Offset X suggests light from the upper right.
 
 #### Blur Radius
-- **Description**: Controls how soft or sharp the inner shadow edge appears. Higher values produce a gradual, diffused shadow, while `0` creates a hard-edged inset.
+- **Description**: Controls inner shadow edge softness. Higher values produce a diffused shadow; `0` creates a hard-edged inset.
 - **Minimum**: `0px`
 - **Default**: `0px`
 
 #### Shadow Color
-- **Description**: Sets the inner shadow color. Use the color picker to choose any color and adjust its opacity (alpha channel).
+- **Description**: Sets the inner shadow color and opacity via the color picker.
 - **Default**: `#000000` (black)
-- **Tip**: Dark colors create a carved or engraved look, while lighter colors (especially white or near-white with low opacity) can simulate an inner highlight or bevel.
+- **Tip**: Dark colors create a carved look; lighter colors (white or near-white at low opacity) simulate an inner highlight or bevel.
 
 ## Common Inner Shadow Styles
 
 ### Embossed Text
-Creates the appearance of text raised from the surface with light hitting from one direction.
+Text appears raised from the surface with directional lighting.
 - **Offset X**: `1px`
 - **Offset Y**: `1px`
 - **Blur**: `1px`
@@ -103,21 +103,21 @@ Creates the appearance of text raised from the surface with light hitting from o
 - **Combine with**: An outer shadow with offset `-1px, -1px` for a full emboss effect.
 
 ### Engraved / Letterpress
-Simulates text that is cut or pressed into a surface.
+Simulates text cut or pressed into a surface.
 - **Offset X**: `0px`
 - **Offset Y**: `-2px`
 - **Blur**: `1px`
 - **Color**: Black (`#000000`)
 
 ### Inner Glow
-A soft, colorful glow emanating from the inside edges of the glyph.
+Soft glow emanating from the inside edges of the glyph.
 - **Offset X**: `0px`
 - **Offset Y**: `0px`
 - **Blur**: `4px` to `8px`
 - **Color**: A bright accent color (e.g., cyan `#00FFFF`, gold `#FFD700`)
 
 ### Subtle Depth
-A minimal inset that adds just a touch of three-dimensionality.
+Minimal inset that adds a sense of depth.
 - **Offset X**: `0px`
 - **Offset Y**: `1px`
 - **Blur**: `2px`
@@ -126,23 +126,23 @@ A minimal inset that adds just a touch of three-dimensionality.
 ## Best Practices & Tips
 
 ### Combine with Outer Shadows
-Use an inner shadow together with an outer [shadow effect](/en/docs/font-design/shadow-effects/) to create convincing emboss and deboss effects. Offset the two shadows in opposite directions to simulate consistent lighting.
+Pair inner shadows with outer [shadow effects](/en/docs/font-design/shadow-effects/) for realistic emboss and deboss effects. Offset the two shadows in opposite directions to simulate consistent lighting.
 
 ### Keep It Subtle
-Inner shadows are most effective when kept restrained. Excessive blur or offset values can make text look muddy or difficult to read, especially at small font sizes.
+Inner shadows work best when restrained. Excessive blur or offset can make text muddy or hard to read, especially at small font sizes.
 
 ### Consider Your Fill Style
-Inner shadows interact visually with your [fill style](/en/docs/font-design/fill-styles/). Solid fills pair well with any inner shadow style. Gradient fills can create especially striking results when combined with a subtle inner glow.
+Inner shadows interact with your [fill style](/en/docs/font-design/fill-styles/). Solid fills pair well with any inner shadow. Gradient fills look good when combined with a subtle inner glow.
 
 ### Performance Considerations
-- Inner shadows are rendered per glyph and baked into the final texture. They do not increase the glyph bounding box size (unlike outer shadows).
-- High blur values add rendering complexity but have minimal impact on atlas size since the shadow stays within the glyph boundary.
+- Inner shadows are rendered per glyph and baked into the final texture. They do not increase glyph bounding box size (unlike outer shadows).
+- High blur values add rendering cost but have minimal impact on atlas size since the shadow stays within the glyph boundary.
 
 ## Important Export Notes
 
-- Inner shadow effects are baked directly into the final bitmap font image, just like outer shadows.
-- Because inner shadows render within the glyph boundary, they do not require additional padding or atlas space.
-- Inner shadows can be used alongside outer shadows, strokes, and fills — all effects are composited into the final glyph bitmap.
+- Inner shadows are baked into the final bitmap font image, just like outer shadows.
+- Because inner shadows render within the glyph boundary, they require no additional padding or atlas space.
+- Inner shadows work alongside outer shadows, strokes, and fills — all effects are composited into the final glyph bitmap.
 
 ## Related Topics
 

@@ -156,7 +156,6 @@ export default defineConfig({
             {
               label: 'Keyboard Shortcuts',
               translations: { 'zh-CN': '快捷键' },
-              badge: { text: 'New', variant: 'tip' },
               slug: 'docs/getting-started/keyboard-shortcuts',
             },
           ],
@@ -184,7 +183,6 @@ export default defineConfig({
                 {
                   label: 'Variable Fonts',
                   translations: { 'zh-CN': '可变字体' },
-                  badge: { text: 'New', variant: 'tip' },
                   slug: 'docs/font-design/variable-fonts',
                 },
                 {
@@ -226,7 +224,6 @@ export default defineConfig({
                 {
                   label: 'Inner Shadow Effects',
                   translations: { 'zh-CN': '内阴影效果' },
-                  badge: { text: 'New', variant: 'tip' },
                   slug: 'docs/font-design/inner-shadow-effects',
                 },
               ],
@@ -264,7 +261,6 @@ export default defineConfig({
                 {
                   label: 'SDF Rendering',
                   translations: { 'zh-CN': 'SDF 渲染' },
-                  badge: { text: 'New', variant: 'tip' },
                   slug: 'docs/font-design/sdf-rendering',
                 },
               ],
@@ -294,7 +290,6 @@ export default defineConfig({
             {
               label: 'PWA & Offline',
               translations: { 'zh-CN': 'PWA 与离线' },
-              badge: { text: 'New', variant: 'tip' },
               slug: 'docs/project-management/pwa-offline',
             },
           ],

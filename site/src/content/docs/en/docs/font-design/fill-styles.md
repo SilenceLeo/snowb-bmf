@@ -38,77 +38,54 @@ schema:
     - "Controlling image pattern repetition modes"
 ---
 
-Fill styles define the inner appearance of your font characters. SnowB BMF offers three powerful options—solid colors, gradients, and image patterns—each providing a distinct visual flair for your bitmap fonts.
+Fill styles define how the inside of your font characters looks. SnowB BMF has three options: solid colors, gradients, and image patterns.
 
-You can find all the controls in the "Fill" section of the right sidebar. Every adjustment you make is previewed in real-time, giving you instant visual feedback.
+All controls are in the **Fill** section of the right sidebar. Every change previews in real time.
 
 ## Solid Colors
 
-The most straightforward fill type, a solid color applies a single, uniform hue across your characters. It's perfect for creating clean, crisp, and highly readable fonts.
+A single, uniform hue across your characters. Best for clean, readable fonts.
 
-**Key Features:**
+Pick any color and adjust its transparency (alpha). Changes preview immediately on the canvas.
 
-- **Full-Featured Color Picker**: Choose any color and adjust its transparency (alpha) with ease.
-- **Instant Preview**: See your color changes applied to the font immediately.
-
-**Best For:**
-
-- UI elements requiring high contrast and readability.
-- Clean, professional typography with a minimalist feel.
-- Monochrome or simple color schemes.
+Works well for UI elements that need high contrast, monochrome designs, and simple color schemes.
 
 ## Gradients
 
-Use gradients to create smooth transitions between colors, giving your font a sense of depth, dimension, and vibrancy.
+Gradients create smooth transitions between two or more colors.
 
-**Gradient Types:**
+Two types are available:
 
-- **Linear Gradient**: Creates a straight-line color blend. You can control its direction with a 0° to 360° angle, perfect for simulating lighting effects.
-- **Radial Gradient**: Creates a circular blend that radiates from a central point, ideal for glows, spotlights, and other highlight effects.
+- **Linear Gradient** blends colors along a straight line. You control the direction with a 0-360 degree angle.
+- **Radial Gradient** blends colors outward from a central point, useful for glow and spotlight effects.
 
-**How to Customize Your Gradient**
+**Customizing a Gradient**
 
-Our intuitive gradient editor makes customization easy:
+The gradient bar is your main editing area. Click anywhere on it to add a color stop, click a stop to change its color, and drag stops along the bar to reposition them. To remove a stop, drag it vertically away from the bar. For linear gradients, use the angle dial or type a value to set the direction.
 
-- **Gradient Bar**: This is your main workspace for crafting the gradient.
-- **Add Color Stops**: Click anywhere on the gradient bar to add a new color point.
-- **Edit Colors**: Click any color stop to open the color picker and change its color.
-- **Position Stops**: Drag color stops along the bar to change where the color transition occurs.
-- **Remove Stops**: Simply drag a color stop vertically away from the bar to delete it.
-- **Adjust Angle (Linear Only)**: Use the visual dial or type in a value to precisely control the gradient's direction.
-
-The default is a simple white-to-black linear gradient, giving you a great starting point.
+The default is a white-to-black linear gradient.
 
 ### Gradient Presets
 
-SnowB BMF includes a preset system to help you quickly apply and manage gradients:
+SnowB BMF includes a preset system for quick gradient application:
 
-- **Built-in Presets**: Choose from 10 professionally designed gradient presets with a single click. Presets cover common use cases like fire, ice, metallic, neon, and more.
-- **Save Custom Presets**: Created the perfect gradient? Save it as a preset to reuse across projects. Your custom presets are stored alongside the built-in ones.
-- **Delete Presets**: Remove any custom preset you no longer need. Built-in presets cannot be deleted.
+- 10 built-in presets (fire, ice, metallic, neon, etc.) are available with a single click.
+- You can save your own gradients as custom presets and reuse them across projects.
+- Custom presets can be deleted; built-in presets cannot.
 
-The preset selector appears at the top of the gradient editor, making it easy to experiment with different looks before fine-tuning.
+The preset selector appears at the top of the gradient editor.
 
 ## Image Patterns
 
-Fill your characters with a custom image or texture to create truly unique and expressive fonts. This feature opens up endless possibilities for creativity.
+Fill your characters with a custom image or texture for unique, expressive fonts.
 
-**Key Features:**
-
-- **Easy Image Upload**: Drag and drop any standard image file to use it as a texture. A thumbnail will show you a preview.
-- **Scale Control**: Enlarge or shrink the pattern to get the perfect texture density, with precise adjustments as small as 0.01.
-- **Repetition Modes**: Control how the texture tiles within your characters:
+Drag and drop any image file to use as a texture. A thumbnail preview appears after upload. Use the scale control to adjust pattern density (step size: 0.01). Repetition modes control how the texture tiles within characters:
   - **`repeat`**: Tiles the pattern seamlessly in all directions.
   - **`repeat-x`**: Repeats the pattern only horizontally.
   - **`repeat-y`**: Repeats the pattern only vertically.
   - **`no-repeat`**: Displays a single instance of the pattern without repeating.
 
-**Best For:**
-
-- **Simulating Materials**: Create fonts that look like wood, metal, fabric, or stone.
-- **Branding**: Integrate a logo or brand-specific pattern directly into your font.
-- **Artistic Typography**: Design highly decorative and creative fonts.
-- **Game Assets**: Make pixel art fonts or text with game-themed textures.
+Image patterns work well for simulating materials (wood, metal, stone), integrating brand-specific textures, creating decorative fonts, or building game-themed text assets.
 
 ## Related Topics
 

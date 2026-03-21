@@ -87,9 +87,7 @@ schema:
       "description": "Bitmap font texture containing all character glyphs"
 ---
 
-SnowB BMF exports your bitmap font as a texture atlas (a `.png` image) and a descriptor file that tells your application how to use it. The descriptor contains all the necessary data, such as glyph positions, metrics, and kerning pairs.
-
-You can choose from several standard formats to ensure compatibility with most game engines, frameworks, and applications.
+Each export produces a texture atlas (`.png`) and a descriptor file with glyph positions, metrics, and kerning pairs. Six formats are available, covering most game engines, frameworks, and applications.
 
 ## How to Export Your Font
 
@@ -102,11 +100,11 @@ You can choose from several standard formats to ensure compatibility with most g
 
 ## Supported Export Formats
 
-All formats are based on the official [AngelCode BMFont specification](http://www.angelcode.com/products/bmfont/doc/file_format.html). Choose the format that best fits your project's requirements for compatibility, performance, and ease of use.
+All formats follow the [AngelCode BMFont specification](http://www.angelcode.com/products/bmfont/doc/file_format.html). Pick the one that fits your project's needs for compatibility, performance, and ease of use.
 
 ### Text Format (`.fnt`, `.txt`)
 
-The most common and widely supported format. It's human-readable, making it easy to debug.
+The most widely supported format. Human-readable and easy to debug.
 
 - **Best for**: Maximum compatibility with engines like Unity, Unreal, and Cocos2d-x.
 - **Features**: Plain text, easy to parse, includes comments for readability.
@@ -114,7 +112,7 @@ The most common and widely supported format. It's human-readable, making it easy
 
 ### XML Format (`.xml`, `.fnt`)
 
-A structured, easy-to-parse format ideal for applications with built-in XML support.
+Structured format for applications with built-in XML support.
 
 - **Best for**: Web applications or projects using custom tools that can easily process XML.
 - **Features**: Standard XML structure, self-descriptive tags.
@@ -136,21 +134,21 @@ A structured, easy-to-parse format ideal for applications with built-in XML supp
 
 ### Binary Format (`.fnt`)
 
-The most compact and efficient format, designed for fast loading and minimal file size.
+The most compact format. Fast loading, minimal file size.
 
 - **Best for**: Performance-critical applications, mobile games, or projects with memory constraints.
 - **Features**: Smallest file size, optimized for quick parsing, follows the BMFont v3 specification.
 - **Specification**: For details, see the [binary format documentation](https://www.angelcode.com/products/bmfont/doc/file_format.html#bin).
 
 **Structure:**
-The binary file consists of typed blocks for info, common data, pages, characters, and kerning pairs, ensuring fast read times.
+The binary file consists of typed blocks for info, common data, pages, characters, and kerning pairs. This layout allows fast read times.
 
 ### JSON Format (`.json`)
 
-A JSON representation of BMFont data, offering the flexibility of a widely-used data format.
+JSON representation of BMFont data.
 
 - **Best for**: Web applications, custom parsers, and projects that prefer JSON over plain text or XML.
-- **Features**: Standard JSON structure, easy to parse in any language, includes `distanceField` metadata when using SDF rendering modes.
+- **Features**: Standard JSON structure, parseable in any language, includes `distanceField` metadata when using SDF rendering modes.
 
 **Example:**
 ```json
@@ -181,7 +179,7 @@ A JSON representation of BMFont data, offering the flexibility of a widely-used 
 
 ### C Header Format (`.c`)
 
-Embeds texture data directly as C language byte arrays, designed for resource-constrained environments.
+Texture data embedded as C byte arrays for resource-constrained environments.
 
 - **Best for**: Embedded systems, microcontrollers (MCU), and bare-metal applications where file system access is limited.
 - **Features**: Supports 8 pixel formats (GRAY8, RGB, RGBA, ARGB, BGR, ABGR, BGRA, RGB565), configurable reconstruction filter, texture data compiled directly into the binary.
@@ -189,7 +187,7 @@ Embeds texture data directly as C language byte arrays, designed for resource-co
   - `GRAY8` (1 byte/pixel) — Monochrome displays
   - `RGB` (3 bytes/pixel) — Standard color without alpha
   - `RGBA` / `ARGB` (4 bytes/pixel) — Color with alpha, different byte orders
-  - `BGR` / `ABGR` / `BGRA` (4 bytes/pixel) — Reversed byte order variants
+  - `BGR` (3 bytes/pixel) / `ABGR` / `BGRA` (4 bytes/pixel) — Reversed byte order variants
   - `RGB565` (2 bytes/pixel) — 16-bit color for memory-constrained displays
 
 ### MSDF Atlas JSON (`.json`)
@@ -204,14 +202,14 @@ An [msdf-atlas-gen](https://github.com/Chlumsky/msdf-atlas-gen) compatible JSON 
 
 ### Multi-Page Export
 
-If your character set is too large to fit on a single texture, SnowB BMF automatically handles it:
+When a character set exceeds a single texture, SnowB BMF splits it automatically:
 
 - **Automatic Pagination**: Glyphs are split across multiple texture files (e.g., `font_0.png`, `font_1.png`).
-- **Unified Descriptor**: A single descriptor file is generated that references all texture pages, so your application can manage them easily.
+- **Unified Descriptor**: One descriptor file references all texture pages, so your application loads them together.
 
 ### Metadata
 
-Exported files automatically include useful metadata, such as the font name, size, generation date, and character set details, which can be helpful for debugging and asset management.
+Exported files include metadata (font name, size, generation date, character set details) for debugging and asset management.
 
 ## Advanced Export Options
 
@@ -265,7 +263,7 @@ Apply a blur filter to the texture before encoding. This option only appears whe
 
 - **Field**: Off/On toggle switch
 - **Default**: Off
-- **Effect**: When enabled, applies a reconstruction (blur) filter to the texture data, which can improve visual quality on certain display hardware
+- **Effect**: When enabled, applies a reconstruction (blur) filter to the texture data. This can improve visual quality on certain display hardware
 
 #### Include Textures (C Header only)
 

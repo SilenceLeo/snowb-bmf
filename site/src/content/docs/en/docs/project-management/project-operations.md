@@ -48,7 +48,7 @@ schema:
 
 ## Create a New Project
 
-Starting a new bitmap font project is simple. A new project is automatically created when you launch the application. You can also create additional projects in two ways:
+A new project is created automatically when you launch the application. To create additional projects:
 
 - Click the **New** button in the main menu.
 - Double-click the empty area in the project tab bar.
@@ -57,18 +57,16 @@ New projects are automatically assigned default names like `Unnamed`, `Unnamed-1
 
 ## Open an Existing Project
 
-You can open projects from your local file system.
-
 ### How to Open
 - Click the **Open** button in the main menu to browse and select your project file.
 
 ### Supported File Formats
-- **SnowB BMF Project (`.sbf`)**: The native format for this tool, ensuring full data compatibility.
+- **SnowB BMF Project (`.sbf`)**: The native format. Preserves all project data.
 - **Littera Project (`.ltr`)**: For importing projects from the legacy Flash-based Littera tool.
 
 ## Save Your Project
 
-**Important:** While SnowB BMF automatically saves your projects to the browser's IndexedDB, we strongly recommend also saving your project to a `.sbf` file as a portable backup. This protects against browser data clearing, device changes, and browser-specific storage limitations.
+**Important:** SnowB BMF auto-saves to IndexedDB, but always save a `.sbf` file as a portable backup. This protects against browser data clearing, device changes, and storage limitations.
 
 ### How to Save
 1. Click the **Save Project** button or press `Cmd/Ctrl+S`.
@@ -77,13 +75,13 @@ You can open projects from your local file system.
 
 ## Automatic Persistence
 
-SnowB BMF automatically saves all your projects to the browser's **IndexedDB** storage, so you don't have to worry about losing work due to accidental page refreshes or browser crashes.
+All projects are automatically saved to the browser's **IndexedDB** storage on page navigation and tab switches. This prevents data loss from accidental refreshes or crashes.
 
 ### How It Works
 
-- **Automatic Triggers**: Projects are saved when you navigate away from the page (`beforeunload`) and when the tab loses visibility (e.g., switching to another tab).
-- **Efficient Storage**: Projects are serialized using Protocol Buffers for compact storage.
-- **Multi-Project Support**: All open projects in your workspace are saved and restored automatically.
+- **Triggers**: Saves on `beforeunload` (page navigation) and `visibilitychange` (tab switch).
+- **Storage format**: Protocol Buffers for compact serialization.
+- **Multi-Project**: All open projects are saved and restored automatically.
 
 ### Important Notes
 
@@ -93,15 +91,15 @@ SnowB BMF automatically saves all your projects to the browser's **IndexedDB** s
 
 ## Manage Multiple Projects
 
-The tool features a **tabbed workspace** that keeps all your projects organized in one place. Each project tab maintains its own independent state, including font settings, character sets, and styling.
+The **tabbed workspace** keeps all your projects in one place. Each tab has its own font settings, character sets, and styling.
 
 - **Create Projects**: Click the **New** button or double-click the empty area in the tab bar.
 - **Close Projects**: Click the close (x) icon on a project tab. Note: at least one project must always remain open.
 - **Project Isolation**: Changes in one project do not affect others.
 
 ### Switching Between Projects
-- Simply click on the corresponding tab to switch between open projects.
-- Note: At least one project must always remain open.
+- Click a tab to switch to that project.
+- At least one project must always remain open.
 
 ### Renaming a Project
 1. Double-click the project's name in its tab to make it editable.
