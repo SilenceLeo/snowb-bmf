@@ -1,38 +1,65 @@
-import { useEffect } from 'react'
+import { observe } from '@legendapp/state'
+import { useEffect, useRef } from 'react'
+import {
+  glyphStore$,
+  isInitializing,
+  layoutStore$,
+  projectStore$,
+  styleStore$,
+} from 'src/store/legend'
 import { saveLegendWorkspace } from 'src/utils/persistence'
 
+const DEBOUNCE_MS = 3000
+
 /**
- * Hook to automatically save workspace to IndexedDB when user leaves the page
- * Uses Legend State stores directly (no workspace parameter needed)
+ * Hook to automatically save workspace to IndexedDB via debounced store observation.
+ * Primary mechanism: store changes trigger a 3s debounced save.
+ * Fallback: beforeunload and visibilitychange events for edge cases.
  */
 export function useAutoSave(): void {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isSavingRef = useRef(false)
+
   useEffect(() => {
-    // Save function that will be called on page unload
-    const handleBeforeUnload = () => {
-      try {
-        saveLegendWorkspace()
-      } catch (error) {
-        console.error('[AutoSave] Failed to save:', error)
-      }
+    const debouncedSave = () => {
+      if (isInitializing()) return
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(async () => {
+        if (isSavingRef.current || isInitializing()) return
+        isSavingRef.current = true
+        try {
+          await saveLegendWorkspace()
+        } finally {
+          isSavingRef.current = false
+        }
+      }, DEBOUNCE_MS)
     }
 
-    // Backup save when tab becomes hidden (e.g., switching tabs)
+    const disposers = [
+      observe(styleStore$, debouncedSave),
+      observe(layoutStore$, debouncedSave),
+      observe(glyphStore$, debouncedSave),
+      observe(projectStore$, debouncedSave),
+    ]
+
+    const handleBeforeUnload = () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      saveLegendWorkspace()
+    }
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden') {
-        try {
-          saveLegendWorkspace()
-        } catch (error) {
-          console.error('[AutoSave] Failed to save:', error)
-        }
+        if (timerRef.current) clearTimeout(timerRef.current)
+        saveLegendWorkspace()
       }
     }
 
-    // Register event listeners
     window.addEventListener('beforeunload', handleBeforeUnload)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    // Cleanup
     return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      disposers.forEach((d) => d())
       window.removeEventListener('beforeunload', handleBeforeUnload)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
