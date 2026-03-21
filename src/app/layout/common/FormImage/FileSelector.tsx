@@ -18,9 +18,13 @@ const FileSelector: FunctionComponent<FileSelectorProps> = (
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target.files) return
     if (e.target.files.length > 0) {
-      readFile(e.target.files[0]).then((buffer) => {
-        if (buffer instanceof ArrayBuffer) onChange(buffer)
-      })
+      readFile(e.target.files[0])
+        .then((buffer) => {
+          if (buffer instanceof ArrayBuffer) onChange(buffer)
+        })
+        .catch((error) => {
+          console.error('Failed to read file:', error)
+        })
     }
   }
 
@@ -42,7 +46,6 @@ const FileSelector: FunctionComponent<FileSelectorProps> = (
       <input
         hidden
         type='file'
-        multiple
         accept='image/*'
         onChange={handleChange}
       />

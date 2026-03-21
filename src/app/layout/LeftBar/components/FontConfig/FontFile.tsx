@@ -7,33 +7,49 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import * as Sentry from '@sentry/react'
-import { observer } from 'mobx-react-lite'
 import { useSnackbar } from 'notistack'
 import React, { FunctionComponent, useState } from 'react'
-import { useFont } from 'src/store/hooks'
+import { addFont, removeFont, useFontResources } from 'src/store/legend'
 import readFile from 'src/utils/readFile'
+import {
+  extractTtfFromTtc,
+  isTtcFile,
+  parseTtcHeader,
+  TtcFontEntry,
+} from 'src/utils/ttcParser'
 
-const FontFamily: FunctionComponent<unknown> = () => {
+import TtcFontSelectDialog from './TtcFontSelectDialog'
+
+// Component handles font family selection - file name is FontFile for historical reasons
+const FontFamily: FunctionComponent = () => {
   const [loading, setLoading] = useState(false)
-  const { fonts, addFont, removeFont } = useFont()
+  const [ttcDialogOpen, setTtcDialogOpen] = useState(false)
+  const [ttcEntries, setTtcEntries] = useState<TtcFontEntry[]>([])
+  const [ttcBuffer, setTtcBuffer] = useState<ArrayBuffer | null>(null)
+  const fonts = useFontResources()
   const { enqueueSnackbar } = useSnackbar()
 
-  const handleUploadFile = (
+  const reportError = (e: unknown) => {
+    enqueueSnackbar((e as Error).message, { variant: 'error' })
+    Sentry.captureException(e)
+  }
+
+  const handleUploadFile = async (
     event: React.ChangeEvent<HTMLInputElement>,
-  ): void => {
+  ): Promise<void> => {
     if (!event || !event.target || !event.target.files?.[0]) {
       return
     }
 
     const file = event.target.files[0]
-    const ext = file.name.match(/\.([A-Z0-9]+)$/i)
-    if (!ext) {
+    if (!file.name.match(/\.([A-Z0-9]+)$/i)) {
       return
     }
 
     setLoading(true)
 
-    readFile(file).then((arrBuf) => {
+    try {
+      const arrBuf = await readFile(file)
       if (!(arrBuf instanceof ArrayBuffer)) {
         setLoading(false)
         return
@@ -41,14 +57,56 @@ const FontFamily: FunctionComponent<unknown> = () => {
 
       event.target.value = ''
 
-      addFont(arrBuf)
-        .then(() => setLoading(false))
-        .catch((e) => {
-          setLoading(false)
-          enqueueSnackbar(e.message, { variant: 'error' })
-          Sentry.captureException(e)
+      if (isTtcFile(arrBuf)) {
+        const entries = parseTtcHeader(arrBuf)
+        if (entries.length === 1) {
+          // Single font in TTC — load directly, skip dialog
+          const ttf = extractTtfFromTtc(arrBuf, 0)
+          await addFont(ttf)
+        } else {
+          setTtcBuffer(arrBuf)
+          setTtcEntries(entries)
+          setTtcDialogOpen(true)
+        }
+      } else {
+        await addFont(arrBuf)
+      }
+    } catch (e) {
+      reportError(e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleTtcSelect = async (selectedIndices: number[]) => {
+    if (!ttcBuffer) return
+
+    setTtcDialogOpen(false)
+    setLoading(true)
+
+    for (const idx of selectedIndices) {
+      try {
+        const ttf = extractTtfFromTtc(ttcBuffer, idx)
+        await addFont(ttf)
+      } catch (e) {
+        const entry = ttcEntries.find((en) => en.index === idx)
+        const name = entry?.fullName ?? `Font #${idx}`
+        enqueueSnackbar(`Failed to load ${name}: ${(e as Error).message}`, {
+          variant: 'error',
         })
-    })
+        Sentry.captureException(e)
+      }
+    }
+
+    setTtcBuffer(null)
+    setTtcEntries([])
+    setLoading(false)
+  }
+
+  const handleTtcDialogClose = () => {
+    setTtcDialogOpen(false)
+    setTtcBuffer(null)
+    setTtcEntries([])
   }
 
   return (
@@ -94,11 +152,17 @@ const FontFamily: FunctionComponent<unknown> = () => {
           hidden
           type='file'
           onChange={handleUploadFile}
-          accept='.ttf,.otf,.woff'
+          accept='.ttf,.otf,.woff,.ttc'
         />
       </Button>
+      <TtcFontSelectDialog
+        open={ttcDialogOpen}
+        entries={ttcEntries}
+        onSelect={handleTtcSelect}
+        onClose={handleTtcDialogClose}
+      />
     </>
   )
 }
 
-export default observer(FontFamily)
+export default FontFamily

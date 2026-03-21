@@ -1,14 +1,14 @@
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
-import { useProjectUi } from 'src/store/hooks'
+import { usePackFailed, useShowPreview } from 'src/store/legend'
 
 import PackView from '../PackView'
 import Preview from '../Preview'
 
-const MainView: FunctionComponent<unknown> = () => {
-  const { showPreview, packFailed } = useProjectUi()
+const MainView: FunctionComponent = () => {
+  const showPreview = useShowPreview()
+  const packFailed = usePackFailed()
 
   return (
     <Box
@@ -58,4 +58,4 @@ const MainView: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(MainView)
+export default MainView

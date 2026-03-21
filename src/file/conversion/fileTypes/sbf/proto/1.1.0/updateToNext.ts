@@ -1,4 +1,4 @@
-import { IFill, IProject as IProjectNext } from '../1.1.2/project'
+import { IFill, IProject as IProjectNext } from '../1.1.1/project'
 import { IProject } from './project'
 
 export default function updateToNext(project: IProject): IProjectNext {

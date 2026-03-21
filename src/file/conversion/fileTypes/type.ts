@@ -1,4 +1,4 @@
-import { Project } from 'src/store'
+import type { Project } from 'src/types/project'
 
 export type CheckFunction = (fileSource: unknown) => boolean
 

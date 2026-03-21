@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 
 import LeftBar from '../LeftBar'
@@ -8,7 +7,7 @@ import TitleBar from '../TitleBar'
 import WorkSpace from '../WorkSpace'
 import UpdateToast from './UpdateToast'
 
-const Wrap: FunctionComponent<unknown> = () => {
+const Wrap: FunctionComponent = () => {
   return (
     <Box
       sx={{
@@ -37,4 +36,4 @@ const Wrap: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(Wrap)
+export default Wrap

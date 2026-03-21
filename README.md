@@ -10,14 +10,19 @@
 <p align="center">
   <a href="https://snowb.org/">Web App</a> •
   <a href="https://snowb.org/en/docs/">Documentation</a> •
-  <a href="README_ZH.md">简体中文</a>
+  <a href="README_ZH.md">中文</a>
+</p>
+
+<p align="center">
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/SilenceLeo/snowb-bmf"></a>
+  <img alt="Version" src="https://img.shields.io/github/package-json/v/SilenceLeo/snowb-bmf">
 </p>
 
 ---
 
 ## Overview
 
-SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export professional bitmap fonts directly in your browser—no installation, no registration, no cloud uploads.
+SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export professional bitmap fonts directly in your browser—no installation, no registration, no cloud uploads. Supports SDF/MSDF rendering for resolution-independent text in modern game engines.
 
 **[Try it now at snowb.org](https://snowb.org/)**
 
@@ -29,25 +34,39 @@ SnowBamboo BMF is a free, open-source bitmap font generator for game developers 
 - **True Cross-Platform** - Works identically on Windows, Mac, Linux, ChromeOS
 - **Privacy-First** - 100% local processing, no tracking, no cloud uploads
 - **Production-Ready** - Advanced packing algorithms reduce texture memory by 30-50%
+- **SDF/MSDF Support** - Resolution-independent rendering via msdfgen WASM integration
+- **Multi-Project Workspace** - Manage multiple font projects simultaneously with tabbed interface
 - **Full Compatibility** - Native support for Unity, Unreal, Godot, Cocos2d, Phaser, PixiJS
-- **Legacy Support** - Import from Littera migrate existing projects seamlessly
+- **Legacy Support** - Import from Littera to migrate existing projects seamlessly
 
 ## Core Features
 
 ### Font Editing & Design
 
-- **Real-time Preview** - Visual feedback as you edit
-- **Advanced Typography** - Kerning pairs, letter spacing, baseline adjustment
-- **Professional Effects** - Gradients (linear/radial), multi-layer shadows, custom strokes
-- **Custom Glyphs** - Import images for icons and special characters
-- **Flexible Input** - Unicode blocks, custom sets
-- **Interactive Canvas** - Precise control via mouse and keyboard
+- **Real-time Preview** - Visual feedback as you edit with text preview mode
+- **Advanced Typography** - Kerning pairs, letter spacing, baseline adjustment, per-glyph metric editing
+- **Professional Fill** - Solid colors, gradients (linear/radial) with 10 built-in presets, image/pattern textures
+- **Advanced Stroke** - Width, position (outer/middle/inner), line cap/join options, supports solid/gradient/image fill
+- **Multi-layer Shadows** - Configurable shadow effects
+- **Custom Glyphs** - Import images via drag-and-drop for icons and special characters, auto character mapping from filename
+- **Multi-Project Workspace** - Tabbed interface to manage multiple font projects, double-click to create/rename
+- **Flexible Input** - Unicode blocks, custom character sets
+- **Interactive Canvas** - Space+drag to pan, Ctrl+scroll to zoom (25%–1000%), preview mode toggle
+- **Font Sharpness** - Adjustable rendering sharpness control
+
+### SDF/MSDF Rendering
+
+- **5 Rendering Modes** - SDF, PSDF, MSDF, MTSDF, and standard bitmap
+- **msdfgen Integration** - Compiled to WASM via Emscripten for native-speed distance field generation
+- **Configurable Parameters** - Distance range, angle threshold, coloring strategy (Simple/Ink Trap/Distance), error correction, fill rule, overlap support
+- **Channel Modes** - White/Black, Black/White, White/Alpha, Black/Alpha output options
+- **Resolution Independent** - Sharp text at any scale in game engines with SDF shader support
 
 ### File Format Support
 
-**Import** - `.sbf`, `.ltr`, `TTF/OTF/WOFF`
+**Import** - `.sbf`, `.ltr`, `TTF/OTF/WOFF/TTC`
 
-**Export** - [AngelCode format](https://www.angelcode.com/products/bmfont/doc/file_format.html) BMFont Text/XML, `.fnt` binary, PNG atlases
+**Export** - [AngelCode format](https://www.angelcode.com/products/bmfont/doc/file_format.html) BMFont Text, XML, Binary, JSON, C Header, PNG atlases, MSDF Atlas JSON
 
 ### Game Engine Integration
 
@@ -56,9 +75,9 @@ Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine
 ### Performance & Architecture
 
 - **Optimized Rendering** - React 19 with Canvas API and Web Workers for heavy computation
-- **Smart Packing** - MaxRects, Guillotine, and Shelf algorithms via worker pool
-- **Progressive Web App** - Works offline with automatic updates
-- **Type-Safe** - Full TypeScript with strict mode, reactive MobX state management
+- **Smart Packing** - MaxRects, Guillotine, and Shelf algorithms via worker pool; Auto/Fixed/Adaptive modes with multi-page support
+- **Progressive Web App** - Works offline with in-app update notifications and automatic version detection
+- **Type-Safe** - Full TypeScript with strict mode, reactive Legend State v2
 
 ## Tech Stack
 
@@ -66,8 +85,9 @@ Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine
 |----------|-----------|
 | **Framework** | React 19, TypeScript 5.8+ |
 | **Build Tool** | Vite 7 with optimized bundling |
-| **State Management** | MobX 6 (strict mode) |
+| **State Management** | Legend State v2 |
 | **UI Components** | Material-UI v7, Emotion CSS-in-JS |
+| **WASM** | msdfgen (SDF/MSDF generation), FreeType (font parsing) |
 | **Testing** | Vitest, React Testing Library |
 | **Graphics** | Canvas API, Web Workers |
 | **Serialization** | Protocol Buffers (.sbf format) |
@@ -133,15 +153,22 @@ yarn find-unused              # Find unused files
 yarn find-unused:cleanup      # Remove unused files
 ```
 
-### Key Development Patterns
+### Project Architecture
 
-See [CLAUDE.md](./CLAUDE.md) for detailed development patterns including:
-- State management with MobX 6
-- Protocol Buffer schema versioning
-- Canvas operations and utilities
-- Performance optimization strategies
-- Code quality standards (linting, formatting, testing)
+- **State Management** — Legend State v2 observables (`src/store/legend/`)
+- **Texture Packing** — Web Worker pool with MaxRects/Guillotine algorithms (`src/utils/PackingEngine.ts`)
+- **Persistence** — IndexedDB via Dexie, Protocol Buffers for project serialization
+- **SDF Generation** — msdfgen compiled to WASM via Emscripten
+- **Code Quality** — ESLint 9 flat config, Prettier with import sorting, Husky pre-commit hooks
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+This project uses third-party open-source libraries. See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete license information.
+
+## Acknowledgments
+
+- [msdfgen](https://github.com/Chlumsky/msdfgen) by Viktor Chlumsky — Multi-channel signed distance field generator
+- [FreeType](https://www.freetype.org) — Font rendering library
+- [opentype.js](https://github.com/opentypejs/opentype.js) by Frederik De Bleser — OpenType and TrueType font parser

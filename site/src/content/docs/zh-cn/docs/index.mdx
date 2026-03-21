@@ -1,5 +1,5 @@
 ---
-title: SnowB BMF 中文文档
+title: SnowB BMF 文档：位图字体生成器指南
 description: 借助 SnowB BMF 官方中文文档，轻松掌握位图字体的制作。从入门基础到高级样式、纹理打包和导出（支持 Unity、Unreal Engine、Godot 等游戏引擎），全面覆盖。
 template: splash
 hero:
@@ -76,7 +76,7 @@ import { ContainerSection } from 'starlight-theme-black/components'
 		采用高效的“铡刀算法”（Guillotine）自动将字形打包到最小的纹理图集，或允许您定义固定的二次幂尺寸以优化 GPU 性能。
 	</Card>
 	<Card title="广泛的导出兼容性" icon="document">
-		支持导出为文本（.fnt/.txt）、XML 和二进制格式，兼容 Unity、Godot、Unreal Engine 等主流游戏引擎。
+		支持 6 种导出格式：文本（.fnt/.txt）、XML、二进制、JSON、C Header 和 MSDF Atlas JSON。兼容 Unity、Godot、Unreal Engine、嵌入式系统和 MSDF 着色器管线。
 	</Card>
 	<Card title="实时预览" icon="magnifier">
 		所有更改即时可见。实时画布提供对样式、度量和字偶距调整的即时反馈。
@@ -112,8 +112,14 @@ import { ContainerSection } from 'starlight-theme-black/components'
 	<Card title="可视化字偶距调整" icon="setting">
 		直观地调整字符对之间的间距。工具提供高亮显示和精确的像素级控制，助您实现专业效果。
 	</Card>
+	<Card title="SDF/MSDF 渲染" icon="star">
+		使用 msdfgen WASM 技术生成分辨率无关的距离场字体。支持 SDF、PSDF、MSDF 和 MTSDF 模式，在游戏引擎中实现任意缩放下的清晰文本渲染。
+	</Card>
 	<Card title="项目管理" icon="open-book">
 		支持以原生的 .sbf 格式保存和加载项目。同时兼容导入来自 Littera 的旧版 .ltr 文件，轻松迁移。
+	</Card>
+	<Card title="自动保存与持久化" icon="approve-check-circle">
+		所有项目自动保存到 IndexedDB 存储。支持多项目工作区和选项卡界面，再也不用担心意外刷新页面导致工作丢失。
 	</Card>
 </CardGrid>
 

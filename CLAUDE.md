@@ -10,203 +10,118 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-SnowBamboo BMF is a professional web-based bitmap font generator built as a modern React application. It allows users to create, edit, and export high-quality bitmap fonts for use in games and applications.
+SnowBamboo BMF is a web-based bitmap font generator for game developers. Users create, edit, and export bitmap fonts (AngelCode BMFont format) directly in the browser. Built with React 19 + TypeScript 5.8+ + Vite 7.
 
 ## Development Commands
 
 ```bash
-# Start development server (Vite)
-yarn start  # or yarn dev
-
-# Build for production
-yarn build
-
-# Preview production build locally
-yarn preview
-
-# Run tests (Vitest)
-yarn test
-
-# Lint code
-yarn lint
-
-# Fix linting issues
-yarn lint:fix
-
-# Check linting with zero warnings
-yarn lint:check
-
-# Format code
-yarn format
-
-# Generate Protocol Buffer files
-yarn pb
-
-# Deploy to GitHub Pages (with Sentry integration)
-yarn predeploy && yarn deploy
-
-# Setup git hooks
-yarn prepare
-
-# Find unused files in the codebase
-yarn find-unused
-
-# Find unused files with cleanup options
-yarn find-unused:cleanup  # Actually removes unused files
-yarn find-unused:dry-run  # Shows what would be removed without deleting
-
-# Build and deployment commands
-yarn build:app           # Build main application
-yarn build:site          # Build documentation site
-yarn build:merge         # Merge builds
-yarn build:sitemap       # Generate sitemap
-yarn build:all           # Run all build steps
+yarn start              # Dev server on port 3000
+yarn build              # tsc + vite build
+yarn test               # Vitest (jsdom)
+yarn test src/utils/measureTextSize.test.ts  # Single test file
+yarn lint:check         # ESLint with zero warnings
+yarn lint:fix           # Auto-fix lint issues
+yarn format             # Prettier
+yarn pb                 # Regenerate Protocol Buffer TypeScript definitions
+yarn find-unused        # Find unused files
+yarn build:all          # Full pipeline: app + docs site + sitemap
 ```
 
 ## Architecture
 
-### Core Technologies
-- **React 19** with TypeScript 5.8+
-- **Vite 7** for build tooling and development server
-- **MobX 6** for state management (configured with strict mode)
-- **Material-UI v7** for UI components with Emotion styling
-- **Vitest** for testing (replaces Jest)
-- **Canvas API** for font rendering and manipulation
-- **Protocol Buffers** for project file serialization (.sbf format)
-- **Web Workers** for heavy computation (packing algorithms)
-- **Sentry** for error tracking and performance monitoring
-- **PWA** capabilities with service worker and workbox
+### State Management — Legend State
 
-### State Management
-The application uses MobX 6 with a single workspace store pattern:
-- `Workspace` - manages projects, fonts, glyphs, editing state, and UI state
-- Store is created as a singleton and provided via React Context at `src/store/index.ts`
-- Configured with strict mode: `enforceActions: 'always'` and `computedRequiresReaction: true`
+All state is managed via Legend State v2 observables in `src/store/legend/`. Six domain stores:
 
-### Key Directories
+| Store | Purpose |
+|-------|---------|
+| `styleStore$` | Font config, fill (solid/gradient/image), stroke, shadow, background, global metrics |
+| `layoutStore$` | Padding, spacing, dimensions, packing mode (auto/fixed/adaptive) |
+| `uiStore$` | Canvas transform, preview mode, letter selection, pack failure state |
+| `workspaceStore$` | Multi-project workspace, active project ID, project metadata |
+| `glyphStore$` | Font glyphs + image glyphs (high-frequency: positions, dimensions, kerning) |
+| `projectStore$` | Project name, text content, timing, initialization state |
 
-- `src/app/layout/` - Main application layout components (LeftBar, RightBar, TitleBar, WorkSpace)
-- `src/app/components/` - Reusable UI components (ColorInput, GradientPicker, Palette, etc.)
-- `src/app/hooks/` - Custom React hooks for interaction (useSpaceDrag, useWheel)
-- `src/app/theme/` - Material-UI theme configuration and component overrides
-- `src/file/` - File import/export functionality
-  - `conversion/` - Handles .ltr (Littera) and .sbf (SnowBamboo) format conversion with versioning
-  - `export/` - Exports to various bitmap font formats (text, XML)
-- `src/workers/` - Web Workers for rectangle packing algorithms (AutoPacker.worker.ts)
-- `src/utils/` - Utility functions for canvas operations, font handling, and file processing
-- `src/store/base/` - Base data models for fonts, glyphs, gradients, shadows, etc.
-- `scripts/` - Build and deployment scripts (Protocol Buffer generation, Sentry integration)
+**Key patterns:**
+- Access with `.get()`, update with `.set()`, group updates with `batch()`
+- 47+ hooks in `src/store/legend/hooks.ts` for React components (e.g., `useFont()`, `useGlyph()`, `useLayout()`)
+- `useSelectorShallow` for shallow-comparison derived state
+- Actions: `packingActions`, `glyphActions`, `projectActions` in `src/store/legend/actions/`
 
-### File Format Support
+**Backward compatibility layer:** `src/store/index.ts` re-exports Legend State types under old names (e.g., `FillData` → `FontStyleConfig`) for file conversion code. The `Project` interface there is a plain data interface (not observable) matching the protobuf `IProject` structure.
 
-**Import formats:**
-- `.sbf` - SnowBamboo project files (Protocol Buffer format)
-- `.ltr` - Littera project files (legacy Flash tool)
+### Packing Engine
 
-**Export formats:**
-- Text-based bitmap font descriptors
-- XML-based bitmap font descriptors
-- PNG texture atlases
+`src/utils/PackingEngine.ts` — Core texture atlas packing with two modes:
+- **Auto mode**: Web Worker pool (`AutoPackerWorkerPool`) with semaphore-controlled concurrency (max `hardwareConcurrency` or 8), 30s timeout, batch of 4 pages
+- **Fixed mode**: Synchronous `GuillotineBinPack` from `rectangle-packer` library
 
-### Protocol Buffers
+Supports `AbortController` cancellation and Sentry error reporting.
 
-The project uses Protocol Buffers for the `.sbf` file format with versioning support:
-- Current schema: `src/file/conversion/fileTypes/sbf/proto/1.2.0/project.proto`
-- Versioned schemas: `src/file/conversion/fileTypes/sbf/proto/[version]/`
-- Migration system: Automatic updates from older project file versions (currently up to v1.2.0)
-- Run `yarn pb` to regenerate TypeScript definitions when making schema changes
+### Persistence
 
-The system supports backward compatibility through version-specific decoders and update functions. Note: File type code has been reorganized from `types/` to `fileTypes/` directory.
+IndexedDB via Dexie (`src/utils/persistence.ts`):
+- Database `snowb-bmf`: tables `workspaceMeta` and `projects`
+- Auto-save on `beforeunload` and `visibilitychange`
+- Projects stored as Protocol Buffer encoded `Uint8Array`
+- Serialization/deserialization: `src/store/legend/persistence/`
 
-### Canvas Operations
+### File Formats
 
-Heavy use of Canvas API for:
-- Font rendering and glyph generation
-- Texture atlas packing
-- Real-time preview rendering
-- Image processing and manipulation
+**Import:** `.sbf` (Protocol Buffer), `.ltr` (Littera/legacy Flash)
+**Export:** BMFont text, BMFont XML, BMFont binary, PNG texture atlases
 
-Canvas utilities are located in `src/utils/` with key functions for font metrics, baselines, and image processing operations:
-- Font metrics and baselines: `getFontBaselinesFromCanvas.ts`, `getFontBaselinesFromMetrics.ts`
-- Font glyph generation: `getFontGlyphs.ts`, `getFontGlyphsProgressive.ts`
-- Image processing: `getTrimImageInfo.ts`, `trimTransparentPixels.ts`
-- Text measurement: `measureTextSize.ts`
+Protocol Buffer schema versioning: 10 versions (1.0.0 → 1.0.1 → 1.0.2 → 1.1.0 → 1.1.1 → 1.1.2 → 1.2.0 → 1.2.1 → 1.2.2 → 1.3.0). Each version has `updateToNext.ts` for automatic migration. Current schema: `src/file/conversion/fileTypes/sbf/proto/1.3.0/project.proto`. Run `yarn pb` after schema changes.
 
-### Testing
+### Application Layout
 
-Uses React Testing Library with Vitest (modern Vite-native test runner). Run tests with `yarn test`.
+```
+App.tsx → ThemeProvider → Wrap.tsx
+  ├─ TitleBar     (top: New/Open/Save/Export buttons)
+  ├─ LeftBar      (FontConfig, GlobalMetric, Glyphs, LayoutConfig, PackConfig)
+  ├─ WorkSpace    (ProjectTabs, MainView canvas, ControllerBar, ImageGlyphList)
+  │   ├─ PackView    (texture atlas preview)
+  │   └─ Preview     (text preview with kerning/metric adjustment)
+  └─ RightBar     (FillConfig, StrokeConfig, ShadowConfig, BackgroundColor)
+```
 
-Test configuration is in `vite.config.ts` with jsdom environment and global test utilities.
+Reusable form components in `src/app/layout/common/` (FormFill, FormGradient, FormImage, FormColor, FormAngle, FormAdjustMetric).
 
-## Development Configuration
+## Build Configuration
 
-### Build System
-- **Vite 7** with optimized build configuration
-- Path aliases configured (`@/`, `@/components`, `@/store`, `@/utils`, `@/types`)
-- Code splitting for vendor libraries (React, MobX, MUI)
-- Web Workers support with ES module format
-- Source maps enabled for debugging
-- ES module package with `"type": "module"` configuration
-- Development server on port 3000 with hot reloading
+### Vite Chunk Splitting
 
-### Linting & Formatting
-- **ESLint 9** with flat configuration (`eslint.config.mjs`)
-- TypeScript-ESLint integration with project-aware parsing
-- React and React Hooks plugin rules
-- CSpell plugin for spell checking with auto-fix enabled
-- Prettier with Trivago's import sorting plugin
-- Code style: no semicolons, single quotes, 2-space indentation, trailing commas
+Manual chunks in `vite.config.ts`:
+- `vendor`: react, react-dom
+- `legendstate`: @legendapp/state, @legendapp/state/react
+- `mui`: @mui/material, @mui/icons-material
+- `utils`: color, clsx, file-saver, jszip
 
-### Pre-commit Hooks
-The project has Husky 9 configured with lint-staged 16 to automatically:
-- Format JS/JSX/TS/TSX files with Prettier and ESLint auto-fix
-- Format CSS/SCSS files with Prettier only
-- Configuration in `.lintstagedrc` file
+### Path Aliases
 
-### Environment & Monitoring
-- **Sentry** integration for error tracking and performance monitoring
-- **Google Analytics** for usage analytics
-- **PWA** features with service worker and update management
-- Environment-specific configuration support
+`@/` → `src/`, `@/components` → `src/components/`, `@/store` → `src/store/`, `@/utils` → `src/utils/`, `@/types` → `types/`
 
-## Common Development Patterns
+Also `src` → `src/` (bare `src` prefix imports).
 
-### Adding New Glyph Types
-1. Update Protocol Buffer schema in `src/file/conversion/fileTypes/sbf/proto/1.2.0/project.proto`
-2. Run `yarn pb` to regenerate TypeScript definitions
-3. Add corresponding store models in `src/store/base/`
-4. Update conversion logic for import/export
-5. Create update function for version migration if needed
+### Code Style
 
-### Working with Canvas
-- Use existing canvas utilities in `src/utils/`
-- Font metrics and baselines: `getFontBaselinesFromCanvas.ts`, `getFontBaselinesFromMetrics.ts`
-- Font glyph generation: `getFontGlyphs.ts`, `getFontGlyphsProgressive.ts`
-- Image processing: `getTrimImageInfo.ts`, `trimTransparentPixels.ts`
-- Text measurement: `measureTextSize.ts`
+- No semicolons, single quotes, 2-space indentation, trailing commas
+- Prettier with `@trivago/prettier-plugin-sort-imports`
+- ESLint 9 flat config (`eslint.config.mjs`): `@typescript-eslint/no-explicit-any` is off, `no-unused-vars` allows `_` prefix
+- CSpell spell checking enabled in ESLint
+- Pre-commit hooks: Husky 9 + lint-staged 16
 
-### State Updates (MobX 6)
-- All MobX actions must be wrapped in `runInAction` or use `@action` decorator
-- Store is configured with `enforceActions: 'always'`
-- Use MobX hooks from `mobx-react-lite` for React integration
+### TypeScript
 
-### Component Development
-- Use Material-UI v7 components with Emotion styling
-- Path aliases available: `@/`, `@/components`, `@/store`, `@/utils`, `@/types`
-- Custom hooks in `src/app/hooks/` for interaction patterns
-- Theme customization in `src/app/theme/`
-
-### Performance Considerations
-- Web Workers for heavy computation (packing algorithms in `src/utils/AutoPackerWorkerPool.ts`)
-- AutoPacker worker pool for efficient parallel processing
-- Vite's optimized bundling with manual chunk splitting
-- Service worker for caching and offline capabilities
-- Sentry for performance monitoring and error tracking
-- Performance monitoring utilities in `src/utils/performanceMonitor.ts`
-- Progressive font glyph generation to improve loading times
-
-### TypeScript Configuration
-- Target: ES2020 with strict mode enabled
-- Experimental decorators enabled for MobX
-- Module resolution: bundler mode with `.ts` extension imports allowed
+- Target: ES2020, strict mode, bundler module resolution
+- No `experimentalDecorators`
 - JSX: react-jsx (automatic runtime)
+
+## Key Gotchas
+
+- `src/store/index.ts` `Project` type is a plain interface for file conversion — do not confuse with observable stores
+- `encodeProject.ts` needs explicit types for `any` array items (e.g., `fontResource` param)
+- When deleting store files, check `vite.config.ts` `manualChunks` and `optimizeDeps`
+- Kerning data is always `Record<string, number>` (not Map)
+- `MetricData` interface (`{ xAdvance, xOffset, yOffset }`) is used as plain objects throughout
+- Performance thresholds in `src/store/legend/config.ts`: `PROGRESSIVE_THRESHOLD: 500` glyphs, `BATCH_SIZE: 100`

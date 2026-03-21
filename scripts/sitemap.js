@@ -50,8 +50,8 @@ function pathToUrl(file) {
 }
 
 // Extract language and content path from URL
-function parseUrl(url, domain) {
-  const urlPath = url.replace(domain, '')
+function parseUrl(url, _domain) {
+  const urlPath = new URL(url).pathname
 
   // Check if URL starts with language code
   const langMatch = urlPath.match(/^\/([a-z]{2}(-[a-z]{2})?)\/(.*)$/)
@@ -110,8 +110,8 @@ function generateAlternateUrls(contentPath, availableLanguages, domain) {
   return alternates
 }
 
-function getPriority(url, domain) {
-  const urlPath = url.replace(domain, '')
+function getPriority(url, _domain) {
+  const urlPath = new URL(url).pathname
 
   // Root page has highest priority
   if (urlPath === '' || urlPath === '/') {

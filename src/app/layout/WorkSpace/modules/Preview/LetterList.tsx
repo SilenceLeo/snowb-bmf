@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
-import { useProjectUi } from 'src/store/hooks'
+import { setSelectLetter, useSelectLetter } from 'src/store/legend'
 
 import { PreviewObject } from './getPreviewCanvas'
 
@@ -17,7 +16,7 @@ const LetterList: FunctionComponent<LetterListProps> = (
     data: { xOffset, yOffset, list },
     drawYOffset,
   } = props
-  const ui = useProjectUi()
+  const { selectLetter, selectNextLetter } = useSelectLetter()
 
   const handleSelect = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -25,10 +24,11 @@ const LetterList: FunctionComponent<LetterListProps> = (
     next: string,
   ) => {
     e.stopPropagation()
-    ui.setSelectLetter(letter, next)
+    setSelectLetter(letter, next)
   }
   return (
     <>
+      {/* Items lack unique IDs; letter+index is used since the same letter can appear multiple times */}
       {list.map((item, idx) => {
         const key = `${item.letter}${idx}`
         return (
@@ -44,11 +44,11 @@ const LetterList: FunctionComponent<LetterListProps> = (
                 background: 'rgba(0, 0, 0, 0.2)',
                 outline: '1px solid #000',
               },
-              ...(item.letter === ui.selectLetter && {
+              ...(item.letter === selectLetter && {
                 background: 'rgba(0, 0, 0, 0.2)',
                 outline: '1px solid #000',
               }),
-              ...(item.letter === ui.selectNextLetter && {
+              ...(item.letter === selectNextLetter && {
                 background: 'rgba(0, 0, 0, 0.1)',
                 outline: '1px dashed #666',
               }),
@@ -62,4 +62,4 @@ const LetterList: FunctionComponent<LetterListProps> = (
   )
 }
 
-export default observer(LetterList)
+export default LetterList

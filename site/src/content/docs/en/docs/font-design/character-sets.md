@@ -1,40 +1,51 @@
 ---
-title: Character Sets
-description: Configure which characters to include in your bitmap font.
+title: "Character Sets: Define Custom Unicode Glyphs for Bitmap Fonts"
+description: Configure which characters to include in your bitmap font. Try it free — no download required.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Character Sets - Configure Characters in Bitmap Fonts"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Complete guide to configuring character sets in SnowB BMF bitmap font generator. Learn how to add, manage, and optimize Unicode characters for your game fonts."
   "keywords": ["character sets", "bitmap font", "Unicode", "glyph", "font design", "texture atlas", "game development", "SnowB BMF"]
   "articleSection": "Font Design"
+  "inLanguage": "en"
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "Character Set Configuration"
     "description": "Feature for managing which characters are included in bitmap fonts"
   "isPartOf":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
   "audience":
     "@type": "Audience"
     "audienceType": "Developers"
     "name": "Game Developers and Font Designers"
   "teaches": ["Unicode character management", "font optimization", "glyph configuration", "international text support"]
-  "mentions":
-    - "@type": "SoftwareFeature"
-      "name": "Unicode Support"
-      "description": "Full Unicode support for international characters"
-    - "@type": "SoftwareFeature"
-      "name": "Automatic Deduplication"
-      "description": "Removes duplicate characters automatically"
-    - "@type": "SoftwareFeature"
-      "name": "Real-time Preview"
-      "description": "Live preview updates as character set changes"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "mainEntity":
-    "@type": "DefinedTerm"
-    "name": "Character Set"
-    "description": "A collection of characters that will be rendered as bitmap glyphs in a font texture atlas"
+    "@type": "HowTo"
+    "name": "How to Configure Character Sets in SnowB BMF"
+    "description": "Step-by-step guide for configuring which characters to include in your bitmap font"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Open Glyphs Input"
+        "text": "Locate the Glyphs input field in the Font Config panel on the left sidebar"
+      - "@type": "HowToStep"
+        "name": "Add Characters"
+        "text": "Type or paste your desired characters into the multi-line text field — duplicates are removed automatically"
+      - "@type": "HowToStep"
+        "name": "Preview and Verify"
+        "text": "Check the real-time workspace preview to confirm your character set renders correctly with the selected font"
 ---
 
 Character sets define which characters (glyphs) are included in your bitmap font. You can manage your character set by adding or removing characters, with full support for Unicode. SnowB BMF automatically handles duplicates and ensures efficient glyph generation.
@@ -166,3 +177,9 @@ Your character set directly affects the exported font data:
 - **Reduce Character Count**: The most common cause is a character set that is too large. Remove any characters that are not essential for your application.
 - **Optimize Layout**: Use auto-packing and adjust spacing/padding settings to reduce the final texture atlas size.
 - **Complex Glyphs**: Fonts with very detailed characters can take longer to process and consume more texture space.
+
+## Related Topics
+
+- [Font Import](/en/docs/font-design/font-import/)
+- [Texture Packing](/en/docs/font-design/texture-packing/)
+- [Layout Settings](/en/docs/font-design/layout-settings/)

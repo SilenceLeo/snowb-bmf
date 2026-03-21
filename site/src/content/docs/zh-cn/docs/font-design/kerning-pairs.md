@@ -1,5 +1,5 @@
 ---
-title: 字偶距调整
+title: 字偶距：调整字符间距提升可读性
 description: 通过配置字偶距，优化字体字符间距，打造专业且精致的文本布局。
 schema:
   "@context": "https://schema.org"
@@ -7,14 +7,14 @@ schema:
   "headline": "字偶距调整 - SnowB BMF 字体设计文档"
   "description": "学习如何在 SnowB BMF 中通过配置字偶距来优化位图字体的字符间距，打造专业且精致的文本布局。"
   "keywords": ["字偶距", "字体设计", "字符间距", "排版学", "位图字体", "SnowB BMF", "字体字偶距", "文本布局"]
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "about":
-    "@type": "SoftwareFeature"
-    "name": "字偶距配置"
-    "description": "位图字体中字符间距的精确控制"
-    "featureOf":
-      "@type": "SoftwareApplication"
-      "name": "SnowB BMF"
-      "url": "https://snowb.org"
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
+  "articleSection": "字体设计"
   "teaches":
     - "如何在 SnowB BMF 中激活字偶距预览模式"
     - "如何定义和调整字偶距对"
@@ -23,19 +23,36 @@ schema:
   "audience":
     "@type": "Audience"
     "audienceType": "字体设计师、游戏开发者、UI设计师"
-  "proficiencyLevel": "初级到中级"
+  "inLanguage": "zh-CN"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
+    "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/zh-cn/docs/font-design/kerning-pairs/"
   "author":
     "@type": "Person"
-    "name": "SnowB BMF Team"
-    "url": "https://snowb.org"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
-  "isPartOf":
-    "@type": "TechArticle"
-    "name": "SnowB BMF 字体设计文档"
-    "url": "https://snowb.org/zh-cn/docs/font-design/"
+  "mainEntity":
+    "@type": "HowTo"
+    "name": "如何在 SnowB BMF 中配置字偶距"
+    "description": "通过字偶距调整字符间距的逐步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "激活预览模式"
+        "text": "点击主工具栏中的预览按钮，启用字偶距视觉引导"
+      - "@type": "HowToStep"
+        "name": "定义字偶距对"
+        "text": "在预览文本区域输入您想要调整字偶距的两个字符"
+      - "@type": "HowToStep"
+        "name": "调整字偶距数值"
+        "text": "点击第一个字符，使用字偶距面板调整间距值"
 ---
 
 字偶距（Kerning）是排版学中的一项基本技术，它通过调整特定字符对之间的间距，创造出视觉上更具吸引力且更易于阅读的文本。恰当的字偶距能让您的字体看起来既专业又均衡。
@@ -82,3 +99,7 @@ schema:
 - **关注常见组合：** 优先处理常见的问题组合，例如 `AV`、`AW`、`VA`、`WA`、`To`、`P.`、`To`、`Yo`。
 - **相信您的眼睛：** 追求视觉上一致的间距，而非数学上的相等。目标是达到感官上的平衡。
 - **进行微小调整：** 以微小的增量（每次 1-3 像素）微调字偶距，以获得最佳效果。
+
+## 相关主题
+
+- [字形度量](/zh-cn/docs/font-design/glyph-metrics/)

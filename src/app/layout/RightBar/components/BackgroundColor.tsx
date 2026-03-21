@@ -1,13 +1,12 @@
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import FormColor from 'src/app/layout/common/FormColor'
-import { useStyle } from 'src/store/hooks'
+import { setBgColor, useBgColor } from 'src/store/legend'
 
 import ConfigSection from '../../../components/ConfigSection'
 
-const BackgroundColor: FunctionComponent<unknown> = () => {
-  const { bgColor, setBgColor } = useStyle()
+const BackgroundColor: FunctionComponent = () => {
+  const bgColor = useBgColor()
 
   return (
     <ConfigSection title='Background Color'>
@@ -23,4 +22,4 @@ const BackgroundColor: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(BackgroundColor)
+export default BackgroundColor

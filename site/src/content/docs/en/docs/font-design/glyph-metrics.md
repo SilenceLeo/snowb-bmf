@@ -1,10 +1,12 @@
 ---
-title: Adjusting Glyph Metrics
+title: "Glyph Metrics: Fine-Tune xAdvance, xOffset, and yOffset"
 description: Optimize character spacing and positioning in your bitmap font by adjusting global and individual glyph metrics like xAdvance, xOffset, and yOffset.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Adjusting Glyph Metrics in SnowB BMF"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Optimize character spacing and positioning in your bitmap font by adjusting global and individual glyph metrics like xAdvance, xOffset, and yOffset."
   "about":
     "@type": "Thing"
@@ -19,14 +21,27 @@ schema:
     "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
   "mainEntity":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
-    "applicationCategory": "DesignApplication"
-    "url": "https://snowb.org"
-  "publisher":
+    "@type": "HowTo"
+    "name": "How to Adjust Glyph Metrics in SnowB BMF"
+    "description": "Step-by-step guide to adjusting global and individual glyph metrics for optimal character spacing"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Open the metrics panel"
+        "text": "Navigate to the left sidebar and locate the global metric adjustment settings"
+      - "@type": "HowToStep"
+        "name": "Adjust global metrics"
+        "text": "Set xAdvance, xOffset, and yOffset values to control the overall font spacing and positioning"
+      - "@type": "HowToStep"
+        "name": "Fine-tune individual glyph metrics"
+        "text": "Activate Preview mode, select specific characters, and override their individual metric values"
+  "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "inLanguage": "en"
   "articleSection": "Font Design"
 ---
@@ -89,3 +104,8 @@ These individual adjustments will always take precedence over the global setting
 - **Adjust Individually**: Use individual tweaks for exceptions and fine-tuning.
 - **Preview Often**: Continuously test your changes with different text samples in preview mode.
 - **Consider the Target**: Keep your target platform's text rendering in mind.
+
+## Related Topics
+
+- [Kerning Pairs](/en/docs/font-design/kerning-pairs/)
+- [Layout Settings](/en/docs/font-design/layout-settings/)

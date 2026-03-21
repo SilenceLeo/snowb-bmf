@@ -2,23 +2,52 @@ import Box from '@mui/material/Box'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
-import { FillType, FontStyleConfig } from 'src/store'
+import {
+  FillType,
+  type GradientData,
+  type GradientPaletteItem,
+  type PatternTextureData,
+  type Repetition,
+} from 'src/store/legend'
 
 import FormColor from '../FormColor'
 import FormGradient from '../FormGradient'
 import FormImage from '../FormImage'
 
 interface FormFillProps {
-  config: FontStyleConfig
+  type: FillType
+  color: string
+  gradient: GradientData
+  patternTexture: PatternTextureData
+  onTypeChange: (type: FillType) => void
+  onColorChange: (color: string) => void
+  // Gradient action overrides (for stroke mode)
+  onGradientTypeChange?: (type: number) => void
+  onGradientAngleChange?: (angle: number) => void
+  onGradientColorAdd?: (offset: number, color: string) => void
+  onGradientPaletteUpdate?: (palette: GradientPaletteItem[]) => void
+  // Pattern texture action overrides (for stroke mode)
+  onPatternImageChange?: (buffer: ArrayBuffer) => void
+  onPatternRepetitionChange?: (repetition: Repetition) => void
+  onPatternScaleChange?: (scale: number) => void
 }
 
-const FormFill: FunctionComponent<FormFillProps> = (props: FormFillProps) => {
-  const {
-    config: { type, color, gradient, patternTexture, setType, setColor },
-  } = props
-
+const FormFill: FunctionComponent<FormFillProps> = ({
+  type,
+  color,
+  gradient,
+  patternTexture,
+  onTypeChange,
+  onColorChange,
+  onGradientTypeChange,
+  onGradientAngleChange,
+  onGradientColorAdd,
+  onGradientPaletteUpdate,
+  onPatternImageChange,
+  onPatternRepetitionChange,
+  onPatternScaleChange,
+}) => {
   return (
     <>
       <Box paddingX={2} marginY={4}>
@@ -26,7 +55,7 @@ const FormFill: FunctionComponent<FormFillProps> = (props: FormFillProps) => {
           row
           name='type'
           value={type}
-          onChange={(e) => setType(Number(e.target.value))}
+          onChange={(e) => onTypeChange(Number(e.target.value))}
         >
           <FormControlLabel
             value={FillType.SOLID}
@@ -45,21 +74,30 @@ const FormFill: FunctionComponent<FormFillProps> = (props: FormFillProps) => {
           />
         </RadioGroup>
       </Box>
-      {type === 0 ? (
+      {type === FillType.SOLID ? (
         <Box paddingX={2} marginY={4}>
-          <FormColor color={color} onChange={setColor} />
+          <FormColor color={color} onChange={onColorChange} />
         </Box>
       ) : null}
-      {type === 1 ? <FormGradient gradient={gradient} /> : null}
-      {type === 2 ? (
+      {type === FillType.GRADIENT ? (
+        <FormGradient
+          gradient={gradient}
+          onTypeChange={onGradientTypeChange}
+          onAngleChange={onGradientAngleChange}
+          onColorAdd={onGradientColorAdd}
+          onPaletteUpdate={onGradientPaletteUpdate}
+        />
+      ) : null}
+      {type === FillType.IMAGE ? (
         <FormImage
           patternTexture={patternTexture}
-          src={patternTexture.src}
-          scale={patternTexture.scale}
+          onImageChange={onPatternImageChange}
+          onRepetitionChange={onPatternRepetitionChange}
+          onScaleChange={onPatternScaleChange}
         />
       ) : null}
     </>
   )
 }
 
-export default observer(FormFill)
+export default FormFill

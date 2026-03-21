@@ -5,19 +5,18 @@ schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Using Image Glyphs in Your Bitmap Font"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Add custom images, icons, and symbols as glyphs in your bitmap font. Learn how to import, manage, and optimize image glyphs for game and app development."
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "Image Glyphs"
     "description": "Custom image integration feature for bitmap font creation"
-  "applicationCategory": "Font Design"
   "keywords": ["image glyphs", "bitmap font", "font design", "icons", "symbols", "texture atlas", "game development", "SnowB BMF", "glyph mapping", "character assignment"]
   "audience":
     "@type": "Audience"
     "audienceType": "Developers"
-    "geographicArea": "Global"
-  "educationalLevel": "Intermediate"
-  "proficiencyRequired": "Basic font design knowledge"
+  "inLanguage": "en"
   "teaches": ["How to add image glyphs to bitmap fonts", "Character mapping for image glyphs", "Image glyph optimization", "Texture atlas integration"]
   "mainEntity":
     "@type": "HowTo"
@@ -33,9 +32,20 @@ schema:
       - "@type": "HowToStep"
         "name": "Manage Glyphs"
         "text": "Enable/disable images and organize your image glyph collection"
-  "isPartOf":
-    "@type": "SoftwareApplication"
+      - "@type": "HowToStep"
+        "name": "Export Font"
+        "text": "Export your project — all enabled image glyphs are automatically included in the texture atlas and descriptor file"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
     "name": "SnowB BMF"
+    "url": "https://snowb.org"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
 ---
 
@@ -110,3 +120,8 @@ When you export your project, all enabled image glyphs are included automaticall
 -   **Texture Atlas:** Images are rendered into the final texture sheet(s).
 -   **Font Data Files:** The character mappings and metrics for your image glyphs are saved in the font descriptor file (`.fnt`, `.xml`, etc.).
 -   **Full Compatibility:** Works with all supported export formats.
+
+## Related Topics
+
+- [Character Sets](/en/docs/font-design/character-sets/)
+- [Export Formats](/en/docs/project-management/export-formats/)

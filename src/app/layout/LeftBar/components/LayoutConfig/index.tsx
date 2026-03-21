@@ -7,7 +7,7 @@ import Padding from './Padding'
 import Page from './Page'
 import Spacing from './Spacing'
 
-const LayoutConfig: FunctionComponent<unknown> = () => {
+const LayoutConfig: FunctionComponent = () => {
   return (
     <ConfigSection title='Layout'>
       <Box sx={{ px: 2, my: 4 }}>

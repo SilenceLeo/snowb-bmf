@@ -1,39 +1,43 @@
 ---
-title: Shadow Effects
+title: "Shadow Effects: Add Depth and Glow to Bitmap Fonts"
 description: Learn how to create and customize professional drop shadows and text effects for your bitmap fonts. Optimize font appearance with adjustable offset, blur, and color.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Shadow Effects in Bitmap Font Design"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Comprehensive guide to creating and customizing professional drop shadows and text effects for bitmap fonts using SnowB BMF. Learn shadow parameters, styles, and best practices."
   "keywords": ["shadow effects", "drop shadow", "bitmap font", "font design", "text effects", "SnowB BMF", "font styling", "visual effects"]
   "about":
-    "@type": "Thing"
-    "name": "Shadow Effects"
-    "description": "Visual effects that add depth and hierarchy to bitmap fonts through shadows"
-  "mentions":
-    - "@type": "SoftwareApplication"
-      "name": "SnowB BMF"
-      "description": "Browser-based bitmap font generator"
-      "url": "https://snowb.org"
-    - "@type": "Thing"
-      "name": "Drop Shadow"
-      "description": "Classic shadow effect for improving text readability"
-    - "@type": "Thing"
-      "name": "Glow Effect"
-      "description": "Soft glowing aura effect around text"
-    - "@type": "Thing"
-      "name": "Long Shadow"
-      "description": "Dramatic cast shadow effect"
+    "@type": "SoftwareApplication"
+    "name": "SnowB BMF"
+    "applicationCategory": "DesignApplication"
+    "url": "https://snowb.org"
   "audience":
     "@type": "Audience"
     "audienceType": "Font Designers, Game Developers, UI/UX Designers"
-  "genre": "Technical Documentation"
-  "inLanguage": "en-US"
-  "isAccessibleForFree": true
+  "articleSection": "Font Design"
+  "teaches":
+    - "How to enable and configure shadow effects"
+    - "Adjusting shadow offset, blur, and color"
+    - "Creating drop shadows, glow effects, and long shadows"
+    - "Best practices for shadow performance and design"
+  "inLanguage": "en"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
+  "mainEntityOfPage":
+    "@type": "WebPage"
+    "@id": "https://snowb.org/en/docs/font-design/shadow-effects/"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
   "mainEntity":
     "@type": "HowTo"
@@ -124,3 +128,8 @@ A modern, dramatic effect with a sharp, cast shadow.
 - Shadow effects are baked directly into the final bitmap font image.
 - Plan your texture atlas size to ensure it's large enough to accommodate the shadow dimensions.
 - Only single-layer shadows are supported.
+
+## Related Topics
+
+- [Fill Styles](/en/docs/font-design/fill-styles/)
+- [Stroke Styles](/en/docs/font-design/stroke-styles/)

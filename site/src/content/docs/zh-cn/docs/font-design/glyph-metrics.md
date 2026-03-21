@@ -1,10 +1,12 @@
 ---
-title: 调整字形度量
+title: "字形度量：微调 xAdvance、xOffset 和 yOffset"
 description: 通过调整全局和单个字形的度量（如 xAdvance、xOffset 和 yOffset），优化位图字体中的字符间距和位置。
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "在 SnowB BMF 中调整字形度量"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "通过调整全局和单个字形的度量（如 xAdvance、xOffset 和 yOffset），优化位图字体中的字符间距和位置。"
   "about":
     "@type": "Thing"
@@ -16,17 +18,30 @@ schema:
   "keywords": ["字形度量", "位图字体", "字符间距", "xAdvance", "xOffset", "yOffset", "字体设计", "排版", "SnowB BMF"]
   "isPartOf":
     "@type": "WebSite"
-    "name": "SnowB BMF Documentation"
+    "name": "SnowB BMF 文档"
     "url": "https://snowb.org"
   "mainEntity":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
-    "applicationCategory": "DesignApplication"
-    "url": "https://snowb.org"
-  "publisher":
+    "@type": "HowTo"
+    "name": "如何在 SnowB BMF 中调整字形度量"
+    "description": "调整全局和单个字形度量以实现最佳字符间距的分步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "打开度量面板"
+        "text": "导航到左侧边栏，找到全局度量调整设置"
+      - "@type": "HowToStep"
+        "name": "调整全局度量"
+        "text": "设置 xAdvance、xOffset 和 yOffset 值，以控制整体字体间距和定位"
+      - "@type": "HowToStep"
+        "name": "微调单个字形度量"
+        "text": "激活预览模式，选择特定字符，并覆盖其单独的度量值"
+  "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "inLanguage": "zh-CN"
   "articleSection": "Font Design"
 ---
@@ -89,3 +104,8 @@ schema:
 - **单独调整**: 对特例和微调使用单独的调整。
 - **经常预览**: 在预览模式下使用不同的文本样本不断测试您的更改。
 - **考虑目标**: 牢记目标平台的文本渲染方式。
+
+## 相关主题
+
+- [字偶距](/zh-cn/docs/font-design/kerning-pairs/)
+- [布局设置](/zh-cn/docs/font-design/layout-settings/)

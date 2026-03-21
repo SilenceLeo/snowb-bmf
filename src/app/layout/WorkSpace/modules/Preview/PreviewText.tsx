@@ -1,14 +1,18 @@
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { observer } from 'mobx-react-lite'
-import React, { FunctionComponent, useState } from 'react'
-import { useProjectUi } from 'src/store/hooks'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { setPreviewText, usePreviewText } from 'src/store/legend'
 
-const Preview: FunctionComponent<unknown> = () => {
-  const { previewText, setPreviewText } = useProjectUi()
+const PreviewText: FunctionComponent = () => {
+  const previewText = usePreviewText()
   const [isIME, setIsIME] = useState(false)
   const [inputText, setInputText] = useState(previewText)
+
+  // Sync inputText when previewText changes externally (e.g., project switch)
+  useEffect(() => {
+    setInputText(previewText)
+  }, [previewText])
 
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>): void => {
     const { value } = event.target
@@ -24,7 +28,6 @@ const Preview: FunctionComponent<unknown> = () => {
 
   const handleCompositionEnd = (): void => {
     setIsIME(false)
-    setInputText(inputText)
     if (inputText !== previewText) {
       setPreviewText(inputText)
     }
@@ -55,4 +58,4 @@ const Preview: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(Preview)
+export default PreviewText

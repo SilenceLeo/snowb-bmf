@@ -1,11 +1,17 @@
 import Input from '@mui/material/Input'
-import { observer } from 'mobx-react-lite'
 import React, { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import {
+  setWidth,
+  useAutoLayout,
+  useFixedSize,
+  useLayoutWidth,
+} from 'src/store/legend'
 
-const PackWidth: FunctionComponent<unknown> = () => {
-  const { width, auto, fixedSize, setWidth } = useLayout()
+const PackWidth: FunctionComponent = () => {
+  const width = useLayoutWidth()
+  const auto = useAutoLayout()
+  const fixedSize = useFixedSize()
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setWidth(Number(event.target.value))
@@ -25,4 +31,4 @@ const PackWidth: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(PackWidth)
+export default PackWidth

@@ -1,21 +1,56 @@
-import { Project } from 'src/store'
-
 import packageInfo from '../../../package.json'
+import getPageFileName from './getPageFileName'
 import {
   BMFont,
   BMFontChars,
   BMFontCommon,
+  BMFontDistanceField,
   BMFontInfo,
   BMFontKernings,
   BMFontMetadata,
   BMFontPage,
+  ExportProjectData,
 } from './type'
+
+/**
+ * Determine BMFont channel flags based on SDF mode and channel format.
+ * Values: glyph=0, outline=1, glyph+outline=2, zero=3, one=4
+ */
+function getSdfChannelFlags(
+  distanceField?: BMFontDistanceField,
+  sdfChannel?: string,
+): { alphaChnl: number; redChnl: number; greenChnl: number; blueChnl: number } {
+  if (distanceField) {
+    if (distanceField.fieldType === 'mtsdf') {
+      // MTSDF: all 4 channels carry glyph/distance data
+      return { alphaChnl: 0, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+    }
+    if (distanceField.fieldType === 'psdf') {
+      // PSDF: single-channel distance in RGB, A=one (opaque)
+      return { alphaChnl: 4, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+    }
+    if (distanceField.fieldType === 'msdf') {
+      // MSDF: RGB carry per-channel distance, A=one (opaque)
+      return { alphaChnl: 4, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+    }
+    // SDF channel modes
+    if (sdfChannel === 'alpha' || sdfChannel === 'alpha-inv') {
+      // Distance in Alpha channel: RGB=one(4), A=glyph(0)
+      return { alphaChnl: 0, redChnl: 4, greenChnl: 4, blueChnl: 4 }
+    }
+    // Distance in RGB channels (rgb / rgb-inv): RGB=glyph(0), A=one(4)
+    return { alphaChnl: 4, redChnl: 0, greenChnl: 0, blueChnl: 0 }
+  }
+  // Normal mode: A=glyph(0), RGB=one(4)
+  return { alphaChnl: 0, redChnl: 4, greenChnl: 4, blueChnl: 4 }
+}
 
 // http://www.angelcode.com/products/bmfont/doc/file_format.html
 export default function toBmfInfo(
-  project: Project,
+  projectData: ExportProjectData,
   fontFamily = '',
   outputFileName?: string,
+  distanceField?: BMFontDistanceField,
 ): BMFont {
   const {
     name,
@@ -23,37 +58,35 @@ export default function toBmfInfo(
     layout,
     globalAdjustMetric,
     glyphList,
+    xFractional,
     ui: { width, height },
-  } = project
+  } = projectData
+  const fractionalBits = Math.max(0, Math.min(7, Math.round(xFractional || 0)))
+  const fractionalScale = 1 << fractionalBits
   const { opentype, size } = style.font
   let fontScale = 1
   if (opentype) {
-    fontScale = (1 / opentype.unitsPerEm) * size
+    fontScale = size / opentype.unitsPerEm
   }
 
-  // Extract bold/italic information from OpenType font
+  // Derive bold/italic from variationSettings or font OS/2 table
   let bold = 0
   let italic = 0
-  if (opentype) {
-    // Check OS/2 table for weight and style
-    const os2Table = opentype.tables.os2
-    if (os2Table) {
-      // Weight classification: 400 = normal, 700+ = bold
-      bold = os2Table.usWeightClass >= 700 ? 1 : 0
-      // Style selection: check for italic bit
-      italic = os2Table.fsSelection & 0x01 ? 1 : 0
-    }
+  const vs = style.font.variationSettings
+  const os2 = opentype?.tables.os2
 
-    // Fallback: check font names for style indicators
-    if (!bold && !italic && opentype.names) {
-      const familyName =
-        opentype.names.fontFamily?.en || opentype.names.fullName?.en || ''
-      const subfamilyName = opentype.names.fontSubfamily?.en || ''
-      const fullName = `${familyName} ${subfamilyName}`.toLowerCase()
+  // Bold: prefer wght axis, fallback to OS/2 usWeightClass
+  if (vs?.wght !== undefined) {
+    if (vs.wght >= 700) bold = 1
+  } else if (os2 && os2.usWeightClass >= 700) {
+    bold = 1
+  }
 
-      bold = /bold|black|heavy|extra/.test(fullName) ? 1 : 0
-      italic = /italic|oblique|slant/.test(fullName) ? 1 : 0
-    }
+  // Italic: prefer ital axis, fallback to OS/2 fsSelection
+  if (vs?.ital !== undefined) {
+    if (vs.ital > 0) italic = 1
+  } else if (os2 && (os2.fsSelection & 0x01) !== 0) {
+    italic = 1
   }
 
   const info: BMFontInfo = {
@@ -90,38 +123,23 @@ export default function toBmfInfo(
   const common: BMFontCommon = {
     lineHeight: Math.round(style.font.size * style.font.lineHeight),
     base: calculateBase(),
-    scaleW: width,
-    scaleH: height,
+    scaleW: layout.packWidth ?? width,
+    scaleH: layout.packHeight ?? height,
     pages: layout.page,
     packed: 0,
-    alphaChnl: 0, // Alpha channel contains glyph data
-    redChnl: 4, // Red channel set to one (full color)
-    greenChnl: 4, // Green channel set to one (full color)
-    blueChnl: 4, // Blue channel set to one (full color)
+    xFpBits: fractionalBits,
+    // Channel info: glyph=0, outline=1, glyph+outline=2, zero=3, one=4
+    // Set based on where distance/glyph data is stored
+    ...getSdfChannelFlags(distanceField, projectData.sdfChannel),
   }
 
   const finalFileName = outputFileName || name
   const pages: BMFontPage[] = Array.from(
     { length: layout.page },
-    (_, index) => {
-      if (layout.page === 1) {
-        return {
-          id: index,
-          file: `${finalFileName}.png`,
-        }
-      } else {
-        // For multi-page, use zero-padded numbering to ensure consistent filename lengths
-        // Calculate the number of digits needed for the highest page number
-        const maxPageIndex = layout.page - 1
-        const digits = maxPageIndex.toString().length
-        const paddedIndex = index.toString().padStart(digits, '0')
-
-        return {
-          id: index,
-          file: `${finalFileName}_${paddedIndex}.png`,
-        }
-      }
-    },
+    (_, index) => ({
+      id: index,
+      file: getPageFileName(finalFileName, index, layout.page),
+    }),
   )
 
   const chars: BMFontChars = {
@@ -136,9 +154,9 @@ export default function toBmfInfo(
 
   glyphList.forEach((glyph) => {
     const isUnEmpty = !!(glyph.width && glyph.height)
-    const info = {
+    const charInfo = {
       letter: glyph.letter,
-      id: glyph.letter.codePointAt(0) || 0,
+      id: glyph.letter.codePointAt(0) ?? 0,
       x: glyph.x,
       y: glyph.y,
       width: isUnEmpty ? glyph.width + layout.padding * 2 : 0,
@@ -153,77 +171,79 @@ export default function toBmfInfo(
         glyph.adjustMetric.yOffset -
         (isUnEmpty ? glyph.trimOffsetTop : 0) -
         (isUnEmpty ? layout.padding : 0),
-      xadvance:
-        Math.ceil(glyph.fontWidth) +
-        globalAdjustMetric.xAdvance +
-        glyph.adjustMetric.xAdvance,
+      xadvance: Math.ceil(
+        (glyph.fontWidth +
+          globalAdjustMetric.xAdvance +
+          glyph.adjustMetric.xAdvance) *
+          fractionalScale,
+      ),
       page: glyph.page || 0,
       chnl: 15,
     }
 
-    chars.list.push(info)
+    chars.list.push(charInfo)
   })
 
-  // High-performance kerning processing with caching and optimizations
   const kerningMap = new Map<string, number>()
 
-  if (opentype) {
-    // Build optimized glyph info array with pre-computed values (single pass)
-    const validGlyphs: Array<{
-      glyph: (typeof glyphList)[0]
-      index: number
-      id: number
-    }> = []
+  // Step 1: Manual kerning — always O(n * k_avg), typically sparse
+  glyphList.forEach((glyph) => {
+    const firstId = glyph.letter.codePointAt(0) ?? 0
+    Object.entries(glyph.kerning).forEach(([letter, amount]) => {
+      if (amount) {
+        const secondId = letter.codePointAt(0) ?? 0
+        kerningMap.set(
+          `${firstId}-${secondId}`,
+          Math.round(amount * fractionalScale),
+        )
+      }
+    })
+  })
 
+  if (opentype) {
+    // Apply variation settings for accurate kerning values
+    const vs = style.font.variationSettings
+    const activeFont =
+      vs && Object.keys(vs).length > 0 ? opentype.getVariation(vs) : opentype
+
+    // Step 2: Extract kerning via fontkit's layout engine (handles both kern and GPOS).
+    // Uses AdaptedFont.getKerningValue() which internally uses fontkit's layout()
+    // to compute the kerning adjustment between glyph pairs. O(n²).
+    const validGlyphs: Array<{ index: number; id: number }> = []
     glyphList.forEach((glyph) => {
-      const glyphIndex = opentype.charToGlyphIndex(glyph.letter)
-      // Only include glyphs with valid indices to reduce loop iterations
+      const glyphIndex = activeFont.charToGlyphIndex(glyph.letter)
       if (glyphIndex !== 0) {
         validGlyphs.push({
-          glyph,
           index: glyphIndex,
-          id: glyph.letter.codePointAt(0) || 0,
+          id: glyph.letter.codePointAt(0) ?? 0,
         })
       }
     })
 
-    // Process kerning with pre-computed data (no Map lookups in hot path)
     for (let i = 0; i < validGlyphs.length; i++) {
       const first = validGlyphs[i]
-
       for (let j = 0; j < validGlyphs.length; j++) {
         const second = validGlyphs[j]
-
-        // Direct access to cached values (much faster than Map.get())
-        const opentypeKerning = opentype.getKerningValue(
+        const kerningValue = activeFont.getKerningValue(
           first.index,
           second.index,
         )
-        const manualKerning = first.glyph.kerning.get(second.glyph.letter) || 0
-
-        // Early termination for zero kerning
-        if (opentypeKerning === 0 && manualKerning === 0) continue
-
-        const amount = Math.round(opentypeKerning * fontScale + manualKerning)
-
+        if (kerningValue === 0) continue
+        const amount = Math.round(kerningValue * fontScale * fractionalScale)
         if (amount) {
           const key = `${first.id}-${second.id}`
-          kerningMap.set(key, amount)
+          // Manual kerning (Step 1) is additive with font kerning
+          const existing = kerningMap.get(key)
+          if (existing !== undefined) {
+            const combined = existing + amount
+            if (combined) kerningMap.set(key, combined)
+            else kerningMap.delete(key)
+          } else {
+            kerningMap.set(key, amount)
+          }
         }
       }
     }
-  } else {
-    // Process manual kerning settings (already optimal for this case)
-    glyphList.forEach((glyph) => {
-      glyph.kerning.forEach((amount, letter) => {
-        if (amount) {
-          const firstId = glyph.letter.codePointAt(0) || 0
-          const secondId = letter.codePointAt(0) || 0
-          const key = `${firstId}-${secondId}`
-          kerningMap.set(key, amount)
-        }
-      })
-    })
   }
 
   // Convert kerning map to sorted list
@@ -257,6 +277,7 @@ export default function toBmfInfo(
     metadata,
     info,
     common,
+    distanceField,
     pages,
     chars,
     kernings,

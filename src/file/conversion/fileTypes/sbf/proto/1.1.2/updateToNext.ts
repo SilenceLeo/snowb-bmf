@@ -3,6 +3,7 @@ import { IProject } from './project'
 
 export default function updateToNext(project: IProject): IProjectNext {
   // Add page support with default values
+  // `as any` is necessary due to cross-version type incompatibility between proto schemas
   const updatedProject = { ...project } as any
 
   // Add page field to layout with default value 1

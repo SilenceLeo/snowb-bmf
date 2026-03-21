@@ -9,10 +9,9 @@ async function createReleaseAndUpload() {
   try {
     const release = await getGitRelease()
     if (!release) {
-      console.warn('No release version available, skipping Sentry upload')
+      console.warn('Empty release identifier, skipping Sentry upload')
       return
     }
-
     console.log(`Creating Sentry release: ${release}`)
     const cli = new SentryCli()
 
@@ -32,7 +31,6 @@ async function createReleaseAndUpload() {
 
     try {
       // Create release version
-      console.log(`Creating Sentry release: ${release}`)
       await cli.releases.new(release, { projects: ['snowb'] })
 
       // Upload source maps (Vite build assets are in assets directory)

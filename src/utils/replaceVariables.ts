@@ -1,6 +1,6 @@
 export default function replaceVariables(
   template: string,
-  variables: Record<string, unknown>,
+  variables: Record<string, any>,
 ): string {
   return template.replace(/\$\w+\$/gi, (match: string): string => {
     const key = match.replace(/\$/g, '')

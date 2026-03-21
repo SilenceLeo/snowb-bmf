@@ -1,10 +1,12 @@
 ---
-title: Bitmap Font Workflow Guide
-description: Master the step-by-step workflow for creating high-quality, game-ready bitmap fonts with SnowB BMF. Learn to configure, style, and export fonts efficiently.
+title: "Workflow Guide: Create Bitmap Fonts Step by Step"
+description: Master the step-by-step workflow for creating high-quality, game-ready bitmap fonts with SnowB BMF. Learn to configure, style, and export fonts efficiently. Try it free — no download required.
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "Bitmap Font Workflow Guide"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "Master the step-by-step workflow for creating high-quality, game-ready bitmap fonts with SnowB BMF. Learn to configure, style, and export fonts efficiently."
   "about":
     "@type": "SoftwareApplication"
@@ -38,11 +40,19 @@ schema:
       - "@type": "HowToStep"
         "name": "Export"
         "text": "Choose format (.txt or .xml) and download font descriptor and texture atlas"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
-  "inLanguage": "en-US"
+  "inLanguage": "en"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
+    "url": "https://snowb.org"
 ---
 
 This guide outlines the complete workflow for creating professional bitmap fonts in SnowB BMF, from initial setup to final export. Follow these steps to produce optimized, high-quality assets for your project.
@@ -140,3 +150,10 @@ Embed icons or symbols directly into your font atlas:
 
 ### Mobile
 - **iOS & Android:** Always use power-of-two texture dimensions (e.g., 512, 1024). Efficient packing is crucial for performance on mobile devices.
+
+## Related Topics
+
+- [Character Sets](/en/docs/font-design/character-sets/)
+- [Font Import](/en/docs/font-design/font-import/)
+- [Fill Styles](/en/docs/font-design/fill-styles/)
+- [Export Formats](/en/docs/project-management/export-formats/)

@@ -1,13 +1,15 @@
 ---
-title: 字体大小
+title: "字体大小：位图字体纹理的最佳尺寸设置"
 description: 了解如何设置位图字体的字体大小，及其对字形质量、纹理图集尺寸和性能的关键影响。
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "在 SnowB BMF 位图字体生成器中配置字体大小"
   "description": "学习如何为位图字体设置字体大小，并了解其对字形质量、纹理大小和 SnowB BMF 性能的影响。"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "字体大小配置"
     "description": "定义位图字体生成中字形像素渲染分辨率的字体大小设置"
   "mainEntity":
@@ -33,6 +35,10 @@ schema:
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "inLanguage": "zh-CN"
   "audience":
     "@type": "Audience"
@@ -94,3 +100,9 @@ schema:
 
 当生成的纹理对于目标平台来说太大时，会发生这种情况。
 - **解决方案**：减小字体大小。您还可以通过从字符集中删除任何未使用的字形来优化纹理大小。
+
+## 相关主题
+
+- [锐利渲染](/zh-cn/docs/font-design/sharp/)
+- [布局设置](/zh-cn/docs/font-design/layout-settings/)
+- [纹理打包](/zh-cn/docs/font-design/texture-packing/)

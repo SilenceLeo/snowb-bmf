@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material/styles'
-import { SxProps, Theme } from '@mui/material/styles'
+import { SxProps, Theme, useTheme } from '@mui/material/styles'
 import React, { FunctionComponent } from 'react'
 
 interface ColorStopProps {

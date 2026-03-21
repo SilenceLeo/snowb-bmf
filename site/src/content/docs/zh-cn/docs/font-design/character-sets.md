@@ -1,6 +1,6 @@
 ---
-title: 字符集
-description: 配置位图字体中需要包含哪些字符。
+title: "字符集：自定义位图字体的 Unicode 字形"
+description: 配置位图字体中需要包含哪些字符。免费使用，无需下载。
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
@@ -9,33 +9,43 @@ schema:
   "keywords": ["字符集", "位图字体", "Unicode", "字形", "字体设计", "纹理图集", "游戏开发", "SnowB BMF"]
   "articleSection": "字体设计"
   "inLanguage": "zh-CN"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "about":
-    "@type": "SoftwareFeature"
+    "@type": "Thing"
     "name": "字符集配置"
     "description": "管理位图字体中包含哪些字符的功能"
   "isPartOf":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
+    "@type": "WebSite"
+    "name": "SnowB BMF 文档"
     "url": "https://snowb.org"
   "audience":
     "@type": "Audience"
     "audienceType": "Developers"
     "name": "游戏开发者和字体设计师"
+  "author":
+    "@type": "Person"
+    "name": "SilenceLeo"
+    "url": "https://github.com/SilenceLeo/"
+  "publisher":
+    "@type": "Organization"
+    "name": "SnowB BMF"
+    "url": "https://snowb.org"
   "teaches": ["Unicode 字符管理", "字体优化", "字形配置", "国际化文本支持"]
-  "mentions":
-    - "@type": "SoftwareFeature"
-      "name": "Unicode 支持"
-      "description": "全面支持国际字符的 Unicode 支持"
-    - "@type": "SoftwareFeature"
-      "name": "自动去重"
-      "description": "自动移除重复字符"
-    - "@type": "SoftwareFeature"
-      "name": "实时预览"
-      "description": "字符集更改时实时更新预览"
   "mainEntity":
-    "@type": "DefinedTerm"
-    "name": "字符集"
-    "description": "将被渲染为字体纹理图集中位图字形的字符集合"
+    "@type": "HowTo"
+    "name": "如何在 SnowB BMF 中配置字符集"
+    "description": "配置位图字体中需要包含哪些字符的分步指南"
+    "step":
+      - "@type": "HowToStep"
+        "name": "打开字形输入框"
+        "text": "在左侧栏的字体配置面板中找到字形输入字段"
+      - "@type": "HowToStep"
+        "name": "添加字符"
+        "text": "在多行文本字段中输入或粘贴所需的字符 — 重复字符会被自动移除"
+      - "@type": "HowToStep"
+        "name": "预览并验证"
+        "text": "查看实时工作区预览，确认您的字符集使用所选字体正确渲染"
 ---
 
 字符集定义了位图字体中包含哪些字符（字形）。您可以通过添加或删除字符来管理字符集，SnowB BMF 完全支持 Unicode，并会自动处理重复字符，确保高效的字形生成。
@@ -165,3 +175,9 @@ HP:MP/+-%
 - **减少字符数量**: 最常见的原因是字符集过大。移除应用程序中非必需的任何字符。
 - **优化布局**: 使用自动打包并调整间距/填充设置，以减小最终的纹理图集尺寸。
 - **复杂的字形**: 包含非常精细字符的字体可能需要更长的处理时间并消耗更多的纹理空间。
+
+## 相关主题
+
+- [字体导入](/zh-cn/docs/font-design/font-import/)
+- [纹理打包](/zh-cn/docs/font-design/texture-packing/)
+- [布局设置](/zh-cn/docs/font-design/layout-settings/)

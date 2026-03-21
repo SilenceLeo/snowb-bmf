@@ -1,12 +1,14 @@
 ---
-title: Exporting Bitmap Fonts
-description: Learn how to export bitmap fonts as PNG files with Text, XML, or Binary descriptors for game engines like Unity, Unreal, and Godot.
+title: "Export Formats: 6 Ways to Export Bitmap Fonts for Game Engines"
+description: "Learn how to export bitmap fonts in 6 formats: Text, XML, Binary, JSON, C Header, and MSDF Atlas JSON. Compatible with Unity, Unreal, Godot, embedded systems, and MSDF shader pipelines."
 schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
-  "headline": "Exporting Bitmap Fonts from SnowB BMF"
-  "description": "Learn how to export bitmap fonts as PNG files with Text, XML, or Binary descriptors for game engines like Unity, Unreal, and Godot."
-  "keywords": ["bitmap font export", "font formats", "game development", "Unity", "Unreal", "Godot", "BMFont", "texture atlas", "fnt format", "XML format", "binary format"]
+  "headline": "Exporting Bitmap Fonts in 6 Formats from SnowB BMF"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
+  "description": "Learn how to export bitmap fonts in 6 formats: Text, XML, Binary, JSON, C Header, and MSDF Atlas JSON. Compatible with Unity, Unreal, Godot, embedded systems, and MSDF shader pipelines."
+  "keywords": ["bitmap font export", "font formats", "game development", "Unity", "Unreal", "Godot", "BMFont", "texture atlas", "fnt format", "XML format", "binary format", "JSON format", "C header format", "MSDF Atlas JSON", "embedded systems", "pixel format"]
   "author":
     "@type": "Person"
     "name": "SilenceLeo"
@@ -16,27 +18,52 @@ schema:
     "name": "SnowB BMF"
     "url": "https://snowb.org"
   "mainEntity":
-    "@type": "SoftwareApplication"
-    "name": "SnowB BMF"
-    "applicationCategory": "DesignApplication"
+    "@type": "HowTo"
+    "name": "How to Export Bitmap Fonts for Game Engines"
+    "description": "Step-by-step guide for exporting bitmap fonts in multiple formats from SnowB BMF"
+    "step":
+      - "@type": "HowToStep"
+        "name": "Open Export Dialog"
+        "text": "Click the Export button in the top menu bar or press Ctrl+E"
+      - "@type": "HowToStep"
+        "name": "Choose Format"
+        "text": "Select from Text (.fnt), XML, Binary, JSON, C Header, or MSDF Atlas JSON format"
+      - "@type": "HowToStep"
+        "name": "Configure Settings"
+        "text": "Adjust filename, texture format, pixel format (for C Header), and other export options"
+      - "@type": "HowToStep"
+        "name": "Download Files"
+        "text": "Click the download button to save a .zip archive containing the descriptor file and PNG texture atlas(es)"
+  "isPartOf":
+    "@type": "WebSite"
+    "name": "SnowB BMF Documentation"
     "url": "https://snowb.org"
-  "about":
-    "@type": "Thing"
-    "name": "Bitmap Font Export Formats"
-    "description": "Technical documentation covering supported export formats for bitmap fonts including Text, XML, and Binary formats based on AngelCode BMFont specification"
+  "inLanguage": "en"
   "mentions":
-    - "@type": "FileFormat"
+    - "@type": "DigitalDocument"
       "name": "BMFont Text Format"
       "fileFormat": ".fnt"
       "description": "Human-readable text format for bitmap font descriptors"
-    - "@type": "FileFormat"
+    - "@type": "DigitalDocument"
       "name": "BMFont XML Format"
       "fileFormat": ".xml"
       "description": "Structured XML format for bitmap font descriptors"
-    - "@type": "FileFormat"
+    - "@type": "DigitalDocument"
       "name": "BMFont Binary Format"
       "fileFormat": ".fnt"
       "description": "Compact binary format for performance-critical applications"
+    - "@type": "DigitalDocument"
+      "name": "BMFont JSON Format"
+      "fileFormat": ".json"
+      "description": "JSON representation of BMFont data with distanceField metadata support"
+    - "@type": "DigitalDocument"
+      "name": "C Header Format"
+      "fileFormat": ".c"
+      "description": "Texture data embedded as C language arrays for embedded systems and MCUs"
+    - "@type": "DigitalDocument"
+      "name": "MSDF Atlas JSON Format"
+      "fileFormat": ".json"
+      "description": "msdf-atlas-gen compatible format with em-normalized coordinates for MSDF shader pipelines"
     - "@type": "ImageObject"
       "name": "PNG Texture Atlas"
       "fileFormat": ".png"
@@ -94,10 +121,65 @@ The most compact and efficient format, designed for fast loading and minimal fil
 
 - **Best for**: Performance-critical applications, mobile games, or projects with memory constraints.
 - **Features**: Smallest file size, optimized for quick parsing, follows the BMFont v3 specification.
-- **Specification**: For details, see the [binary format documentation](https.www.angelcode.com/products/bmfont/doc/file_format.html#bin).
+- **Specification**: For details, see the [binary format documentation](https://www.angelcode.com/products/bmfont/doc/file_format.html#bin).
 
 **Structure:**
 The binary file consists of typed blocks for info, common data, pages, characters, and kerning pairs, ensuring fast read times.
+
+### JSON Format (`.json`)
+
+A JSON representation of BMFont data, offering the flexibility of a widely-used data format.
+
+- **Best for**: Web applications, custom parsers, and projects that prefer JSON over plain text or XML.
+- **Features**: Standard JSON structure, easy to parse in any language, includes `distanceField` metadata when using SDF rendering modes.
+
+**Example:**
+```json
+{
+  "info": {
+    "face": "Arial",
+    "size": 32,
+    "bold": 0,
+    "italic": 0
+  },
+  "distanceField": {
+    "fieldType": "msdf",
+    "distanceRange": 4
+  },
+  "common": {
+    "lineHeight": 38,
+    "base": 26,
+    "scaleW": 512,
+    "scaleH": 512,
+    "pages": 1
+  },
+  "pages": ["font_0.png"],
+  "chars": [
+    { "id": 65, "x": 10, "y": 0, "width": 18, "height": 20, "xoffset": 0, "yoffset": 6, "xadvance": 18, "page": 0 }
+  ]
+}
+```
+
+### C Header Format (`.c`)
+
+Embeds texture data directly as C language byte arrays, designed for resource-constrained environments.
+
+- **Best for**: Embedded systems, microcontrollers (MCU), and bare-metal applications where file system access is limited.
+- **Features**: Supports 8 pixel formats (GRAY8, RGB, RGBA, ARGB, BGR, ABGR, BGRA, RGB565), configurable reconstruction filter, texture data compiled directly into the binary.
+- **Pixel Formats**: Choose the format that matches your display hardware:
+  - `GRAY8` (1 byte/pixel) — Monochrome displays
+  - `RGB` (3 bytes/pixel) — Standard color without alpha
+  - `RGBA` / `ARGB` (4 bytes/pixel) — Color with alpha, different byte orders
+  - `BGR` / `ABGR` / `BGRA` (4 bytes/pixel) — Reversed byte order variants
+  - `RGB565` (2 bytes/pixel) — 16-bit color for memory-constrained displays
+
+### MSDF Atlas JSON (`.json`)
+
+An [msdf-atlas-gen](https://github.com/Chlumsky/msdf-atlas-gen) compatible JSON format using em-normalized coordinates.
+
+- **Best for**: MSDF shader pipelines, custom rendering engines with distance field support, and projects using msdf-atlas-gen tooling.
+- **Features**: Em-normalized coordinates (Y-axis up), font metrics from OpenType tables, distanceField metadata with configurable range, underline position/thickness data.
+- **Note**: This format is designed specifically for SDF/MSDF rendering modes. Using it with the Default render mode will produce valid but non-SDF output.
 
 ## Advanced Features
 
@@ -111,6 +193,22 @@ If your character set is too large to fit on a single texture, SnowB BMF automat
 ### Metadata
 
 Exported files automatically include useful metadata, such as the font name, size, generation date, and character set details, which can be helpful for debugging and asset management.
+
+## Advanced Export Options
+
+### Pixel Format (C Header Only)
+
+When exporting in C Header format, choose a pixel format that matches your target hardware. See the C Header Format section above for available formats.
+
+### Include Textures
+
+By default, texture atlas PNG files are included in the export archive. You can configure whether to include them when using programmatic export workflows.
+
+### Extended Data Fields
+
+Some export formats support additional metadata:
+- **distanceField**: Included in JSON and MSDF Atlas JSON formats when using SDF/MSDF rendering modes. Contains the field type (e.g., `msdf`, `sdf`) and distance range.
+- **xFractional**: When enabled, glyph metrics use fixed-point notation for sub-pixel precision.
 
 ## Troubleshooting Common Issues
 

@@ -1,4 +1,4 @@
-import { PathCommand } from 'opentype.js'
+import type { PathCommand } from './fontAdapter'
 
 export default function ctxDoPath(
   ctx: CanvasRenderingContext2D,

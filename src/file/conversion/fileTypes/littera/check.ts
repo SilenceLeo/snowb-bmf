@@ -3,6 +3,12 @@ import * as Sentry from '@sentry/react'
 import { CheckFunction } from '../type'
 import validate from './schema'
 
+// Check if the data has basic Littera structure indicators (top-level keys)
+function looksLikeLittera(data: Record<string, unknown>): boolean {
+  const litteraKeys = ['fill', 'font', 'glyphs', 'stroke', 'shadow']
+  return litteraKeys.some((key) => key in data)
+}
+
 const check: CheckFunction = (litteraStr) => {
   let litteraData
 
@@ -12,6 +18,8 @@ const check: CheckFunction = (litteraStr) => {
     } catch {
       return false
     }
+  } else if (typeof litteraStr === 'object' && litteraStr !== null) {
+    litteraData = litteraStr
   }
 
   if (typeof litteraData !== 'object') {
@@ -20,7 +28,7 @@ const check: CheckFunction = (litteraStr) => {
 
   const isLittera = validate(litteraData)
 
-  if (!isLittera) {
+  if (!isLittera && looksLikeLittera(litteraData as Record<string, unknown>)) {
     if (import.meta.env.DEV) {
       console.log(isLittera, validate.errors)
     }

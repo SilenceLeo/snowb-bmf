@@ -5,6 +5,8 @@ schema:
   "@context": "https://schema.org"
   "@type": "TechArticle"
   "headline": "字体填充样式：纯色、渐变与图案"
+  "datePublished": "2025-01-15"
+  "dateModified": "2026-03-15"
   "description": "学习如何为您的位图字体应用纯色、渐变和独特的图像图案，为任何项目创造引人注目的视觉效果。"
   "about":
     "@type": "SoftwareApplication"
@@ -15,18 +17,18 @@ schema:
   "inLanguage": "zh-CN"
   "isPartOf":
     "@type": "WebSite"
-    "name": "SnowB BMF Documentation"
+    "name": "SnowB BMF 文档"
     "url": "https://snowb.org"
   "mainEntityOfPage":
     "@type": "WebPage"
-    "@id": "https://snowb.org/zh-cn/docs/font-design/fill-styles"
+    "@id": "https://snowb.org/zh-cn/docs/font-design/fill-styles/"
   "author":
     "@type": "Person"
     "name": "SilenceLeo"
     "url": "https://github.com/SilenceLeo/"
   "publisher":
     "@type": "Organization"
-    "name": "SnowB BMF"
+    "name": "SnowB"
     "url": "https://snowb.org"
   "teaches":
     - "如何为位图字体应用纯色"
@@ -77,6 +79,16 @@ schema:
 
 默认是一个简单的从白到黑的线性渐变，为您提供了一个很好的起点。
 
+### 渐变预设
+
+SnowB BMF 包含一个预设系统，帮助您快速应用和管理渐变：
+
+- **内置预设**：从 10 个专业设计的渐变预设中选择，一键即可应用。预设涵盖常见用途，如火焰、冰霜、金属、霓虹等。
+- **保存自定义预设**：创建了完美的渐变？将其保存为预设，以便在不同项目中重复使用。您的自定义预设与内置预设一起存储。
+- **删除预设**：移除不再需要的自定义预设。内置预设无法删除。
+
+预设选择器显示在渐变编辑器的顶部，让您可以轻松尝试不同的效果，然后再进行微调。
+
 ## 图像图案
 
 用自定义图像或纹理填充您的字符，以创建真正独特且富有表现力的字体。此功能为创意开辟了无限可能。
@@ -97,3 +109,8 @@ schema:
 - **品牌化**：将徽标或品牌特定图案直接集成到您的字体中。
 - **艺术排版**：设计高度装饰性和创造性的字体。
 - **游戏资产**：制作像素艺术字体或带有游戏主题纹理的文本。
+
+## 相关主题
+
+- [描边样式](/zh-cn/docs/font-design/stroke-styles/)
+- [阴影效果](/zh-cn/docs/font-design/shadow-effects/)

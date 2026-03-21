@@ -1,11 +1,11 @@
 import Checkbox from '@mui/material/Checkbox'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import GridInput from 'src/app/components/GridInput'
-import { useLayout } from 'src/store/hooks'
+import { setFixedSize, useAutoLayout, useFixedSize } from 'src/store/legend'
 
-const FixedSize: FunctionComponent<unknown> = () => {
-  const { auto, fixedSize, setFixedSize } = useLayout()
+const FixedSize: FunctionComponent = () => {
+  const auto = useAutoLayout()
+  const fixedSize = useFixedSize()
 
   return (
     <GridInput before='Fixed Size:'>
@@ -20,4 +20,4 @@ const FixedSize: FunctionComponent<unknown> = () => {
   )
 }
 
-export default observer(FixedSize)
+export default FixedSize

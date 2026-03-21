@@ -3,12 +3,11 @@ import { SxProps, Theme } from '@mui/material/styles'
 import * as Sentry from '@sentry/react'
 import { saveAs } from 'file-saver'
 import hotkeys from 'hotkeys-js'
-import { toJS } from 'mobx'
-import { observer } from 'mobx-react-lite'
 import { useSnackbar } from 'notistack'
 import { FunctionComponent, useCallback, useEffect } from 'react'
 import { encode } from 'src/file/conversion'
-import { useWorkspace } from 'src/store/hooks'
+import type { Project } from 'src/store'
+import { serializeProject } from 'src/store/legend'
 
 interface ButtonSaveProps {
   sx?: SxProps<Theme>
@@ -20,28 +19,27 @@ const ButtonSave: FunctionComponent<ButtonSaveProps> = (
   const { sx } = props
 
   const { enqueueSnackbar } = useSnackbar()
-  const workSpace = useWorkspace()
-  const { currentProject: project } = workSpace
 
   const handleSaveProject = useCallback(
     (e: { preventDefault(): void }) => {
       e.preventDefault()
       try {
-        const buffer = encode(toJS(project))
+        const project = serializeProject()
+        // Type assertion needed: serializeProject() returns observable-derived type, encode() expects plain Project interface
+        const buffer = encode(project as unknown as Project)
         saveAs(new Blob([buffer as BlobPart]), `${project.name}.sbf`)
       } catch (e) {
         Sentry.captureException(e)
         enqueueSnackbar((e as Error).message)
       }
     },
-    [enqueueSnackbar, project],
+    [enqueueSnackbar],
   )
 
   useEffect(() => {
-    hotkeys.unbind('ctrl+s')
-    hotkeys('ctrl+s', handleSaveProject)
+    hotkeys('ctrl+s,command+s', handleSaveProject)
     return () => {
-      hotkeys.unbind('ctrl+s')
+      hotkeys.unbind('ctrl+s,command+s', handleSaveProject)
     }
   }, [handleSaveProject])
 
@@ -52,4 +50,4 @@ const ButtonSave: FunctionComponent<ButtonSaveProps> = (
   )
 }
 
-export default observer(ButtonSave)
+export default ButtonSave

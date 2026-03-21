@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import { observer } from 'mobx-react-lite'
 import { FunctionComponent } from 'react'
 import ConfigSection from 'src/app/components/ConfigSection'
 
@@ -7,8 +6,9 @@ import FontFile from './FontFile'
 import FontSharp from './FontSharp'
 import FontSize from './FontSize'
 import LineHeight from './LineHeight'
+import VariationAxes from './VariationAxes'
 
-const FontConfig: FunctionComponent<unknown> = () => {
+const FontConfig: FunctionComponent = () => {
   return (
     <ConfigSection title='Font'>
       <Box sx={{ px: 2, my: 4 }}>
@@ -23,8 +23,11 @@ const FontConfig: FunctionComponent<unknown> = () => {
       <Box sx={{ px: 2, my: 4 }}>
         <LineHeight />
       </Box>
+      <Box sx={{ px: 2, my: 4 }}>
+        <VariationAxes />
+      </Box>
     </ConfigSection>
   )
 }
 
-export default observer(FontConfig)
+export default FontConfig
