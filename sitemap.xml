@@ -69,6 +69,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/image-glyphs/"/>
   </url>
   <url>
+    <loc>https://snowb.org/en/docs/font-design/inner-shadow-effects/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/inner-shadow-effects/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/inner-shadow-effects/"/>
+  </url>
+  <url>
     <loc>https://snowb.org/en/docs/font-design/kerning-pairs/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -118,11 +125,25 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/texture-packing/"/>
   </url>
   <url>
+    <loc>https://snowb.org/en/docs/font-design/variable-fonts/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/variable-fonts/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/variable-fonts/"/>
+  </url>
+  <url>
     <loc>https://snowb.org/en/docs/getting-started/interface-guide/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/interface-guide/"/>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/interface-guide/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/getting-started/keyboard-shortcuts/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/keyboard-shortcuts/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/keyboard-shortcuts/"/>
   </url>
   <url>
     <loc>https://snowb.org/en/docs/getting-started/overview/</loc>
@@ -151,6 +172,13 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/project-operations/"/>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/project-operations/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/en/docs/project-management/pwa-offline/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/pwa-offline/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/pwa-offline/"/>
   </url>
   <url>
     <loc>https://snowb.org/zh-cn/</loc>
@@ -216,6 +244,13 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/image-glyphs/"/>
   </url>
   <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/inner-shadow-effects/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/inner-shadow-effects/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/inner-shadow-effects/"/>
+  </url>
+  <url>
     <loc>https://snowb.org/zh-cn/docs/font-design/kerning-pairs/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -265,11 +300,25 @@
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/texture-packing/"/>
   </url>
   <url>
+    <loc>https://snowb.org/zh-cn/docs/font-design/variable-fonts/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/font-design/variable-fonts/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/font-design/variable-fonts/"/>
+  </url>
+  <url>
     <loc>https://snowb.org/zh-cn/docs/getting-started/interface-guide/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/interface-guide/"/>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/interface-guide/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/getting-started/keyboard-shortcuts/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/getting-started/keyboard-shortcuts/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/getting-started/keyboard-shortcuts/"/>
   </url>
   <url>
     <loc>https://snowb.org/zh-cn/docs/getting-started/overview/</loc>
@@ -298,5 +347,12 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/project-operations/"/>
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/project-operations/"/>
+  </url>
+  <url>
+    <loc>https://snowb.org/zh-cn/docs/project-management/pwa-offline/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://snowb.org/en/docs/project-management/pwa-offline/"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://snowb.org/zh-cn/docs/project-management/pwa-offline/"/>
   </url>
 </urlset>
