@@ -1,4 +1,3 @@
-import type { Font as OpenType } from 'opentype.js'
 import {
   type MsdfGlyphData,
   processAtlasForMsdf,
@@ -7,6 +6,7 @@ import {
 import type { GlyphRenderConfig } from 'src/types/style'
 import { PackingEngine } from 'src/utils/PackingEngine'
 import { isCancelError } from 'src/utils/concurrency'
+import type { AdaptedFont } from 'src/utils/fontAdapter'
 import getFontGlyphs from 'src/utils/getFontGlyphs'
 import getFontGlyphsProgressive from 'src/utils/getFontGlyphsProgressive'
 
@@ -531,7 +531,7 @@ interface StyleConfig {
   font: FontData & {
     mainFont: FontResource | null
     mainFamily: string
-    opentype: OpenType | null
+    opentype: AdaptedFont | null
     family: string
     minBaseLine: number
     maxBaseLine: number
@@ -600,7 +600,7 @@ function toGlyphRenderConfig(config: StyleConfig): GlyphRenderConfig {
   return {
     font: {
       ...config.font,
-      fonts: config.font.mainFont ? [config.font.mainFont] : [],
+      fonts: config.font.fonts,
     },
     fill: {
       ...config.fill,

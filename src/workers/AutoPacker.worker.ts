@@ -24,7 +24,13 @@ function maxMin(list: Rectangle[]) {
     totalArea += width * height
   }
 
-  return { minWidth, minHeight, maxWidth: totalWidth, maxHeight: totalHeight, totalArea }
+  return {
+    minWidth,
+    minHeight,
+    maxWidth: totalWidth,
+    maxHeight: totalHeight,
+    totalArea,
+  }
 }
 
 function packing(list: Rectangle[]) {

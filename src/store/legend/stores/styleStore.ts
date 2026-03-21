@@ -9,8 +9,6 @@
  * - Background color
  */
 import { batch, observable, opaqueObject } from '@legendapp/state'
-import type { Font as OpenType } from 'opentype.js'
-import { parse } from 'opentype.js'
 import {
   type FillData,
   FillType,
@@ -21,7 +19,10 @@ import {
   type ShadowData,
   type StrokeData,
 } from 'src/types/style'
+import type { VariationAxis, VariationInstance } from 'src/types/variableFont'
 import base64ToArrayBuffer from 'src/utils/base64ToArrayBuffer'
+import type { AdaptedFont } from 'src/utils/fontAdapter'
+import { createAdaptedFont } from 'src/utils/fontAdapter'
 import getFontBaselinesFromCanvas from 'src/utils/getFontBaselinesFromCanvas'
 import getFontBaselinesFromMetrics from 'src/utils/getFontBaselinesFromMetrics'
 import updateFontFace from 'src/utils/updateFontFace'
@@ -45,6 +46,7 @@ export {
   type StrokeData,
 } from 'src/types/style'
 export type { GradientColor } from 'src/types/style'
+export type { VariationAxis, VariationInstance } from 'src/types/variableFont'
 
 // ============================================================================
 // Store-specific Type Definitions
@@ -57,7 +59,9 @@ export type SdfChannel = 'rgb' | 'rgb-inv' | 'alpha' | 'alpha-inv'
 export interface FontResource {
   font: ArrayBuffer
   family: string
-  opentype: OpenType
+  opentype: AdaptedFont
+  variationAxes?: VariationAxis[]
+  variationInstances?: VariationInstance[]
 }
 
 export interface FontData {
@@ -71,6 +75,7 @@ export interface FontData {
   ideographic: number
   bottom: number
   sharp: number
+  variationSettings: Record<string, number>
 }
 
 export type FillRule = 'nonzero' | 'evenodd'
@@ -184,6 +189,7 @@ function createDefaultFont(): FontData {
     ideographic: 0,
     bottom: 0,
     sharp: 80,
+    variationSettings: {},
   }
 }
 
@@ -271,9 +277,9 @@ export function getFontFamily(): string {
 }
 
 /**
- * Get opentype font instance
+ * Get adapted font instance
  */
-export function getOpentype(): OpenType | null {
+export function getOpentype(): AdaptedFont | null {
   const mainFont = getMainFont()
   return mainFont ? mainFont.opentype : null
 }
@@ -346,47 +352,70 @@ export function updateBaselines(): void {
  * Add a font
  */
 export async function addFont(fontBuffer: ArrayBuffer): Promise<void> {
-  const opentype: OpenType = parse(fontBuffer, { lowMemory: true })
+  const opentype: AdaptedFont = createAdaptedFont(fontBuffer)
 
   const { names } = opentype
-  const postScriptNames = names.postScriptName
-  const firstKey = postScriptNames ? Object.keys(postScriptNames)[0] : undefined
-  const family = firstKey ? postScriptNames[firstKey] : undefined
+  const family =
+    names.fullName?.[Object.keys(names.fullName ?? {})[0]] ||
+    names.postScriptName?.[Object.keys(names.postScriptName ?? {})[0]] ||
+    names.fontFamily?.[Object.keys(names.fontFamily ?? {})[0]]
 
   if (!family) {
-    throw new Error('Font has no postScriptName.')
+    throw new Error('Font has no identifiable name.')
   }
 
   const fonts = styleStore$.style.font.fonts.get()
-  const hasFont = fonts.find((fontResource) => fontResource.family === family)
+  const hasFont = fonts.some((fontResource) => fontResource.family === family)
 
   if (hasFont) {
     throw new Error('Font already exists.')
   }
 
+  // Variable font axes and instances are natively available from the adapter
+  const variationAxes =
+    opentype.variationAxes.length > 0 ? opentype.variationAxes : undefined
+  const variationInstances =
+    opentype.variationInstances.length > 0
+      ? opentype.variationInstances
+      : undefined
+
+  // Build default variation settings from axis defaults
+  const defaultVariationSettings: Record<string, number> = {}
+  if (variationAxes) {
+    for (const axis of variationAxes) {
+      defaultVariationSettings[axis.tag] = axis.defaultValue
+    }
+  }
+
   // Note: Do NOT revoke the Object URL here. The CSS @font-face rule
   // references it via src: url(...), and the browser needs it valid for
   // the entire font lifetime. The URL is cleaned up on page unload.
+  const isVariable = !!variationAxes
   const url = URL.createObjectURL(new Blob([fontBuffer]))
-  await updateFontFace(family, url)
+  await updateFontFace(family, url, isVariable)
 
   // Re-check after async operation to prevent concurrent duplicates.
-  // Note: updateFontFace overwrites the single <style> element each time,
-  // so the stale @font-face rule is already replaced. Only the Object URL
-  // needs cleanup here.
   const currentFonts = styleStore$.style.font.fonts.get()
   if (currentFonts.find((f) => f.family === family)) {
     URL.revokeObjectURL(url)
     throw new Error('Font already exists.')
   }
+
   styleStore$.style.font.fonts.set([
     ...currentFonts,
     {
       font: opaqueObject(fontBuffer),
       family,
       opentype: opaqueObject(opentype),
+      variationAxes,
+      variationInstances,
     },
   ])
+
+  // Only set variation settings for the first font; fallback fonts don't change variation
+  if (currentFonts.length === 0) {
+    styleStore$.style.font.variationSettings.set(defaultVariationSettings)
+  }
 
   updateBaselines()
 }
@@ -402,7 +431,23 @@ export function removeFont(fontResource: FontResource): void {
     return
   }
 
-  styleStore$.style.font.fonts.set(fonts.filter((_, i) => i !== idx))
+  const remaining = fonts.filter((_, i) => i !== idx)
+  styleStore$.style.font.fonts.set(remaining)
+
+  if (remaining.length === 0) {
+    // Clear variationSettings when all fonts are removed
+    styleStore$.style.font.variationSettings.set({})
+  } else if (idx === 0) {
+    // Primary font removed — rebuild variation settings from new primary
+    const newPrimary = remaining[0]
+    const newDefaults: Record<string, number> = {}
+    if (newPrimary.variationAxes) {
+      for (const axis of newPrimary.variationAxes) {
+        newDefaults[axis.tag] = axis.defaultValue
+      }
+    }
+    styleStore$.style.font.variationSettings.set(newDefaults)
+  }
 
   if (idx === 0) {
     updateBaselines()
@@ -430,6 +475,20 @@ export function setLineHeight(lineHeight: number): void {
  */
 export function setSharp(sharp: number): void {
   styleStore$.style.font.sharp.set(sharp)
+}
+
+/**
+ * Set variation settings for variable fonts
+ */
+export function setVariationSettings(settings: Record<string, number>): void {
+  styleStore$.style.font.variationSettings.set(settings)
+}
+
+/**
+ * Set a single variation axis value
+ */
+export function setVariationAxisValue(tag: string, value: number): void {
+  styleStore$.style.font.variationSettings[tag].set(value)
 }
 
 // ============================================================================

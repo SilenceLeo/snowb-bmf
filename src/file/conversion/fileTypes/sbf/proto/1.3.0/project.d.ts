@@ -753,6 +753,9 @@ export interface IFont {
 
   /** Font sharp */
   sharp?: number | null
+
+  /** Font variationSettings */
+  variationSettings?: { [k: string]: number } | null
 }
 
 /** Represents a Font. */
@@ -774,6 +777,9 @@ export class Font implements IFont {
 
   /** Font sharp. */
   public sharp: number
+
+  /** Font variationSettings. */
+  public variationSettings: { [k: string]: number }
 
   /**
    * Creates a new Font instance using the specified properties.

@@ -1,3 +1,4 @@
+import applyCanvasVariationSettings from './applyCanvasVariationSettings'
 import createCanvasFontString, {
   FontStyleConfig,
 } from './createCanvasFontString'
@@ -18,7 +19,10 @@ const CANVAS_SIZE = 256
 
 export default function measureTextSize(
   letter: string,
-  config: FontStyleConfig,
+  config: FontStyleConfig & {
+    variationSettings?: Record<string, number>
+    fontStretch?: string
+  },
 ): LetterSize {
   if (!canvas) {
     canvas = document.createElement('canvas')
@@ -33,6 +37,14 @@ export default function measureTextSize(
 
   const font = createCanvasFontString(config)
   ctx.font = font
+
+  // Apply non-registered variation axes + fontStretch
+  // Always call to reset previous settings when variationSettings is undefined
+  applyCanvasVariationSettings(
+    ctx,
+    config.variationSettings ?? {},
+    config.fontStretch,
+  )
   ctx.textAlign = 'left'
   ctx.textBaseline = 'alphabetic'
 

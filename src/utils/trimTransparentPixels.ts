@@ -55,8 +55,7 @@ export function trimTransparentPixelsFromRegion(
       }
       if (hasBottomTransparentPixels) {
         const idx =
-          ((regionY + regionHeight - y - 1) * fullWidth + (regionX + x)) * 4 +
-          3
+          ((regionY + regionHeight - y - 1) * fullWidth + (regionX + x)) * 4 + 3
         if (data[idx] > threshold) {
           hasBottomTransparentPixels = false
         }

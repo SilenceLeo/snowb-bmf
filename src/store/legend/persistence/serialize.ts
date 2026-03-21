@@ -237,6 +237,7 @@ function serializeFont(font: FontData): IFont {
     size: font.size,
     lineHeight: font.lineHeight,
     sharp: font.sharp,
+    variationSettings: font.variationSettings,
   }
 }
 

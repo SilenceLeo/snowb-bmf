@@ -48,6 +48,8 @@ export {
   type GradientPaletteItem,
   type StyleStoreState,
   type Repetition,
+  type VariationAxis,
+  type VariationInstance,
   FillType,
   GradientType,
   // Font actions
@@ -63,6 +65,8 @@ export {
   setFontSize,
   setLineHeight,
   setSharp,
+  setVariationSettings,
+  setVariationAxisValue,
   // Fill actions
   setFillType,
   setFillColor,
@@ -322,6 +326,7 @@ export {
   useFontLineHeight,
   useFontSharp,
   useFontResources,
+  useFontVariationSettings,
   useMainFont,
   useMainFontFamily,
   useFill,

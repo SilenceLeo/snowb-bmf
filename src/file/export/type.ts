@@ -1,10 +1,10 @@
 // ============================================================================
 // Export Data Types (for Legend State migration)
 // ============================================================================
-import type { Font as OpenType } from 'opentype.js'
 import type { LayoutData } from 'src/store/legend/stores/layoutStore'
 import type { FontData, SdfChannel } from 'src/store/legend/stores/styleStore'
 import type { MetricData } from 'src/types/style'
+import type { AdaptedFont } from 'src/utils/fontAdapter'
 
 export interface BMFontInfo {
   face: string
@@ -181,7 +181,7 @@ export interface ExportProjectData {
   style: {
     font: FontData & {
       mainFamily: string
-      opentype: OpenType | null
+      opentype: AdaptedFont | null
     }
   }
   layout: LayoutData

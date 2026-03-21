@@ -6,6 +6,7 @@
  * - Render layer (glyphRenderHelper, getFontGlyphs) uses these for config params
  * - File layer (encode/decode) maps to these via store re-exports
  */
+import type { AdaptedFont } from 'src/utils/fontAdapter'
 
 // ============================================================================
 // Enums
@@ -127,10 +128,11 @@ export interface ShadowData {
 // Font
 // ============================================================================
 
-/** Font resource with opentype instance */
+/** Font resource with adapted font instance */
 export interface FontResourceBase {
   family: string
-  opentype: any
+  opentype: AdaptedFont
+  variationAxes?: Array<{ tag: string; defaultValue: number }>
 }
 
 /** Font configuration for rendering */
@@ -140,6 +142,7 @@ export interface FontRenderConfig {
   lineHeight: number
   sharp: number
   family?: string
+  variationSettings?: Record<string, number>
   [key: string]: unknown
 }
 

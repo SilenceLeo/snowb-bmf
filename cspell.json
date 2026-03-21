@@ -22,6 +22,7 @@
     "Felzenszwalb",
     "gpos",
     "GPOS",
+    "GSUB",
     "hhea",
     "Hiero",
     "hocs",
@@ -67,7 +68,15 @@
     "xadvance",
     "softmask",
     "psdf",
-    "PSDF"
+    "PSDF",
+    "fontkit",
+    "fontkitFont",
+    "fvar",
+    "gvar",
+    "wght",
+    "wdth",
+    "ital",
+    "slnt"
   ],
   "ignorePaths": [
     "node_modules",

@@ -320,6 +320,10 @@ export function useFontResources(): FontResource[] {
   return useSelector(() => styleStore$.style.font.fonts.get())
 }
 
+export function useFontVariationSettings(): Record<string, number> {
+  return useSelector(() => styleStore$.style.font.variationSettings.get())
+}
+
 export function useMainFontFamily(): string {
   return useSelector(() => {
     const fonts = styleStore$.style.font.fonts.get()
