@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">SnowBamboo BMF</h1>
-<p align="center">Professional Web-Based Bitmap Font Generator</p>
+<p align="center">Bitmap font generator that runs in your browser</p>
 
 <p align="center">
   <a href="https://snowb.org/">Web App</a> •
@@ -22,69 +22,69 @@
 
 ## Overview
 
-SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export professional bitmap fonts directly in your browser—no installation, no registration, no cloud uploads. Supports SDF/MSDF rendering for resolution-independent text in modern game engines.
+SnowBamboo BMF is a free, open-source bitmap font generator for game developers and digital creators. Create, edit, and export bitmap fonts directly in your browser — no install, no sign-up, nothing leaves your machine. SDF/MSDF rendering is built in, so text stays sharp at any scale.
 
 **[Try it now at snowb.org](https://snowb.org/)**
 
 [![SnowBamboo Bitmap Font Generator Preview](https://github.com/SilenceLeo/snowb-bmf/assets/4632034/182efea8-6254-4bb7-80a1-1d4c3be1e928)](https://snowb.org/)
 
-### Key Advantages
+### Why this one
 
-- **Zero Setup** - Start creating in seconds with no installation required
-- **True Cross-Platform** - Works identically on Windows, Mac, Linux, ChromeOS
-- **Privacy-First** - 100% local processing, no tracking, no cloud uploads
-- **Production-Ready** - Advanced packing algorithms reduce texture memory by 30-50%
-- **SDF/MSDF Support** - Resolution-independent rendering via msdfgen WASM integration
-- **Multi-Project Workspace** - Manage multiple font projects simultaneously with tabbed interface
-- **Full Compatibility** - Native support for Unity, Unreal, Godot, Cocos2d, Phaser, PixiJS
-- **Legacy Support** - Import from Littera to migrate existing projects seamlessly
+- **Zero setup.** Open your browser and start working.
+- **Cross-platform.** Windows, Mac, Linux, ChromeOS, same behavior everywhere.
+- **Privacy-first.** Everything runs locally. No tracking, no uploads.
+- **Smaller textures.** Packing algorithms cut memory use by 30–50%.
+- **SDF/MSDF built in.** msdfgen compiled to WASM; text stays sharp at any scale.
+- **Tabbed workspace.** Work on several font projects at once.
+- **Engine-ready.** Exports drop into Unity, Unreal, Godot, Cocos2d, Phaser, PixiJS.
+- **Littera migration.** Import `.ltr` files and bring old projects over.
 
-## Core Features
+## Features
 
-### Font Editing & Design
+### Editing and design
 
-- **Real-time Preview** - Visual feedback as you edit with text preview mode
-- **Advanced Typography** - Kerning pairs, letter spacing, baseline adjustment, per-glyph metric editing
-- **Professional Fill** - Solid colors, gradients (linear/radial) with 10 built-in presets, image/pattern textures
-- **Advanced Stroke** - Width, position (outer/middle/inner), line cap/join options, supports solid/gradient/image fill
-- **Multi-layer Shadows** - Configurable shadow effects
-- **Custom Glyphs** - Import images via drag-and-drop for icons and special characters, auto character mapping from filename
-- **Multi-Project Workspace** - Tabbed interface to manage multiple font projects, double-click to create/rename
-- **Flexible Input** - Unicode blocks, custom character sets
-- **Interactive Canvas** - Space+drag to pan, Ctrl+scroll to zoom (25%–1000%), preview mode toggle
-- **Font Sharpness** - Adjustable rendering sharpness control
+- **Live preview.** WYSIWYG editing with a text preview mode.
+- **Typography.** Kerning, letter spacing, baseline, per-glyph metrics.
+- **Fills.** Solid, gradient (linear/radial, 10 presets), image textures.
+- **Strokes.** Width, position (outer/middle/inner), cap/join; solid, gradient, or image fill.
+- **Shadows.** Multi-layer, all parameters adjustable.
+- **Custom glyphs.** Drag in images for icons or special characters; filenames map to character codes.
+- **Project tabs.** Manage multiple fonts, double-click to create or rename.
+- **Character input.** Unicode block picker, custom character sets.
+- **Canvas.** Space+drag to pan, Ctrl+scroll to zoom (25%–1,000%).
+- **Sharpness.** Font rendering sharpness is adjustable.
 
-### SDF/MSDF Rendering
+### SDF/MSDF rendering
 
-- **5 Rendering Modes** - SDF, PSDF, MSDF, MTSDF, and standard bitmap
-- **msdfgen Integration** - Compiled to WASM via Emscripten for native-speed distance field generation
-- **Configurable Parameters** - Distance range, angle threshold, coloring strategy (Simple/Ink Trap/Distance), error correction, fill rule, overlap support
-- **Channel Modes** - White/Black, Black/White, White/Alpha, Black/Alpha output options
-- **Resolution Independent** - Sharp text at any scale in game engines with SDF shader support
+- **Five modes.** SDF, PSDF, MSDF, MTSDF, standard bitmap.
+- **msdfgen WASM.** Emscripten-compiled, near-native distance field generation.
+- **Tunable.** Distance range, angle threshold, coloring strategy (Simple/Ink Trap/Distance), error correction, fill rule.
+- **Channel output.** White/Black, Black/White, White/Alpha, Black/Alpha.
+- **Scale-independent.** Sharp at any size if the engine supports SDF shaders.
 
-### File Format Support
+### File formats
 
-**Import** - `.sbf`, `.ltr`, `TTF/OTF/WOFF/TTC`
+**Import:** `.sbf`, `.ltr`, `TTF/OTF/WOFF/TTC`
 
-**Export** - [AngelCode format](https://www.angelcode.com/products/bmfont/doc/file_format.html) BMFont Text, XML, Binary, JSON, C Header, PNG atlases, MSDF Atlas JSON
+**Export:** [AngelCode BMFont](https://www.angelcode.com/products/bmfont/doc/file_format.html) Text, XML, Binary, JSON, C Header, PNG atlases, MSDF Atlas JSON
 
-### Game Engine Integration
+### Engine support
 
-Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine (Slate/UMG), Godot, [Cocos2d/Creator](https://docs.cocos.com/creator/3.8/manual/en/asset/font.html), [Phaser 3](https://docs.phaser.io/phaser/concepts/gameobjects/bitmap-text)/PixiJS, and custom engines via standard BMFont format.
+Exports work with Unity (TextMesh Pro/legacy), Unreal Engine (Slate/UMG), Godot, [Cocos2d/Creator](https://docs.cocos.com/creator/3.8/manual/en/asset/font.html), [Phaser 3](https://docs.phaser.io/phaser/concepts/gameobjects/bitmap-text)/PixiJS. Standard BMFont format, so custom engines can read the files too.
 
-### Performance & Architecture
+### Under the hood
 
-- **Optimized Rendering** - React 19 with Canvas API and Web Workers for heavy computation
-- **Smart Packing** - MaxRects, Guillotine, and Shelf algorithms via worker pool; Auto/Fixed/Adaptive modes with multi-page support
-- **Progressive Web App** - Works offline with in-app update notifications and automatic version detection
-- **Type-Safe** - Full TypeScript with strict mode, reactive Legend State v2
+- **Rendering.** React 19 + Canvas API. Heavy work runs in Web Workers.
+- **Packing.** Worker pool runs MaxRects/Guillotine/Shelf. Auto, Fixed, and Adaptive modes. Multi-page.
+- **PWA.** Works offline. In-app update prompts.
+- **Type safe.** TypeScript strict mode, Legend State v2 for reactive state.
 
-## Tech Stack
+## Stack
 
 | Category | Technology |
 |----------|-----------|
 | **Framework** | React 19, TypeScript 5.8+ |
-| **Build Tool** | Vite 7 with optimized bundling |
+| **Build** | Vite 7 |
 | **State Management** | Legend State v2 |
 | **UI Components** | Material-UI v7, Emotion CSS-in-JS |
 | **WASM** | msdfgen (SDF/MSDF generation), FreeType (font parsing) |
@@ -92,7 +92,7 @@ Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine
 | **Graphics** | Canvas API, Web Workers |
 | **Serialization** | Protocol Buffers (.sbf format) |
 | **PWA** | Workbox service worker |
-| **Monitoring** | Sentry (error tracking & performance) |
+| **Monitoring** | Sentry |
 
 ## Quick Start
 
@@ -100,7 +100,7 @@ Native support for all major engines: Unity (TextMesh Pro/legacy), Unreal Engine
 
 - Node.js 18+ and Yarn package manager
 
-### Installation & Development
+### Install and run
 
 ```bash
 # Clone the repository
@@ -114,34 +114,31 @@ yarn install
 yarn start
 ```
 
-The application will be available at `http://localhost:3000`
+Open `http://localhost:3000`.
 
-### Production Build
+### Production build
 
 ```bash
-# Build the application
 yarn build
-
-# Preview production build
-yarn preview
+yarn preview        # check locally before deploying
 ```
 
-## Development Guide
+## Development
 
-### Essential Commands
+### Commands
 
 ```bash
 # Development
 yarn start                    # Start Vite dev server (port 3000)
 yarn test                     # Run Vitest tests
 
-# Code Quality
+# Code quality
 yarn lint                     # Run ESLint
 yarn lint:fix                 # Auto-fix linting issues
 yarn lint:check               # Check with zero warnings
 yarn format                   # Format with Prettier
 
-# Build & Deploy
+# Build and deploy
 yarn build                    # Build production bundle
 yarn build:all                # Complete build pipeline (app + docs + sitemap)
 yarn preview                  # Preview production build locally
@@ -153,22 +150,22 @@ yarn find-unused              # Find unused files
 yarn find-unused:cleanup      # Remove unused files
 ```
 
-### Project Architecture
+### Architecture
 
-- **State Management** — Legend State v2 observables (`src/store/legend/`)
-- **Texture Packing** — Web Worker pool with MaxRects/Guillotine algorithms (`src/utils/PackingEngine.ts`)
-- **Persistence** — IndexedDB via Dexie, Protocol Buffers for project serialization
-- **SDF Generation** — msdfgen compiled to WASM via Emscripten
-- **Code Quality** — ESLint 9 flat config, Prettier with import sorting, Husky pre-commit hooks
+- **State:** Legend State v2 observables (`src/store/legend/`)
+- **Packing:** Web Worker pool, MaxRects/Guillotine (`src/utils/PackingEngine.ts`)
+- **Persistence:** IndexedDB via Dexie, Protocol Buffers for serialization
+- **SDF:** msdfgen compiled to WASM via Emscripten
+- **Lint/format:** ESLint 9 flat config, Prettier with import sorting, Husky pre-commit
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT. See [LICENSE](LICENSE).
 
-This project uses third-party open-source libraries. See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for complete license information.
+Third-party licenses: [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
 
 ## Acknowledgments
 
-- [msdfgen](https://github.com/Chlumsky/msdfgen) by Viktor Chlumsky — Multi-channel signed distance field generator
-- [FreeType](https://www.freetype.org) — Font rendering library
-- [opentype.js](https://github.com/opentypejs/opentype.js) by Frederik De Bleser — OpenType and TrueType font parser
+- [msdfgen](https://github.com/Chlumsky/msdfgen) by Viktor Chlumsky — multi-channel signed distance field generator
+- [FreeType](https://www.freetype.org) — font rendering library
+- [fontkit](https://github.com/foliojs/fontkit) by Devon Govett — font engine supporting OpenType, TrueType, WOFF, WOFF2, TTC
