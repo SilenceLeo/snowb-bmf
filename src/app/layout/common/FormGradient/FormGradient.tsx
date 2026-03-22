@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import { type FunctionComponent, useCallback } from 'react'
 import GradientPicker from 'src/app/components/GradientPicker'
 import GradientPresetPicker from 'src/app/components/GradientPresetPicker'
-import GridInput from 'src/app/components/GridInput'
+import GridInput, { type GridColumnSize } from 'src/app/components/GridInput'
 import WrappedSketchPicker from 'src/app/components/WrappedSketchPicker'
 import {
   type GradientData,
@@ -26,6 +26,7 @@ import FormAngle from '../FormAngle'
 
 interface FormGradientProps {
   gradient: GradientData
+  beforeWidth?: GridColumnSize
   // Optional action overrides (for stroke mode)
   onTypeChange?: (type: number) => void
   onAngleChange?: (angle: number) => void
@@ -35,6 +36,7 @@ interface FormGradientProps {
 
 const FormGradient: FunctionComponent<FormGradientProps> = ({
   gradient,
+  beforeWidth,
   onTypeChange,
   onAngleChange,
   onColorAdd,
@@ -73,11 +75,20 @@ const FormGradient: FunctionComponent<FormGradientProps> = ({
   return (
     <>
       <Box paddingX={2} marginY={4}>
-        <FormAngle angle={angle} onChange={handleAngleChange} />
+        <FormAngle
+          angle={angle}
+          beforeWidth={beforeWidth}
+          onChange={handleAngleChange}
+        />
       </Box>
 
       <Box paddingX={2} marginY={4}>
-        <GridInput before='Type:' component='div' childrenWidth={8}>
+        <GridInput
+          before='Type:'
+          beforeWidth={beforeWidth}
+          component='div'
+          childrenWidth={8}
+        >
           <RadioGroup
             row
             name='type'

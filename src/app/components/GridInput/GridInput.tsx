@@ -8,11 +8,14 @@ import React, {
   ReactNode,
 } from 'react'
 
+export type GridColumnSize = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+
 interface GridInputProps {
   before?: ReactNode | string
   after?: ReactNode
   component?: ElementType
-  childrenWidth?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+  beforeWidth?: GridColumnSize
+  childrenWidth?: GridColumnSize
   sx?: SxProps<Theme>
   children?: ReactNode
 }
@@ -20,7 +23,15 @@ interface GridInputProps {
 const GridInput: FunctionComponent<GridInputProps> = (
   props: PropsWithChildren<GridInputProps>,
 ): React.JSX.Element => {
-  const { before, children, component, after, childrenWidth, ...other } = props
+  const {
+    before,
+    children,
+    component,
+    after,
+    beforeWidth,
+    childrenWidth,
+    ...other
+  } = props
   return (
     <Grid
       component={component || 'label'}
@@ -31,7 +42,7 @@ const GridInput: FunctionComponent<GridInputProps> = (
       alignItems='center'
       {...other}
     >
-      <Grid size={5}>
+      <Grid size={beforeWidth || 5}>
         {typeof before === 'object' ? (
           before
         ) : (
@@ -40,7 +51,7 @@ const GridInput: FunctionComponent<GridInputProps> = (
           </Typography>
         )}
       </Grid>
-      <Grid size={childrenWidth || 6}>{children}</Grid>
+      <Grid size={childrenWidth || 5}>{children}</Grid>
       <Grid size='grow'>
         {typeof after === 'object' ? (
           after

@@ -3,6 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import { FunctionComponent } from 'react'
+import type { GridColumnSize } from 'src/app/components/GridInput'
 import {
   FillType,
   type GradientData,
@@ -20,6 +21,7 @@ interface FormFillProps {
   color: string
   gradient: GradientData
   patternTexture: PatternTextureData
+  beforeWidth?: GridColumnSize
   onTypeChange: (type: FillType) => void
   onColorChange: (color: string) => void
   // Gradient action overrides (for stroke mode)
@@ -38,6 +40,7 @@ const FormFill: FunctionComponent<FormFillProps> = ({
   color,
   gradient,
   patternTexture,
+  beforeWidth,
   onTypeChange,
   onColorChange,
   onGradientTypeChange,
@@ -76,12 +79,17 @@ const FormFill: FunctionComponent<FormFillProps> = ({
       </Box>
       {type === FillType.SOLID ? (
         <Box paddingX={2} marginY={4}>
-          <FormColor color={color} onChange={onColorChange} />
+          <FormColor
+            color={color}
+            beforeWidth={beforeWidth}
+            onChange={onColorChange}
+          />
         </Box>
       ) : null}
       {type === FillType.GRADIENT ? (
         <FormGradient
           gradient={gradient}
+          beforeWidth={beforeWidth}
           onTypeChange={onGradientTypeChange}
           onAngleChange={onGradientAngleChange}
           onColorAdd={onGradientColorAdd}
@@ -91,6 +99,7 @@ const FormFill: FunctionComponent<FormFillProps> = ({
       {type === FillType.IMAGE ? (
         <FormImage
           patternTexture={patternTexture}
+          beforeWidth={beforeWidth}
           onImageChange={onPatternImageChange}
           onRepetitionChange={onPatternRepetitionChange}
           onScaleChange={onPatternScaleChange}

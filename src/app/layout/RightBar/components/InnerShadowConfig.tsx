@@ -56,7 +56,7 @@ const InnerShadowConfig: FunctionComponent = () => {
         }
       >
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Offset X:' after='px'>
+          <GridInput before='Offset X:' beforeWidth={4} after='px'>
             <Input
               value={innerShadow?.offsetX ?? 0}
               fullWidth
@@ -67,7 +67,7 @@ const InnerShadowConfig: FunctionComponent = () => {
           </GridInput>
         </Box>
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Offset Y:' after='px'>
+          <GridInput before='Offset Y:' beforeWidth={4} after='px'>
             <Input
               value={innerShadow?.offsetY ?? 0}
               fullWidth
@@ -78,7 +78,7 @@ const InnerShadowConfig: FunctionComponent = () => {
           </GridInput>
         </Box>
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Blur:' after='px'>
+          <GridInput before='Blur:' beforeWidth={4} after='px'>
             <Input
               value={innerShadow?.blur ?? 0}
               fullWidth
@@ -92,6 +92,7 @@ const InnerShadowConfig: FunctionComponent = () => {
         <Box sx={{ px: 2, my: 4 }}>
           <FormColor
             color={innerShadow?.color || ''}
+            beforeWidth={4}
             onChange={setInnerShadowColor}
           />
         </Box>
