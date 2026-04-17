@@ -43,7 +43,7 @@
     "hotkeys-js": "^3.11.2",
     "jszip": "^3.10.1",
     "notistack": "^3.0.1",
-    "protobufjs": "^7.2.4",
+    "protobufjs": "^7.5.5",
     "react": "^19.1.0",
     "react-color": "^2.19.3",
     "react-dom": "^19.1.0",
