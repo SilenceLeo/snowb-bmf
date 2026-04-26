@@ -3,7 +3,7 @@ import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import { FunctionComponent } from 'react'
-import GridInput from 'src/app/components/GridInput'
+import GridInput, { type GridColumnSize } from 'src/app/components/GridInput'
 import {
   type PatternTextureData,
   Repetition,
@@ -16,6 +16,7 @@ import FileSelector from './FileSelector'
 
 interface FormImageProps {
   patternTexture: PatternTextureData
+  beforeWidth?: GridColumnSize
   // Optional action overrides (for stroke mode)
   onImageChange?: (buffer: ArrayBuffer) => void
   onRepetitionChange?: (repetition: Repetition) => void
@@ -24,6 +25,7 @@ interface FormImageProps {
 
 const FormImage: FunctionComponent<FormImageProps> = ({
   patternTexture,
+  beforeWidth,
   onImageChange,
   onRepetitionChange,
   onScaleChange,
@@ -41,6 +43,7 @@ const FormImage: FunctionComponent<FormImageProps> = ({
         <GridInput
           component='div'
           before='Scale:'
+          beforeWidth={beforeWidth}
           after={<FileSelector src={src} onChange={handleImageChange} />}
         >
           <Input
@@ -53,7 +56,11 @@ const FormImage: FunctionComponent<FormImageProps> = ({
         </GridInput>
       </Box>
       <Box paddingX={2} marginY={4}>
-        <GridInput before='Repeat:' after={repetition}>
+        <GridInput
+          before='Repeat:'
+          beforeWidth={beforeWidth}
+          after={repetition}
+        >
           <Select
             value={repetition}
             onChange={(e) =>

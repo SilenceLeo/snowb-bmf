@@ -431,6 +431,10 @@ export function useOrderedGrid(): boolean {
   return useSelector(() => layoutStore$.layout.orderedGrid.get())
 }
 
+export function useNoTrim(): boolean {
+  return useSelector(() => layoutStore$.layout.noTrim.get())
+}
+
 export function useColumns(): number {
   return useSelector(() => layoutStore$.layout.columns.get())
 }
@@ -500,6 +504,18 @@ export function useSelectLetter(): {
 
 export function usePackFailed(): boolean {
   return useSelector(() => uiStore$.ui.packFailed.get())
+}
+
+export function useSdfPreviewColor(): string {
+  return useSelector(() => uiStore$.ui.sdfPreviewColor.get())
+}
+
+export function useSdfPreviewFontSize(): number | null {
+  return useSelector(() => uiStore$.ui.sdfPreviewFontSize.get())
+}
+
+export function useSdfPreviewLineHeight(): number | null {
+  return useSelector(() => uiStore$.ui.sdfPreviewLineHeight.get())
 }
 
 export function useRenderMode(): RenderMode {

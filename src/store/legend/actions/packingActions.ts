@@ -703,6 +703,7 @@ export async function packStyle(): Promise<void> {
       totalGlyphs > PERFORMANCE_THRESHOLDS.PROGRESSIVE_THRESHOLD
 
     const styleOptions = toGlyphRenderConfig(createStyleConfig())
+    styleOptions.noTrim = layoutStore$.layout.noTrim.get()
 
     let canvas: HTMLCanvasElement
     let glyphs: Map<string, any>

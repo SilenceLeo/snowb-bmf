@@ -27,6 +27,9 @@ export interface LayoutData {
   fixedSize: boolean
   orderedGrid: boolean
   columns: number
+  // Named "noTrim" (not "trim") so proto3 bool default false = trim ON,
+  // ensuring backward compatibility with older project files that lack this field.
+  noTrim: boolean
 
   // Multi-page support
   page: number
@@ -54,6 +57,7 @@ function createDefaultLayout(): LayoutData {
     fixedSize: false,
     orderedGrid: false,
     columns: 8,
+    noTrim: false,
     page: 1,
     packWidth: 512,
     packHeight: 512,
@@ -126,6 +130,15 @@ export function setOrderedGrid(orderedGrid: boolean): void {
 }
 
 /**
+ * Set no-trim mode
+ * When true, glyph images retain full cell dimensions
+ * When false, glyph images are trimmed to pixel-tight bounds
+ */
+export function setNoTrim(noTrim: boolean): void {
+  layoutStore$.layout.noTrim.set(noTrim)
+}
+
+/**
  * Set column count for ordered grid mode
  */
 export function setColumns(columns: number): void {
@@ -185,6 +198,9 @@ export function updateLayout(updates: Partial<LayoutData>): void {
     }
     if (updates.orderedGrid !== undefined) {
       layoutStore$.layout.orderedGrid.set(updates.orderedGrid)
+    }
+    if (updates.noTrim !== undefined) {
+      layoutStore$.layout.noTrim.set(updates.noTrim)
     }
     if (updates.columns !== undefined) {
       layoutStore$.layout.columns.set(Math.max(1, Math.floor(updates.columns)))

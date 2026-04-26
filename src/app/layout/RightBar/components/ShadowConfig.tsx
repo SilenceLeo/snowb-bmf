@@ -56,7 +56,7 @@ const ShadowConfig: FunctionComponent = () => {
         }
       >
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Offset X:' after='px'>
+          <GridInput before='Offset X:' beforeWidth={4} after='px'>
             <Input
               value={shadow?.offsetX ?? 0}
               fullWidth
@@ -67,7 +67,7 @@ const ShadowConfig: FunctionComponent = () => {
           </GridInput>
         </Box>
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Offset Y:' after='px'>
+          <GridInput before='Offset Y:' beforeWidth={4} after='px'>
             <Input
               value={shadow?.offsetY ?? 0}
               fullWidth
@@ -78,7 +78,7 @@ const ShadowConfig: FunctionComponent = () => {
           </GridInput>
         </Box>
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Blur:' after='px'>
+          <GridInput before='Blur:' beforeWidth={4} after='px'>
             <Input
               value={shadow?.blur ?? 0}
               fullWidth
@@ -90,7 +90,11 @@ const ShadowConfig: FunctionComponent = () => {
           </GridInput>
         </Box>
         <Box sx={{ px: 2, my: 4 }}>
-          <FormColor color={shadow?.color || ''} onChange={setShadowColor} />
+          <FormColor
+            color={shadow?.color || ''}
+            beforeWidth={4}
+            onChange={setShadowColor}
+          />
         </Box>
       </Box>
     </ConfigSection>

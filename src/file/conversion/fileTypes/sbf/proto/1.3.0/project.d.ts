@@ -1177,6 +1177,9 @@ export interface ILayout {
 
   /** Layout columns */
   columns?: number | null
+
+  /** Layout noTrim */
+  noTrim?: boolean | null
 }
 
 /** Represents a Layout. */
@@ -1213,6 +1216,9 @@ export class Layout implements ILayout {
 
   /** Layout columns. */
   public columns: number
+
+  /** Layout noTrim. */
+  public noTrim: boolean
 
   /**
    * Creates a new Layout instance using the specified properties.

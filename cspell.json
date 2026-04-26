@@ -76,7 +76,14 @@
     "wght",
     "wdth",
     "ital",
-    "slnt"
+    "slnt",
+    "GLSL",
+    "mediump",
+    "highp",
+    "webglcontextlost",
+    "webglcontextrestored",
+    "texcoord",
+    "texels"
   ],
   "ignorePaths": [
     "node_modules",

@@ -11,6 +11,7 @@ import {
   setSourceCanvas,
 } from '../glyphStore'
 import { getProjectText, setProjectText } from '../projectStore'
+import { layoutStore$ } from '../stores/layoutStore'
 import type { FontGlyphData, ImageGlyphData } from '../types'
 import { packStyle, throttlePack } from './packingActions'
 
@@ -202,7 +203,8 @@ async function initializeImageGlyphOffStore(
 
     image.onload = () => {
       const { naturalWidth, naturalHeight } = image
-      const trimInfo = getTrimImageInfo(image)
+      const skipTrim = layoutStore$.layout.noTrim.get()
+      const trimInfo = getTrimImageInfo(image, 0, skipTrim)
 
       imageGlyph.fontWidth = naturalWidth
       imageGlyph.fontHeight = naturalHeight

@@ -4,6 +4,7 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Input from '@mui/material/Input'
 import Switch from '@mui/material/Switch'
 import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
 import { FunctionComponent, memo } from 'react'
 import GridInput from 'src/app/components/GridInput'
 import type { RenderMode } from 'src/store/legend'
@@ -140,7 +141,8 @@ const MsdfParams: FunctionComponent = memo(() => {
 
       {/* Coloring Strategy — only for MSDF/MTSDF */}
       <Box sx={{ px: 2, my: 4 }}>
-        <GridInput before='Coloring:' component='div' childrenWidth={8}>
+        <Typography>Coloring:</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
           <ButtonGroup size='small' color='primary'>
             <Button
               onClick={() => setColoringStrategy('simple')}
@@ -150,46 +152,57 @@ const MsdfParams: FunctionComponent = memo(() => {
             </Button>
             <Button
               onClick={() => setColoringStrategy('inktrap')}
-              variant={coloringStrategy === 'inktrap' ? 'contained' : 'outlined'}
+              variant={
+                coloringStrategy === 'inktrap' ? 'contained' : 'outlined'
+              }
             >
               Ink Trap
             </Button>
             <Tooltip title='Experimental: distance-based optimal coloring'>
               <Button
                 onClick={() => setColoringStrategy('distance')}
-                variant={coloringStrategy === 'distance' ? 'contained' : 'outlined'}
+                variant={
+                  coloringStrategy === 'distance' ? 'contained' : 'outlined'
+                }
               >
                 Distance
               </Button>
             </Tooltip>
           </ButtonGroup>
-        </GridInput>
+        </Box>
       </Box>
 
       {/* Error Correction — only for MSDF/MTSDF (MSDFGeneratorConfig) */}
       <Box sx={{ px: 2, my: 4 }}>
-        <GridInput before='Error Fix:' component='div' childrenWidth={8}>
+        <Typography>Error Fix:</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
           <ButtonGroup size='small' color='primary'>
             <Button
               onClick={() => setErrorCorrection('disabled')}
-              variant={errorCorrection === 'disabled' ? 'contained' : 'outlined'}
+              variant={
+                errorCorrection === 'disabled' ? 'contained' : 'outlined'
+              }
             >
               Off
             </Button>
             <Button
               onClick={() => setErrorCorrection('edge-priority')}
-              variant={errorCorrection === 'edge-priority' ? 'contained' : 'outlined'}
+              variant={
+                errorCorrection === 'edge-priority' ? 'contained' : 'outlined'
+              }
             >
               Edge Priority
             </Button>
             <Button
               onClick={() => setErrorCorrection('indiscriminate')}
-              variant={errorCorrection === 'indiscriminate' ? 'contained' : 'outlined'}
+              variant={
+                errorCorrection === 'indiscriminate' ? 'contained' : 'outlined'
+              }
             >
               Indiscriminate
             </Button>
           </ButtonGroup>
-        </GridInput>
+        </Box>
       </Box>
     </>
   )
@@ -232,9 +245,7 @@ const RenderConfig: FunctionComponent = () => {
           >
             SDF
           </Button>
-          <Tooltip
-            title={!hasFontFile ? 'Upload a font file first' : ''}
-          >
+          <Tooltip title={!hasFontFile ? 'Upload a font file first' : ''}>
             <span>
               <Button
                 onClick={() => setRenderMode('psdf')}
@@ -245,9 +256,7 @@ const RenderConfig: FunctionComponent = () => {
               </Button>
             </span>
           </Tooltip>
-          <Tooltip
-            title={!hasFontFile ? 'Upload a font file first' : ''}
-          >
+          <Tooltip title={!hasFontFile ? 'Upload a font file first' : ''}>
             <span>
               <Button
                 onClick={() => setRenderMode('msdf')}
@@ -258,15 +267,11 @@ const RenderConfig: FunctionComponent = () => {
               </Button>
             </span>
           </Tooltip>
-          <Tooltip
-            title={!hasFontFile ? 'Upload a font file first' : ''}
-          >
+          <Tooltip title={!hasFontFile ? 'Upload a font file first' : ''}>
             <span>
               <Button
                 onClick={() => setRenderMode('mtsdf')}
-                variant={
-                  renderMode === 'mtsdf' ? 'contained' : 'outlined'
-                }
+                variant={renderMode === 'mtsdf' ? 'contained' : 'outlined'}
                 disabled={!hasFontFile}
               >
                 MTSDF
@@ -311,9 +316,7 @@ const RenderConfig: FunctionComponent = () => {
                 </Button>
                 <Button
                   onClick={() => setSdfChannel('rgb-inv')}
-                  variant={
-                    sdfChannel === 'rgb-inv' ? 'contained' : 'outlined'
-                  }
+                  variant={sdfChannel === 'rgb-inv' ? 'contained' : 'outlined'}
                 >
                   Black/White
                 </Button>
@@ -321,9 +324,7 @@ const RenderConfig: FunctionComponent = () => {
               <ButtonGroup size='small' color='primary'>
                 <Button
                   onClick={() => setSdfChannel('alpha')}
-                  variant={
-                    sdfChannel === 'alpha' ? 'contained' : 'outlined'
-                  }
+                  variant={sdfChannel === 'alpha' ? 'contained' : 'outlined'}
                 >
                   White/Alpha
                 </Button>

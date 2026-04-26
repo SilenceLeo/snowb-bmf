@@ -31,6 +31,7 @@ const FillConfig: FunctionComponent = () => {
         color={color}
         gradient={gradient}
         patternTexture={patternTexture}
+        beforeWidth={4}
         onTypeChange={setFillType}
         onColorChange={setFillColor}
         onGradientTypeChange={setGradientType}

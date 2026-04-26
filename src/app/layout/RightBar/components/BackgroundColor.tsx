@@ -16,7 +16,11 @@ const BackgroundColor: FunctionComponent = () => {
           my: 4,
         }}
       >
-        <FormColor color={bgColor || ''} onChange={setBgColor} />
+        <FormColor
+          color={bgColor || ''}
+          beforeWidth={4}
+          onChange={setBgColor}
+        />
       </Box>
     </ConfigSection>
   )

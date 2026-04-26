@@ -2809,6 +2809,7 @@ export const Layout = ($root.Layout = (() => {
    * @property {number|null} [page] Layout page
    * @property {boolean|null} [orderedGrid] Layout orderedGrid
    * @property {number|null} [columns] Layout columns
+   * @property {boolean|null} [noTrim] Layout noTrim
    */
 
   /**
@@ -2898,6 +2899,14 @@ export const Layout = ($root.Layout = (() => {
   Layout.prototype.columns = 0
 
   /**
+   * Layout noTrim.
+   * @member {boolean} noTrim
+   * @memberof Layout
+   * @instance
+   */
+  Layout.prototype.noTrim = false
+
+  /**
    * Creates a new Layout instance using the specified properties.
    * @function create
    * @memberof Layout
@@ -2953,6 +2962,8 @@ export const Layout = ($root.Layout = (() => {
       Object.hasOwnProperty.call(message, 'columns')
     )
       writer.uint32(/* id 9, wireType 0 =*/ 72).int32(message.columns)
+    if (message.noTrim != null && Object.hasOwnProperty.call(message, 'noTrim'))
+      writer.uint32(/* id 10, wireType 0 =*/ 80).bool(message.noTrim)
     return writer
   }
 
@@ -3024,6 +3035,10 @@ export const Layout = ($root.Layout = (() => {
           message.columns = reader.int32()
           break
         }
+        case 10: {
+          message.noTrim = reader.bool()
+          break
+        }
         default:
           reader.skipType(tag & 7)
           break
@@ -3078,6 +3093,8 @@ export const Layout = ($root.Layout = (() => {
         return 'orderedGrid: boolean expected'
     if (message.columns != null && message.hasOwnProperty('columns'))
       if (!$util.isInteger(message.columns)) return 'columns: integer expected'
+    if (message.noTrim != null && message.hasOwnProperty('noTrim'))
+      if (typeof message.noTrim !== 'boolean') return 'noTrim: boolean expected'
     return null
   }
 
@@ -3102,6 +3119,7 @@ export const Layout = ($root.Layout = (() => {
     if (object.orderedGrid != null)
       message.orderedGrid = Boolean(object.orderedGrid)
     if (object.columns != null) message.columns = object.columns | 0
+    if (object.noTrim != null) message.noTrim = Boolean(object.noTrim)
     return message
   }
 
@@ -3127,6 +3145,7 @@ export const Layout = ($root.Layout = (() => {
       object.page = 0
       object.orderedGrid = false
       object.columns = 0
+      object.noTrim = false
     }
     if (message.padding != null && message.hasOwnProperty('padding'))
       object.padding = message.padding
@@ -3146,6 +3165,8 @@ export const Layout = ($root.Layout = (() => {
       object.orderedGrid = message.orderedGrid
     if (message.columns != null && message.hasOwnProperty('columns'))
       object.columns = message.columns
+    if (message.noTrim != null && message.hasOwnProperty('noTrim'))
+      object.noTrim = message.noTrim
     return object
   }
 

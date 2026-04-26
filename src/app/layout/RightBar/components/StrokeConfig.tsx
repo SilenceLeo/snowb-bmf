@@ -88,7 +88,7 @@ const StrokeConfig: FunctionComponent = () => {
         }
       >
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Width:' after='px'>
+          <GridInput before='Width:' beforeWidth={4} after='px'>
             <Input
               value={width ?? 0}
               fullWidth
@@ -100,7 +100,12 @@ const StrokeConfig: FunctionComponent = () => {
         </Box>
 
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Type:' component='div' childrenWidth={8}>
+          <GridInput
+            before='Type:'
+            beforeWidth={4}
+            component='div'
+            childrenWidth={8}
+          >
             <ButtonGroup size='small' color='primary'>
               <Button
                 onClick={() => setStrokeType(STROKE_OUTER)}
@@ -127,7 +132,12 @@ const StrokeConfig: FunctionComponent = () => {
         </Box>
 
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Line Cap:' component='div' childrenWidth={8}>
+          <GridInput
+            before='Line Cap:'
+            beforeWidth={4}
+            component='div'
+            childrenWidth={8}
+          >
             <ButtonGroup size='small' color='primary'>
               <Button
                 onClick={() => setStrokeLineCap('butt')}
@@ -152,7 +162,12 @@ const StrokeConfig: FunctionComponent = () => {
         </Box>
 
         <Box sx={{ px: 2, my: 4 }}>
-          <GridInput before='Line Join:' component='div' childrenWidth={8}>
+          <GridInput
+            before='Line Join:'
+            beforeWidth={4}
+            component='div'
+            childrenWidth={8}
+          >
             <ButtonGroup size='small' color='primary'>
               <Button
                 onClick={() => setStrokeLineJoin('miter')}
@@ -180,6 +195,7 @@ const StrokeConfig: FunctionComponent = () => {
           color={color}
           gradient={gradient}
           patternTexture={patternTexture}
+          beforeWidth={4}
           onTypeChange={setStrokeFillType}
           onColorChange={setStrokeColor}
           onGradientTypeChange={setStrokeGradientType}

@@ -24,7 +24,7 @@ import {
   glyphStore$,
 } from '../glyphStore'
 import { setCurrentProject } from '../projectStore'
-import { initializeLayoutStore } from '../stores/layoutStore'
+import { initializeLayoutStore, layoutStore$ } from '../stores/layoutStore'
 import type { MetricData } from '../stores/styleStore'
 import {
   type ColoringStrategy,
@@ -712,6 +712,7 @@ export async function deserializeProject(data: DecodedProject): Promise<void> {
         page: data.layout?.page ?? 1,
         orderedGrid: data.layout?.orderedGrid ?? false,
         columns: data.layout?.columns ?? 8,
+        noTrim: data.layout?.noTrim ?? false,
       })
 
       // Set UI store
@@ -764,7 +765,8 @@ export async function initializeImageGlyphSources(): Promise<void> {
 
       img.onload = () => {
         // Apply trim to match glyphActions.initializeImageGlyph behavior
-        const trimInfo = getTrimImageInfo(img)
+        const skipTrim = layoutStore$.layout.noTrim.get()
+        const trimInfo = getTrimImageInfo(img, 0, skipTrim)
         const hasContent = trimInfo.width > 0 && trimInfo.height > 0
 
         batch(() => {
