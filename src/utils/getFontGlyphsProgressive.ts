@@ -22,6 +22,7 @@ export interface ProgressiveOptions {
   batchSize?: number
   onProgress?: (completed: number, total: number) => void
   signal?: AbortSignal
+  doTrim?: boolean
 }
 
 /**
@@ -159,6 +160,7 @@ export default async function getFontGlyphsProgressive(
     batchSize,
     onProgress,
     signal,
+    doTrim: !config.noTrim,
   })
 
   return { canvas: copyToCleanCanvas(finalCanvas), glyphs: map }
@@ -186,7 +188,7 @@ async function processTrimmingBatched(
   layout: LayoutInfo,
   options: ProgressiveOptions,
 ): Promise<void> {
-  const { batchSize = 50, signal } = options
+  const { batchSize = 50, signal, doTrim = true } = options
 
   for (let batchStart = 0; batchStart < text.length; batchStart += batchSize) {
     if (signal?.aborted) {
@@ -197,7 +199,7 @@ async function processTrimmingBatched(
 
     await new Promise<void>((resolve) => {
       requestAnimationFrame(() => {
-        trimGlyphs(text, map, ctx, layout, batchStart, batchEnd)
+        trimGlyphs(text, map, ctx, layout, batchStart, batchEnd, doTrim)
         resolve()
       })
     })

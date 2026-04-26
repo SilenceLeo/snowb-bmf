@@ -80,7 +80,7 @@ export default function getFontGlyphs(text: string[], config: Config) {
     ctx = result.ctx
   }
 
-  trimGlyphs(text, map, ctx, layout)
+  trimGlyphs(text, map, ctx, layout, 0, undefined, !config.noTrim)
 
   // Copy to a clean canvas without willReadFrequently
   // to ensure Safari compatibility when used as drawImage source

@@ -112,6 +112,8 @@ message Layout {
   bool orderedGrid = 8;
 
   int32 columns = 9;
+
+  bool noTrim = 10;
 }
 
 message Shadow {

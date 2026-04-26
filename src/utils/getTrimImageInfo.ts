@@ -7,6 +7,7 @@ interface TrimInfo extends TrimImageInfo {
 export default function getTrimImageInfo(
   image: HTMLImageElement,
   threshold = 0,
+  skipTrim = false,
 ): TrimInfo {
   const width = image.naturalWidth
   const height = image.naturalHeight
@@ -31,6 +32,11 @@ export default function getTrimImageInfo(
   canvas.width = width
   canvas.height = height
   ctx.drawImage(image, 0, 0)
+
+  if (skipTrim) {
+    return { canvas, width, height, trimOffsetLeft: 0, trimOffsetTop: 0 }
+  }
+
   const imageData = ctx.getImageData(0, 0, width, height)
   const trimInfo = trimTransparentPixels(imageData, threshold)
 

@@ -202,6 +202,11 @@ export function setupAutoRunListeners(): void {
     }
   })
 
+  // No-trim toggle — requires glyph re-render (not just re-pack)
+  const unsubscribeNoTrim = layoutStore$.layout.noTrim.onChange(() => {
+    debouncedStyleChange()
+  })
+
   // Background color changes - re-packing only (skip in SDF mode where bgColor is ignored)
   const unsubscribeBgColor = styleStore$.style.bgColor.onChange(() => {
     if (styleStore$.style.render.mode.get() === 'default') {
@@ -332,6 +337,7 @@ export function setupAutoRunListeners(): void {
   cleanupFunctions = [
     unsubscribeImageGlyphs,
     unsubscribeLayout,
+    unsubscribeNoTrim,
     unsubscribeBgColor,
     unsubscribeFontSize,
     unsubscribeFontFonts,

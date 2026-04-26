@@ -59,6 +59,97 @@ export interface LayoutInfo {
   itemWidth: number
   itemHeight: number
   padding: number
+  fontBoxAscent: number
+  fontBoxHeight: number
+}
+
+interface FontBoxMetrics {
+  ascent: number
+  descent: number
+  height: number
+}
+
+let metricsCanvas: HTMLCanvasElement | undefined
+
+function getCanvasFontBoxMetrics(font: FontConfig): FontBoxMetrics {
+  if (!metricsCanvas) {
+    metricsCanvas = document.createElement('canvas')
+  }
+
+  const ctx = metricsCanvas.getContext('2d')
+  if (!ctx) {
+    return {
+      ascent: font.size,
+      descent: 0,
+      height: font.size,
+    }
+  }
+
+  const cssProps = variationSettingsToCssProps(font.variationSettings)
+  ctx.font = createCanvasFontString({
+    fontSize: font.size,
+    fontFamily: font.family,
+    fontWeight: cssProps.fontWeight,
+    fontStyle: cssProps.fontStyle,
+  })
+  applyCanvasVariationSettings(
+    ctx,
+    font.variationSettings ?? {},
+    cssProps.fontStretch,
+  )
+  ctx.textAlign = 'left'
+  ctx.textBaseline = 'alphabetic'
+
+  const metrics = ctx.measureText('Mg')
+  const ascent =
+    typeof metrics.fontBoundingBoxAscent === 'number'
+      ? metrics.fontBoundingBoxAscent
+      : metrics.actualBoundingBoxAscent
+  const descent =
+    typeof metrics.fontBoundingBoxDescent === 'number'
+      ? metrics.fontBoundingBoxDescent
+      : metrics.actualBoundingBoxDescent
+
+  const safeAscent = Math.max(1, Math.ceil(ascent || font.size))
+  const safeDescent = Math.max(0, Math.ceil(descent || 0))
+
+  return {
+    ascent: safeAscent,
+    descent: safeDescent,
+    height: Math.max(1, safeAscent + safeDescent),
+  }
+}
+
+function getFontBoxMetrics(font: FontConfig): FontBoxMetrics {
+  const mainFont = font.fonts?.[0]
+  if (mainFont?.opentype) {
+    let opentype = mainFont.opentype
+    const variationSettings = font.variationSettings
+    const hasVariation =
+      variationSettings &&
+      Object.keys(variationSettings).length > 0 &&
+      mainFont.variationAxes?.some(
+        (axis: { tag: string; defaultValue: number }) =>
+          variationSettings[axis.tag] !== undefined &&
+          variationSettings[axis.tag] !== axis.defaultValue,
+      )
+
+    if (hasVariation && variationSettings) {
+      opentype = opentype.getVariation(variationSettings)
+    }
+
+    const scale = font.size / opentype.unitsPerEm
+    const ascent = Math.max(1, Math.ceil(opentype.ascender * scale))
+    const descent = Math.max(0, Math.ceil(Math.abs(opentype.descender * scale)))
+
+    return {
+      ascent,
+      descent,
+      height: Math.max(1, ascent + descent),
+    }
+  }
+
+  return getCanvasFontBoxMetrics(font)
 }
 
 export function computeLayout(
@@ -66,6 +157,13 @@ export function computeLayout(
   config: GlyphRenderConfig,
 ): LayoutInfo {
   const { font, stroke, shadow } = config
+  const fontBoxMetrics = config.noTrim
+    ? getFontBoxMetrics(font)
+    : {
+        ascent: font.size,
+        descent: 0,
+        height: font.size,
+      }
   const columnNum = Math.ceil(Math.sqrt(textLength))
   const lineNum = Math.ceil(textLength / columnNum)
   const lineWidth = stroke ? stroke.width * 2 : 0
@@ -79,7 +177,7 @@ export function computeLayout(
   }
 
   const itemWidth = font.size + addX * 2
-  const itemHeight = font.size + addY * 2
+  const itemHeight = Math.ceil(fontBoxMetrics.height) + addY * 2
   const padding = font.size
 
   return {
@@ -91,6 +189,8 @@ export function computeLayout(
     itemWidth,
     itemHeight,
     padding,
+    fontBoxAscent: Math.ceil(fontBoxMetrics.ascent),
+    fontBoxHeight: Math.ceil(fontBoxMetrics.height),
   }
 }
 
@@ -183,6 +283,8 @@ export function renderSingleGlyph(
       itemWidth,
       itemHeight,
       padding,
+      layout,
+      config.noTrim,
     )
   } else {
     letterSize = renderFallbackGlyph(
@@ -200,6 +302,8 @@ export function renderSingleGlyph(
       itemWidth,
       itemHeight,
       padding,
+      layout,
+      config.noTrim,
     )
   }
 
@@ -221,6 +325,8 @@ function renderOpentypeGlyph(
   itemWidth: number,
   itemHeight: number,
   padding: number,
+  layout: LayoutInfo,
+  noTrim?: boolean,
 ): GlyphItem {
   const opentype = fontResource.opentype
   const glyph = opentype.charToGlyph(letter)
@@ -234,14 +340,17 @@ function renderOpentypeGlyph(
   const fontWidth = opentype.getAdvanceWidth(letter, font.size)
   const fontHeight = (opentype.ascender - opentype.descender) * scale
 
+  const trimOffsetTop = Math.round(boundingBox.y1) * -1
+  const trimOffsetLeft = Math.round(boundingBox.x1) * -1
+
   const letterSize: GlyphItem = {
     letter,
     width: Math.ceil(boundingBox.x2) - Math.floor(boundingBox.x1),
     height: Math.ceil(boundingBox.y2) - Math.floor(boundingBox.y1),
     fontWidth,
     fontHeight,
-    trimOffsetTop: Math.round(boundingBox.y1) * -1,
-    trimOffsetLeft: Math.round(boundingBox.x1) * -1,
+    trimOffsetTop: noTrim ? 0 : trimOffsetTop,
+    trimOffsetLeft: noTrim ? 0 : trimOffsetLeft,
     canvasX: 0,
     canvasY: 0,
   }
@@ -250,8 +359,10 @@ function renderOpentypeGlyph(
     return letterSize
   }
 
-  const translateX = startX + addX + letterSize.trimOffsetLeft
-  const translateY = startY + addY + letterSize.trimOffsetTop
+  const translateX = noTrim ? startX + addX : startX + addX + trimOffsetLeft
+  const translateY = noTrim
+    ? startY + addY + layout.fontBoxAscent - baseline
+    : startY + addY + trimOffsetTop
 
   ctx.translate(translateX, translateY)
   ctxDoPath(ctx, path.commands)
@@ -325,6 +436,8 @@ function renderFallbackGlyph(
   itemWidth: number,
   itemHeight: number,
   padding: number,
+  layout: LayoutInfo,
+  noTrim?: boolean,
 ): GlyphItem {
   const variationSettings = font.variationSettings
   const cssProps = variationSettingsToCssProps(variationSettings)
@@ -344,17 +457,24 @@ function renderFallbackGlyph(
     canvasY: 0,
   }
 
+  if (noTrim) {
+    letterSize.trimOffsetLeft = 0
+    letterSize.trimOffsetTop = 0
+  }
+
   const { width, height, trimOffsetLeft, trimOffsetTop } = letterSize
   if (width === 0 || height === 0) {
     return letterSize
   }
 
   const styleX = startX + addX + (width - font.size) / 2
-  const drawX = startX + addX + trimOffsetLeft
-  const drawY = startY + addY + trimOffsetTop
+  const drawX = noTrim ? startX + addX : startX + addX + trimOffsetLeft
+  const drawY = noTrim
+    ? startY + addY + layout.fontBoxAscent
+    : startY + addY + trimOffsetTop
 
   ctx.textAlign = 'left'
-  ctx.textBaseline = 'top'
+  ctx.textBaseline = noTrim ? 'alphabetic' : 'top'
   ctx.font = createCanvasFontString({
     fontSize: font.size,
     fontFamily: font.family,
@@ -421,6 +541,7 @@ function renderFallbackGlyph(
     )
     strokeCtx.clip()
     strokeCtx.font = ctx.font
+    strokeCtx.textBaseline = noTrim ? 'alphabetic' : 'top'
     if (hasVariation) {
       applyCanvasVariationSettings(
         strokeCtx,
@@ -640,6 +761,7 @@ export function trimGlyphs(
   layout: LayoutInfo,
   startIndex = 0,
   endIndex?: number,
+  doTrim = true,
 ): void {
   const { columnNum, itemWidth, itemHeight, padding, addX, addY } = layout
   const end = endIndex ?? text.length
@@ -647,6 +769,23 @@ export function trimGlyphs(
 
   const cellWidth = itemWidth + padding * 2
   const cellHeight = itemHeight + padding * 2
+
+  if (!doTrim) {
+    for (let i = startIndex; i < end; i++) {
+      const cellX = (i % columnNum) * cellWidth
+      const cellY = Math.floor(i / columnNum) * cellHeight
+      const letterSize = map.get(text[i])
+      if (!letterSize || letterSize.width === 0 || letterSize.height === 0)
+        continue
+      letterSize.width = itemWidth
+      letterSize.height = itemHeight
+      letterSize.trimOffsetLeft += addX
+      letterSize.trimOffsetTop += addY
+      letterSize.canvasX = cellX + padding
+      letterSize.canvasY = cellY + padding
+    }
+    return
+  }
 
   // Calculate bounding region for all cells in [startIndex, end)
   const startRow = Math.floor(startIndex / columnNum)

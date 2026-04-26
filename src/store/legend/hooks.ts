@@ -431,6 +431,10 @@ export function useOrderedGrid(): boolean {
   return useSelector(() => layoutStore$.layout.orderedGrid.get())
 }
 
+export function useNoTrim(): boolean {
+  return useSelector(() => layoutStore$.layout.noTrim.get())
+}
+
 export function useColumns(): number {
   return useSelector(() => layoutStore$.layout.columns.get())
 }

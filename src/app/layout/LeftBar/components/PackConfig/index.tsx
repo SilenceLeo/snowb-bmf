@@ -6,6 +6,7 @@ import ConfigSection from 'src/app/components/ConfigSection'
 import AutoPack from './AutoPack'
 import Columns from './Columns'
 import FixedSize from './FixedSize'
+import NoTrim from './NoTrim'
 import OrderedGrid from './OrderedGrid'
 import PackHeight from './PackHeight'
 import PackWidth from './PackWidth'
@@ -30,6 +31,9 @@ const PackConfig: FunctionComponent = () => {
       </Box>
       <Box sx={{ px: 2, my: 4 }}>
         <Columns />
+      </Box>
+      <Box sx={{ px: 2, my: 4 }}>
+        <NoTrim />
       </Box>
     </ConfigSection>
   )

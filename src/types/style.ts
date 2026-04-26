@@ -167,4 +167,5 @@ export interface GlyphRenderConfig {
   stroke?: StrokeRenderConfig
   shadow?: ShadowData
   innerShadow?: ShadowData
+  noTrim?: boolean
 }
