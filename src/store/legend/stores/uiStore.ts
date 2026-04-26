@@ -37,6 +37,11 @@ export interface UiData {
 
   // Packing state
   packFailed: boolean
+
+  // SDF preview settings (only active when renderMode !== 'default')
+  sdfPreviewColor: string // text color hex, default '#000000'
+  sdfPreviewFontSize: number | null // null = follow actual font size
+  sdfPreviewLineHeight: number | null // null = follow actual line height
 }
 
 export interface UiStoreState {
@@ -64,6 +69,9 @@ function createDefaultUi(): UiData {
     selectLetter: '',
     selectNextLetter: '',
     packFailed: false,
+    sdfPreviewColor: '#000000',
+    sdfPreviewFontSize: null,
+    sdfPreviewLineHeight: null,
   }
 }
 
@@ -209,7 +217,9 @@ export function setPreviewTransform(trans: {
 }): void {
   batch(() => {
     if (trans.previewScale !== undefined) {
-      uiStore$.ui.previewScale.set(Math.min(Math.max(trans.previewScale, 0.01), MAX_SCALE))
+      uiStore$.ui.previewScale.set(
+        Math.min(Math.max(trans.previewScale, 0.01), MAX_SCALE),
+      )
     }
     if (trans.previewOffsetX !== undefined) {
       uiStore$.ui.previewOffsetX.set(trans.previewOffsetX)
@@ -235,6 +245,39 @@ export function setPreviewOffset(offsetX: number, offsetY: number): void {
     uiStore$.ui.previewOffsetX.set(offsetX)
     uiStore$.ui.previewOffsetY.set(offsetY)
   })
+}
+
+// ============================================================================
+// SDF Preview Actions
+// ============================================================================
+
+/**
+ * Set SDF preview text color (hex string)
+ */
+export function setSdfPreviewColor(color: string): void {
+  uiStore$.ui.sdfPreviewColor.set(color)
+}
+
+/**
+ * Set SDF preview font size (null = follow actual font size)
+ */
+export function setSdfPreviewFontSize(size: number | null): void {
+  if (size === null || !Number.isFinite(size) || size <= 0) {
+    uiStore$.ui.sdfPreviewFontSize.set(null)
+    return
+  }
+  uiStore$.ui.sdfPreviewFontSize.set(size)
+}
+
+/**
+ * Set SDF preview line height (null = follow actual line height)
+ */
+export function setSdfPreviewLineHeight(height: number | null): void {
+  if (height === null || !Number.isFinite(height) || height <= 0) {
+    uiStore$.ui.sdfPreviewLineHeight.set(null)
+    return
+  }
+  uiStore$.ui.sdfPreviewLineHeight.set(height)
 }
 
 // ============================================================================

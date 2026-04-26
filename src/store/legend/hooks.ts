@@ -502,6 +502,18 @@ export function usePackFailed(): boolean {
   return useSelector(() => uiStore$.ui.packFailed.get())
 }
 
+export function useSdfPreviewColor(): string {
+  return useSelector(() => uiStore$.ui.sdfPreviewColor.get())
+}
+
+export function useSdfPreviewFontSize(): number | null {
+  return useSelector(() => uiStore$.ui.sdfPreviewFontSize.get())
+}
+
+export function useSdfPreviewLineHeight(): number | null {
+  return useSelector(() => uiStore$.ui.sdfPreviewLineHeight.get())
+}
+
 export function useRenderMode(): RenderMode {
   return useSelector(() => styleStore$.style.render.mode.get())
 }

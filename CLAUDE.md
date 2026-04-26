@@ -8,6 +8,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **NEVER create additional documentation files after completing tasks.** Do not generate task summaries, case studies, examples, or any other documentation unless explicitly requested by the user. Focus only on the requested code changes.
 
+## Iron Rules
+
+- **No speculative values**: All numeric constants in SDF/BMFont output must be derived from authoritative sources (msdfgen formulas, BMFont spec, font metrics). Never use guessed padding, magic offsets, or hardcoded safety margins (e.g., `+4`, `+2`) to patch dimension mismatches. If two coordinate systems disagree, fix the root cause — do not add a buffer.
+- **Think before coding**: State assumptions explicitly; if uncertain, ask. Surface multiple interpretations instead of silently picking one. If a simpler approach exists, say so. If something is unclear, stop and name it.
+- **Simplicity first**: No features beyond what was asked. No abstractions for single-use code. No unrequested "flexibility" or "configurability". No error handling for impossible scenarios. If 200 lines could be 50, rewrite.
+- **Surgical changes**: Don't "improve" adjacent code, comments, or formatting. Don't refactor things that aren't broken. Match existing style. Mention unrelated dead code — don't delete it. Only remove imports/vars/functions YOUR changes made unused. Every changed line must trace to the request.
+- **Goal-driven execution**: Transform tasks into verifiable goals with tests/checks. For multi-step work, state a brief plan: step → verify. Strong success criteria let you loop independently.
+
 ## Project Overview
 
 SnowBamboo BMF is a web-based bitmap font generator for game developers. Users create, edit, and export bitmap fonts (AngelCode BMFont format) directly in the browser. Built with React 19 + TypeScript 5.8+ + Vite 7.
@@ -113,9 +121,7 @@ Also `src` → `src/` (bare `src` prefix imports).
 
 ### TypeScript
 
-- Target: ES2020, strict mode, bundler module resolution
-- No `experimentalDecorators`
-- JSX: react-jsx (automatic runtime)
+- Target: ES2020, strict mode, bundler module resolution. No `experimentalDecorators`. JSX: react-jsx (automatic runtime).
 
 ## Key Gotchas
 
