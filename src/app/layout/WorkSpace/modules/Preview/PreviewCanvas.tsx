@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material/styles'
+// import { useTheme } from '@mui/material/styles'
 import {
   FunctionComponent,
   useCallback,
@@ -13,13 +13,16 @@ import useWheel from 'src/app/hooks/useWheel'
 import {
   clearSelection,
   getGlyphForLetter,
+  setIsDarkBg,
   setPreviewTransform,
+  setShowBaselines,
   useDistanceRange,
   useFontBaselines,
   useFontLineHeight,
   useFontSize,
   useGlobalAdjustMetric,
   useGlyphDataVersion,
+  useIsDarkBg,
   useIsPacking,
   usePackCanvases,
   usePadding,
@@ -30,12 +33,38 @@ import {
   useSdfPreviewColor,
   useSdfPreviewFontSize,
   useSdfPreviewLineHeight,
+  useShowBaselines,
 } from 'src/store/legend'
 import type { FontGlyphData, ImageGlyphData } from 'src/store/legend'
 import { hexToNormalizedRgb } from 'src/utils/webgl/SdfShaderRenderer'
 
 import LetterList from './LetterList'
 import { useSdfPreviewRenderer } from './useSdfPreviewRenderer'
+
+// Chessboard pattern definitions
+const lightBgPixel = {
+  backgroundColor: '#ffffff',
+  backgroundImage: `
+    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%)
+  `,
+  backgroundSize: '20px 20px',
+  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+}
+
+const darkBgPixel = {
+  backgroundColor: '#2a2a2a',
+  backgroundImage: `
+    linear-gradient(45deg, #505050 25%, transparent 25%),
+    linear-gradient(-45deg, #505050 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #505050 75%),
+    linear-gradient(-45deg, transparent 75%, #505050 75%)
+  `,
+  backgroundSize: '20px 20px',
+  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+}
 
 interface PreviewData {
   lines: number
@@ -61,7 +90,7 @@ interface PreviewData {
 // Currently deferred due to tight coupling between canvas ref, multiple
 // store subscriptions, and interdependent useEffect chains.
 const PreviewCanvas: FunctionComponent = () => {
-  const { bgPixel } = useTheme()
+  // const { bgPixel } = useTheme()
 
   // Use Legend State hooks
   const renderMode = useRenderMode()
@@ -125,6 +154,9 @@ const PreviewCanvas: FunctionComponent = () => {
     ideographic,
     bottom,
   )
+
+  const isDarkBg = useIsDarkBg()
+  const isShowBaselines = useShowBaselines()
 
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
   const domRef = useRef<HTMLDivElement>(null)
@@ -415,6 +447,8 @@ const PreviewCanvas: FunctionComponent = () => {
       }
     })
 
+    if (isShowBaselines) {
+
     for (let index = 0; index < data.lines; index += 1) {
       ;[middle, hanging, top, alphabetic, ideographic, bottom].forEach(
         (baseLine) => {
@@ -447,6 +481,8 @@ const PreviewCanvas: FunctionComponent = () => {
       ctx.setLineDash([])
       ctx.stroke()
     }
+
+    }
   }, [
     alphabetic,
     bottom,
@@ -459,6 +495,7 @@ const PreviewCanvas: FunctionComponent = () => {
     ideographic,
     isPacking,
     isSdfMode,
+    isShowBaselines,
     maxBaseLine,
     middle,
     minBaseLine,
@@ -493,13 +530,63 @@ const PreviewCanvas: FunctionComponent = () => {
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        ...bgPixel,
+        ...(isDarkBg ? darkBgPixel : lightBgPixel),
         cursor:
           dragState === 2 ? 'grabbing' : dragState === 1 ? 'grab' : 'default',
       }}
       onMouseDown={handleMouseDown}
       onClick={handleClearSelection}
     >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 8,
+          right: 8,
+          zIndex: 10,
+          display: 'flex',
+          gap: 1,
+        }}
+      >
+        <Box
+          sx={{
+            width: 24,
+            height: 24,
+            borderRadius: '50%',
+            border: '2px solid rgba(133, 133, 133, 0.7)',
+            cursor: 'pointer',
+            backgroundColor: isDarkBg ? '#272727' : '#ececec',
+            transition: 'background-color 0.2s',
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            setIsDarkBg(!isDarkBg)
+          }}
+        />
+        <Box
+          sx={{
+            width: 24,
+            height: 24,
+            borderRadius: 1,
+            border: '2px solid rgba(133, 133, 133, 0.7)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: isShowBaselines ? '#fff' : '#888',
+            backgroundColor: isShowBaselines ? '#272727' : '#ececec',
+            transition: 'background-color 0.2s, color 0.2s',
+            userSelect: 'none',
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            setShowBaselines(!isShowBaselines)
+          }}
+        >
+          L
+        </Box>
+      </Box>
       <Box
         sx={{
           transformOrigin: '50% 50%',

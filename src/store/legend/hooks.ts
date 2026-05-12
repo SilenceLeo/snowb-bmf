@@ -518,6 +518,14 @@ export function useSdfPreviewLineHeight(): number | null {
   return useSelector(() => uiStore$.ui.sdfPreviewLineHeight.get())
 }
 
+export function useIsDarkBg(): boolean {
+  return useSelector(() => uiStore$.ui.isDarkBg.get())
+}
+
+export function useShowBaselines(): boolean {
+  return useSelector(() => uiStore$.ui.showBaselines.get())
+}
+
 export function useRenderMode(): RenderMode {
   return useSelector(() => styleStore$.style.render.mode.get())
 }

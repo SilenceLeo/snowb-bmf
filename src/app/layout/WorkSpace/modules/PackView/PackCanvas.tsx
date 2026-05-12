@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material/styles'
+// import { useTheme } from '@mui/material/styles'
 import {
   FunctionComponent,
   useCallback,
@@ -11,8 +11,10 @@ import {
 import useSpaceDrag from 'src/app/hooks/useSpaceDrag'
 import useWheel from 'src/app/hooks/useWheel'
 import {
+  setIsDarkBg,
   setTransform,
   useBgColor,
+  useIsDarkBg,
   useIsPacking,
   usePackCanvases,
   usePackDimensions,
@@ -21,9 +23,33 @@ import {
   useUiTransform,
 } from 'src/store/legend'
 
-const PackCanvas: FunctionComponent = () => {
-  const { bgPixel } = useTheme()
+const lightBgPixel = {
+  backgroundColor: '#ffffff',
+  backgroundImage: `
+    linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%)
+  `,
+  backgroundSize: '20px 20px',
+  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+}
 
+const darkBgPixel = {
+  backgroundColor: '#2a2a2a',
+  backgroundImage: `
+    linear-gradient(45deg, #505050 25%, transparent 25%),
+    linear-gradient(-45deg, #505050 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #505050 75%),
+    linear-gradient(-45deg, transparent 75%, #505050 75%)
+  `,
+  backgroundSize: '20px 20px',
+  backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
+}
+
+const PackCanvas: FunctionComponent = () => {
+  // const { bgPixel } = useTheme()
+  const isDarkBg = useIsDarkBg()
   const isPacking = useIsPacking()
   const { scale, offsetX, offsetY } = useUiTransform()
   const { width: gridWidth, height: gridHeight } = useUiDimensions()
@@ -158,6 +184,25 @@ const PackCanvas: FunctionComponent = () => {
       <Box
         sx={{
           position: 'absolute',
+          top: 8,
+          right: 8,
+          zIndex: 10,
+          width: 24,
+          height: 24,
+          borderRadius: '50%',
+          border: '2px solid rgba(133, 133, 133, 0.7)',
+          cursor: 'pointer',
+          backgroundColor: isDarkBg ? '#272727' : '#ececec',
+          transition: 'background-color 0.2s',
+        }}
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsDarkBg(!isDarkBg)
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
           left: '50%',
           top: '50%',
           width: `${gridWidth}px`,
@@ -190,7 +235,7 @@ const PackCanvas: FunctionComponent = () => {
               }}
               sx={{
                 imageRendering: 'pixelated',
-                ...bgPixel,
+                ...(isDarkBg ? darkBgPixel : lightBgPixel),
                 position: 'absolute',
                 left: `${canvasX}px`,
                 top: `${canvasY}px`,

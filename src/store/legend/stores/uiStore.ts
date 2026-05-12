@@ -31,6 +31,9 @@ export interface UiData {
   previewOffsetX: number
   previewOffsetY: number
 
+  isDarkBg: boolean
+  showBaselines: boolean
+
   // Selection state
   selectLetter: string
   selectNextLetter: string
@@ -66,6 +69,8 @@ function createDefaultUi(): UiData {
     previewScale: 1,
     previewOffsetX: 0,
     previewOffsetY: 0,
+    isDarkBg: false,
+    showBaselines: true,
     selectLetter: '',
     selectNextLetter: '',
     packFailed: false,
@@ -205,6 +210,20 @@ export function setPreviewText(text: string): void {
  */
 export function setShowPreview(showPreview: boolean): void {
   uiStore$.ui.showPreview.set(showPreview)
+}
+
+/**
+ * Set dark background
+ */
+export function setIsDarkBg(dark: boolean): void {
+  uiStore$.ui.isDarkBg.set(dark)
+}
+
+/**
+ * Set show baselines
+ */
+export function setShowBaselines(show: boolean): void {
+  uiStore$.ui.showBaselines.set(show)
 }
 
 /**
