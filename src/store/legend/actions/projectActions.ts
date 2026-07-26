@@ -409,9 +409,8 @@ export function cleanupListeners(): void {
  * Set project name and sync to workspace.
  *
  * Note: Sync is intentionally one-way (projectStore → workspaceStore).
- * ProjectTabs.handleRename calls setWorkspaceProjectName directly,
- * which is correct because the active project's projectStore is the
- * source of truth and gets overwritten on project switch anyway.
+ * Call this action when renaming the active project so its serialized name
+ * (and therefore its save/export filename) stays in sync with its tab label.
  */
 export function setProjectName(name: string): void {
   if (name) {

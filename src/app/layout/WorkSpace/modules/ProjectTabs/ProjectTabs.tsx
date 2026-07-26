@@ -2,6 +2,7 @@ import Tabs from '@mui/material/Tabs'
 import { useTheme } from '@mui/material/styles'
 import React, { FunctionComponent, useCallback, useState } from 'react'
 import {
+  setProjectNameAction,
   setWorkspaceProjectName,
   useActiveProjectId,
   useProjectList,
@@ -30,10 +31,7 @@ const ProjectTabs: FunctionComponent = () => {
   }, [])
 
   const handleRemove = useCallback(
-    async (
-      _e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-      value?: number,
-    ) => {
+    async (_e: React.MouseEvent<SVGSVGElement, MouseEvent>, value?: number) => {
       if (typeof value !== 'undefined') {
         setIsSwitching(true)
         try {
@@ -55,9 +53,19 @@ const ProjectTabs: FunctionComponent = () => {
     }
   }, [])
 
-  const handleRename = useCallback((name: string, id: number): void => {
-    setWorkspaceProjectName(id, name)
-  }, [])
+  const handleRename = useCallback(
+    (name: string, id: number): void => {
+      // The active project's name is also used by save/export. Update it via
+      // the project action so the project and workspace stores stay in sync.
+      if (id === activeId) {
+        setProjectNameAction(name)
+        return
+      }
+
+      setWorkspaceProjectName(id, name)
+    },
+    [activeId],
+  )
 
   return (
     <Tabs
